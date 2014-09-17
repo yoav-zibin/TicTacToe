@@ -60,18 +60,18 @@ var isMoveOk = (function () {
     return true;
   }
 
-  /** 
-   * Returns the move that should be performed when player 
-   * with index turnIndexBeforeMove makes a move in cell row X col. 
+  /**
+   * Returns the move that should be performed when player
+   * with index turnIndexBeforeMove makes a move in cell row X col.
    */
   function createMove(board, row, col, turnIndexBeforeMove) {
     var boardAfterMove = copyObject(board);
     boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
     var winner = getWinner(boardAfterMove);
     var firstOperation;
-    if (winner !== '' || isTie(board)) {
+    if (winner !== '' || isTie(boardAfterMove)) {
       // Game over.
-      firstOperation = {endMatch: {endMatchScores: 
+      firstOperation = {endMatch: {endMatchScores:
         (winner === 'X' ? [1, 0] : (winner === 'O' ? [0, 1] : [0, 0]))}};
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
@@ -83,13 +83,13 @@ var isMoveOk = (function () {
   }
 
   function isMoveOk(params) {
-    var move = params.move; 
-    var turnIndexBeforeMove = params.turnIndexBeforeMove; 
-    var stateBeforeMove = params.stateBeforeMove; 
+    var move = params.move;
+    var turnIndexBeforeMove = params.turnIndexBeforeMove;
+    var stateBeforeMove = params.stateBeforeMove;
     // The state and turn after move are not needed in TicTacToe (or in any game where all state is public).
-    //var turnIndexAfterMove = params.turnIndexAfterMove; 
-    //var stateAfterMove = params.stateAfterMove; 
-    
+    //var turnIndexAfterMove = params.turnIndexAfterMove;
+    //var stateAfterMove = params.stateAfterMove;
+
     // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
     // to verify that move is legal.
     try {
@@ -102,10 +102,10 @@ var isMoveOk = (function () {
       var col = deltaValue.col;
       var board = stateBeforeMove.board;
       if (board === undefined) {
-        // Initially (at the beginning of the match), stateBeforeMove is {}. 
+        // Initially (at the beginning of the match), stateBeforeMove is {}.
         board = [['', '', ''], ['', '', ''], ['', '', '']];
       }
-      // One can only make a move in an empty position 
+      // One can only make a move in an empty position
       if (board[row][col] !== '') {
         return false;
       }
@@ -120,29 +120,5 @@ var isMoveOk = (function () {
     return true;
   }
 
-  // "Manual testing" --- expected result is [true, true, true, false].
-  console.log(
-    [ // Check placing X in 0x0 from initial state.
-      isMoveOk({turnIndexBeforeMove: 0, stateBeforeMove: {}, 
-        move: [{setTurn: {turnIndex : 1}},
-          {set: {key: 'board', value: [['X', '', ''], ['', '', ''], ['', '', '']]}},
-          {set: {key: 'delta', value: {row: 0, col: 0}}}]}),
-      // Check placing O in 0x1 from previous state.   
-      isMoveOk({turnIndexBeforeMove: 1, 
-        stateBeforeMove: {board: [['X', '', ''], ['', '', ''], ['', '', '']], delta: {row: 0, col: 0}}, 
-        move: [{setTurn: {turnIndex : 0}},
-          {set: {key: 'board', value: [['X', 'O', ''], ['', '', ''], ['', '', '']]}},
-          {set: {key: 'delta', value: {row: 0, col: 1}}}]}),
-      // Check end game where X wins.   
-      isMoveOk({turnIndexBeforeMove: 0, 
-        stateBeforeMove: {board: [['X', 'O', ''], ['X', 'O', ''], ['', '', '']], delta: {row: 1, col: 1}}, 
-        move: [{endMatch: {endMatchScores: [1, 0]}},
-          {set: {key: 'board', value: [['X', 'O', ''], ['X', 'O', ''], ['X', '', '']]}},
-          {set: {key: 'delta', value: {row: 2, col: 0}}}]}),
-      // Checking an illegal move.
-      isMoveOk({turnIndexBeforeMove: 0, stateBeforeMove: {}, move: [{setTurn: {turnIndex : 0}}]})
-    ]);
-  
   return isMoveOk;
 })();
-
