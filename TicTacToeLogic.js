@@ -1,6 +1,6 @@
 /*jslint devel: true, indent: 2 */
 /*global console */
-var isMoveOk = (function () {
+var ticTacToeLogic = (function () {
   'use strict';
 
   function isEqual(object1, object2) {
@@ -65,6 +65,13 @@ var isMoveOk = (function () {
    * with index turnIndexBeforeMove makes a move in cell row X col.
    */
   function createMove(board, row, col, turnIndexBeforeMove) {
+    if (board === undefined) {
+      // Initially (at the beginning of the match), the board in state is undefined.
+      board = [['', '', ''], ['', '', ''], ['', '', '']];
+    }
+    if (board[row][col] !== '') {
+      throw new Error("One can only make a move in an empty position!");
+    }
     var boardAfterMove = copyObject(board);
     boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
     var winner = getWinner(boardAfterMove);
@@ -80,6 +87,68 @@ var isMoveOk = (function () {
     return [firstOperation,
             {set: {key: 'board', value: boardAfterMove}},
             {set: {key: 'delta', value: {row: row, col: col}}}];
+  }
+
+  /** Returns an array of {stateBeforeMove, move, comment}. */
+  function getExampleMoves(initialTurnIndex, initialState, arrayOfRowColComment) {
+    var exampleMoves = [];
+    var state = initialState;
+    var turnIndex = initialTurnIndex;
+    for (var i = 0; i < arrayOfRowColComment.length; i++) {
+      var rowColComment = arrayOfRowColComment[i];
+      var move = createMove(state.board, rowColComment.row, rowColComment.col, turnIndex);
+      exampleMoves.push({
+        stateBeforeMove: state,
+        turnIndexBeforeMove: turnIndex,
+        move: move,
+        comment: {en: rowColComment.comment}});
+      state = {board : move[1].set.value, delta: move[2].set.value};
+      turnIndex = 1 - turnIndex;
+    }
+    return exampleMoves;
+  }
+
+  function getRiddles() {
+    return [
+      getExampleMoves(0,
+        {
+          board:
+            [['O', 'O', ''],
+             ['', 'X', ''],
+             ['', '', 'X']],
+          delta: {row: 0, col: 1}
+        },
+        [
+        {row: 0, col: 2, comment: "Find the position for X where he could win in his next turn either by having a diagonal or a column"},
+        {row: 2, col: 0, comment: "O played in bottom-left"},
+        {row: 1, col: 2, comment: "X wins in the middle-right by having three X in the right column."}
+      ]),
+      getExampleMoves(1,
+        {
+          board:
+            [['O', '', ''],
+             ['X', 'O', 'X'],
+             ['', '', 'X']],
+          delta: {row: 0, col: 1}
+        },
+        [
+        {row: 0, col: 2, comment: "O must play there to prevent X from winning"},
+        {row: 2, col: 0, comment: "X played in bottom-left"},
+        {row: 0, col: 1, comment: "O wins by having 3 in a row!"}
+      ])
+    ];
+  }
+
+  function getExampleGame() {
+    return getExampleMoves(0, {}, [
+      {row: 1, col: 1, comment: "The classic opening is to put X in the middle"},
+      {row: 0, col: 0, comment: "O in the top-left"},
+      {row: 2, col: 2, comment: "X in the bottom-right"},
+      {row: 0, col: 1, comment: "O in the top-middle (this is a mistake! X will win in 2 moves!)"},
+      {row: 0, col: 2, comment: "X in the top-right (X can win next turn either in middle-right or bottom-left. No way O can prevent it.)"},
+      {row: 2, col: 0, comment: "O in the bottom-left (X will now win...)"},
+      {row: 1, col: 2, comment: "X wins in the middle-right by having three X in the right column."}
+    ]);
   }
 
   function isMoveOk(params) {
@@ -101,14 +170,6 @@ var isMoveOk = (function () {
       var row = deltaValue.row;
       var col = deltaValue.col;
       var board = stateBeforeMove.board;
-      if (board === undefined) {
-        // Initially (at the beginning of the match), stateBeforeMove is {}.
-        board = [['', '', ''], ['', '', ''], ['', '', '']];
-      }
-      // One can only make a move in an empty position
-      if (board[row][col] !== '') {
-        return false;
-      }
       var expectedMove = createMove(board, row, col, turnIndexBeforeMove);
       if (!isEqual(move, expectedMove)) {
         return false;
@@ -120,5 +181,5 @@ var isMoveOk = (function () {
     return true;
   }
 
-  return isMoveOk;
+  return {isMoveOk: isMoveOk, getExampleGame: getExampleGame, getRiddles: getRiddles};
 })();
