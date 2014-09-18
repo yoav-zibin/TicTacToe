@@ -35,6 +35,21 @@ describe("In TicTacToe ", function() {
         {set: {key: 'delta', value: {row: 0, col: 1}}}]);
   });
 
+  it("placing an O in a non-empty position is illegal", function() {
+    expectIllegalMove(1,
+      {board:
+        [['X', '', ''],
+         ['', '', ''],
+         ['', '', '']], delta: {row: 0, col: 0}},
+      [{setTurn: {turnIndex : 0}},
+        {set: {key: 'board', value:
+          [['O', '', ''],
+           ['', '', ''],
+           ['', '', '']]}},
+        {set: {key: 'delta', value: {row: 0, col: 0}}}]);
+  });
+
+
   it("X wins by placing X in 2x0 is legal", function() {
     expectMoveOk(0,
       {board:
