@@ -3,8 +3,42 @@
 var ticTacToeLogic = (function () {
   'use strict';
 
+  // later we should switch to angular.equals
+  // https://docs.angularjs.org/api/ng/function/angular.equals
   function isEqual(object1, object2) {
-    return JSON.stringify(object1) === JSON.stringify(object2);
+    if (object1 === object2) {
+      return true;
+    }
+    if (typeof object1 != 'object' && typeof object2 != 'object') {
+      return object1 == object2;
+    }
+    try {
+      var keys1 = Object.keys(object1);
+      var keys2 = Object.keys(object2);
+      var i, key;
+
+      if (keys1.length != keys2.length) {
+        return false;
+      }
+      //the same set of keys (although not necessarily the same order),
+      keys1.sort();
+      keys2.sort();
+      // key test
+      for (i = keys1.length - 1; i >= 0; i--) {
+        if (keys1[i] != keys2[i])
+          return false;
+      }
+      // equivalent values for every corresponding key
+      for (i = keys1.length - 1; i >= 0; i--) {
+        key = keys1[i];
+        if (!isEqual(object1[key], object2[key])) {
+          return false;
+        }
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   function copyObject(object) {

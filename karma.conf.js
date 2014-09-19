@@ -7,11 +7,6 @@ module.exports = function(config){
       '*.js'
     ],
 
-    files: [
-      '*.js'
-    ],
-
-    // coverage reporter generates the coverage
     reporters: ['progress', 'coverage'],
 
     preprocessors: {
