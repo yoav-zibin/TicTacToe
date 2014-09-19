@@ -141,7 +141,7 @@ describe("In TicTacToe ", function() {
         history[i].stateBeforeMove,
         history[i].move);
     }
-    expect(JSON.stringify(history[history.length - 1].move[0].endMatch)).toBeDefined();
+    expect(history[history.length - 1].move[0].endMatch).toBeDefined();
   }
 
   it("getExampleGame returns a legal history and the last move ends the game", function() {
