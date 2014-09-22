@@ -131,12 +131,16 @@ var ticTacToeLogic = (function () {
     for (var i = 0; i < arrayOfRowColComment.length; i++) {
       var rowColComment = arrayOfRowColComment[i];
       var move = createMove(state.board, rowColComment.row, rowColComment.col, turnIndex);
+      var stateAfterMove = {board : move[1].set.value, delta: move[2].set.value};
       exampleMoves.push({
         stateBeforeMove: state,
+        stateAfterMove: stateAfterMove,
         turnIndexBeforeMove: turnIndex,
+        turnIndexAfterMove: 1 - turnIndex,
         move: move,
         comment: {en: rowColComment.comment}});
-      state = {board : move[1].set.value, delta: move[2].set.value};
+        
+      state = stateAfterMove;
       turnIndex = 1 - turnIndex;
     }
     return exampleMoves;
