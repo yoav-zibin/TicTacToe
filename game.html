@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>TicTacToe</title>
+  <meta name="description" content="TicTacToe game">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="components/angular/angular.js"></script>
+  <script src="game.js"></script>
+  <script src="gameLogic.js"></script>
+  <script src="messageService.js"></script>
+  <!-- for local testing purposes ! -->
+  <script src="http://yoav-zibin.github.io/emulator/platform.js"></script>
+</head>
+<body ng-controller="Ctrl">
+  <textarea ng-model="jsonState" rows=10 cols=100 readonly></textarea>
+  <table border="1">
+    <tr width="50px" height="50px" ng-repeat="row in board track by $index">
+      <td width="50px" height="50px" ng-repeat="cell in row track by $index">&nbsp; {{cell}} &nbsp;</td>
+    </tr>
+  </table>
+  <textarea rows=10 cols=100 readonly>
+    All operations in GameApi:
+    [
+      {setTurn: {turnIndex: 1}},
+      {set: {key: "k", value: "v"}},
+      {endMatch: {endMatchScores: [42, -2]}},
+      {set: {key: "k", value: "v", visibleToPlayerIndexes: [0]}},
+      {setVisibility: {key: "k", visibleToPlayerIndexes: null}},
+      {shuffle: {keys: ["k1", "k2"]}},
+      {setRandomInteger: {key: "k", from: 0, to: 6}},
+      {"delete": {key: "k"}}
+    ]
+  </textarea>
+  <textarea ng-model="move" rows=10 cols=100></textarea>
+  <br>
+  <button ng-click="makeMove()">Make move</button>
+</body>
+</html>

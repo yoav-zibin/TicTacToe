@@ -4,6 +4,10 @@ module.exports = function(config){
     basePath : './',
 
     files : [
+      'components/angular/angular.js',
+      'components/angular-route/angular-route.js',
+      'components/angular-resource/angular-resource.js',
+      'components/angular-mocks/angular-mocks.js',
       '*.js'
     ],
 
@@ -13,7 +17,7 @@ module.exports = function(config){
       // source files, that you wanna generate coverage for
       // do not include tests or libraries
       // (these files will be instrumented by Istanbul)
-      'TicTacToeLogic.js': ['coverage']
+      //'gameLogic.js': ['coverage']
     },
 
     // optionally, configure the reporter

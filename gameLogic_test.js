@@ -1,4 +1,12 @@
 describe("In TicTacToe ", function() {
+  var ticTacToeLogic;
+
+  beforeEach(module("myApp.gameLogic"));
+
+  beforeEach(inject(function (gameLogic) {
+    ticTacToeLogic = gameLogic;
+  }));
+
   function expectMoveOk(turnIndexBeforeMove, stateBeforeMove, move) {
     expect(ticTacToeLogic.isMoveOk({turnIndexBeforeMove: turnIndexBeforeMove,
       stateBeforeMove: stateBeforeMove,
