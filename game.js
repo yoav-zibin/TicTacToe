@@ -25,7 +25,7 @@ angular.module('myApp',
       riddles: gameLogic.getRiddles()
     };
 
-    var isLocalTesting = $window.location.origin === "file://";
+    var isLocalTesting = $window.parent === $window;
     $scope.move = "[{setTurn: {turnIndex: 1}}, {set: {key: 'board', value:[['X', '', ''], ['', '', ''], ['', '', '']]}}, {set: {key: 'delta', value: {row: 0, col: 0}}}]";
     $scope.makeMove = function () {
       $log.info(["Making move:", $scope.move]);
