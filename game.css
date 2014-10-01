@@ -1,0 +1,24 @@
+table {
+  border-collapse: collapse;
+}
+body {
+  margin: 0px;
+  padding: 0px;
+}
+.cell {
+  text-align:center;
+  vertical-align: middle;
+  font-family: "Helvetica";
+  font-size: 30pt;
+  width: 50px;
+  height: 50px;
+  border: none;
+  margin: 0px;
+  padding: 0px;
+}
+.r {
+  border-right: 3pt solid black;
+}
+.b {
+  border-bottom: 3pt solid black;
+}

@@ -59,6 +59,10 @@ angular.module('myApp.gameLogic', []).service('gameLogic', function() {
     return true;
   }
 
+  function getInitialBoard() {
+    return [['', '', ''], ['', '', ''], ['', '', '']];
+  }
+
   /**
    * Returns the move that should be performed when player
    * with index turnIndexBeforeMove makes a move in cell row X col.
@@ -66,7 +70,7 @@ angular.module('myApp.gameLogic', []).service('gameLogic', function() {
   function createMove(board, row, col, turnIndexBeforeMove) {
     if (board === undefined) {
       // Initially (at the beginning of the match), the board in state is undefined.
-      board = [['', '', ''], ['', '', ''], ['', '', '']];
+      board = getInitialBoard();
     }
     if (board[row][col] !== '') {
       throw new Error("One can only make a move in an empty position!");
@@ -104,7 +108,7 @@ angular.module('myApp.gameLogic', []).service('gameLogic', function() {
         turnIndexAfterMove: 1 - turnIndex,
         move: move,
         comment: {en: rowColComment.comment}});
-        
+
       state = stateAfterMove;
       turnIndex = 1 - turnIndex;
     }
@@ -184,6 +188,8 @@ angular.module('myApp.gameLogic', []).service('gameLogic', function() {
     return true;
   }
 
+  this.getInitialBoard = getInitialBoard;
+  this.createMove = createMove;
   this.isMoveOk = isMoveOk;
   this.getExampleGame = getExampleGame;
   this.getRiddles = getRiddles;
