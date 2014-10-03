@@ -5,6 +5,7 @@ angular.module('myApp.scaleBodyService', [])
     var doc = $window.document;
     var body = doc.body;
     var gameSize = null;
+    var oldSizes = null;
 
     function scaleBody(_gameSize) {
       gameSize = _gameSize;
@@ -18,11 +19,28 @@ angular.module('myApp.scaleBodyService', [])
       $log.info(["Scaling the body to size: ", gameSize]);
       var myGameWidth = gameSize.width;
       var myGameHeight = gameSize.height;
-      var scaleX = $window.innerWidth / myGameWidth;
-      var scaleY = $window.innerHeight / myGameHeight;
+      var windowWidth = $window.innerWidth;
+      var windowHeight = $window.innerHeight;
+      if (oldSizes !== null) {
+        if (oldSizes.myGameWidth === myGameWidth && 
+            oldSizes.myGameHeight === myGameHeight && 
+            oldSizes.windowWidth === windowWidth && 
+            oldSizes.windowHeight === windowHeight) {
+          return; // nothing changed, so no need to change the transformations.
+        }
+      }
+      oldSizes = {
+          myGameWidth: myGameWidth, 
+          myGameHeight: myGameHeight, 
+          windowWidth: windowWidth, 
+          windowHeight: windowHeight
+      };
+      
+      var scaleX = windowWidth / myGameWidth;
+      var scaleY = windowHeight / myGameHeight;
       var scale = Math.min(scaleX, scaleY);
-      var tx = (window.innerWidth / scale - myGameWidth) / 2;
-      var ty = (window.innerHeight / scale - myGameHeight) / 2;
+      var tx = (windowWidth / scale - myGameWidth) / 2;
+      var ty = (windowHeight / scale - myGameHeight) / 2;
       var transformString = "scale(" + scale + "," + scale + ")  translate(" + tx + "px, " + ty + "px)";
       body.style['transform'] = transformString;
       body.style['-o-transform'] = transformString;
@@ -40,6 +58,7 @@ angular.module('myApp.scaleBodyService', [])
     $window.onresize = rescale;
     $window.onorientationchange = rescale;
     doc.addEventListener("orientationchange", rescale);
-
+    setInterval(rescale, 1000);
+    
     this.scaleBody = scaleBody;
   });
