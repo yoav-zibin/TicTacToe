@@ -11,7 +11,6 @@ angular.module('myApp',
     var isLocalTesting = $window.parent === $window;
 
     function updateUI(params) {
-      $scope.jsonState = angular.toJson(params.stateAfterMove, true);
       $scope.board = params.stateAfterMove.board;
       if ($scope.board === undefined) {
         $scope.board = gameLogic.getInitialBoard();
@@ -38,11 +37,6 @@ angular.module('myApp',
       maxNumberOfPlayers: 2,
       exampleGame: gameLogic.getExampleGame(),
       riddles: gameLogic.getRiddles()
-    };
-
-    $scope.move = "[{setTurn: {turnIndex: 1}}, {set: {key: 'board', value:[['X', '', ''], ['', '', ''], ['', '', '']]}}, {set: {key: 'delta', value: {row: 0, col: 0}}}]";
-    $scope.makeMove = function () {
-      sendMakeMove(eval($scope.move));
     };
     $scope.cellClicked = function (row, col) {
       $log.info(["Clicked on cell:", row, col]);
