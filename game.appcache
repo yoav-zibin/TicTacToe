@@ -6,7 +6,7 @@ http://yoav-zibin.github.io/emulator/gameService.js
 http://yoav-zibin.github.io/emulator/messageService.js
 http://yoav-zibin.github.io/emulator/scaleBodyService.js
 http://yoav-zibin.github.io/emulator/stateService.js
-game.css
-audio/move.wav
 game.js
 gameLogic.js
+game.css
+audio/move.wav
