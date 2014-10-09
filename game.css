@@ -22,3 +22,19 @@ body {
 .b {
   border-bottom: 3pt solid black;
 }
+
+.slowlyAppear {
+  -webkit-animation: slowlyAppear 0.5s linear; /* Chrome, Safari, Opera */
+  animation: slowlyAppear 0.5s linear;
+}
+/* Chrome, Safari, Opera */
+@-webkit-keyframes slowlyAppear {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+/* Standard syntax */
+@keyframes slowlyAppear {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}

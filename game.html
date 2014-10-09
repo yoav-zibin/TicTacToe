@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp">
+<html manifest="game.appcache" lang="en" ng-app="myApp">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>TicTacToe</title>
   <meta name="description" content="TicTacToe game">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="components/angular/angular.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular-touch.min.js"></script>
+
   <script src="game.js"></script>
   <script src="gameLogic.js"></script>
-  <script src="messageService.js"></script>
-  <script src="scaleBodyService.js"></script>
-  <!-- for local testing purposes ! -->
-  <script src="http://yoav-zibin.github.io/emulator/platform.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/gameService.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/messageService.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/scaleBodyService.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/stateService.js"></script>
   <link rel="stylesheet" type="text/css" href="game.css">
 </head>
 <body ng-controller="Ctrl">
@@ -22,7 +24,9 @@
         ng-class="{cell: true, r: $index < 2, b: $parent.$index < 2}"
         ng-click="cellClicked($parent.$index, $index)">
         <!-- {{$parent.$index}} {{$index}} -->
-        {{cell}}
+        <div ng-class="{slowlyAppear: shouldSlowlyAppear($parent.$index, $index)}">
+          {{cell}}
+        </div>
       </td>
     </tr>
   </table>

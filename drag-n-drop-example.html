@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Drag-n-drop example</title>
+  <meta name="description" content="Drag-n-drop example">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular-touch.min.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/angular-dragdrop.1.0.8.min.js"></script>
+  <script>
+  angular.module('myApp', ['ngTouch', 'ngDragDrop'])
+    .controller('Ctrl', function ($scope, $log) {
+      $scope.onStartCallback = function () {
+        $log.info("onStart happened!", arguments);
+      };
+      $scope.onDropCallback = function () {
+        $log.info("onDrop happened!", arguments);
+      };
+    });
+  </script>
+</head>
+<body ng-controller="Ctrl">
+  <div data-drag="true" jqyoui-draggable="{onStart: 'onStartCallback'}">drag me</div>
+  <div data-drop="true" jqyoui-droppable="{onDrop: 'onDropCallback'}">Drop here</div>
+</body>
+</html>

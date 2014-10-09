@@ -1,7 +1,7 @@
 describe("In TicTacToe ", function() {
   var ticTacToeLogic;
 
-  beforeEach(module("myApp.gameLogic"));
+  beforeEach(module("myApp"));
 
   beforeEach(inject(function (gameLogic) {
     ticTacToeLogic = gameLogic;
@@ -164,6 +164,21 @@ describe("In TicTacToe ", function() {
     for (var i = 0; i < riddles.length; i++) {
       expectLegalHistoryThatEndsTheGame(riddles[i]);
     }
+  });
+
+  it("createComputerMove selects an empty cell", function() {
+    var board =
+        [['O', 'O', 'X'],
+         ['X', 'X', 'O'],
+         ['O', 'X', '']];
+    var move = ticTacToeLogic.createComputerMove(board, 0);
+    var expectedMove = [{endMatch: {endMatchScores: [0, 0]}},
+        {set: {key: 'board', value:
+          [['O', 'O', 'X'],
+           ['X', 'X', 'O'],
+           ['O', 'X', 'X']]}},
+        {set: {key: 'delta', value: {row: 2, col: 2}}}];
+    expect(angular.equals(move, expectedMove)).toBe(true);
   });
 
 });

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.gameLogic', []).service('gameLogic', function() {
+angular.module('myApp').service('gameLogic', function() {
 
   function isEqual(object1, object2) {
     return angular.equals(object1, object2);
@@ -61,6 +61,26 @@ angular.module('myApp.gameLogic', []).service('gameLogic', function() {
 
   function getInitialBoard() {
     return [['', '', ''], ['', '', ''], ['', '', '']];
+  }
+
+  /**
+   * Returns the move that the computer player should do for the given board.
+   * The computer will play in a random empty cell in the board.
+   */
+  function createComputerMove(board, turnIndexBeforeMove) {
+      var possibleMoves = [];
+      var i, j;
+      for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+          try {
+            possibleMoves.push(createMove(board, i, j, turnIndexBeforeMove));
+          } catch (e) {
+            // The cell in that position was full.
+          }
+        }
+      }
+      var randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+      return randomMove;
   }
 
   /**
@@ -189,6 +209,7 @@ angular.module('myApp.gameLogic', []).service('gameLogic', function() {
   }
 
   this.getInitialBoard = getInitialBoard;
+  this.createComputerMove = createComputerMove;
   this.createMove = createMove;
   this.isMoveOk = isMoveOk;
   this.getExampleGame = getExampleGame;
