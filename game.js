@@ -16,9 +16,11 @@ angular.module('myApp', ['ngTouch'])
     function updateUI(params) {
       $scope.board = params.stateAfterMove.board;
       $scope.delta = params.stateAfterMove.delta;
-      moveAudio.play();
       if ($scope.board === undefined) {
         $scope.board = gameLogic.getInitialBoard();
+      } else {
+        // Only play a sound if there was a move (i.e., state is not empty).
+        moveAudio.play();
       }
       $scope.isYourTurn = params.turnIndexAfterMove >= 0 && // game is ongoing
         params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
