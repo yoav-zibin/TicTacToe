@@ -15,16 +15,17 @@
   angular.module('myApp', ['ngTouch', 'ngDragDrop'])
     .controller('Ctrl', function ($scope, $log) {
       $scope.onStartCallback = function () {
-        $log.info("onStart happened!", arguments);
+        $log.info("onStart happened!", arguments, arguments[1].helper[0].getAttribute("data-pieceId"));
       };
       $scope.onDropCallback = function () {
-        $log.info("onDrop happened!", arguments);
+        $log.info("onDrop happened!", arguments, arguments, arguments[1].helper[0].getAttribute("data-pieceId"));
       };
     });
   </script>
 </head>
 <body ng-controller="Ctrl">
-  <div data-drag="true" jqyoui-draggable="{onStart: 'onStartCallback'}">drag me</div>
-  <div data-drop="true" jqyoui-droppable="{onDrop: 'onDropCallback'}">Drop here</div>
+  <div data-drag="true" jqyoui-draggable="{onStart: 'onStartCallback(23, 24)'}" data-pieceId="35">drag me1</div>
+  <div data-drag="true" jqyoui-draggable="{onStart: 'onStartCallback(true)'}" data-pieceId="36">drag me2</div>
+  <div data-drop="true" jqyoui-droppable="{onDrop: 'onDropCallback(42)'}">Drop here</div>
 </body>
 </html>
