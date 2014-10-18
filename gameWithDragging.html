@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html manifest="game.appcache" lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>TicTacToe</title>
+  <meta name="description" content="TicTacToe game">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/ngDraggable.js"></script>
+  <script>
+  angular.module('myApp', ['ngDraggable'])
+    .controller('DragCtrl', function ($scope, $log, scaleBodyService) {
+      $scope.notifications = "Nothing was dragged";
+
+      $scope.onDropComplete = function (data, event, row, col) {
+        $log.info("onDropComplete happened!", arguments);
+        $scope.notifications = "Dropped " + data + " in " + row + "x" + col;
+        $scope.cellClicked(row, col);
+      };
+    })
+    .service('scaleBodyService', function() {
+      this.scaleBody = function () {}; // Fake scaleBodyService because scaling and drag-n-drop don't work together
+    });
+  </script>
+
+  <script src="game.js"></script>
+  <script src="gameLogic.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/gameService.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/messageService.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/stateService.js"></script>
+  <link rel="stylesheet" type="text/css" href="game.css">
+</head>
+<body ng-cloak ng-controller="Ctrl"
+    style="height:100%; width:100%; overflow: hidden;">
+
+
+  <div ng-controller="DragCtrl">
+
+    Drag either P1 or P2 into an empty cell
+    <table border="1">
+      <tr>
+        <td ng-drag="true" ng-drag-data="1" class="cell">
+          <div>P1</div>
+        </td>
+        <td ng-drag="true" ng-drag-data="2" class="cell">
+          <div>P2</div>
+        </td>
+      </tr>
+    </table>
+        {{notifications}}
+
+    <table>
+      <tr ng-repeat="row in board track by $index">
+        <td ng-repeat="cell in row track by $index"
+          ng-class="{cell: true, r: $index < 2, b: $parent.$index < 2}"
+          ng-drop="true"
+          ng-drop-success="onDropComplete($data,$event,$parent.$index,$index)">
+          <!-- {{$parent.$index}} {{$index}} -->
+          <div ng-class="{slowlyAppear: shouldSlowlyAppear($parent.$index, $index)}">
+            {{cell}}
+          </div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+</body>
+</html>

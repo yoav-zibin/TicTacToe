@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Drag-n-drop example</title>
+  <meta name="description" content="Drag-n-drop example">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+  <script>
+  angular.module('myApp', [])
+    .controller('Ctrl', function (scaleBodyService) {
+      scaleBodyService.scaleBody({width: 300, height: 300});
+    });
+  </script>
+  <script src="http://yoav-zibin.github.io/emulator/scaleBodyService.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/messagePasser.js"></script>
+</head>
+<body ng-cloak ng-controller="Ctrl"
+    style="height:100%; width:100%; overflow: hidden;">
+  <iframe src='gameWithDragging.html'
+      id="game_iframe"
+      frameborder="0"
+      style="height:100%; width:100%; overflow: hidden;"
+      scrolling="no" seamless="seamless"></iframe>
+</body>
+</html>

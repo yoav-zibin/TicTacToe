@@ -6,60 +6,54 @@
   <title>Drag-n-drop example</title>
   <meta name="description" content="Drag-n-drop example">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular-touch.js"></script>
+  <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/ngDraggable.js"></script>
   <script>
-  angular.module('myApp', ['ngTouch'])
+  angular.module('myApp', ['ngDraggable'])
     .controller('Ctrl', function ($scope, $log, scaleBodyService) {
-
-      scaleBodyService.scaleBody({width: 300, height: 300});
-
       $scope.board = [['','X','O'],['','',''],['','','']];
       $scope.notifications = "Nothing was dragged";
-      $scope.allowDrop = function (ev) {
-        ev.preventDefault();
+
+      $scope.onDropComplete = function (data, event, row, col) {
+        $log.info("onDropComplete happened!", arguments);
+        $scope.notifications = "Dropped piece " + data + " in " + row + "x" + col;
       };
-      $scope.drag = function (ev) {
-        $scope.$apply(function() {
-          var data = ev.target.getAttribute("data-pieceId");
-          $scope.notifications = "Started dragging pieceId=" + data;
-          ev.dataTransfer.setData("text/plain", data);
-        });
-      };
-      $scope.drop = function (ev) {
-        $scope.$apply(function() {
-          ev.preventDefault();
-          var data = ev.dataTransfer.getData("text/plain");
-          var row = ev.target.getAttribute("data-row");
-          var col = ev.target.getAttribute("data-col");
-          $scope.notifications = "Dropped pieceId=" + data + " in row=" + row + " col=" + col;
-        });
-      }
+
+      // This causes drag-n-drop to NOT work:
+      // scaleBodyService.scaleBody({width: 300, height: 300});
     });
   </script>
   <script src="http://yoav-zibin.github.io/emulator/scaleBodyService.js"></script>
+  <style>
+  .cell {
+    background-color: red;
+    width: 50px;
+    height: 50px;
+  }
+  </style>
 </head>
-<body ng-controller="Ctrl">
+<body ng-cloak ng-controller="Ctrl"
+    style="height:100%; width:100%; overflow: hidden;">
 
-
-{{notifications}}
-
-  <div draggable="true" ondragstart="angular.element(this).scope().drag(event)"
-      data-pieceId="1">Piece1</div>
-  <div draggable="true" ondragstart="angular.element(this).scope().drag(event)"
-      data-pieceId="2">Piece2</div>
+  {{notifications}}
 
   <table border="1">
     <tr ng-repeat="row in board track by $index">
-      <td ng-repeat="cell in row track by $index">
-        <div ondrop="angular.element(this).scope().drop(event)"
-             ondragover="angular.element(this).scope().allowDrop(event)"
-            data-row="{{$parent.$index}}" data-col="{{$index}}" >
-          {{cell}} drop here<br>
-          here!
+      <td ng-repeat="col in row track by $index"
+          class="cell"
+          ng-drop="true"
+          ng-drop-success="onDropComplete($data,$event,$parent.$index,$index)">
+        <div>
+          {{col}}
         </div>
       </td>
     </tr>
   </table>
+<br>
+    <div ng-drag="true" ng-drag-data="1">Piece1</div>
+    <div ng-drag="true" ng-drag-data="2">Piece2</div>
+<br>
+
 </body>
 </html>
