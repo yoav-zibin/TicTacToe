@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html manifest="game.appcache" lang="en" ng-app="myApp">
+<html lang="en" ng-app="myApp">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,9 +18,9 @@
   <script src="http://yoav-zibin.github.io/emulator/scaleBodyService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/stateService.js"></script>
   <link rel="stylesheet" type="text/css" href="game.css">
+  <link rel="stylesheet" type="text/css" href="main.css">
 </head>
-<body ng-cloak ng-controller="Ctrl"
-    style="height:100%; width:100%; overflow: hidden;">
+<body ng-cloak ng-controller="Ctrl">
   <table>
     <tr ng-repeat="row in board track by $index">
       <td ng-repeat="cell in row track by $index"

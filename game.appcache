@@ -9,4 +9,5 @@ http://yoav-zibin.github.io/emulator/stateService.js
 game.js
 gameLogic.js
 game.css
+main.css
 audio/move.wav
