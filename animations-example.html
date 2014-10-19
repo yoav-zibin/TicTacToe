@@ -57,9 +57,15 @@
 <body ng-cloak ng-controller="Ctrl"
     style="height:100%; width:100%; overflow: hidden;">
 
-<div class="testAnimate">
-  Yoav
-</div>
+  <div class="testAnimate">
+    Yoav
+  </div>
+
+  <div ng-style='{top: "300px", left: "300px", position: "relative",
+                  "-webkit-animation": "moveAnimation 2s",
+                  "animation": "moveAnimation 2s"}'>
+    Foo
+  </div>
 
   <table border="1">
     <tr ng-repeat="row in board track by $index">
