@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Animation example</title>
+  <meta name="description" content="Animation example">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-animate.min.js"></script>
+  <script>
+  angular.module('myApp', ['ngAnimate'])
+    .controller('Ctrl', function ($scope, $log) {
+      $scope.board = [['X','','','O'],['','','',''],['','','',''],['','','','']];
+      $scope.getStyle = function (row, col) {
+        var cell = $scope.board[row][col];
+        if (cell === 'X') {
+            return {top: "160px", left: "160px", position: "relative",
+                "-webkit-animation": "moveAnimation 2s",
+                "animation": "moveAnimation 2s"};
+        }
+        if (cell === 'O') {
+          return {top: "160px", left: "-160px", position: "relative",
+              "-webkit-animation": "moveAnimation 2s",
+              "animation": "moveAnimation 2s"};
+        }
+        return {}; // no style
+      };
+    });
+  </script>
+  <style>
+  .cell {
+    text-align:center;
+    vertical-align: middle;
+    font-family: "Helvetica";
+    font-size: 30pt;
+    width: 50px;
+    height: 50px;
+    margin: 0px;
+    padding: 0px;
+  }
+  .testAnimate {
+    position: relative;
+    top: 100px;
+    left: 100px;
+    -webkit-animation: 5s moveAnimation;
+    animation: 5s moveAnimation;
+  }
+  @-webkit-keyframes moveAnimation {
+    from {top: 0px; left: 0px;}
+  }
+  @keyframes moveAnimation {
+    from {top: 0px; left: 0px;}
+  }
+  </style>
+</head>
+<body ng-cloak ng-controller="Ctrl"
+    style="height:100%; width:100%; overflow: hidden;">
+
+<div class="testAnimate">
+  Yoav
+</div>
+
+  <table border="1">
+    <tr ng-repeat="row in board track by $index">
+      <td ng-repeat="col in row track by $index"
+          class="cell">
+        <div ng-style="getStyle($parent.$index,$index)">
+          {{col}}
+        </div>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
