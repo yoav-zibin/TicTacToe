@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Drag-n-drop example</title>
+  <meta name="description" content="Drag-n-drop example">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-touch.js"></script>
+  <script>
+  angular.module('myApp', ['ngTouch'])
+    .controller('Ctrl', function ($scope, $log, scaleBodyService) {
+
+      scaleBodyService.scaleBody({width: 300, height: 300});
+
+      $scope.board = [['','X','O'],['','',''],['','','']];
+      $scope.notifications = "Nothing was dragged";
+      $scope.allowDrop = function (ev) {
+        ev.preventDefault();
+      };
+      $scope.drag = function (ev) {
+        $scope.$apply(function() {
+          var data = ev.target.getAttribute("data-pieceId");
+          $scope.notifications = "Started dragging pieceId=" + data;
+          ev.dataTransfer.setData("text/plain", data);
+        });
+      };
+      $scope.drop = function (ev) {
+        $scope.$apply(function() {
+          ev.preventDefault();
+          var data = ev.dataTransfer.getData("text/plain");
+          var row = ev.target.getAttribute("data-row");
+          var col = ev.target.getAttribute("data-col");
+          $scope.notifications = "Dropped pieceId=" + data + " in row=" + row + " col=" + col;
+        });
+      }
+    });
+  </script>
+  <script src="http://yoav-zibin.github.io/emulator/scaleBodyService.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
+</head>
+<body ng-cloak ng-controller="Ctrl">
+
+{{notifications}}
+
+  <div draggable="true" ondragstart="angular.element(this).scope().drag(event)"
+      data-pieceId="1">Piece1</div>
+  <div draggable="true" ondragstart="angular.element(this).scope().drag(event)"
+      data-pieceId="2">Piece2</div>
+
+  <table border="1">
+    <tr ng-repeat="row in board track by $index">
+      <td ng-repeat="cell in row track by $index">
+        <div ondrop="angular.element(this).scope().drop(event)"
+            ondragenter="angular.element(this).scope().allowDrop(event)"
+            ondragover="angular.element(this).scope().allowDrop(event)"
+            data-row="{{$parent.$index}}" data-col="{{$index}}" >
+          {{cell}} drop here<br>
+          here!
+        </div>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

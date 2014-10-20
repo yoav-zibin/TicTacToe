@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp', ['ngTouch'])
+angular.module('myApp')
   .controller('Ctrl', function (
       $window, $scope, $log, $timeout,
       gameService, scaleBodyService, gameLogic) {

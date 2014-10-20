@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Scaling a game</title>
+  <meta name="description" content="Scaling a game">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+  <script>
+  angular.module('myApp', [])
+    .controller('Ctrl', function (scaleBodyService) {
+      scaleBodyService.scaleBody({width: 300, height: 300});
+      var src = "gameWithDragging.html";
+      if (window.parent === window) {
+        src += "?test";
+      }
+      window.document.getElementById("game_iframe").src = src;
+    });
+  </script>
+  <script src="http://yoav-zibin.github.io/emulator/scaleBodyService.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/messagePasser.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
+</head>
+<body ng-cloak ng-controller="Ctrl">
+  <iframe id="game_iframe"
+      frameborder="0"
+      style="height:100%; width:100%; overflow: hidden;"
+      scrolling="no" seamless="seamless"></iframe>
+</body>
+</html>
