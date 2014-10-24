@@ -10,7 +10,7 @@
   <script>
   angular.module('myApp', [])
     .controller('Ctrl', function (scaleBodyService) {
-      scaleBodyService.scaleBody({width: 300, height: 300});
+      scaleBodyService.scaleBody({width: 1000, height: 1000});
       var src = "gameWithDragging.html";
       if (window.parent === window) {
         src += "?test";
@@ -20,7 +20,7 @@
   </script>
   <script src="http://yoav-zibin.github.io/emulator/scaleBodyService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/messagePasser.js"></script>
-  <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
+  <link rel="stylesheet" type="text/css" href="size.css">
 </head>
 <body ng-cloak ng-controller="Ctrl">
   <iframe id="game_iframe"
