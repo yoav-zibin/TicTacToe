@@ -55,7 +55,7 @@
     50% {transform:scale(2);}
   }
   </style>
-  <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
+  <link rel="stylesheet" type="text/css" href="size300x300.css">
 </head>
 <body ng-cloak ng-controller="Ctrl">
 
@@ -63,18 +63,18 @@
     Yoav
   </div>
 
-  <div ng-style='{top: "300px", left: "300px", position: "relative",
+  <div ng-style='{top: "250px", left: "250px", position: "relative",
                   "-webkit-animation": "moveAnimation 2s",
                   "animation": "moveAnimation 2s"}'>
     Foo
   </div>
 
   <table border="1">
-    <tr ng-repeat="row in board track by $index">
-      <td ng-repeat="col in row track by $index"
+    <tr ng-repeat="row in [0, 1, 2]">
+      <td ng-repeat="col in [0, 1, 2]"
           class="cell">
-        <div ng-style="getStyle($parent.$index,$index)">
-          {{col}}
+        <div ng-style="getStyle(row, col)">
+          {{board[row][col]}}
         </div>
       </td>
     </tr>

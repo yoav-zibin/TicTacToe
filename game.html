@@ -17,18 +17,18 @@
   <script src="http://yoav-zibin.github.io/emulator/messageService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/scaleBodyService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/stateService.js"></script>
-  <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
   <link rel="stylesheet" type="text/css" href="game.css">
+  <link rel="stylesheet" type="text/css" href="size152x152.css">
 </head>
 <body ng-cloak ng-controller="Ctrl">
   <table>
-    <tr ng-repeat="row in board track by $index">
-      <td ng-repeat="cell in row track by $index"
-        ng-class="{cell: true, r: $index < 2, b: $parent.$index < 2}"
-        ng-click="cellClicked($parent.$index, $index)">
+    <tr ng-repeat="row in [0, 1, 2]">
+      <td ng-repeat="col in [0, 1, 2]"
+        ng-class="{cell: true, r: col < 2, b: row < 2}"
+        ng-click="cellClicked(row, col)">
         <!-- {{$parent.$index}} {{$index}} -->
-        <div ng-class="{slowlyAppear: shouldSlowlyAppear($parent.$index, $index)}">
-          {{cell}}
+        <div ng-class="{slowlyAppear: shouldSlowlyAppear(row, col)}">
+          {{board[row][col]}}
         </div>
       </td>
     </tr>
