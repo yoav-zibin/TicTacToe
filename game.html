@@ -21,17 +21,16 @@
   <link rel="stylesheet" type="text/css" href="size152x152.css">
 </head>
 <body ng-cloak ng-controller="Ctrl">
-  <table>
-    <tr ng-repeat="row in [0, 1, 2]">
-      <td ng-repeat="col in [0, 1, 2]"
-        ng-class="{cell: true, r: col < 2, b: row < 2}"
-        ng-click="cellClicked(row, col)">
-        <!-- {{$parent.$index}} {{$index}} -->
-        <div ng-class="{slowlyAppear: shouldSlowlyAppear(row, col)}">
-          {{board[row][col]}}
-        </div>
-      </td>
-    </tr>
-  </table>
+  <div ng-repeat="row in [0, 1, 2]">
+    <div ng-repeat="col in [0, 1, 2]"
+      ng-style="{position: 'absolute', display: 'inline', left: (52*col) + 'px', top: (52*row) + 'px'}"
+      ng-class="{cell: true, r: col < 2, b: row < 2}"
+      ng-click="cellClicked(row, col)">
+      <!-- {{$parent.$index}} {{$index}} -->
+      <div style="line-height: 50px" ng-class="{slowlyAppear: shouldSlowlyAppear(row, col)}">
+        {{board[row][col]}}
+      </div>
+    </div>
+  </div>
 </body>
 </html>

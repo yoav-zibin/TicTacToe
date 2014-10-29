@@ -3,7 +3,6 @@ table {
 }
 .cell {
   text-align:center;
-  vertical-align: middle;
   font-family: "Helvetica";
   font-size: 30pt;
   width: 50px;
