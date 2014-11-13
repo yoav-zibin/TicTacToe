@@ -2,8 +2,19 @@
 
 angular.module('myApp')
   .controller('Ctrl', function (
-      $window, $scope, $log, $timeout,
+      $window, $scope, $log, $timeout, $interval,
       gameService, scaleBodyService, gameLogic) {
+
+      $scope.counterA = 0;
+      $scope.counterB = 0;
+      $interval(function () {
+        $scope.counterA++;
+      }, 1000);
+      $interval(function () {
+        if (!document.hidden && !document.mozHidden && !document.msHidden && !document.webkitHidden) {
+          $scope.counterB++;
+        }
+      }, 1000);
 
     var moveAudio = new Audio('audio/move.wav');
     moveAudio.load();
