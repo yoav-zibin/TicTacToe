@@ -19,7 +19,7 @@
         $scope.counterA++;
       }, 4000);
       $interval(function () {
-        if (window.document.hasFocus()) {
+        if (!document.hidden && !document.mozHidden && !document.msHidden && !document.webkitHidden) {
           $scope.counterC++;
         }
       }, 4000);
@@ -54,7 +54,7 @@
   <div ng-controller="DragCtrl"
       style="width:500px; height:500px; border: 5px solid red; background-color:yellow;">
 
-    Drag either P1 or P2 into an empty cell ($interval: {{counterA}}, $interval (only when document hasFocus): {{counterC}}, setInterval: {{counterB}})
+    Drag either P1 or P2 into an empty cell ($interval: {{counterA}}, $interval (only when not hidden): {{counterC}}, setInterval: {{counterB}})
     <table border="1">
       <tr>
         <td ng-drag="true" ng-drag-data="1" class="cell">
