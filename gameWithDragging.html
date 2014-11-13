@@ -14,8 +14,14 @@
     .controller('DragCtrl', function ($scope, $log, scaleBodyService, $interval) {
       $scope.counterA = 0;
       $scope.counterB = 0;
+      $scope.counterC = 0;
       $interval(function () {
         $scope.counterA++;
+      }, 4000);
+      $interval(function () {
+        if (window.document.hasFocus()) {
+          $scope.counterC++;
+        }
       }, 4000);
       setInterval(function () {
         $scope.counterB++;
@@ -48,7 +54,7 @@
   <div ng-controller="DragCtrl"
       style="width:500px; height:500px; border: 5px solid red; background-color:yellow;">
 
-    Drag either P1 or P2 into an empty cell ($interval: {{counterA}}, setInterval: {{counterB}})
+    Drag either P1 or P2 into an empty cell ($interval: {{counterA}}, $interval (only when document hasFocus): {{counterC}}, setInterval: {{counterB}})
     <table border="1">
       <tr>
         <td ng-drag="true" ng-drag-data="1" class="cell">
