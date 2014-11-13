@@ -12,9 +12,13 @@
   <script>
   angular.module('myApp', ['ngDraggable'])
     .controller('DragCtrl', function ($scope, $log, scaleBodyService, $interval) {
-      $scope.counter = 0;
+      $scope.counterA = 0;
+      $scope.counterB = 0;
       $interval(function () {
-        $scope.counter++;
+        $scope.counterA++;
+      }, 4000);
+      setInterval(function () {
+        $scope.counterB++;
       }, 1000);
       $scope.notifications = "Nothing was dragged";
 
@@ -44,7 +48,7 @@
   <div ng-controller="DragCtrl"
       style="width:500px; height:500px; border: 5px solid red; background-color:yellow;">
 
-    Drag either P1 or P2 into an empty cell ({{counter}})
+    Drag either P1 or P2 into an empty cell ($interval: {{counterA}}, setInterval: {{counterB}})
     <table border="1">
       <tr>
         <td ng-drag="true" ng-drag-data="1" class="cell">
