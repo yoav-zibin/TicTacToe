@@ -11,7 +11,11 @@
   <script src="http://yoav-zibin.github.io/emulator/ngDraggable.js"></script>
   <script>
   angular.module('myApp', ['ngDraggable'])
-    .controller('DragCtrl', function ($scope, $log, scaleBodyService) {
+    .controller('DragCtrl', function ($scope, $log, scaleBodyService, $interval) {
+      $scope.counter = 0;
+      $interval(function () {
+        $scope.counter++;
+      }, 1000);
       $scope.notifications = "Nothing was dragged";
 
       $scope.onDropComplete = function (data, event, row, col) {
@@ -40,7 +44,7 @@
   <div ng-controller="DragCtrl"
       style="width:500px; height:500px; border: 5px solid red; background-color:yellow;">
 
-    Drag either P1 or P2 into an empty cell
+    Drag either P1 or P2 into an empty cell ({{counter}})
     <table border="1">
       <tr>
         <td ng-drag="true" ng-drag-data="1" class="cell">
