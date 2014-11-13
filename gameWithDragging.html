@@ -19,7 +19,7 @@
         $scope.counterA++;
       }, 4000);
       $interval(function () {
-        if (!document.hidden && !document.mozHidden && !document.msHidden && !document.webkitHidden) {
+        if (!document.hidden && !document.mozHidden && !document.msHidden && !document.webkitHidden && window.document.hasFocus()) {
           $scope.counterC++;
         }
       }, 4000);

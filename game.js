@@ -11,7 +11,7 @@ angular.module('myApp')
         $scope.counterA++;
       }, 1000);
       $interval(function () {
-        if (!document.hidden && !document.mozHidden && !document.msHidden && !document.webkitHidden) {
+        if (!document.hidden && !document.mozHidden && !document.msHidden && !document.webkitHidden && window.document.hasFocus()) {
           $scope.counterB++;
         }
       }, 1000);
