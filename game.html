@@ -99,10 +99,6 @@
   }
   </script>
 
-  <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-  </fb:login-button>
-
-
   <div ng-repeat="row in [0, 1, 2]">
     <div ng-repeat="col in [0, 1, 2]"
       ng-style="{position: 'absolute', display: 'inline', left: (52*col) + 'px', top: (52*row) + 'px'}"
@@ -114,5 +110,9 @@
       </div>
     </div>
   </div>
+
+    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+    </fb:login-button>
+
 </body>
 </html>
