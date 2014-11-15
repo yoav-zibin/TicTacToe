@@ -33,9 +33,13 @@
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
       console.log(response.authResponse.accessToken);
-      // accessSignature: , myPlayerId: string,
-      console.log('You can pass this ServerApi message:');
-      console.log([{socialLogin: {accessToken: response.authResponse.accessToken, uniqueType: "E"}}]);
+      console.log(response.authResponse.userId);
+      console.log('https://graph.facebook.com/'+ response.authResponse.userId + '/picture?type=square');
+      console.log('https://graph.facebook.com/'+ response.authResponse.userId + '/picture?width=100&height=100');
+      console.log('You can pass this ServerApi message for creating a new user:');
+      console.log('[{socialLogin: {accessToken: "' + response.authResponse.accessToken + '", uniqueType: "F"}}]');
+      console.log('Or this message to merge with an existing user by passing myPlayerId+accessSignature:');
+      console.log('[{socialLogin: {myPlayerId: "5660460074401792", accessSignature: "dbc116314cb079b3f139f7ea3838bfad", accessToken: "' + response.authResponse.accessToken + '", uniqueType: "F"}}]');
       testAPI();
     } else if (response.status === 'not_authorized') {
       console.log("The person is logged into Facebook, but not your app.");
