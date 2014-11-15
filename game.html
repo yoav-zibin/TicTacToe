@@ -33,9 +33,9 @@
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
       console.log(response.authResponse.accessToken);
-      console.log(response.authResponse.userId);
-      console.log('https://graph.facebook.com/'+ response.authResponse.userId + '/picture?type=square');
-      console.log('https://graph.facebook.com/'+ response.authResponse.userId + '/picture?width=100&height=100');
+      console.log(response.authResponse.userID);
+      console.log('https://graph.facebook.com/'+ response.authResponse.userID + '/picture?type=square');
+      console.log('https://graph.facebook.com/'+ response.authResponse.userID + '/picture?width=100&height=100');
       console.log('You can pass this ServerApi message for creating a new user:');
       console.log('[{socialLogin: {accessToken: "' + response.authResponse.accessToken + '", uniqueType: "F"}}]');
       console.log('Or this message to merge with an existing user by passing myPlayerId+accessSignature:');
