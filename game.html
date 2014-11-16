@@ -54,7 +54,6 @@
         "https://graph.facebook.com/v2.2/me?format=json&method=get&pretty=0&suppress_http_code=1&access_token="
           + access_token,
         function(response) {
-          console.log(response);
           alert('Successful login for: ' + response.name);
         }
       );
