@@ -35,16 +35,18 @@
       });
       return result;
     }
-
-    function fbAsyncInit() {
-      FB.init({
-        appId      : '1505618116376825',
-        cookie     : true,  // enable cookies to allow the server to access
-                            // the session
-        xfbml      : true,  // parse social plugins on this page
-        version    : 'v2.2' // use version 2.1
-      });
-      testFbAPI();
+    function makeAjaxCall(url, callback) {
+    	var xmlhttp = new XMLHttpRequest();
+    	xmlhttp.onreadystatechange = function() {
+    	  if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+    	    var responseText = xmlhttp.responseText;
+    	    var response = JSON.parse(responseText);
+          console.log(response);
+    	    callback(response);
+        }
+    	};
+    	xmlhttp.open("GET", url, true);
+    	xmlhttp.send();
     }
 
     alert(location);
@@ -52,12 +54,9 @@
     alert(access_token);
 
     function testFbAPI() {
-      FB.api(
-        '/me',
-        'post',
-        {
-          access_token : access_token
-        },
+      makeAjaxCall(
+        "https://graph.facebook.com/v2.2/me?format=json&method=get&pretty=0&suppress_http_code=1&access_token="
+          + access_token,
         function(response) {
           console.log(response);
           alert('Successful login for: ' + response.name);
