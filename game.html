@@ -49,11 +49,7 @@
     	xmlhttp.send();
     }
 
-    alert(location);
-    var access_token = getJsonFromUrl().access_token;
-    alert(access_token);
-
-    function testFbAPI() {
+    function testFbAPI(access_token) {
       makeAjaxCall(
         "https://graph.facebook.com/v2.2/me?format=json&method=get&pretty=0&suppress_http_code=1&access_token="
           + access_token,
@@ -64,17 +60,10 @@
       );
     }
 
+    alert(location);
+    var access_token = getJsonFromUrl().access_token;
     if (access_token) {
-      window.fbAsyncInit = fbAsyncInit;
-
-      // Load the SDK asynchronously
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
+      testFbAPI(access_token);
     }
     </script>
 
