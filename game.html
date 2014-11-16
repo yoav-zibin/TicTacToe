@@ -10,7 +10,6 @@
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-touch.min.js"></script>
   <script>
     angular.module('myApp', ['ngTouch']);
-    window.alert(window.location);
   </script>
   <script src="gameLogic.js"></script>
   <script src="game.js"></script>
@@ -22,6 +21,63 @@
   <link rel="stylesheet" type="text/css" href="size152x152.css">
 </head>
 <body ng-cloak ng-controller="Ctrl">
+
+    <script>
+    function getJsonFromUrl() {
+      if (!location.search || location.search == "") {
+        return {};
+      }
+      var query = location.search.substr(1);
+      var result = {};
+      query.split("&").forEach(function(part) {
+        var item = part.split("=");
+        result[item[0]] = decodeURIComponent(item[1]);
+      });
+      return result;
+    }
+
+    function fbAsyncInit() {
+      FB.init({
+        appId      : '1505618116376825',
+        cookie     : true,  // enable cookies to allow the server to access
+                            // the session
+        xfbml      : true,  // parse social plugins on this page
+        version    : 'v2.2' // use version 2.1
+      });
+      testFbAPI();
+    }
+
+    alert(location);
+    var access_token = getJsonFromUrl().access_token;
+    alert(access_token);
+
+    function testFbAPI() {
+      FB.api(
+        '/me',
+        'post',
+        {
+          access_token : access_token
+        },
+        function(response) {
+          alert('Successful login for: ' + response.name);
+        }
+      );
+    }
+
+    if (access_token) {
+      window.fbAsyncInit = fbAsyncInit;
+
+      // Load the SDK asynchronously
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    }
+    </script>
+
 
   <div ng-repeat="row in [0, 1, 2]">
     <div ng-repeat="col in [0, 1, 2]"
