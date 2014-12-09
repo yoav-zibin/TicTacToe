@@ -1,3 +1,4 @@
+<script>
 function successHandler (result) {
   alert('result = ' + result);
 }
@@ -113,3 +114,4 @@ function onDeviceReady() {
     );
 }
 document.addEventListener("deviceready", onDeviceReady, false);
+</script>
