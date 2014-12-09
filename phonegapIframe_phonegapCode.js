@@ -1,12 +1,11 @@
-<script>
-function successHandler (result) {
+window.successHandler = function (result) {
   alert('result = ' + result);
 }
-function errorHandler (error) {
+window.errorHandler = function (error) {
   alert('error = ' + error);
 }
 
-function registerForPushNotification() {
+window.registerForPushNotification = function () {
   alert('registerForPushNotification for cordova.platformId:' + cordova.platformId);
   var pushNotification = window.plugins.pushNotification;
   alert('pushNotification=' + pushNotification + " pushNotification.register=" + pushNotification.register);
@@ -32,7 +31,7 @@ function registerForPushNotification() {
 }
 
 // iOS
-function onNotificationAPN(event) {
+window.onNotificationAPN = function (event) {
   alert('RECEIVED:' + JSON.stringify(event));
   if ( event.alert )
   {
@@ -51,7 +50,7 @@ function onNotificationAPN(event) {
   }
 }
 
-function tokenHandler(result) {
+window.tokenHandler = function (result) {
   // Your iOS push server needs to know the token before it can push to this device
   // here is where you might want to send it the token for later use.
   alert('device token = ' + result);
@@ -59,7 +58,7 @@ function tokenHandler(result) {
 }
 
 // Android and Amazon Fire OS
-function onNotification(e) {
+window.onNotification = function (e) {
   alert('RECEIVED:' + JSON.stringify(e));
 
   switch( e.event )
@@ -91,15 +90,15 @@ function onNotification(e) {
   }
 }
 
-function sendMessageToPlatform(message) {
+window.sendMessageToPlatform = function (message) {
   alert("sendMessageToPlatform:" + JSON.stringify(message));
   //window.document.getElementById("platform_iframe").contentWindow.postMessage(message, "*");
 }
-function sendToken(token, error) {
+window.sendToken = function (token, error) {
   sendMessageToPlatform({token: token, error: error});
   registerForPushNotification();
 }
-function fbLoginSuccess(userData) {
+window.fbLoginSuccess = function (userData) {
     facebookConnectPlugin.getAccessToken(function(token) {
         sendToken(token, "");
     }, function(error) {
@@ -107,11 +106,10 @@ function fbLoginSuccess(userData) {
     });
 }
 
-function onDeviceReady() {
+window.onDeviceReady = function () {
     facebookConnectPlugin.login(["public_profile"],
         fbLoginSuccess,
         function (error) { sendToken("", error); }
     );
 }
 document.addEventListener("deviceready", onDeviceReady, false);
-</script>
