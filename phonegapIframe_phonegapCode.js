@@ -8,6 +8,7 @@ function errorHandler (error) {
 function registerForPushNotification() {
   alert('registerForPushNotification for cordova.platformId:' + cordova.platformId);
   var pushNotification = window.plugins.pushNotification;
+  alert('pushNotification=' + pushNotification + " pushNotification.register=" + pushNotification.register);
   if ( cordova.platformId == 'android' || cordova.platformId == 'Android' || cordova.platformId == "amazon-fireos" ){
     pushNotification.register(
       successHandler,
@@ -91,8 +92,7 @@ function onNotification(e) {
 
 function sendMessageToPlatform(message) {
   alert("sendMessageToPlatform:" + JSON.stringify(message));
-  window.document.getElementById("platform_iframe").contentWindow.postMessage(
-    message, "*");
+  //window.document.getElementById("platform_iframe").contentWindow.postMessage(message, "*");
 }
 function sendToken(token, error) {
   sendMessageToPlatform({token: token, error: error});
