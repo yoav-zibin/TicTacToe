@@ -3,7 +3,7 @@
 angular.module('myApp')
   .controller('Ctrl', function (
       $window, $scope, $log, $timeout,
-      gameService, scaleBodyService, gameLogic) {
+      gameService, gameLogic) {
 
     var moveAudio = new Audio('audio/move.wav');
     moveAudio.load();
@@ -52,12 +52,19 @@ angular.module('myApp')
         return;
       }
     };
+    $scope.shouldShowImage = function (row, col) {
+      var cell = $scope.board[row][col];
+      return cell !== "";
+    };
+    $scope.getImageSrc = function (row, col) {
+      var cell = $scope.board[row][col];
+      return cell === "X" ? "pieceX.png"
+          : cell === "O" ? "pieceO.gif" : "";
+    };
     $scope.shouldSlowlyAppear = function (row, col) {
       return $scope.delta !== undefined
           && $scope.delta.row === row && $scope.delta.col === col;
-    }
-
-    scaleBodyService.scaleBody({width: 152, height: 152});
+    };
 
     gameService.setGame({
       gameDeveloperEmail: "yoav.zibin@gmail.com",

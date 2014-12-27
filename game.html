@@ -6,8 +6,8 @@
   <title>TicTacToe</title>
   <meta name="description" content="TicTacToe game">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-touch.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-touch.js"></script>
   <script>
     angular.module('myApp', ['ngTouch']);
   </script>
@@ -15,10 +15,8 @@
   <script src="game.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/gameService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/messageService.js"></script>
-  <script src="http://yoav-zibin.github.io/emulator/scaleBodyService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/stateService.js"></script>
   <link rel="stylesheet" type="text/css" href="game.css">
-  <link rel="stylesheet" type="text/css" href="size152x152.css">
 </head>
 <body ng-cloak ng-controller="Ctrl">
 
@@ -59,7 +57,6 @@
       );
     }
 
-    alert(location);
     var access_token = getJsonFromUrl().access_token;
     if (access_token) {
       testFbAPI(access_token);
@@ -69,12 +66,12 @@
 
   <div ng-repeat="row in [0, 1, 2]">
     <div ng-repeat="col in [0, 1, 2]"
-      ng-style="{position: 'absolute', display: 'inline', left: (52*col) + 'px', top: (52*row) + 'px'}"
-      ng-class="{cell: true, r: col < 2, b: row < 2}"
+      class="square"
       ng-click="cellClicked(row, col)">
-      <!-- {{$parent.$index}} {{$index}} -->
-      <div style="line-height: 50px" ng-class="{slowlyAppear: shouldSlowlyAppear(row, col)}">
-        {{board[row][col]}}
+      <div ng-class="{content: true, r: col < 2, b: row < 2}">
+        <img ng-class="{piece: true, slowlyAppear: shouldSlowlyAppear(row, col)}"
+          ng-show="shouldShowImage(row, col)"
+          ng-src="{{getImageSrc(row, col)}}">
       </div>
     </div>
   </div>
