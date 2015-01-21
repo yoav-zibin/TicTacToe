@@ -5,9 +5,6 @@ angular.module('myApp')
       $window, $scope, $log, $timeout,
       gameService, scaleBodyService, gameLogic) {
 
-    var moveAudio = new Audio('audio/move.wav');
-    moveAudio.load();
-
     function sendComputerMove() {
       gameService.makeMove(
           gameLogic.createComputerMove($scope.board, $scope.turnIndex));
@@ -18,9 +15,6 @@ angular.module('myApp')
       $scope.delta = params.stateAfterMove.delta;
       if ($scope.board === undefined) {
         $scope.board = gameLogic.getInitialBoard();
-      } else {
-        // Only play a sound if there was a move (i.e., state is not empty).
-        moveAudio.play();
       }
       $scope.isYourTurn = params.turnIndexAfterMove >= 0 && // game is ongoing
         params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn

@@ -143,29 +143,6 @@ describe("In TicTacToe ", function() {
       {set: {key: 'delta', value: {row: 0, col: 0}}}]);
   });
 
-  function expectLegalHistoryThatEndsTheGame(history) {
-    for (var i = 0; i < history.length; i++) {
-      expectMoveOk(history[i].turnIndexBeforeMove,
-        history[i].stateBeforeMove,
-        history[i].move);
-    }
-    expect(history[history.length - 1].move[0].endMatch).toBeDefined();
-  }
-
-  it("getExampleGame returns a legal history and the last move ends the game", function() {
-    var exampleGame = ticTacToeLogic.getExampleGame();
-    expect(exampleGame.length).toBe(7);
-    expectLegalHistoryThatEndsTheGame(exampleGame);
-  });
-
-  it("getRiddles returns legal histories where the last move ends the game", function() {
-    var riddles = ticTacToeLogic.getRiddles();
-    expect(riddles.length).toBe(2);
-    for (var i = 0; i < riddles.length; i++) {
-      expectLegalHistoryThatEndsTheGame(riddles[i]);
-    }
-  });
-
   it("createComputerMove selects an empty cell", function() {
     var board =
         [['O', 'O', 'X'],
