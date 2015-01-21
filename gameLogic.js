@@ -11,7 +11,7 @@ angular.module('myApp', []).service('gameLogic', function() {
 
   /** 
    * Returns true if the game ended in a tie because there are no empty cells.
-   * E.g., the following board ended in a tie:
+   * E.g., isTie returns true for the following board:
    *     [['X', 'O', 'X'],
    *      ['X', 'O', 'O'],
    *      ['O', 'X', 'X']]
@@ -32,11 +32,11 @@ angular.module('myApp', []).service('gameLogic', function() {
 
   /** 
    * Return the winner (either 'X' or 'O') or '' if there is no winner. 
-   * board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-   * E.g.,
+   * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
+   * E.g., getWinner returns 'X' for the following board:
    *     [['X', 'O', ''],
    *      ['X', 'O', ''],
-   *      ['', '', '']]
+   *      ['X', '', '']]
    */
   function getWinner(board) {
     var boardString = '';
@@ -70,7 +70,6 @@ angular.module('myApp', []).service('gameLogic', function() {
     }
     return '';
   }
-
 
   /**
    * Returns the move that the computer player should do for the given board.
