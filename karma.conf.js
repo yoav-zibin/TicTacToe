@@ -6,7 +6,8 @@ module.exports = function(config){
     files : [
       'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js',
       'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-mocks.js',
-      '*.js'
+      'gameLogic.js',
+      'gameLogic_test.js'
     ],
 
     reporters: ['progress', 'coverage'],
