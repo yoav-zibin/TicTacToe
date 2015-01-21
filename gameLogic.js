@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp').service('gameLogic', function() {
+angular.module('myApp', []).service('gameLogic', function() {
 
   /** Return the winner (either 'X' or 'O') or '' if there is no winner. 
     board is a matrix of size 3x3 containing either 'X', 'O', or ''.
