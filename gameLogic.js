@@ -144,6 +144,4 @@ angular.module('myApp').service('gameLogic', function() {
   this.createComputerMove = createComputerMove;
   this.createMove = createMove;
   this.isMoveOk = isMoveOk;
-  this.getExampleGame = getExampleGame;
-  this.getRiddles = getRiddles;
 });

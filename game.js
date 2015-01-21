@@ -64,8 +64,6 @@ angular.module('myApp')
       gameDeveloperEmail: "yoav.zibin@gmail.com",
       minNumberOfPlayers: 2,
       maxNumberOfPlayers: 2,
-      exampleGame: gameLogic.getExampleGame(),
-      riddles: gameLogic.getRiddles(),
       isMoveOk: gameLogic.isMoveOk,
       updateUI: updateUI
     });

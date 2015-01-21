@@ -4,9 +4,8 @@ module.exports = function(config){
     basePath : './',
 
     files : [
-      'http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.js',
-      'http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular-touch.js',
-      'http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular-mocks.js',
+      'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js',
+      'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-mocks.js',
       '*.js'
     ],
 
