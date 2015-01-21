@@ -16,50 +16,6 @@
 </head>
 <body ng-cloak ng-controller="Ctrl">
 
-    <script>
-    function getJsonFromUrl() {
-      if (!location.search || location.search == "") {
-        return {};
-      }
-      var query = location.search.substr(1);
-      var result = {};
-      query.split("&").forEach(function(part) {
-        var item = part.split("=");
-        result[item[0]] = decodeURIComponent(item[1]);
-      });
-      return result;
-    }
-    function makeAjaxCall(url, callback) {
-    	var xmlhttp = new XMLHttpRequest();
-    	xmlhttp.onreadystatechange = function() {
-    	  if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-    	    var responseText = xmlhttp.responseText;
-    	    var response = JSON.parse(responseText);
-          console.log(response);
-    	    callback(response);
-        }
-    	};
-    	xmlhttp.open("GET", url, true);
-    	xmlhttp.send();
-    }
-
-    function testFbAPI(access_token) {
-      makeAjaxCall(
-        "https://graph.facebook.com/v2.2/me?format=json&method=get&pretty=0&suppress_http_code=1&access_token="
-          + access_token,
-        function(response) {
-          alert('Successful login for: ' + response.name);
-        }
-      );
-    }
-
-    var access_token = getJsonFromUrl().access_token;
-    if (access_token) {
-      testFbAPI(access_token);
-    }
-    </script>
-
-
   <div ng-repeat="row in [0, 1, 2]">
     <div ng-repeat="col in [0, 1, 2]"
       class="square"
