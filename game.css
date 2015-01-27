@@ -21,10 +21,10 @@ html, body {
   z-index: -1;
 }
 .r {
-  border-right: 10pt solid black;
+  border-right: 2pt solid black;
 }
 .b {
-  border-bottom: 10pt solid black;
+  border-bottom: 2pt solid black;
 }
 
 .slowlyAppear {
