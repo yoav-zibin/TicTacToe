@@ -53,7 +53,7 @@ angular.module('myApp')
     $scope.getImageSrc = function (row, col) {
       var cell = $scope.board[row][col];
       return cell === "X" ? "pieceX.png"
-          : cell === "O" ? "pieceO.gif" : "";
+          : cell === "O" ? "pieceO.png" : "";
     };
     $scope.shouldSlowlyAppear = function (row, col) {
       return $scope.delta !== undefined
