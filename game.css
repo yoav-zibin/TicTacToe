@@ -14,6 +14,7 @@ html, body {
 .content {
   position: absolute;
   width: 100%;
+  height: 100%;
 }
 .piece {
   position: relative;
@@ -21,10 +22,10 @@ html, body {
   z-index: -1;
 }
 .r {
-  border-right: 2pt solid black;
+  border-right: 4pt solid black;
 }
 .b {
-  border-bottom: 2pt solid black;
+  border-bottom: 4pt solid black;
 }
 
 .slowlyAppear {
