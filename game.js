@@ -3,7 +3,8 @@
 angular.module('myApp')
   .controller('Ctrl', function (
       $window, $scope, $log, $timeout,
-      gameService, gameLogic) {
+      gameService, gameLogic, resizeGameAreaService) {
+    resizeGameAreaService.setWidthToHeight(1);
 
     function sendComputerMove() {
       gameService.makeMove(

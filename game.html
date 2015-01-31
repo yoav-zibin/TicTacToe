@@ -9,6 +9,7 @@
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
   <script src="gameLogic.js"></script>
   <script src="game.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/resizeGameAreaService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/gameService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/messageService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/stateService.js"></script>
@@ -16,17 +17,19 @@
 </head>
 <body ng-cloak ng-controller="Ctrl">
 
-  <div ng-repeat="row in [0, 1, 2]">
+<div id="gameArea">
+  <div ng-repeat="row in [0, 1, 2]"
+      style="position:absolute; top:{{row * 33}}%; left:0; width:100%; height:33%;">
     <div ng-repeat="col in [0, 1, 2]"
-      class="square"
-      ng-click="cellClicked(row, col)">
-      <div ng-class="{content: true, r: col < 2, b: row < 2}">
-        <img ng-class="{piece: true, slowlyAppear: shouldSlowlyAppear(row, col)}"
+        style="position:absolute; top:0; left:{{col * 33}}%; width:33%; height:100%;"
+        ng-class="{r: col < 2, b: row < 2}"
+        ng-click="cellClicked(row, col)">
+      <img ng-class="{piece: true, slowlyAppear: shouldSlowlyAppear(row, col)}"
           ng-show="shouldShowImage(row, col)"
           ng-src="{{getImageSrc(row, col)}}">
-      </div>
     </div>
   </div>
+</div>
 
 </body>
 </html>
