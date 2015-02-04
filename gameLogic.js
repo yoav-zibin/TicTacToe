@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('myApp', []).service('gameLogic', function() {
+angular.module('myApp', []).factory('gameLogic', function() {
 
   /** Returns the initial TicTacToe board, which is a 3x3 matrix containing ''. */
   function getInitialBoard() {
-    return [['', '', ''], 
-            ['', '', ''], 
+    return [['', '', ''],
+            ['', '', ''],
             ['', '', '']];
   }
 
-  /** 
+  /**
    * Returns true if the game ended in a tie because there are no empty cells.
    * E.g., isTie returns true for the following board:
    *     [['X', 'O', 'X'],
@@ -30,8 +30,8 @@ angular.module('myApp', []).service('gameLogic', function() {
     return true;
   }
 
-  /** 
-   * Return the winner (either 'X' or 'O') or '' if there is no winner. 
+  /**
+   * Return the winner (either 'X' or 'O') or '' if there is no winner.
    * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
    * E.g., getWinner returns 'X' for the following board:
    *     [['X', 'O', ''],
@@ -150,8 +150,10 @@ angular.module('myApp', []).service('gameLogic', function() {
     return true;
   }
 
-  this.getInitialBoard = getInitialBoard;
-  this.createComputerMove = createComputerMove;
-  this.createMove = createMove;
-  this.isMoveOk = isMoveOk;
+  return {
+      getInitialBoard: getInitialBoard,
+      createComputerMove: createComputerMove,
+      createMove: createMove,
+      isMoveOk: isMoveOk
+  };
 });
