@@ -23,7 +23,7 @@ angular.module('myApp').factory('aiService', function(alphaBetaService, gameLogi
         alphaBetaLimits);
   }
 
-  function getStateScoreForIndex0(move) {
+  function getStateScoreForIndex0(move, playerIndex) {
     if (move[0].endMatch) {
       var endMatchScores = move[0].endMatch.endMatchScores;
       return endMatchScores[0] > endMatchScores[1] ? Number.POSITIVE_INFINITY
