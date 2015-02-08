@@ -1,20 +1,20 @@
-describe("In TicTacToe ", function() {
-  var ticTacToeLogic;
+describe("In TicTacToe", function() {
+  var _gameLogic;
 
   beforeEach(module("myApp"));
 
   beforeEach(inject(function (gameLogic) {
-    ticTacToeLogic = gameLogic;
+    _gameLogic = gameLogic;
   }));
 
   function expectMoveOk(turnIndexBeforeMove, stateBeforeMove, move) {
-    expect(ticTacToeLogic.isMoveOk({turnIndexBeforeMove: turnIndexBeforeMove,
+    expect(_gameLogic.isMoveOk({turnIndexBeforeMove: turnIndexBeforeMove,
       stateBeforeMove: stateBeforeMove,
       move: move})).toBe(true);
   }
 
   function expectIllegalMove(turnIndexBeforeMove, stateBeforeMove, move) {
-    expect(ticTacToeLogic.isMoveOk({turnIndexBeforeMove: turnIndexBeforeMove,
+    expect(_gameLogic.isMoveOk({turnIndexBeforeMove: turnIndexBeforeMove,
       stateBeforeMove: stateBeforeMove,
       move: move})).toBe(false);
   }
@@ -57,6 +57,33 @@ describe("In TicTacToe ", function() {
         {set: {key: 'delta', value: {row: 0, col: 0}}}]);
   });
 
+  it("cannot move after the game is over", function() {
+    expectIllegalMove(1,
+      {board:
+        [['X', 'O', ''],
+         ['X', 'O', ''],
+         ['X', '', '']], delta: {row: 2, col: 0}},
+      [{setTurn: {turnIndex : 0}},
+        {set: {key: 'board', value:
+          [['X', 'O', ''],
+           ['X', 'O', ''],
+           ['X', 'O', '']]}},
+        {set: {key: 'delta', value: {row: 2, col: 1}}}]);
+  });
+
+  it("placing O in 2x1 is legal", function() {
+    expectMoveOk(1,
+      {board:
+        [['O', 'X', ''],
+         ['X', 'O', ''],
+         ['X', '', '']], delta: {row: 2, col: 0}},
+      [{setTurn: {turnIndex : 0}},
+        {set: {key: 'board', value:
+          [['O', 'X', ''],
+           ['X', 'O', ''],
+           ['X', 'O', '']]}},
+        {set: {key: 'delta', value: {row: 2, col: 1}}}]);
+  });
 
   it("X wins by placing X in 2x0 is legal", function() {
     expectMoveOk(0,
@@ -143,19 +170,19 @@ describe("In TicTacToe ", function() {
       {set: {key: 'delta', value: {row: 0, col: 0}}}]);
   });
 
-  it("createComputerMove selects an empty cell", function() {
+  it("getPossibleMoves returns exactly one cell", function() {
     var board =
         [['O', 'O', 'X'],
          ['X', 'X', 'O'],
          ['O', 'X', '']];
-    var move = ticTacToeLogic.createComputerMove(board, 0);
+    var possibleMoves = _gameLogic.getPossibleMoves(board, 0);
     var expectedMove = [{endMatch: {endMatchScores: [0, 0]}},
         {set: {key: 'board', value:
           [['O', 'O', 'X'],
            ['X', 'X', 'O'],
            ['O', 'X', 'X']]}},
         {set: {key: 'delta', value: {row: 2, col: 2}}}];
-    expect(angular.equals(move, expectedMove)).toBe(true);
+    expect(angular.equals(possibleMoves, [expectedMove])).toBe(true);
   });
 
 });

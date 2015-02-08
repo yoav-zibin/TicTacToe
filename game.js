@@ -3,12 +3,14 @@
 angular.module('myApp')
   .controller('Ctrl', function (
       $window, $scope, $log, $timeout,
-      gameService, gameLogic, resizeGameAreaService) {
+      gameService, gameLogic, aiService, resizeGameAreaService) {
     resizeGameAreaService.setWidthToHeight(1);
 
     function sendComputerMove() {
       gameService.makeMove(
-          gameLogic.createComputerMove($scope.board, $scope.turnIndex));
+          aiService.createComputerMove($scope.board, $scope.turnIndex,
+              // 0.3 seconds for the AI to choose a move
+              {millisecondsLimit: 300}));
     }
 
     function updateUI(params) {
@@ -24,7 +26,7 @@ angular.module('myApp')
       // Is it the computer's turn?
       if ($scope.isYourTurn
           && params.playersInfo[params.yourPlayerIndex].playerId === '') {
-        $scope.isYourTurn = false;
+        $scope.isYourTurn = false; // to make sure the UI won't send another move.
         // Wait 500 milliseconds until animation ends.
         $timeout(sendComputerMove, 500);
       }

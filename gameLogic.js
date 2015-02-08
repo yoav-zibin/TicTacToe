@@ -72,23 +72,22 @@ angular.module('myApp', []).factory('gameLogic', function() {
   }
 
   /**
-   * Returns the move that the computer player should do for the given board.
-   * The computer will play in a random empty cell in the board.
+   * Returns all the possible moves for the given board and turnIndexBeforeMove.
+   * Returns an empty array if the game is over.
    */
-  function createComputerMove(board, turnIndexBeforeMove) {
-      var possibleMoves = [];
-      var i, j;
-      for (i = 0; i < 3; i++) {
-        for (j = 0; j < 3; j++) {
-          try {
-            possibleMoves.push(createMove(board, i, j, turnIndexBeforeMove));
-          } catch (e) {
-            // The cell in that position was full.
-          }
+  function getPossibleMoves(board, turnIndexBeforeMove) {
+    var possibleMoves = [];
+    var i, j;
+    for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+        try {
+          possibleMoves.push(createMove(board, i, j, turnIndexBeforeMove));
+        } catch (e) {
+          // The cell in that position was full.
         }
       }
-      var randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-      return randomMove;
+    }
+    return possibleMoves;
   }
 
   /**
@@ -102,6 +101,9 @@ angular.module('myApp', []).factory('gameLogic', function() {
     }
     if (board[row][col] !== '') {
       throw new Error("One can only make a move in an empty position!");
+    }
+    if (getWinner(board) !== '' || isTie(board)) {
+      throw new Error("Can only make a move if the game is not over!");
     }
     var boardAfterMove = angular.copy(board);
     boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
@@ -152,7 +154,7 @@ angular.module('myApp', []).factory('gameLogic', function() {
 
   return {
       getInitialBoard: getInitialBoard,
-      createComputerMove: createComputerMove,
+      getPossibleMoves: getPossibleMoves,
       createMove: createMove,
       isMoveOk: isMoveOk
   };
