@@ -26,7 +26,9 @@ angular.module('myApp').factory('aiService', function(alphaBetaService, gameLogi
   function getStateScoreForIndex0(move) {
     if (move[0].endMatch) {
       var endMatchScores = move[0].endMatch.endMatchScores;
-      return endMatchScores[0] - endMatchScores[1];
+      return endMatchScores[0] > endMatchScores[1] ? Number.POSITIVE_INFINITY
+          : endMatchScores[0] < endMatchScores[1] ? Number.NEGATIVE_INFINITY
+          : 0;
     }
     return 0;
   }
