@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
+  <script src="gameLogic.js"></script>
+  <script>
+  angular.module('myApp')
+  .run(function(gameLogic) {
+    var move = gameLogic.createMove(undefined, 0, 0, 0);
+    console.log("move=", move);
+    var params = {turnIndexBeforeMove: 0,
+      stateBeforeMove: {},
+      move: move};
+    var res = gameLogic.isMoveOk(params);
+    console.log("params=", params, "result=", res);
+  });
+  </script>
+</head>
+<body>
+Testing gameLogic with a simple HTML.
+</body>
+</html>
