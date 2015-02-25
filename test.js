@@ -1,0 +1,1 @@
+var a = {{ site.github.project_title }};
