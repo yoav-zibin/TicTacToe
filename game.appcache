@@ -1,7 +1,12 @@
+---
+layout: default
+title: Jekyll processing HTML5 cache to add build_revision
+---
 CACHE MANIFEST
-# 2015-02-25
-
-# {{ site.github.project_title }}
+# 
+# This will make sure the MANIFEST is changed on every commit!
+# {{ site.github.build_revision }}
+# Don't forget to add to your game.html:
 # <html manifest="game.appcache" ...
 http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js
 http://yoav-zibin.github.io/emulator/gameService.js
