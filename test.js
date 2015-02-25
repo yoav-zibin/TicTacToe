@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Test
+title: Test Jekyll
 ---
 
-var a = {{ site.github.project_title }};
+var build_revision = '{{ site.github.build_revision }}';
