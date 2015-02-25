@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Test
+title: Test Jekyll
 ---
 
 <!DOCTYPE html>
@@ -9,8 +9,9 @@ title: Test
   <meta charset="utf-8">
 </head>
 <body>
-
-{{ site.github.project_title }}
+Info on this project:
+project_title={{ site.github.project_title }}<br>
+build_revision={{ site.github.build_revision }}<br>
 
 </body>
 </html>
