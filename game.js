@@ -7,10 +7,16 @@ angular.module('myApp')
     resizeGameAreaService.setWidthToHeight(1);
 
     function sendComputerMove() {
-      gameService.makeMove(
-          aiService.createComputerMove($scope.board, $scope.turnIndex,
-              // 0.3 seconds for the AI to choose a move
-              {millisecondsLimit: 300}));
+      // wait at least 0.5 seconds for the move animation to end (in case the AI is very quick)
+      var minMillisecondsWait = 500;
+      var startTime = new Date().getTime();
+      var aiMove = aiService.createComputerMove($scope.board, $scope.turnIndex,
+          // at most 1 second for the AI to choose a move (but might be much quicker)
+          {millisecondsLimit: 1000});
+      var remainingTime = Math.max(1, minMillisecondsWait - (new Date().getTime() - startTime));
+      $timeout(function () {
+        gameService.makeMove(aiMove);  
+      }, remainingTime);
     }
 
     function updateUI(params) {
@@ -27,8 +33,7 @@ angular.module('myApp')
       if ($scope.isYourTurn
           && params.playersInfo[params.yourPlayerIndex].playerId === '') {
         $scope.isYourTurn = false; // to make sure the UI won't send another move.
-        // Wait 500 milliseconds until animation ends.
-        $timeout(sendComputerMove, 500);
+        $timeout(sendComputerMove, 1); // to start the move animation
       }
     }
 
