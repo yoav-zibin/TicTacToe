@@ -1,9 +1,12 @@
 'use strict';
 
 angular.module('myApp')
-  .controller('Ctrl', function (
-      $window, $scope, $log, $timeout,
-      gameService, gameLogic, aiService, resizeGameAreaService) {
+  .controller('Ctrl', 
+      ['$window', '$scope', '$log', '$timeout',
+       'gameService', 'gameLogic', 'aiService', 'resizeGameAreaService',
+      function ($window, $scope, $log, $timeout,
+        gameService, gameLogic, aiService, resizeGameAreaService) {
+
     resizeGameAreaService.setWidthToHeight(1);
 
     function sendComputerMove() {
@@ -70,4 +73,4 @@ angular.module('myApp')
       isMoveOk: gameLogic.isMoveOk,
       updateUI: updateUI
     });
-  });
+  }]);

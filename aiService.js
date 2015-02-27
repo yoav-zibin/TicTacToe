@@ -1,6 +1,8 @@
 'use strict';
 
-angular.module('myApp').factory('aiService', function(alphaBetaService, gameLogic) {
+angular.module('myApp').factory('aiService', 
+    ["alphaBetaService", "gameLogic",
+      function(alphaBetaService, gameLogic) {
 
   /**
    * Returns the move that the computer player should do for the given board.
@@ -42,4 +44,4 @@ angular.module('myApp').factory('aiService', function(alphaBetaService, gameLogi
   }
 
   return {createComputerMove: createComputerMove};
-});
+}]);
