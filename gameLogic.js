@@ -1,4 +1,3 @@
-/*global angular */
 angular.module('myApp', []).factory('gameLogic', function() {
 
   'use strict';

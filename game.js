@@ -1,4 +1,3 @@
-/* global angular */
 angular.module('myApp')
   .controller('Ctrl',
       ['$scope', '$log', '$timeout',

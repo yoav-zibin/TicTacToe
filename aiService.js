@@ -1,4 +1,3 @@
-/* global angular */
 angular.module('myApp').factory('aiService',
     ["alphaBetaService", "gameLogic",
       function(alphaBetaService, gameLogic) {

@@ -23,7 +23,7 @@
     "grunt-http-server": "~1.2.0"
   },
   "scripts": {
-    "test": "grunt karma"
+    "test": "grunt"
   },
   "repository": {
     "type": "git",

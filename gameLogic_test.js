@@ -1,4 +1,7 @@
 describe("In TicTacToe", function() {
+
+  'use strict';
+
   var _gameLogic;
 
   beforeEach(module("myApp"));

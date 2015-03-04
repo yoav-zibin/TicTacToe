@@ -1,10 +1,11 @@
-'use strict';
-
 /* https://github.com/angular/protractor/blob/master/docs/toc.md */
 
 describe('TicTacToe', function() {
+  
+  'use strict';
+
   beforeEach(function() {
-    browser.get('http://localhost:9000/game.html');
+    browser.get('http://localhost:9000/game.min.html');
   });
 
   function getDiv(row, col) {
@@ -33,7 +34,7 @@ describe('TicTacToe', function() {
     for (var row = 0; row < 3; row++) {
       for (var col = 0; col < 3; col++) {
         expectImgDisplayed(row, col, false);
-      }  
+      }
     }
   });
 

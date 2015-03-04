@@ -1,4 +1,7 @@
 describe("aiService", function() {
+
+  'use strict';
+
   var _aiService;
 
   beforeEach(module("myApp"));

@@ -1,10 +1,29 @@
 module.exports = function(grunt) {
 
+  'use strict';
+
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-      all: ['Gruntfile.js', 'aiService.js', 'gameLogic.js', 'game.js']
+      options: {
+        curly: true,
+        eqeqeq: true,
+        eqnull: true,
+        browser: true,
+        strict: true,
+        undef: true,
+        bitwise: true,
+        forin: true,
+        jasmine: true,
+        jquery: true,
+        globals: {
+          module: false, // for Gruntfile.js
+          inject: false, // testing angular
+          angular: false
+        },
+      },
+      all: ['Gruntfile.js', 'aiService.js', 'aiService_test.js', 'gameLogic.js', 'game.js']
     },
     uglify: {
       my_target: {
@@ -35,7 +54,7 @@ module.exports = function(grunt) {
             runInBackground: true
         }
     },
-    protractor: {
+    'protractor': {
       options: {
         configFile: "protractor.conf.js", // Default config file
         keepAlive: true, // If false, the grunt process stops when the test fails.
@@ -56,6 +75,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-protractor-coverage');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'uglify', 'processhtml', 'http-server', 'protractor']);
+  grunt.registerTask('default', ['jshint', 'uglify', 'processhtml',
+      'http-server', 'protractor']);
 
 };
