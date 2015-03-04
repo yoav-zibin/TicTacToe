@@ -1,11 +1,12 @@
-'use strict';
-
+/* global angular */
 angular.module('myApp')
-  .controller('Ctrl', 
-      ['$window', '$scope', '$log', '$timeout',
+  .controller('Ctrl',
+      ['$scope', '$log', '$timeout',
        'gameService', 'gameLogic', 'aiService', 'resizeGameAreaService',
-      function ($window, $scope, $log, $timeout,
+      function ($scope, $log, $timeout,
         gameService, gameLogic, aiService, resizeGameAreaService) {
+
+    'use strict';
 
     resizeGameAreaService.setWidthToHeight(1);
 
@@ -26,12 +27,12 @@ angular.module('myApp')
       $scope.turnIndex = params.turnIndexAfterMove;
 
       // Is it the computer's turn?
-      if ($scope.isYourTurn
-          && params.playersInfo[params.yourPlayerIndex].playerId === '') {
+      if ($scope.isYourTurn &&
+          params.playersInfo[params.yourPlayerIndex].playerId === '') {
         $scope.isYourTurn = false; // to make sure the UI won't send another move.
         // Waiting 0.5 seconds to let the move animation finish; if we call aiService
         // then the animation is paused until the javascript finishes.
-        $timeout(sendComputerMove, 500); 
+        $timeout(sendComputerMove, 500);
       }
     }
 
@@ -62,8 +63,8 @@ angular.module('myApp')
           : cell === "O" ? "pieceO.png" : "";
     };
     $scope.shouldSlowlyAppear = function (row, col) {
-      return $scope.delta !== undefined
-          && $scope.delta.row === row && $scope.delta.col === col;
+      return $scope.delta !== undefined &&
+          $scope.delta.row === row && $scope.delta.col === col;
     };
 
     gameService.setGame({

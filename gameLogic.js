@@ -1,6 +1,7 @@
-'use strict';
-
+/*global angular */
 angular.module('myApp', []).factory('gameLogic', function() {
+
+  'use strict';
 
   /** Returns the initial TicTacToe board, which is a 3x3 matrix containing ''. */
   function getInitialBoard() {
