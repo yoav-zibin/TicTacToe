@@ -13,22 +13,37 @@ module.exports = function(grunt) {
         browser: true,
         strict: true,
         undef: true,
+        unused: true,
         bitwise: true,
         forin: true,
+        freeze: true,
+        latedef: true,
+        noarg: true,
+        nocomma: true,
+        nonbsp: true,
+        nonew: true,
+        notypeof: true,
+        singleGroups: true,
         jasmine: true,
         jquery: true,
         globals: {
           module: false, // for Gruntfile.js
+          exports: false, // for protractor.conf.js
           inject: false, // testing angular
-          angular: false
+          angular: false,
+          browser: false, element: false, by: false, // Protractor
         },
       },
-      all: ['Gruntfile.js', 'aiService.js', 'aiService_test.js', 'gameLogic.js', 'game.js']
+      all: ['Gruntfile.js', 'karma.conf.js', 'protractor.conf.js', 'src/*.js']
+    },
+    watch: {
+      files: ['<%= jshint.files %>'],
+      tasks: ['jshint']
     },
     uglify: {
       my_target: {
         files: {
-          'everything.min.js': ['aiService.js', 'gameLogic.js', 'game.js']
+          'minified/everything.min.js': ['src/gameLogic.js', 'src/game.js', 'src/aiService.js']
         }
       }
     },
