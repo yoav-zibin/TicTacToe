@@ -1,7 +1,7 @@
 /* https://github.com/angular/protractor/blob/master/docs/toc.md */
 
 describe('TicTacToe', function() {
-  
+
   'use strict';
 
   beforeEach(function() {

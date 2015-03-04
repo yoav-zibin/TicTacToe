@@ -54,7 +54,8 @@ module.exports = function(grunt) {
         separator: ';',
       },
       dist: {
-        src: ['src/*.js'],
+        // Order is important! gameLogic.js must be first because it defines myApp angular module. 
+        src: ['src/gameLogic.js', 'src/game.js', 'src/aiService.js'],
         dest: 'dist/everything.js',
       },
     },
@@ -64,7 +65,7 @@ module.exports = function(grunt) {
       },
       my_target: {
         files: {
-          'dist/everything.min.js': ['src/gameLogic.js', 'src/game.js', 'src/aiService.js']
+          'dist/everything.min.js': ['dist/everything.js']
         }
       }
     },
@@ -140,7 +141,8 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('default', ['jshint', 'karma',
-      'uglify', 'processhtml', 'manifest',
+      'concat', 'uglify',
+      'processhtml', 'manifest',
       'http-server', 'protractor']);
 
 };
