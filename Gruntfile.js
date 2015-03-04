@@ -36,14 +36,35 @@ module.exports = function(grunt) {
       },
       all: ['Gruntfile.js', 'karma.conf.js', 'protractor.conf.js', 'src/*.js']
     },
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        background: true,
+        singleRun: false
+      }
+    },
+    // Run karma and watch files using:
+    // grunt karma:unit:start watch
     watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint']
+      files: ['src/*.js'],
+      tasks: ['jshint', 'karma:unit:run']
+    },
+    concat: {
+      options: {
+        separator: ';',
+      },
+      dist: {
+        src: ['src/*.js'],
+        dest: 'dist/everything.js',
+      },
     },
     uglify: {
+      options: {
+        sourceMap: true,
+      },
       my_target: {
         files: {
-          'minified/everything.min.js': ['src/gameLogic.js', 'src/game.js', 'src/aiService.js']
+          'dist/everything.min.js': ['src/gameLogic.js', 'src/game.js', 'src/aiService.js']
         }
       }
     },
@@ -52,6 +73,30 @@ module.exports = function(grunt) {
         files: {
           'game.min.html': ['game.html']
         }
+      }
+    },
+    manifest: {
+      generate: {
+        options: {
+          basePath: '.',
+          cache: [
+            'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js',
+            'http://yoav-zibin.github.io/emulator/gameService.js',
+            'http://yoav-zibin.github.io/emulator/messageService.js',
+            'http://yoav-zibin.github.io/emulator/stateService.js',
+            'http://yoav-zibin.github.io/emulator/alphaBetaService.js',
+            'http://yoav-zibin.github.io/emulator/resizeGameAreaService.js',
+            'http://yoav-zibin.github.io/emulator/main.css'
+          ],
+          network: ['*'], // so we can load source maps for debugging
+          timestamp: true
+        },
+        src: [
+          'dist/everything.min.js',
+          '*.css',
+          '*.png'
+        ],
+        dest: 'dist/game.appcache'
       }
     },
     'http-server': {
@@ -69,7 +114,7 @@ module.exports = function(grunt) {
             runInBackground: true
         }
     },
-    'protractor': {
+    protractor: {
       options: {
         configFile: "protractor.conf.js", // Default config file
         keepAlive: true, // If false, the grunt process stops when the test fails.
@@ -82,15 +127,20 @@ module.exports = function(grunt) {
     },
   });
 
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-processhtml');
+  grunt.loadNpmTasks('grunt-manifest');
   grunt.loadNpmTasks('grunt-http-server');
   grunt.loadNpmTasks('grunt-protractor-runner');
   grunt.loadNpmTasks('grunt-protractor-coverage');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'uglify', 'processhtml',
+  grunt.registerTask('default', ['jshint', 'karma',
+      'uglify', 'processhtml', 'manifest',
       'http-server', 'protractor']);
 
 };
