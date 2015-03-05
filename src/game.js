@@ -2,9 +2,9 @@
 angular.module('myApp')
   .controller('Ctrl',
       ['$scope', '$log', '$timeout',
-       'gameService', 'gameLogic', 'aiService', 'resizeGameAreaService',
+       'gameService', 'stateService', 'gameLogic', 'aiService', 'resizeGameAreaService',
       function ($scope, $log, $timeout,
-        gameService, gameLogic, aiService, resizeGameAreaService) {
+        gameService, stateService, gameLogic, aiService, resizeGameAreaService) {
 
     'use strict';
 
@@ -35,8 +35,10 @@ angular.module('myApp')
         $timeout(sendComputerMove, 500);
       }
     }
+    window.e2e_test_stateService = stateService; // to allow us to load any state in our e2e tests.
 
-    // Before getting any updateUI, we show an empty board to a viewer (so you can't perform moves).
+    // Before getting any updateUI, we initialize $scope variables (such as board)
+    // and show an empty board to a viewer (so you can't perform moves).
     updateUI({stateAfterMove: {}, turnIndexAfterMove: 0, yourPlayerIndex: -2});
 
     $scope.cellClicked = function (row, col) {
