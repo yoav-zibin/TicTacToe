@@ -79,7 +79,7 @@ module.exports = function(grunt) {
     manifest: {
       generate: {
         options: {
-          basePath: '.',
+          basePath: '.',ygc
           cache: [
             'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js',
             'http://yoav-zibin.github.io/emulator/gameService.js',
@@ -90,8 +90,8 @@ module.exports = function(grunt) {
             'http://yoav-zibin.github.io/emulator/main.css',
             '/TicTacToe/dist/everything.min.js',
             '/TicTacToe/game.css',
-            '/TicTacToe/imgs/pieceX.png',
-            '/TicTacToe/imgs/pieceO.png'
+            '/TicTacToe/pieceX.png',
+            '/TicTacToe/pieceO.png'
           ],
           network: ['/dist/everything.min.js.map', '/dist/everything.js'],
           timestamp: true
