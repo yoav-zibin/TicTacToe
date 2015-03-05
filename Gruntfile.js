@@ -88,10 +88,10 @@ module.exports = function(grunt) {
             'http://yoav-zibin.github.io/emulator/alphaBetaService.js',
             'http://yoav-zibin.github.io/emulator/resizeGameAreaService.js',
             'http://yoav-zibin.github.io/emulator/main.css',
-            '/dist/everything.min.js',
-            '/game.css',
-            '/pieceX.png',
-            '/pieceO.png'
+            '/TicTacToe/dist/everything.min.js',
+            '/TicTacToe/game.css',
+            '/TicTacToe/imgs/pieceX.png',
+            '/TicTacToe/imgs/pieceO.png'
           ],
           network: ['/dist/everything.min.js.map', '/dist/everything.js'],
           timestamp: true
