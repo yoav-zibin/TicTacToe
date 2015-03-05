@@ -7,7 +7,7 @@ angular.module('myApp')
         gameService, gameLogic, aiService, resizeGameAreaService) {
 
     'use strict';
-    
+
     resizeGameAreaService.setWidthToHeight(1);
 
     function sendComputerMove() {
@@ -41,6 +41,9 @@ angular.module('myApp')
 
     $scope.cellClicked = function (row, col) {
       $log.info(["Clicked on cell:", row, col]);
+      if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
+        throw new Error("Throwing the error because URL has '?throwException'");
+      }
       if (!$scope.isYourTurn) {
         return;
       }

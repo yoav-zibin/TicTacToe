@@ -54,7 +54,7 @@ module.exports = function(grunt) {
         separator: ';',
       },
       dist: {
-        // Order is important! gameLogic.js must be first because it defines myApp angular module. 
+        // Order is important! gameLogic.js must be first because it defines myApp angular module.
         src: ['src/gameLogic.js', 'src/game.js', 'src/aiService.js'],
         dest: 'dist/everything.js',
       },
@@ -87,17 +87,17 @@ module.exports = function(grunt) {
             'http://yoav-zibin.github.io/emulator/stateService.js',
             'http://yoav-zibin.github.io/emulator/alphaBetaService.js',
             'http://yoav-zibin.github.io/emulator/resizeGameAreaService.js',
-            'http://yoav-zibin.github.io/emulator/main.css'
+            'http://yoav-zibin.github.io/emulator/main.css',
+            '/dist/everything.min.js',
+            '/game.css',
+            '/pieceX.png',
+            '/pieceO.png'
           ],
-          network: ['*'], // so we can load source maps for debugging
+          network: ['/dist/everything.min.js.map', '/dist/everything.js'],
           timestamp: true
         },
-        src: [
-          'dist/everything.min.js',
-          '*.css',
-          '*.png'
-        ],
-        dest: 'dist/game.appcache'
+        dest: 'dist/game.appcache',
+        src: []
       }
     },
     'http-server': {
