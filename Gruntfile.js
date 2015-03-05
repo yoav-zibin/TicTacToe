@@ -79,7 +79,7 @@ module.exports = function(grunt) {
     manifest: {
       generate: {
         options: {
-          basePath: '.',ygc
+          basePath: '.', 
           cache: [
             'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js',
             'http://yoav-zibin.github.io/emulator/gameService.js',
