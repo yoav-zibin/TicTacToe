@@ -123,6 +123,11 @@ describe('TicTacToe', function() {
       [['X', 'O', ''],
        ['X', 'O', ''],
        ['X', '', '']];
+  var delta4 = {row: 2, col: 1};
+  var board4 =
+      [['X', 'O', ''],
+       ['X', 'O', ''],
+       ['', 'X', '']];
 
   var matchState2 = {
     turnIndexBeforeMove: 1,
@@ -148,6 +153,18 @@ describe('TicTacToe', function() {
     lastVisibleTo: {},
     currentVisibleTo: {},
   };
+  var matchState4 = {
+    turnIndexBeforeMove: 0,
+    turnIndex: 1,
+    endMatchScores: null,
+    lastMove: [{setTurn: {turnIndex: 1}},
+         {set: {key: 'board', value: board4}},
+         {set: {key: 'delta', value: delta4}}],
+    lastState: {board: board2, delta: delta2},
+    currentState: {board: board4, delta: delta4},
+    lastVisibleTo: {},
+    currentVisibleTo: {},
+  };
 
   it('can start from a match that is about to end, and win', function () {
     setMatchState(matchState2, 'passAndPlay');
@@ -170,5 +187,21 @@ describe('TicTacToe', function() {
     setMatchState(matchState3, 'passAndPlay');
     expectBoard(board3);
     clickDivAndExpectPiece(2, 1, ""); // can't click after game ended
+  });
+
+  it('should make an AI move after at most 1.5 seconds', function () {
+    setMatchState(matchState4, 'playAgainstTheComputer');
+    browser.sleep(1500);
+    expectBoard(
+        [['X', 'O', ''],
+         ['X', 'O', ''],
+         ['O', 'X', '']]);
+    clickDivAndExpectPiece(2, 2, "X"); // Human-player X did a very stupid move!
+    browser.sleep(1500); // AI will now make the winning move
+    expectBoard(
+        [['X', 'O', 'O'],
+         ['X', 'O', ''],
+         ['O', 'X', 'X']]);
+    clickDivAndExpectPiece(1, 2, ""); // Can't make a move after game is over
   });
 });
