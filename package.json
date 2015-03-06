@@ -22,7 +22,8 @@
     "grunt-http-server": "~1.2.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-karma": "~0.10.1",
-    "grunt-contrib-concat": "~0.5.1"
+    "grunt-contrib-concat": "~0.5.1",
+    "grunt-manifest": "~0.4.0"
   },
   "scripts": {
     "prestart": "npm install",
