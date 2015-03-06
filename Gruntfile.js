@@ -31,6 +31,7 @@ module.exports = function(grunt) {
           exports: false, // for protractor.conf.js
           inject: false, // testing angular
           angular: false,
+          console: false,
           browser: false, element: false, by: false, // Protractor
         },
       },
@@ -133,7 +134,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-manifest');
   grunt.loadNpmTasks('grunt-http-server');
   grunt.loadNpmTasks('grunt-protractor-runner');
-  grunt.loadNpmTasks('grunt-protractor-coverage');
 
   // Default task(s).
   grunt.registerTask('default', ['jshint', 'karma',
