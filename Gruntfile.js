@@ -85,15 +85,15 @@ module.exports = function(grunt) {
             'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js',
             'http://yoav-zibin.github.io/emulator/dist/gameServices.min.js',
             'http://yoav-zibin.github.io/emulator/main.css',
-            '/TicTacToe/dist/everything.min.js',
-            '/TicTacToe/game.css',
-            '/TicTacToe/pieceX.png',
-            '/TicTacToe/pieceO.png'
+            'dist/everything.min.js',
+            'game.css',
+            'pieceX.png',
+            'pieceO.png'
           ],
-          network: ['/TicTacToe/dist/everything.min.js.map', '/TicTacToe/dist/everything.js'],
+          network: ['dist/everything.min.js.map', 'dist/everything.js'],
           timestamp: true
         },
-        dest: 'dist/game.appcache',
+        dest: 'game.appcache',
         src: []
       }
     },
