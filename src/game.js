@@ -37,10 +37,6 @@ angular.module('myApp')
     }
     window.e2e_test_stateService = stateService; // to allow us to load any state in our e2e tests.
 
-    // Before getting any updateUI, we initialize $scope variables (such as board)
-    // and show an empty board to a viewer (so you can't perform moves).
-    updateUI({stateAfterMove: {}, turnIndexAfterMove: 0, yourPlayerIndex: -2});
-
     $scope.cellClicked = function (row, col) {
       $log.info(["Clicked on cell:", row, col]);
       if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
