@@ -163,11 +163,16 @@ angular.module('myApp', []).factory('gameLogic', function() {
 angular.module('myApp')
   .controller('Ctrl',
       ['$scope', '$log', '$timeout',
-       'gameService', 'stateService', 'gameLogic', 'aiService', 'resizeGameAreaService',
+       'gameService', 'stateService', 'gameLogic', 'aiService',
+       'resizeGameAreaService', '$translate',
       function ($scope, $log, $timeout,
-        gameService, stateService, gameLogic, aiService, resizeGameAreaService) {
-
+        gameService, stateService, gameLogic, aiService,
+        resizeGameAreaService, $translate) {
     'use strict';
+
+    $translate('TICTACTOE_GAME').then(function (translation) {
+      console.log("Translation of 'TICTACTOE_GAME' is " + translation);
+    });
 
     resizeGameAreaService.setWidthToHeight(1);
 
@@ -236,6 +241,21 @@ angular.module('myApp')
       isMoveOk: gameLogic.isMoveOk,
       updateUI: updateUI
     });
+  }])
+  .config(['$translateProvider', function($translateProvider) {
+    'use strict';
+
+    if (!window.angularTranslations) {
+      throw new Error("We forgot to include languages/en.js in our HTML");
+    }
+    $translateProvider.translations('en', window.angularTranslations);
+    $translateProvider.useStaticFilesLoader({
+        prefix: 'languages/',
+        suffix: '.js'
+      })
+      .registerAvailableLanguageKeys(['en', 'de'])
+      .fallbackLanguage(['en'])
+      .determinePreferredLanguage();
   }]);
 ;angular.module('myApp').factory('aiService',
     ["alphaBetaService", "gameLogic",

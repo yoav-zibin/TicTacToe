@@ -13,12 +13,19 @@
 
   <script src="http://yoav-zibin.github.io/emulator/dist/gameServices.min.js"></script>
 
+  <script src="languages/en.js"></script>
+  <script src="http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.2.6.1.min.js"></script>
+
   <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
   <link rel="stylesheet" type="text/css" href="game.css">
 </head>
 <body ng-cloak ng-controller="Ctrl">
 
 <div id="gameArea">
+
+  <!-- Just for the sake of showing how to I18N a game. -->
+  <div style="display:none;">{{ 'TICTACTOE_GAME' | translate }}</div>
+
   <div ng-repeat="row in [0, 1, 2]"
       style="position:absolute; top:{{row * 33}}%; left:0; width:100%; height:33%;">
     <div ng-repeat="col in [0, 1, 2]"
