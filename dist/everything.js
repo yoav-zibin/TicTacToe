@@ -177,16 +177,16 @@ angular.module('myApp')
     resizeGameAreaService.setWidthToHeight(1);
 
     function sendComputerMove() {
-      gameService.makeMove(aiService.createComputerMove($scope.board, $scope.turnIndex,
-          // at most 1 second for the AI to choose a move (but might be much quicker)
-          {millisecondsLimit: 1000}));
+      gameService.makeMove(
+          aiService.createComputerMove($scope.state.board, $scope.turnIndex,
+            // at most 1 second for the AI to choose a move (but might be much quicker)
+            {millisecondsLimit: 1000}));
     }
 
     function updateUI(params) {
-      $scope.board = params.stateAfterMove.board;
-      $scope.delta = params.stateAfterMove.delta;
-      if ($scope.board === undefined) {
-        $scope.board = gameLogic.getInitialBoard();
+      $scope.state = params.stateAfterMove;
+      if ($scope.state.board === undefined) {
+        $scope.state.board = gameLogic.getInitialBoard();
       }
       $scope.isYourTurn = params.turnIndexAfterMove >= 0 && // game is ongoing
         params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
@@ -212,7 +212,7 @@ angular.module('myApp')
         return;
       }
       try {
-        var move = gameLogic.createMove($scope.board, row, col, $scope.turnIndex);
+        var move = gameLogic.createMove($scope.state.board, row, col, $scope.turnIndex);
         $scope.isYourTurn = false; // to prevent making another move
         gameService.makeMove(move);
       } catch (e) {
@@ -221,17 +221,17 @@ angular.module('myApp')
       }
     };
     $scope.shouldShowImage = function (row, col) {
-      var cell = $scope.board[row][col];
+      var cell = $scope.state.board[row][col];
       return cell !== "";
     };
     $scope.getImageSrc = function (row, col) {
-      var cell = $scope.board[row][col];
+      var cell = $scope.state.board[row][col];
       return cell === "X" ? "pieceX.png"
           : cell === "O" ? "pieceO.png" : "";
     };
     $scope.shouldSlowlyAppear = function (row, col) {
-      return $scope.delta !== undefined &&
-          $scope.delta.row === row && $scope.delta.col === col;
+      return $scope.state.delta !== undefined &&
+          $scope.state.delta.row === row && $scope.state.delta.col === col;
     };
 
     gameService.setGame({

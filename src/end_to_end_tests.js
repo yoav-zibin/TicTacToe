@@ -82,9 +82,8 @@ describe('TicTacToe', function() {
   it('should end game if X wins', function () {
     for (var col = 0; col < 3; col++) {
       clickDivAndExpectPiece(1, col, "X");
-      getDiv(2, col).click();
       // After the game ends, player "O" click (in cell 2x2) will be ignored.
-      expectPiece(2, col, col === 2 ? "" : "O");
+      clickDivAndExpectPiece(2, col, col === 2 ? "" : "O");
     }
     expectBoard(
         [['', '', ''],
