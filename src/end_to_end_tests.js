@@ -12,8 +12,8 @@ describe('TicTacToe', function() {
     return element(by.id('e2e_test_div_' + row + 'x' + col));
   }
 
-  function getImg(row, col) {
-    return element(by.id('e2e_test_img_' + row + 'x' + col));
+  function getPiece(row, col, pieceKind) {
+    return element(by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col));
   }
 
   function expectPiece(row, col, pieceKind) {
@@ -21,9 +21,8 @@ describe('TicTacToe', function() {
     // Originally, my animation started from {opacity: 0;}
     // And then the image wasn't displayed.
     // I changed it to start from {opacity: 0.1;}
-    expect(getImg(row, col).isDisplayed()).toEqual(pieceKind === "" ? false : true);
-    expect(getImg(row, col).getAttribute("src")).toEqual(
-      pieceKind === "" ? null : "http://localhost:9000/piece" + pieceKind + ".png");
+    expect(getPiece(row, col, 'X').isDisplayed()).toEqual(pieceKind === "X" ? true : false);
+    expect(getPiece(row, col, 'O').isDisplayed()).toEqual(pieceKind === "O" ? true : false);
   }
 
   function expectBoard(board) {

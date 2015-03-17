@@ -224,10 +224,11 @@ angular.module('myApp')
       var cell = $scope.state.board[row][col];
       return cell !== "";
     };
-    $scope.getImageSrc = function (row, col) {
-      var cell = $scope.state.board[row][col];
-      return cell === "X" ? "pieceX.png"
-          : cell === "O" ? "pieceO.png" : "";
+    $scope.isPieceX = function (row, col) {
+      return $scope.state.board[row][col] === 'X';
+    };
+    $scope.isPieceO = function (row, col) {
+      return $scope.state.board[row][col] === 'O';
     };
     $scope.shouldSlowlyAppear = function (row, col) {
       return $scope.state.delta !== undefined &&
