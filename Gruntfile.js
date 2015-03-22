@@ -27,7 +27,7 @@ module.exports = function(grunt) {
         jasmine: true,
         jquery: true,
         globals: {
-          module: false, // for Gruntfile.js
+          module: false, require: false, // for Gruntfile.js
           exports: false, // for protractor.conf.js
           inject: false, // testing angular
           angular: false,
@@ -125,15 +125,7 @@ module.exports = function(grunt) {
     },
   });
 
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-karma');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-processhtml');
-  grunt.loadNpmTasks('grunt-manifest');
-  grunt.loadNpmTasks('grunt-http-server');
-  grunt.loadNpmTasks('grunt-protractor-runner');
+  require('load-grunt-tasks')(grunt);
 
   // Default task(s).
   grunt.registerTask('default', ['jshint', 'karma',

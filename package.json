@@ -23,7 +23,8 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-karma": "~0.10.1",
     "grunt-contrib-concat": "~0.5.1",
-    "grunt-manifest": "~0.4.0"
+    "grunt-manifest": "~0.4.0",
+    "load-grunt-tasks": "~3.1.0"
   },
   "scripts": {
     "prestart": "npm install",
