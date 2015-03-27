@@ -162,10 +162,10 @@ angular.module('myApp', []).factory('gameLogic', function() {
 ;
 angular.module('myApp')
   .controller('Ctrl',
-      ['$scope', '$log', '$timeout',
+      ['$rootScope', '$scope', '$log', '$timeout',
        'gameService', 'stateService', 'gameLogic', 'aiService',
        'resizeGameAreaService', '$translate',
-      function ($scope, $log, $timeout,
+      function ($rootScope, $scope, $log, $timeout,
         gameService, stateService, gameLogic, aiService,
         resizeGameAreaService, $translate) {
     'use strict';
@@ -176,29 +176,53 @@ angular.module('myApp')
 
     resizeGameAreaService.setWidthToHeight(1);
 
+    var animationEnded = false;
+    var canMakeMove = false;
+    var isComputerTurn = false;
+    var state = null;
+    var turnIndex = null;
+
+    function animationEndedCallback() {
+      $rootScope.$apply(function () {
+        $log.info("Animation ended");
+        animationEnded = true;
+        if (isComputerTurn) {
+          sendComputerMove();
+        }
+      });
+    }
+    // See http://www.sitepoint.com/css3-animation-javascript-event-handlers/
+    document.addEventListener("animationend", animationEndedCallback, false); // standard
+    document.addEventListener("webkitAnimationEnd", animationEndedCallback, false); // WebKit
+    document.addEventListener("oanimationend", animationEndedCallback, false); // Opera
+
+
     function sendComputerMove() {
       gameService.makeMove(
-          aiService.createComputerMove($scope.state.board, $scope.turnIndex,
+          aiService.createComputerMove(state.board, turnIndex,
             // at most 1 second for the AI to choose a move (but might be much quicker)
             {millisecondsLimit: 1000}));
     }
 
     function updateUI(params) {
-      $scope.state = params.stateAfterMove;
-      if ($scope.state.board === undefined) {
-        $scope.state.board = gameLogic.getInitialBoard();
+      animationEnded = false;
+      state = params.stateAfterMove;
+      if (state.board === undefined) {
+        state.board = gameLogic.getInitialBoard();
       }
-      $scope.isYourTurn = params.turnIndexAfterMove >= 0 && // game is ongoing
+      canMakeMove = params.turnIndexAfterMove >= 0 && // game is ongoing
         params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
-      $scope.turnIndex = params.turnIndexAfterMove;
+      turnIndex = params.turnIndexAfterMove;
 
       // Is it the computer's turn?
-      if ($scope.isYourTurn &&
-          params.playersInfo[params.yourPlayerIndex].playerId === '') {
-        $scope.isYourTurn = false; // to make sure the UI won't send another move.
-        // Waiting 0.5 seconds to let the move animation finish; if we call aiService
-        // then the animation is paused until the javascript finishes.
-        $timeout(sendComputerMove, 500);
+      isComputerTurn = canMakeMove &&
+          params.playersInfo[params.yourPlayerIndex].playerId === '';
+      if (isComputerTurn) {
+        // To make sure the player won't click something and send a move instead of the computer sending a move.
+        canMakeMove = false;
+        // We calculate the AI move only after the animation finishes,
+        // because if we call aiService now
+        // then the animation will be paused until the javascript finishes.
       }
     }
     window.e2e_test_stateService = stateService; // to allow us to load any state in our e2e tests.
@@ -208,12 +232,12 @@ angular.module('myApp')
       if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
         throw new Error("Throwing the error because URL has '?throwException'");
       }
-      if (!$scope.isYourTurn) {
+      if (!canMakeMove) {
         return;
       }
       try {
-        var move = gameLogic.createMove($scope.state.board, row, col, $scope.turnIndex);
-        $scope.isYourTurn = false; // to prevent making another move
+        var move = gameLogic.createMove(state.board, row, col, turnIndex);
+        canMakeMove = false; // to prevent making another move
         gameService.makeMove(move);
       } catch (e) {
         $log.info(["Cell is already full in position:", row, col]);
@@ -221,18 +245,19 @@ angular.module('myApp')
       }
     };
     $scope.shouldShowImage = function (row, col) {
-      var cell = $scope.state.board[row][col];
+      var cell = state.board[row][col];
       return cell !== "";
     };
     $scope.isPieceX = function (row, col) {
-      return $scope.state.board[row][col] === 'X';
+      return state.board[row][col] === 'X';
     };
     $scope.isPieceO = function (row, col) {
-      return $scope.state.board[row][col] === 'O';
+      return state.board[row][col] === 'O';
     };
     $scope.shouldSlowlyAppear = function (row, col) {
-      return $scope.state.delta !== undefined &&
-          $scope.state.delta.row === row && $scope.state.delta.col === col;
+      return !animationEnded &&
+          state.delta !== undefined &&
+          state.delta.row === row && state.delta.col === col;
     };
 
     gameService.setGame({
