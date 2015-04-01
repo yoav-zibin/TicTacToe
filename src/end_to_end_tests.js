@@ -122,11 +122,6 @@ describe('TicTacToe', function() {
       [['X', 'O', ''],
        ['X', 'O', ''],
        ['X', '', '']];
-  var delta4 = {row: 2, col: 1};
-  var board4 =
-      [['X', 'O', ''],
-       ['X', 'O', ''],
-       ['', 'X', '']];
 
   var matchState2 = {
     turnIndexBeforeMove: 1,
