@@ -62,6 +62,10 @@ angular.module('myApp')
         // We calculate the AI move only after the animation finishes,
         // because if we call aiService now
         // then the animation will be paused until the javascript finishes.
+        if (state.delta === undefined) {
+          // there is not going to be an animation, so call sendComputerMove() now (can happen in ?onlyAIs mode)
+          sendComputerMove();
+        }
       }
     }
     window.e2e_test_stateService = stateService; // to allow us to load any state in our e2e tests.

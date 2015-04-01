@@ -49,6 +49,14 @@ describe("aiService", function() {
     expect(angular.equals(move[2].set.value, {row: 0, col: 2})).toBe(true);
   });
 
+  it("O prevents another immediate win", function() {
+    var move = _aiService.createComputerMove(
+        [['X', 'O', ''],
+         ['X', 'O', ''],
+         ['', 'X', '']], 1, {maxDepth: 2});
+    expect(angular.equals(move[2].set.value, {row: 2, col: 0})).toBe(true);
+  });
+
   it("X finds a winning move that will lead to winning in 2 steps", function() {
     var move = _aiService.createComputerMove(
         [['X', '', ''],

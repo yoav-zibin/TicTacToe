@@ -21,8 +21,9 @@ describe('TicTacToe', function() {
     // Originally, my animation started from {opacity: 0;}
     // And then the image wasn't displayed.
     // I changed it to start from {opacity: 0.1;}
-    expect(getPiece(row, col, 'X').isDisplayed()).toEqual(pieceKind === "X" ? true : false);
-    expect(getPiece(row, col, 'O').isDisplayed()).toEqual(pieceKind === "O" ? true : false);
+    var msg = row + "x" + col + " should be " + pieceKind;
+    expect(getPiece(row, col, 'X').isDisplayed()).toEqual(pieceKind === "X" ? true : false, msg);
+    expect(getPiece(row, col, 'O').isDisplayed()).toEqual(pieceKind === "O" ? true : false, msg);
   }
 
   function expectBoard(board) {
@@ -151,18 +152,6 @@ describe('TicTacToe', function() {
     lastVisibleTo: {},
     currentVisibleTo: {},
   };
-  var matchState4 = {
-    turnIndexBeforeMove: 0,
-    turnIndex: 1,
-    endMatchScores: null,
-    lastMove: [{setTurn: {turnIndex: 1}},
-         {set: {key: 'board', value: board4}},
-         {set: {key: 'delta', value: delta4}}],
-    lastState: {board: board2, delta: delta2},
-    currentState: {board: board4, delta: delta4},
-    lastVisibleTo: {},
-    currentVisibleTo: {},
-  };
 
   it('can start from a match that is about to end, and win', function () {
     setMatchState(matchState2, 'passAndPlay');
@@ -187,19 +176,9 @@ describe('TicTacToe', function() {
     clickDivAndExpectPiece(2, 1, ""); // can't click after game ended
   });
 
-  it('should make an AI move after at most 1.5 seconds', function () {
-    setMatchState(matchState4, 'playAgainstTheComputer');
-    browser.sleep(1500);
-    expectBoard(
-        [['X', 'O', ''],
-         ['X', 'O', ''],
-         ['O', 'X', '']]);
-    clickDivAndExpectPiece(2, 2, "X"); // Human-player X did a very stupid move!
-    browser.sleep(1500); // AI will now make the winning move
-    expectBoard(
-        [['X', 'O', 'O'],
-         ['X', 'O', ''],
-         ['O', 'X', 'X']]);
-    clickDivAndExpectPiece(1, 2, ""); // Can't make a move after game is over
+  it('with onlyAIs should work', function () {
+    browser.get('http://localhost:9000/game.min.html?onlyAIs');
+    browser.sleep(2000); // wait for AI to make at least one move
+    expectPiece(0, 0, 'X');
   });
 });

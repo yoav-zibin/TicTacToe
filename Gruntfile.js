@@ -23,7 +23,6 @@ module.exports = function(grunt) {
         nonbsp: true,
         nonew: true,
         notypeof: true,
-        singleGroups: true,
         jasmine: true,
         jquery: true,
         globals: {
@@ -38,6 +37,10 @@ module.exports = function(grunt) {
       all: ['Gruntfile.js', 'karma.conf.js', 'protractor.conf.js', 'src/*.js', 'languages/*.js']
     },
     karma: {
+      once: {
+        configFile: 'karma.conf.js',
+        singleRun: true
+      },
       unit: {
         configFile: 'karma.conf.js',
         background: true,
@@ -132,7 +135,7 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'karma',
+  grunt.registerTask('default', ['jshint', 'karma:unit',
       'concat', 'uglify',
       'processhtml', 'manifest',
       'http-server', 'protractor']);

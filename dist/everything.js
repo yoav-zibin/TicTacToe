@@ -223,6 +223,10 @@ angular.module('myApp')
         // We calculate the AI move only after the animation finishes,
         // because if we call aiService now
         // then the animation will be paused until the javascript finishes.
+        if (state.delta === undefined) {
+          // there is not going to be an animation, so call sendComputerMove() now (can happen in ?onlyAIs mode)
+          sendComputerMove();
+        }
       }
     }
     window.e2e_test_stateService = stateService; // to allow us to load any state in our e2e tests.
@@ -298,9 +302,9 @@ angular.module('myApp')
   function createComputerMove(board, playerIndex, alphaBetaLimits) {
     // We use alpha-beta search, where the search states are TicTacToe moves.
     // Recal that a TicTacToe move has 3 operations:
-    // 1) endMatch or setTurn
-    // 2) {set: {key: 'board', value: ...}}
-    // 3) {set: {key: 'delta', value: ...}}]
+    // 0) endMatch or setTurn
+    // 1) {set: {key: 'board', value: ...}}
+    // 2) {set: {key: 'delta', value: ...}}]
     return alphaBetaService.alphaBetaDecision(
         [null, {set: {key: 'board', value: board}}],
         playerIndex, getNextStates, getStateScoreForIndex0,
