@@ -275,17 +275,7 @@ angular.module('myApp')
   .config(['$translateProvider', function($translateProvider) {
     'use strict';
 
-    if (!window.angularTranslations) {
-      throw new Error("We forgot to include languages/en.js in our HTML");
-    }
-    $translateProvider.translations('en', window.angularTranslations);
-    $translateProvider.useStaticFilesLoader({
-        prefix: 'languages/',
-        suffix: '.js'
-      })
-      .registerAvailableLanguageKeys(['en', 'de'])
-      .fallbackLanguage(['en'])
-      .determinePreferredLanguage();
+    $translateProvider.init(['en', 'de']);
   }]);
 ;angular.module('myApp').factory('aiService',
     ["alphaBetaService", "gameLogic",
