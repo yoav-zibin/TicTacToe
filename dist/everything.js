@@ -170,9 +170,7 @@ angular.module('myApp')
         resizeGameAreaService, $translate) {
     'use strict';
 
-    $translate('TICTACTOE_GAME').then(function (translation) {
-      console.log("Translation of 'TICTACTOE_GAME' is " + translation);
-    });
+    console.log("Translation of 'TICTACTOE_GAME' is " + $translate('TICTACTOE_GAME'));
 
     resizeGameAreaService.setWidthToHeight(1);
 
@@ -271,11 +269,6 @@ angular.module('myApp')
       isMoveOk: gameLogic.isMoveOk,
       updateUI: updateUI
     });
-  }])
-  .config(['$translateProvider', function($translateProvider) {
-    'use strict';
-
-    $translateProvider.init(['en', 'de']);
   }]);
 ;angular.module('myApp').factory('aiService',
     ["alphaBetaService", "gameLogic",
