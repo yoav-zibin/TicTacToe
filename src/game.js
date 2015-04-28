@@ -9,7 +9,7 @@ angular.module('myApp')
         resizeGameAreaService, $translate) {
     'use strict';
 
-    console.log("Translation of 'TICTACTOE_GAME' is " + $translate('TICTACTOE_GAME'));
+    console.log("Translation of 'RULES_OF_TICTACTOE' is " + $translate('RULES_OF_TICTACTOE'));
 
     resizeGameAreaService.setWidthToHeight(1);
 
