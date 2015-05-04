@@ -100,7 +100,7 @@ module.exports = function(grunt) {
           ],
           network: [
             'languages/en.js',
-            'languages/de.js',
+            'languages/he.js',
             'dist/everything.min.js.map',
             'dist/everything.js'
           ],
