@@ -44,7 +44,7 @@
         class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
   </div>
 
-  <div class="overlayModal" ng-show="isHelpModalShown" aria-hidden="true">
+  <div class="overlayModal" ng-class="{zeroOpacity: !isHelpModalShown, oneOpacity: isHelpModalShown}" aria-hidden="true">
     <div class="modal-backdrop in"></div>
     <div class="modal-dialog">
       <div class="modal-content">
