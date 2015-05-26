@@ -37,14 +37,9 @@ module.exports = function(grunt) {
       all: ['Gruntfile.js', 'karma.conf.js', 'protractor.conf.js', 'src/*.js', 'languages/*.js']
     },
     karma: {
-      once: {
-        configFile: 'karma.conf.js',
-        singleRun: true
-      },
       unit: {
         configFile: 'karma.conf.js',
-        background: true,
-        singleRun: false
+        singleRun: true
       }
     },
     // Run karma and watch files using:
@@ -141,7 +136,7 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'karma:unit',
+  grunt.registerTask('default', ['jshint', 'karma',
       'concat', 'uglify',
       'processhtml', 'manifest',
       'http-server', 'protractor']);
