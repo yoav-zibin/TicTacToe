@@ -1,16 +1,12 @@
-angular.module('myApp').factory('aiService',
-    ["alphaBetaService", "gameLogic",
-      function(alphaBetaService, gameLogic) {
-
-  'use strict';
-
+module aiService {
   /**
    * Returns the move that the computer player should do for the given board.
    * alphaBetaLimits is an object that sets a limit on the alpha-beta search,
    * and it has either a millisecondsLimit or maxDepth field:
    * millisecondsLimit is a time limit, and maxDepth is a depth limit.
    */
-  function createComputerMove(board, playerIndex, alphaBetaLimits) {
+  export function createComputerMove(
+      board: Board, playerIndex: number, alphaBetaLimits: IAlphaBetaLimits): IMove {
     // We use alpha-beta search, where the search states are TicTacToe moves.
     // Recal that a TicTacToe move has 3 operations:
     // 0) endMatch or setTurn
@@ -24,7 +20,7 @@ angular.module('myApp').factory('aiService',
         alphaBetaLimits);
   }
 
-  function getStateScoreForIndex0(move) { // alphaBetaService also passes playerIndex, in case you need it: getStateScoreForIndex0(move, playerIndex)
+  function getStateScoreForIndex0(move: IMove, playerIndex: number): number {
     if (move[0].endMatch) {
       var endMatchScores = move[0].endMatch.endMatchScores;
       return endMatchScores[0] > endMatchScores[1] ? Number.POSITIVE_INFINITY
@@ -34,13 +30,11 @@ angular.module('myApp').factory('aiService',
     return 0;
   }
 
-  function getNextStates(move, playerIndex) {
+  function getNextStates(move: IMove, playerIndex: number): IMove[] {
     return gameLogic.getPossibleMoves(move[1].set.value, playerIndex);
   }
 
-  function getDebugStateToString(move) {
+  function getDebugStateToString(move: IMove): string {
     return "\n" + move[1].set.value.join("\n") + "\n";
   }
-
-  return {createComputerMove: createComputerMove};
-}]);
+}

@@ -9,6 +9,7 @@
   <meta name="description" content="TicTacToe game">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
+  <!-- The crossorigin attribute controls, for scripts that are obtained from other origins, whether error information will be exposed. -->
   <!-- build:js http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js -->
   <script crossorigin="anonymous" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
   <!-- /build -->
@@ -25,31 +26,31 @@
   <!-- /build -->
 
   <!-- build:js dist/everything.min.js -->
-  <script crossorigin="anonymous" src="src/gameLogic.js"></script>
-  <script crossorigin="anonymous" src="src/game.js"></script>
-  <script crossorigin="anonymous" src="src/aiService.js"></script>
+  <script src="ts_output_readonly_do_NOT_change_manually/src/gameLogic.js"></script>
+  <script src="ts_output_readonly_do_NOT_change_manually/src/game.js"></script>
+  <script src="ts_output_readonly_do_NOT_change_manually/src/aiService.js"></script>
   <!-- /build -->
 
   <script>window.angularTranslationLanguages = ['en', 'he'];</script>
-  <!-- build:js http://yoav-zibin.github.io/emulator/dist/turnBasedServices.2.min.js -->
-  <script crossorigin="anonymous" src="http://yoav-zibin.github.io/emulator/dist/turnBasedServices.2.js"></script>
+  <!-- build:js http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js -->
+  <script crossorigin="anonymous" src="http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.js"></script>
   <!-- /build -->
 
   <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
   <link rel="stylesheet" type="text/css" href="game.css">
 </head>
-<body ng-cloak ng-controller="Ctrl">
+<body ng-cloak>
   <div style="position:absolute; bottom:5px; left: 5px; z-index:10;">
-    <span ng-click="isHelpModalShown = true"
+    <span ng-click="game.isHelpModalShown = true"
         class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
   </div>
 
-  <div class="overlayModal" ng-class="{zeroOpacity: !isHelpModalShown, oneOpacity: isHelpModalShown}" aria-hidden="true">
+  <div class="overlayModal" ng-class="{zeroOpacity: !game.isHelpModalShown, oneOpacity: game.isHelpModalShown}" aria-hidden="true">
     <div class="modal-backdrop in"></div>
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" ng-click="isHelpModalShown = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" ng-click="game.isHelpModalShown = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">
             {{ 'RULES_OF_TICTACTOE' | translate }}
           </h4>
@@ -83,7 +84,7 @@
           </carousel>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" ng-click="isHelpModalShown = false">
+          <button type="button" class="btn btn-primary" ng-click="game.isHelpModalShown = false">
             {{ 'CLOSE' | translate }}
           </button>
         </div>
@@ -98,18 +99,18 @@
     <div ng-repeat="col in [0, 1, 2]"
         style="position:absolute; top:0; left:{{col * 33}}%; width:33%; height:100%;"
         ng-class="{r: col < 2, b: row < 2}"
-        ng-click="cellClicked(row, col)"
+        ng-click="game.cellClicked(row, col)"
         id="{{'e2e_test_div_' + row + 'x' + col}}">
       <div style="width:100%; height: 100%"
-          ng-class="{slowlyAppear: shouldSlowlyAppear(row, col)}"
-          ng-show="shouldShowImage(row, col)">
-        <svg ng-show="isPieceO(row, col)"
+          ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
+          ng-show="game.shouldShowImage(row, col)">
+        <svg ng-show="game.isPieceO(row, col)"
             id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
             width="100%" height="100%">
           <circle cx="50%" cy="50%" r="27%"
             stroke="blue" stroke-width="5%" fill="white" />
         </svg>
-        <svg ng-show="isPieceX(row, col)"
+        <svg ng-show="game.isPieceX(row, col)"
             id="{{'e2e_test_pieceX_' + row + 'x' + col}}"
             width="100%" height="100%">
           <line x1="25%" y1="25%"

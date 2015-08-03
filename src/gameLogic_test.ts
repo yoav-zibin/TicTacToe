@@ -1,25 +1,22 @@
 describe("In TicTacToe", function() {
 
-  'use strict';
-
-  var _gameLogic;
-
-  beforeEach(module("myApp"));
-
-  beforeEach(inject(function (gameLogic) {
-    _gameLogic = gameLogic;
-  }));
-
-  function expectMoveOk(turnIndexBeforeMove, stateBeforeMove, move) {
-    expect(_gameLogic.isMoveOk({turnIndexBeforeMove: turnIndexBeforeMove,
+  function expectMove(
+      turnIndexBeforeMove: number, stateBeforeMove: IState, move: IMove, isOk: boolean): void {
+    expect(gameLogic.isMoveOk({
+      turnIndexBeforeMove: turnIndexBeforeMove,
+      turnIndexAfterMove: null,
       stateBeforeMove: stateBeforeMove,
-      move: move})).toBe(true);
+      stateAfterMove: null,
+      move: move,
+      numberOfPlayers: null})).toBe(isOk);
   }
 
-  function expectIllegalMove(turnIndexBeforeMove, stateBeforeMove, move) {
-    expect(_gameLogic.isMoveOk({turnIndexBeforeMove: turnIndexBeforeMove,
-      stateBeforeMove: stateBeforeMove,
-      move: move})).toBe(false);
+  function expectMoveOk(turnIndexBeforeMove: number, stateBeforeMove: IState, move: IMove): void {
+    expectMove(turnIndexBeforeMove, stateBeforeMove, move, true);
+  }
+
+  function expectIllegalMove(turnIndexBeforeMove: number, stateBeforeMove: IState, move: IMove): void {
+    expectMove(turnIndexBeforeMove, stateBeforeMove, move, false);
   }
 
   it("placing X in 0x0 from initial state is legal", function() {
@@ -178,7 +175,7 @@ describe("In TicTacToe", function() {
         [['O', 'O', 'X'],
          ['X', 'X', 'O'],
          ['O', 'X', '']];
-    var possibleMoves = _gameLogic.getPossibleMoves(board, 0);
+    var possibleMoves = gameLogic.getPossibleMoves(board, 0);
     var expectedMove = [{endMatch: {endMatchScores: [0, 0]}},
         {set: {key: 'board', value:
           [['O', 'O', 'X'],
