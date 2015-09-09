@@ -98,14 +98,10 @@ interface StringDictionary {
 interface StringNumberDictionary {
   [index: string]: (string|number);
 }
-interface Window {
-  angularTranslationLanguages: string[];
-  angularTranslationsLoaded: (lang: string, codeToL10N: StringDictionary) => void;
-}
-
 interface ITranslateService {
   (translationId: string, interpolateParams?: StringDictionary): string;
   getLanguage(): string;
+  setLanguage(language: string, codeToL10N: StringDictionary): void;
 }
 declare var translate: ITranslateService;
 

@@ -88,7 +88,7 @@ var gameLogic;
      * with index turnIndexBeforeMove makes a move in cell row X col.
      */
     function createMove(board, row, col, turnIndexBeforeMove) {
-        if (board === undefined) {
+        if (!board) {
             // Initially (at the beginning of the match), the board in state is undefined.
             board = getInitialBoard();
         }

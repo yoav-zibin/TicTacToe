@@ -57,8 +57,6 @@ module.exports = function(grunt) {
             'imgs/HelpSlide2.png'
           ],
           network: [
-            'languages/en.js',
-            'languages/he.js',
             'dist/everything.min.js.map',
             'dist/everything.js'
           ],

@@ -101,7 +101,7 @@ module gameLogic {
    */
   export function createMove(
       board: Board, row: number, col: number, turnIndexBeforeMove: number): IMove {
-    if (board === undefined) {
+    if (!board) {
       // Initially (at the beginning of the match), the board in state is undefined.
       board = getInitialBoard();
     }
