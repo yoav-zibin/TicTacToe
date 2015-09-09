@@ -95,9 +95,6 @@ declare var alphaBetaService: IAlphaBetaService;
 interface StringDictionary {
   [index: string]: string;
 }
-interface StringNumberDictionary {
-  [index: string]: (string|number);
-}
 interface ITranslateService {
   (translationId: string, interpolateParams?: StringDictionary): string;
   getLanguage(): string;
