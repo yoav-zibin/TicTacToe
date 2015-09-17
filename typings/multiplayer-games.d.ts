@@ -67,8 +67,6 @@ interface IUpdateUI extends IIsMoveOk {
 interface IGame {
   isMoveOk(move: IIsMoveOk): boolean;
   updateUI(update: IUpdateUI): void;
-  minNumberOfPlayers: number;
-  maxNumberOfPlayers: number;
 }
 interface IGameService {
   setGame(game: IGame): void;
