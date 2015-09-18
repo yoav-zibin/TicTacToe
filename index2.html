@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!-- build:[manifest] game.appcache -->
+<html lang="en" ng-app="myApp" ng-strict-di>
+<!-- /build -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>TicTacToe</title>
+  <meta name="description" content="TicTacToe game">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <!-- The crossorigin attribute controls, for scripts that are obtained from other origins, whether error information will be exposed. -->
+  <!-- build:js http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js -->
+  <script crossorigin="anonymous" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
+  <!-- /build -->
+
+  <!-- For the game rules/instructions, I use carousel from Angular UI + Bootstrap -->
+  <!-- build:css http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.css">
+  <!-- /build -->
+  <!-- build:js http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-touch.min.js -->
+  <script crossorigin="anonymous" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-touch.js"></script>
+  <!-- /build -->
+  <!-- build:js http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js -->
+  <script crossorigin="anonymous" src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.js"></script>
+  <!-- /build -->
+
+  <!-- build:js dist/everything.min.js -->
+  <script src="ts_output_readonly_do_NOT_change_manually/src/gameLogic.js"></script>
+  <script src="ts_output_readonly_do_NOT_change_manually/src/game.js"></script>
+  <script src="ts_output_readonly_do_NOT_change_manually/src/aiService.js"></script>
+  <!-- /build -->
+
+  <!-- build:js http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js -->
+  <script crossorigin="anonymous" src="http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.js"></script>
+  <!-- /build -->
+
+  <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
+  <link rel="stylesheet" type="text/css" href="game.css">
+</head>
+<body ng-cloak>
+  <div style="position:absolute; bottom:5px; left: 5px; z-index:10;">
+    <span ng-click="game.isHelpModalShown = true"
+        class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+  </div>
+
+  <div class="overlayModal" ng-class="{zeroOpacity: !game.isHelpModalShown, oneOpacity: game.isHelpModalShown}" aria-hidden="true">
+    <div class="modal-backdrop in"></div>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="game.isHelpModalShown = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">
+            {{ 'RULES_OF_TICTACTOE' | translate }}
+          </h4>
+        </div>
+        <div class="modal-body">
+          <carousel style="height: 150px">
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                    {{ 'RULES_SLIDE1' | translate }}
+                  </td>
+                  <td>
+                    <img src="imgs/HelpSlide1.png" style="height:100px;">
+                  </td>
+                </tr>
+              </table>
+            </slide>
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                  {{ 'RULES_SLIDE2' | translate }}
+                  </td>
+                  <td>
+                    <img src="imgs/HelpSlide2.png" style="height:100px;">
+                  </td>
+                </tr>
+              </table>
+            </slide>
+          </carousel>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" ng-click="game.isHelpModalShown = false">
+            {{ 'CLOSE' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div id="gameArea">
+
+  <div ng-repeat="row in [0, 1, 2]"
+      style="position:absolute; top:{{row * 33}}%; left:0; width:100%; height:33%;">
+    <div ng-repeat="col in [0, 1, 2]"
+        style="position:absolute; top:0; left:{{col * 33}}%; width:33%; height:100%;"
+        ng-class="{r: col < 2, b: row < 2}"
+        ng-click="game.cellClicked(row, col)"
+        id="{{'e2e_test_div_' + row + 'x' + col}}">
+      <div style="width:100%; height: 100%"
+          ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
+          ng-show="game.shouldShowImage(row, col)">
+        <svg ng-show="game.isPieceO(row, col)"
+            id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
+            width="100%" height="100%">
+          <circle cx="50%" cy="50%" r="27%"
+            stroke="blue" stroke-width="5%" fill="white" />
+        </svg>
+        <svg ng-show="game.isPieceX(row, col)"
+            id="{{'e2e_test_pieceX_' + row + 'x' + col}}"
+            width="100%" height="100%">
+          <line x1="25%" y1="25%"
+                x2="75%" y2="75%"
+                stroke="red"
+                stroke-width="5%"/>
+          <line x1="25%" y1="75%"
+                x2="75%" y2="25%"
+                stroke="red"
+                stroke-width="5%"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
