@@ -7,7 +7,7 @@ describe('TicTacToe', function() {
   }
 
   beforeEach(function() {
-    getPage('game.min.html');
+    getPage('index.min.html');
   });
 
   function getDiv(row: number, col: number) {
@@ -98,14 +98,14 @@ describe('TicTacToe', function() {
   });
 
   it('with playAgainstTheComputer should work', function () {
-    getPage('game.min.html?playAgainstTheComputer');
+    getPage('index.min.html?playAgainstTheComputer');
     clickDivAndExpectPiece(1, 0, "X");
     browser.sleep(2000); // wait for AI to make at least one move
     expectPiece(0, 0, 'O');
   });
 
   it('with onlyAIs should work', function () {
-    browser.get('game.min.html?onlyAIs');
+    browser.get('index.min.html?onlyAIs');
     browser.sleep(2000); // wait for AI to make at least one move
     expectPiece(0, 0, 'X');
   });
