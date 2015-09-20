@@ -32,6 +32,19 @@
  *
  * Note: The number of row and col are both zero based
  *
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * The move operation is an array consist of several parts:
+ *
+ * 0 - setTurn: {setTurn: {turnIndex: 0}}
+ * 0 - endMatch: {endMatch: {endMatchScores: [1, 0]}}
+ * 1 - setBoard: {set: {key: 'board', value: [[...], ..., [...]]}}
+ * 2 - setDeltaFrom: {set: {key: 'deltaFrom', value: {row: row, col: col}}}
+ * 3 - setDeltaTo: {set: {key: 'deltaTo', value: {row: row, col: col}}}
+ *
+ * Notes: move[0] can be either setTurn or endMatch
+ *
  */
 
 type Board = string[][];
@@ -73,26 +86,11 @@ module gameLogic {
            ['BTiger', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'BLion']];
   }
 
-  // /**
-  //  * Returns true if the game ended in a tie because there are
-  //  * no available moves for any pieces
-  //  *
-  //  * @board: the board representation
-  //  * @turnIndex: current player (0: Black, 1: White)
-  //  *
-  //  * return true if the game ended in a tie because
-  //  * there are no available moves for any pieces
-  //  */
-  // function isTie(board: Board, turnIndex: number): boolean {
-  //
-  // }
-
-
   /**
   * Returns turnIndex initial
   * 0: Black;    1: White
   */
-  function getTurn(turnIndex) {
+  function getTurn(turnIndex):string {
     return (turnIndex === 0 ? 'B' : 'W');
   }
 
@@ -103,14 +101,14 @@ module gameLogic {
   */
   function getIdFromAnimal(animal: string): number {
     switch (name) {
-      case "Mouse": return 0;
-      case "Cat": return 1;
-      case "Wolf": return 2;
-      case "Dog": return 3;
-      case "Leopard": return 4;
-      case "Tiger": return 5;
-      case "Lion": return 6;
-      case "Elephant": return 7;
+      case "Mouse": return 0; break;
+      case "Cat": return 1; break;
+      case "Wolf": return 2; break;
+      case "Dog": return 3; break;
+      case "Leopard": return 4; break;
+      case "Tiger": return 5; break;
+      case "Lion": return 6; break;
+      case "Elephant": return 7; break;
       default:
         try {
           throw new Error("Cannot transfor from this animal to int ID");
@@ -138,14 +136,14 @@ module gameLogic {
   function isOwnTrap(turnIndexBeforeMove: number, deltaFrom: BoardDelta):boolean {
     if(turnIndexBeforeMove === 0) {
       for(var trap in gameConstVals.BlackTraps) {
-        if(trap.col === deltaFrom.col && trap.row === deltaFrom.row) {
+        if(angular.equals(trap, deltaFrom)) {
           return true;
         }
       }
       return false;
     }else if(turnIndexBeforeMove === 1) {
       for(var trap in gameConstVals.WhiteTraps) {
-        if(trap.col === deltaFrom.col && trap.row === deltaFrom.row) {
+        if(angular.equals(trap, deltaFrom)) {
           return true;
         }
       }
@@ -158,45 +156,6 @@ module gameLogic {
         console.log(err);
       }
     }
-  }
-
-  /**
-   * Return true if the position is opponent's own trap
-   */
-  function isOpponentTrap(turnIndexBeforeMove: number, deltaFrom: BoardDelta):boolean {
-    if(turnIndexBeforeMove === 0) {
-      for(var trap in gameConstVals.WhiteTraps) {
-        if(trap.col === deltaFrom.col && trap.row === deltaFrom.row) {
-          return true;
-        }
-      }
-      return false;
-    }else if(turnIndexBeforeMove === 1) {
-      for(var trap in gameConstVals.BlackTraps) {
-        if(trap.col === deltaFrom.col && trap.row === deltaFrom.row) {
-          return true;
-        }
-      }
-      return false;
-    }else {
-      try {
-        throw new Error("turnIndexBeforeMove is wrong");
-      }
-      catch(err) {
-        console.log(err);
-      }
-    }
-  }
-
-  /**
-   * Return true if the position is a trap
-   */
-  function isTrap(turnIndexBeforeMove: number, deltaFrom: BoardDelta):boolean {
-    if(isOwnTrap(turnIndexBeforeMove, deltaFrom)
-      || isOpponentTrap(turnIndexBeforeMove, deltaFrom)) {
-      return true;
-    }
-    return false;
   }
 
   /**
@@ -216,14 +175,12 @@ module gameLogic {
    */
   function isOwnDen(turnIndexBeforeMove: number, deltaFrom: BoardDelta):boolean {
     if(turnIndexBeforeMove === 0) {
-      if(deltaFrom.col === gameConstVals.BlackDen.col
-        && deltaFrom.row === gameConstVals.BlackDen.row) {
+      if(angular.equals(deltaFrom, gameConstVals.BlackDen)) {
         return true;
       }
       return false;
     }else if(turnIndexBeforeMove === 1) {
-      if(deltaFrom.col === gameConstVals.WhiteDen.col
-        && deltaFrom.row === gameConstVals.WhiteDen.row) {
+      if(angular.equals(deltaFrom, gameConstVals.WhiteDen)) {
         return true;
       }
       return false;
@@ -236,44 +193,6 @@ module gameLogic {
       }
     }
   }
-
-  /**
-   * Return true if the position is opponent's own den
-   */
-  function isOpponentDen(turnIndexBeforeMove: number, deltaFrom: BoardDelta):boolean {
-    if(turnIndexBeforeMove === 0) {
-      if(deltaFrom.col === gameConstVals.WhiteDen.col
-        && deltaFrom.row === gameConstVals.WhiteDen.row) {
-        return true;
-      }
-      return false;
-    }else if(turnIndexBeforeMove === 1) {
-      if(deltaFrom.col === gameConstVals.BlackDen.col
-        && deltaFrom.row === gameConstVals.BlackDen.row) {
-        return true;
-      }
-      return false;
-    }else {
-      try {
-        throw new Error("turnIndexBeforeMove is wrong");
-      }
-      catch(err) {
-        console.log(err);
-      }
-    }
-  }
-
-  /**
-   * Return true if the position a den
-   */
-  function isDen(turnIndexBeforeMove: number, deltaFrom: BoardDelta):boolean {
-    if(isOwnDen(turnIndexBeforeMove, deltaFrom)
-      || isOpponentDen(turnIndexBeforeMove, deltaFrom)) {
-      return true;
-    }
-    return false;
-  }
-
 
   /**
    * Return true if the position has no chess piece
@@ -309,22 +228,25 @@ module gameLogic {
     }
   }
 
-
-
   /**
    * Return the winner (either 'W' or 'B') or '' if there is no winner
    */
-  function getWinner(board: Board, turnIndexBeforeMove: number): string {
-
+  function getWinner(board: Board): string {
+    if(board[gameConstVals.BlackDen.row][gameConstVals.BlackDen.col] !== 'BDen') {
+      return 'W';
+    }else if(board[gameConstVals.WhiteDen.row][gameConstVals.WhiteDen.col] !== 'WDen') {
+      return 'B';
+    }else {
+      return '';
+    }
   }
-
 
   /**
    * Returns the list of available positions for animal
    * that who can only move on land but not jump through river
    * include: Cat, Wolf, Dog, Leopard, Elephant
    */
-  function getAnimalLandPossibleMoves(board: Board, turnIndexBeforeMove: number,
+  function getLandAnimalPossibleMoves(board: Board, turnIndexBeforeMove: number,
     deltaFrom: BoardDelta): IMove[] {
       var possibleMoves: IMove[] = [];
 
@@ -335,45 +257,47 @@ module gameLogic {
       var leftMove: BoardDelta = {row: deltaFrom.row, col: deltaFrom.col - 1};
       var rightMove: BoardDelta = {row: deltaFrom.row, col: deltaFrom.col + 1};
 
-      getAnimalLandPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, upMove, possibleMoves);
-      getAnimalLandPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, downMove, possibleMoves);
-      getAnimalLandPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, leftMove, possibleMoves);
-      getAnimalLandPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, rightMove, possibleMoves);
+      if(canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, upMove)) {
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, upMove));
+      }
+      if(canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, downMove)) {
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, downMove));
+      }
+      if(canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, leftMove)) {
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, leftMove));
+      }
+      if(canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, rightMove)) {
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, rightMove));
+      }
       return possibleMoves;
   }
 
-  function getAnimalLandPossibleMovesHelper(board: Board, turnIndexBeforeMove: number,
-    deltaFrom: BoardDelta, deltaTo: BoardDelta, possibleMoves: IMove[]) {
-      // not out board, not river, not own den
-      if(!isOutBoard(deltaTo) && !isInRiver(deltaTo) && !isOwnDen(turnIndexBeforeMove, deltaTo)) {
-        // no chess piece there
-        if(noChessPiece(board, deltaTo)) {
-          possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
-        }else {
-          // the chess there is opponent's
-          if(!isOwnChessPiece(board, turnIndexBeforeMove, deltaTo)) {
-            // player's animal is equal or bigger then opponent
-            var playerAnimal = board[deltaFrom.row][deltaFrom.col];
-            var opponentAnimal = board[deltaTo.row][deltaTo.col];
-            var playerAnimalID = getIdFromAnimal(playerAnimal.substring(1));
-            var opponentAnimalID = getIdFromAnimal(opponentAnimal.substring(1));
+  /**
+   * Returns true if the land animal can move to destination
+   * include: Cat, Wolf, Dog, Leopard, Elephant
+   */
+  function canLandAnimalMove(board: Board, turnIndexBeforeMove: number, deltaFrom: BoardDelta, deltaTo: BoardDelta): boolean {
+    // cannot out board, in river or own den
+    if(isOutBoard(deltaTo) || isInRiver(deltaTo) || isOwnDen(turnIndexBeforeMove, deltaTo)) {
+      return false;
+    }
 
-            // opponent's animal is in player's trap
-            if(isOwnTrap(turnIndexBeforeMove, deltaTo)) {
-              possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
-            }else {
-              if(playerAnimalID >= opponentAnimalID) {
-                // Elephant cannot eat Mouse
-                if(playerAnimalID === 7 && opponentAnimalID === 0) {
-                  // do nothing
-                }else {
-                  possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
-                }
-              }
-            }
-          }
-        }
+    // can only move one cell throw up, down, left or right direction
+    if(deltaFrom.row !== deltaTo.row && deltaFrom.col !== deltaTo.col) {
+      return false;
+    }else if(deltaFrom.row === deltaTo.row) {
+      if(Math.abs(deltaFrom.col - deltaTo.col) !== 1) {
+        return false;
       }
+    }else if(deltaFrom.col === deltaTo.col) {
+      if(Math.abs(deltaFrom.row - deltaTo.row) !== 1) {
+        return false;
+      }
+    }else if(angular.equals(deltaFrom, deltaTo)) {
+      return false;
+    }else {};
+
+    return canMoveHelper(board, turnIndexBeforeMove, deltaFrom, deltaTo);
   }
 
   /**
@@ -423,7 +347,7 @@ module gameLogic {
    * that who can move on land and also jump through river
    * include: Tiger, Lion
    */
-  function getAnimalFlyRiverPossibleMoves(board: Board, turnIndexBeforeMove: number,
+  function getFlyAnimalPossibleMoves(board: Board, turnIndexBeforeMove: number,
     deltaFrom: BoardDelta): IMove[] {
       var possibleMoves: IMove[] = [];
 
@@ -434,73 +358,177 @@ module gameLogic {
         // rat is not on the way, can fly throguh river
         if(!isMouseOnWay(board, deltaFrom, upMove)) {
           upMove.row = upMove.row - 3;
-          getAnimalFlyRiverPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, upMove, possibleMoves);
+          if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, upMove)) {
+            possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, upMove));
+          }
         }
       }else {
-        getAnimalFlyRiverPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, upMove, possibleMoves);
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, upMove));
       }
 
       var downMove: BoardDelta = {row: deltaFrom.row + 1, col: deltaFrom.col};
       if(isInRiver(downMove)) {
         if(!isMouseOnWay(board, deltaFrom, downMove)) {
           downMove.row = downMove.row + 3;
-          getAnimalFlyRiverPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, downMove, possibleMoves);
+          if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, downMove)) {
+            possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, downMove));
+          }
         }
       }else {
-        getAnimalFlyRiverPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, downMove, possibleMoves);
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, downMove));
       }
 
       var leftMove: BoardDelta = {row: deltaFrom.row, col: deltaFrom.col - 1};
       if(isInRiver(leftMove)) {
         if(!isMouseOnWay(board, deltaFrom, leftMove)) {
           leftMove.col = leftMove.col - 2;
-          getAnimalFlyRiverPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, leftMove, possibleMoves);
+          if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, leftMove)) {
+            possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, leftMove));
+          }
         }
       }else {
-        getAnimalFlyRiverPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, leftMove, possibleMoves);
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, leftMove));
       }
 
       var rightMove: BoardDelta = {row: deltaFrom.row, col: deltaFrom.col + 1};
       if(isInRiver(rightMove)) {
         if(!isMouseOnWay(board, deltaFrom, rightMove)) {
           rightMove.col = rightMove.col + 2;
-          getAnimalFlyRiverPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, rightMove, possibleMoves);
+          if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, rightMove)) {
+            possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, rightMove));
+          }
         }
       }else {
-        getAnimalFlyRiverPossibleMovesHelper(board, turnIndexBeforeMove, deltaFrom, rightMove, possibleMoves);
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, rightMove));
       }
 
       return possibleMoves;
   }
 
-  function getAnimalFlyRiverPossibleMovesHelper(board: Board, turnIndexBeforeMove: number,
-    deltaFrom: BoardDelta, deltaTo: BoardDelta, possibleMoves: IMove[]) {
-      // not out board, not own den
-      if(!isOutBoard(deltaTo) && !isOwnDen(turnIndexBeforeMove, deltaTo)) {
-        // no chess piece there
-        if(noChessPiece(board, deltaTo)) {
-          possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
-        }else {
-          // the chess there is opponent's
-          if(!isOwnChessPiece(board, turnIndexBeforeMove, deltaTo)) {
-            // player's animal is equal or bigger then opponent
-            var playerAnimal = board[deltaFrom.row][deltaFrom.col];
-            var opponentAnimal = board[deltaTo.row][deltaTo.col];
-            var playerAnimalID = getIdFromAnimal(playerAnimal.substring(1));
-            var opponentAnimalID = getIdFromAnimal(opponentAnimal.substring(1));
+  /**
+   * Returns true if the fly animal can move to destination
+   * include: Tiger, Lion
+   */
+  function canFlyAnimalMove(board: Board, turnIndexBeforeMove: number, deltaFrom: BoardDelta, deltaTo: BoardDelta): boolean {
+    // cannot out board, in river or own den
+    if(isOutBoard(deltaTo) || isInRiver(deltaTo) || isOwnDen(turnIndexBeforeMove, deltaTo)) {
+      return false;
+    }
 
-            // opponent's animal is in player's trap
-            if(isOwnTrap(turnIndexBeforeMove, deltaTo)) {
-              possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+    // can only move one cell throw up, down, left or right direction
+    if(deltaFrom.row !== deltaTo.row && deltaFrom.col !== deltaTo.col) {
+      return false;
+    }else if(deltaFrom.row === deltaTo.row) {
+      // no fly: diff 1     fly: diff 3
+      if(Math.abs(deltaFrom.col - deltaTo.col) !== 1 || Math.abs(deltaFrom.col - deltaTo.col) !== 3) {
+        return false;
+      }
+    }else if(deltaFrom.col === deltaTo.col) {
+      // no fly: diff 1     fly: diff 4
+      if(Math.abs(deltaFrom.row - deltaTo.row) !== 1 || Math.abs(deltaFrom.row - deltaTo.row) !== 4) {
+        return false;
+      }
+    }else if(angular.equals(deltaFrom, deltaTo)) {
+      return false;
+    }else {};
+
+    // move throw parallel direction
+    if(deltaFrom.row === deltaTo.row) {
+      var deltaNext: BoardDelta;
+      // move throw right direction
+      if(deltaFrom.col < deltaTo.col) {
+         deltaNext = {row: deltaFrom.row, col: deltaFrom.col+1};
+         if(isInRiver(deltaNext)) {
+           if(deltaTo.col - deltaFrom.col === 1) {
+             return false;
+           }else {
+             if(isMouseOnWay(board, deltaFrom, deltaTo)) {
+               return false;
+             }else {
+               return canMoveHelper(board, turnIndexBeforeMove, deltaFrom, deltaTo);
+             }
+           }
+         }else {
+           // fly on land is illegal
+           if(deltaTo.col - deltaFrom.col === 3) {
+             return false;
+           }else {
+             return canMoveHelper(board, turnIndexBeforeMove, deltaFrom, deltaTo);
+           }
+         }
+      }
+      // move throw left direction
+      else {
+        deltaNext = {row: deltaFrom.row, col: deltaFrom.col-1};
+        if(isInRiver(deltaNext)) {
+          if(deltaFrom.col - deltaTo.col === 1) {
+            return false;
+          }else {
+            if(isMouseOnWay(board, deltaFrom, deltaTo)) {
+              return false;
             }else {
-              if(playerAnimalID >= opponentAnimalID) {
-                // player animal can only be Tiger or Lion
-                possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
-              }
+              return canMoveHelper(board, turnIndexBeforeMove, deltaFrom, deltaTo);
             }
+          }
+        }else {
+          // fly on land is illegal
+          if(deltaFrom.col - deltaTo.col === 3) {
+            return false;
+          }else {
+            return canMoveHelper(board, turnIndexBeforeMove, deltaFrom, deltaTo);
           }
         }
       }
+    }
+    // move throw vertical direction
+    else {
+      var deltaNext: BoardDelta;
+      // move throw down direction
+      if(deltaFrom.row < deltaTo.row) {
+        deltaNext = {row: deltaFrom.row+1, col: deltaFrom.col};
+        if(isInRiver(deltaNext)) {
+          if(deltaTo.col - deltaFrom.col === 1) {
+            return false;
+          }else {
+            if(isMouseOnWay(board, deltaFrom, deltaTo)) {
+              return false;
+            }else {
+              return canMoveHelper(board, turnIndexBeforeMove, deltaFrom, deltaTo);
+            }
+          }
+        }else {
+          // fly on land is illegal
+          if(deltaTo.col - deltaFrom.col === 4) {
+            return false;
+          }else {
+            return canMoveHelper(board, turnIndexBeforeMove, deltaFrom, deltaTo);
+          }
+        }
+      }
+      // move throw up direction
+      else {
+        deltaNext = {row: deltaFrom.row-1, col: deltaFrom.col};
+        if(isInRiver(deltaNext)) {
+          if(deltaFrom.col - deltaTo.col === 1) {
+            return false;
+          }else {
+            if(isMouseOnWay(board, deltaFrom, deltaTo)) {
+              return false;
+            }else {
+              return canMoveHelper(board, turnIndexBeforeMove, deltaFrom, deltaTo);
+            }
+          }
+        }else {
+          // fly on land is illegal
+          if(deltaFrom.col - deltaTo.col === 4) {
+            return false;
+          }else {
+            return canMoveHelper(board, turnIndexBeforeMove, deltaFrom, deltaTo);
+          }
+        }
+      }
+    }
+
   }
 
   /**
@@ -508,7 +536,7 @@ module gameLogic {
    * that who can move on land and also swim in river
    * include: Mouse
    */
-  function getAnimalSwimRiverPossibleMoves(board: Board, turnIndexBeforeMove: number,
+  function getSwimAnimalPossibleMoves(board: Board, turnIndexBeforeMove: number,
     deltaFrom: BoardDelta): IMove[] {
       var possibleMoves: IMove[] = [];
 
@@ -519,64 +547,105 @@ module gameLogic {
       var leftMove: BoardDelta = {row: deltaFrom.row, col: deltaFrom.col - 1};
       var rightMove: BoardDelta = {row: deltaFrom.row, col: deltaFrom.col + 1};
 
-      getAnimalSwimRiverPossibleMoves(board, turnIndexBeforeMove, deltaFrom, upMove, possibleMoves);
-      getAnimalSwimRiverPossibleMoves(board, turnIndexBeforeMove, deltaFrom, downMove, possibleMoves);
-      getAnimalSwimRiverPossibleMoves(board, turnIndexBeforeMove, deltaFrom, leftMove, possibleMoves);
-      getAnimalSwimRiverPossibleMoves(board, turnIndexBeforeMove, deltaFrom, rightMove, possibleMoves);
+      if(canSwimAnimalMove(board, turnIndexBeforeMove, deltaFrom, upMove)) {
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, upMove));
+      }
+      if(canSwimAnimalMove(board, turnIndexBeforeMove, deltaFrom, downMove)) {
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, downMove));
+      }
+      if(canSwimAnimalMove(board, turnIndexBeforeMove, deltaFrom, leftMove)) {
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, leftMove));
+      }
+      if(canSwimAnimalMove(board, turnIndexBeforeMove, deltaFrom, rightMove)) {
+        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, rightMove));
+      }
+
       return possibleMoves;
   }
 
-  function getAnimalSwimRiverPossibleMovesHelper(board: Board, turnIndexBeforeMove: number,
-    deltaFrom: BoardDelta, deltaTo: BoardDelta, possibleMoves: IMove[]) {
-      // not out board, not own den
-      if(!isOutBoard(deltaTo) && !isOwnDen(turnIndexBeforeMove, deltaTo)) {
-        // no chess piece there
-        if(noChessPiece(board, deltaTo)) {
-          possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
-        }else {
-          // the chess there is opponent's
-          if(!isOwnChessPiece(board, turnIndexBeforeMove, deltaTo)) {
-            // player's animal can only be Mouse
-            var opponentAnimal = board[deltaTo.row][deltaTo.col];
-            var playerAnimalID = 0;
-            var opponentAnimalID = getIdFromAnimal(opponentAnimal.substring(1));
+  /**
+   * Returns true if the fly animal can move to destination
+   * include: Tiger, Lion
+   */
+  function canSwimAnimalMove(board: Board, turnIndexBeforeMove: number, deltaFrom: BoardDelta, deltaTo: BoardDelta): boolean {
+    // cannot out board, in river or own den
+    if(isOutBoard(deltaTo) || isOwnDen(turnIndexBeforeMove, deltaTo)) {
+      return false;
+    }
 
-            // opponent's animal is in player's trap
-            if(isOwnTrap(turnIndexBeforeMove, deltaTo)) {
-              possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+    // can only move one cell throw up, down, left or right direction
+    if(deltaFrom.row !== deltaTo.row && deltaFrom.col !== deltaTo.col) {
+      return false;
+    }else if(deltaFrom.row === deltaTo.row) {
+      if(Math.abs(deltaFrom.col - deltaTo.col) !== 1) {
+        return false;
+      }
+    }else if(deltaFrom.col === deltaTo.col) {
+      if(Math.abs(deltaFrom.row - deltaTo.row) !== 1) {
+        return false;
+      }
+    }else if(angular.equals(deltaFrom, deltaTo)) {
+      return false;
+    }else {};
+
+    return canMoveHelper(board, turnIndexBeforeMove, deltaFrom, deltaTo);
+  }
+
+  /**
+   * Returns true if can move
+   * for final compare: no chess piece there or has chess piece there
+   */
+  function canMoveHelper(board: Board, turnIndexBeforeMove: number, deltaFrom: BoardDelta, deltaTo: BoardDelta): boolean {
+    // no chess piece there
+    if(noChessPiece(board, deltaTo)) {
+      return true;
+    }else {
+      // the chess there is opponent's
+      if(!isOwnChessPiece(board, turnIndexBeforeMove, deltaTo)) {
+        // player's animal can only be Mouse
+        var playerAnimal = board[deltaFrom.row][deltaFrom.col];
+        var opponentAnimal = board[deltaTo.row][deltaTo.col];
+        var playerAnimalID = getIdFromAnimal(playerAnimal.substring(1));
+        var opponentAnimalID = getIdFromAnimal(opponentAnimal.substring(1));
+
+        // opponent's animal is in player's trap
+        if(isOwnTrap(turnIndexBeforeMove, deltaTo)) {
+          return true;
+        }else {
+          // Elephant and Mouse is special
+          if(playerAnimalID >= opponentAnimalID) {
+            if(playerAnimalID === 7 && opponentAnimalID === 0) {
+              return false;
             }else {
-              // in this case, opponent's animal can only be Mouse
-              if(playerAnimalID >= opponentAnimalID) {
-                possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
-              }else if(opponentAnimalID === 7){
-                // the Mouse in river cannot eat Elephant on the land
-                // only Mouse on the land can eat Elephant
-                if(!isInRiver(deltaFrom)) {
-                  possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
-                }
+              return true;
+            }
+          }else {
+            if(playerAnimalID === 0 && opponentAnimalID === 7) {
+              // the Mouse in river cannot eat Elephant on the land
+              // only Mouse on the land can eat Elephant
+              if(isInRiver(deltaFrom)) {
+                return false;
+              }else {
+                return true;
               }
+            }else {
+              return false;
             }
           }
         }
+      }else {
+        return false;
       }
+    }
   }
-
 
   /**
    * Returns the list of available positions for Elephant to move
    */
   export function getElephantPossibleMoves(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getAnimalLandPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    var possibleMoves: IMove[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
-  }
-
-  /**
-   * Returns true if the Elephant has any place to move
-   */
-  function canElephantMoveAnywhere(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
-      return getElephantPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
 
   /**
@@ -584,16 +653,8 @@ module gameLogic {
    */
   export function getLionPossibleMoves(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getAnimalFlyRiverPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    var possibleMoves: IMove[] = getFlyAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
-  }
-
-  /**
-   * Returns true if the Lion has any place to move
-   */
-  function canLionMoveAnywhere(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
-      return getLionPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
 
   /**
@@ -601,16 +662,8 @@ module gameLogic {
    */
   export function getTigerPossibleMoves(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getAnimalFlyRiverPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    var possibleMoves: IMove[] = getFlyAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
-  }
-
-  /**
-   * Returns true if the Tiger has any place to move
-   */
-  function canTigerMoveAnywhere(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
-      return getTigerPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
 
   /**
@@ -618,16 +671,8 @@ module gameLogic {
    */
   export function getLeopardPossibleMoves(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getAnimalLandPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    var possibleMoves: IMove[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
-  }
-
-  /**
-   * Returns true if the Leopard has any place to move
-   */
-  function canLeopardMoveAnywhere(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
-      return getLeopardPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
 
   /**
@@ -635,16 +680,8 @@ module gameLogic {
    */
   export function getDogPossibleMoves(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getAnimalLandPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    var possibleMoves: IMove[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
-  }
-
-  /**
-   * Returns true if the Dog has any place to move
-   */
-  function canDogMoveAnywhere(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
-      return getDogPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
 
   /**
@@ -652,16 +689,8 @@ module gameLogic {
    */
   export function getWolfPossibleMoves(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getAnimalLandPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    var possibleMoves: IMove[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
-  }
-
-  /**
-   * Returns true if the Wolf has any place to move
-   */
-  function canWolfMoveAnywhere(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
-      return getWolfPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
 
   /**
@@ -669,16 +698,8 @@ module gameLogic {
    */
   export function getCatPossibleMoves(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getAnimalLandPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    var possibleMoves: IMove[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
-  }
-
-  /**
-   * Returns true if the Cat has any place to move
-   */
-  function canCatMoveAnywhere(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
-      return getCatPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
 
   /**
@@ -686,18 +707,103 @@ module gameLogic {
    */
   export function getMousePossibleMoves(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getAnimalSwimRiverPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    var possibleMoves: IMove[] = getSwimAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
   }
 
   /**
-   * Returns true if the Mouse has any place to move
+   * Returns all the possible moves for the given board and turnIndexBeforeMove.
+   * Returns an empty array if the game is over.
    */
-  function canMouseMoveAnywhere(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
-      return getMousePossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
+  export function getPossibleMoves(board: Board, turnIndexBeforeMove: number): IMove[] {
+    var possibleMoves: IMove[] = [];
+    if(!board) {
+      return [];
+    }
+    var turn = getTurn(turnIndexBeforeMove);
+    for(var i = 0; i < gameConstVals.ROWS; i++){
+      for(var j = 0; j < gameConstVals.COLS; j++){
+        var piece = board[i][j];
+        if(piece !== 'L' && piece !== 'R' && piece.charAt(0) === turn) {
+          var deltaFrom: BoardDelta = {row: i, col: j};
+          var oneCaseMoves: IMove[];
+          switch(piece.substring(1)) {
+          case 'Elephant':
+            oneCaseMoves = getElephantPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+            if(oneCaseMoves.length > 0) {
+              for(var move in oneCaseMoves) {
+                possibleMoves.push(move);
+              }
+            }
+            break;
+          case 'Lion':
+            oneCaseMoves = getLionPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+            if(oneCaseMoves.length > 0) {
+              for(var move in oneCaseMoves) {
+                possibleMoves.push(move);
+              }
+            }
+            break;
+          }
+          case 'Tiger':
+            oneCaseMoves = getTigerPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+            if(oneCaseMoves.length > 0) {
+              for(var move in oneCaseMoves) {
+                possibleMoves.push(move);
+              }
+            }
+            break;
+          }
+          case 'Leopard':
+            oneCaseMoves = getLeopardPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+            if(oneCaseMoves.length > 0) {
+              for(var move in oneCaseMoves) {
+                possibleMoves.push(move);
+              }
+            }
+            break;
+          }
+          case 'Dog':
+            oneCaseMoves = getDogPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+            if(oneCaseMoves.length > 0) {
+              for(var move in oneCaseMoves) {
+                possibleMoves.push(move);
+              }
+            }
+            break;
+          }
+          case 'Wolf':
+            oneCaseMoves = getWolfPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+            if(oneCaseMoves.length > 0) {
+              for(var move in oneCaseMoves) {
+                possibleMoves.push(move);
+              }
+            }
+            break;
+          }
+          case 'Cat':
+            oneCaseMoves = getCatPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+            if(oneCaseMoves.length > 0) {
+              for(var move in oneCaseMoves) {
+                possibleMoves.push(move);
+              }
+            }
+            break;
+          }
+          case 'Mouse':
+            oneCaseMoves = getMousePossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+            if(oneCaseMoves.length > 0) {
+              for(var move in oneCaseMoves) {
+                possibleMoves.push(move);
+              }
+            }
+            break;
+          }
+        }
+      }
+    }
+    return possibleMoves;
   }
-
 
 
   /**
@@ -705,31 +811,185 @@ module gameLogic {
    * with index turnIndexBeforeMove makes a move in cell row X col.
    * @deltaFrom: start position of the piece
    * @deltaTo: destination position of the piece
+   * @return if the move is legal, create it; otherwise throw error
    */
    export function createMove(board: Board, turnIndexBeforeMove: number,
      deltaFrom: BoardDelta, deltaTo: BoardDelta):IMove {
+     if(!board) {
+       board = getInitialBoard();
+     }
+     var piece: string = board[deltaFrom.row][deltaFrom.col];
+     var destination: string = board[deltaTo.row][deltaTo.col];
+     var turn: string = getTurn(turnIndexBeforeMove);
 
+     if(deltaFrom.row === deltaTo.row && deltaFrom.col === deltaTo.col) {
+       throw new Error ("Cannot move to same position.");
+     }
+
+     if(destination.substring === 'Den' && destination[0] === turn) {
+       throw new Error("Cannot move into you own Den");
+     }
+
+     if(piece.charAt(0) !== turn) {
+       // include: 'R', 'L', opponent's pieces
+       if(piece === 'R' || piece === 'L') {
+         throw new Error("There is no piece to move");
+       }else {
+         throw new Error("Cannot move opponent's piece");
+       }
+     }else {
+       if(piece.substring(1) === 'Den' || piece.substring(1) === 'Trap') {
+         throw new Error("There is no piece to move");
+       }
+     }
+
+     if(getWinner(board) !== '') {
+       throw new Error("Cannot make a move if the game is over!");
+     }
+
+     if(destination !== 'L' && destination !== 'R'
+       && destination.substring(1) !== 'Trap' && destination.substring(1) !== 'Den') {
+       if(turn === destination.charAt(0)) {
+         throw new Error("One can only make a move in an empty position or capture opponent's piece!");
+       }
+     }
+
+     var boardAfterMove = angular.copy(board);
+     // update the board according to the moving piece
+     var animal = piece.substring(1);
+     switch(animal) {
+     case 'Elephant':
+       if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
+         boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+         boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+       }else {
+         throw new Error("Illegal move for Elephant.");
+       }
+       break;
+     case 'Lion':
+       if (canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
+         boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+         boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+       }else {
+         throw new Error("Illegal move for Lion.");
+       }
+       break;
+     }
+     case 'Tiger':
+       if (canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
+         boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+         boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+       }else {
+         throw new Error("Illegal move for Lion.");
+       }
+       break;
+     }
+     case 'Leopard':
+       if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
+         boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+         boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+       }else {
+         throw new Error("Illegal move for Lion.");
+       }
+       break;
+     }
+     case 'Dog':
+       if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
+         boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+         boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+       }else {
+         throw new Error("Illegal move for Lion.");
+       }
+       break;
+     }
+     case 'Wolf':
+       if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
+         boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+         boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+       }else {
+         throw new Error("Illegal move for Lion.");
+       }
+       break;
+     }
+     case 'Cat':
+       if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
+         boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+         boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+       }else {
+         throw new Error("Illegal move for Lion.");
+       }
+       break;
+     }
+     case 'Mouse':
+       if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
+         if(isInRiver(deltaFrom)) {
+           boardAfterMove[deltaFrom.row][deltaFrom.col] = 'R';
+         }else {
+           boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+         }
+         boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+       }else {
+         throw new Error("Illegal move for Lion.");
+       }
+       break;
+      default:
+        throw new Error("Unknown piece type!");
+     }
+     var winner = getWinner(boardAfterMove);
+     var firstOperation: IOperation;
+     if(winner !== '') {
+       // game is over
+       firstOperation = {endMatch: {endMatchScores:
+        winner === 'B' ? [1, 0] : winner === 'W' ? [0, 1] : [0, 0]}};
+     }else {
+       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
+       firstOperation = {setTurn: {turnIndex: 1 - turnIndexBeforeMove}};
+     }
+
+     return [firstOperation,
+            {set: {key: 'board', value: boardAfterMove}},
+            {set: {key: 'deltaFrom', value: {row: deltaFrom.row, col: deltaFrom.col}}},
+            {set: {key: 'deltaTo', value: {row: deltaTo.row, col: deltaTo.col}}}];
    }
-
-  /**
-   * Returns all the possible moves for the given board and turnIndexBeforeMove.
-   * Returns an empty array if the game is over.
-   */
-  export function getPossibleMoves(board: Board, turnIndexBeforeMove: number): IMove[] {
-
-  }
-
 
   /**
    * Check if the move is OK.
    *
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+   *
+   * The move operation is an array consist of several parts:
+   *
+   * 0 - setTurn: {setTurn: {turnIndex: 0}}
+   * 0 - endMatch: {endMatch: {endMatchScores: [1, 0]}}
+   * 1 - setBoard: {set: {key: 'board', value: [[...], ..., [...]]}}
+   * 2 - setDeltaFrom: {set: {key: 'deltaFrom', value: {row: row, col: col}}}
+   * 3 - setDeltaTo: {set: {key: 'deltaTo', value: {row: row, col: col}}}
+   *
+   * Notes: move[0] can be either setTurn or endMatch
+   *
    * @returns return true if the move is ok, otherwise false.
    */
   export function isMoveOk(params: IIsMoveOk): boolean {
+    var move = params.move;
+    var turnIndexBeforeMove = params.turnIndexBeforeMove;
+    var stateBeforeMove: IState = params.stateBeforeMove;
 
+    /* We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
+     * to verify that move is legal. */
+    try {
+      var deltaFrom: BoardDelta = move[2].set.value;
+      var deltaTo: BoardDelta = move[3].set.value;
+      var board = stateBeforeMove.board;
+      var expectedMove = createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo);
+
+      if(!angular.equals(move, expectedMove)) {
+        return false;
+      }
+    }catch (e) {
+      // if there are any exceptions then the move is illegal
+      return false;
+    }
+    return true;
   }
-
-
-
 
 }
