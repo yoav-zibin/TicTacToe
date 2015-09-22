@@ -1,10 +1,17 @@
 var gameLogic;
 (function (gameLogic) {
-    /** Returns the initial TicTacToe board, which is a 3x3 matrix containing ''. */
+    gameLogic.ROWS = 3;
+    gameLogic.COLS = 3;
+    /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
     function getInitialBoard() {
-        return [['', '', ''],
-            ['', '', ''],
-            ['', '', '']];
+        var board = [];
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            board[i] = [];
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                board[i][j] = '';
+            }
+        }
+        return board;
     }
     gameLogic.getInitialBoard = getInitialBoard;
     /**
@@ -15,8 +22,8 @@ var gameLogic;
      *      ['O', 'X', 'X']]
      */
     function isTie(board) {
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
                 if (board[i][j] === '') {
                     // If there is an empty cell then we do not have a tie.
                     return false;
@@ -36,8 +43,8 @@ var gameLogic;
      */
     function getWinner(board) {
         var boardString = '';
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
                 var cell = board[i][j];
                 boardString += cell === '' ? ' ' : cell;
             }
@@ -52,7 +59,7 @@ var gameLogic;
             'X...X...X',
             '..X.X.X..'
         ];
-        for (i = 0; i < win_patterns.length; i++) {
+        for (var i = 0; i < win_patterns.length; i++) {
             var win_pattern = win_patterns[i];
             var x_regexp = new RegExp(win_pattern);
             var o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
@@ -71,8 +78,8 @@ var gameLogic;
      */
     function getPossibleMoves(board, turnIndexBeforeMove) {
         var possibleMoves = [];
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
                 try {
                     possibleMoves.push(createMove(board, i, j, turnIndexBeforeMove));
                 }
@@ -121,8 +128,8 @@ var gameLogic;
         var turnIndexBeforeMove = params.turnIndexBeforeMove;
         var stateBeforeMove = params.stateBeforeMove;
         // The state and turn after move are not needed in TicTacToe (or in any game where all state is public).
-        //var turnIndexAfterMove = params.turnIndexAfterMove;
-        //var stateAfterMove = params.stateAfterMove;
+        //let turnIndexAfterMove = params.turnIndexAfterMove;
+        //let stateAfterMove = params.stateAfterMove;
         // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
         // to verify that move is legal.
         try {

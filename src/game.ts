@@ -10,8 +10,6 @@ module game {
     console.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
     resizeGameAreaService.setWidthToHeight(1);
     gameService.setGame({
-      minNumberOfPlayers: 2,
-      maxNumberOfPlayers: 2,
       isMoveOk: gameLogic.isMoveOk,
       updateUI: updateUI
     });
