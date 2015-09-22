@@ -1,10 +1,10 @@
 module game {
-  var animationEnded = false;
-  var canMakeMove = false;
-  var isComputerTurn = false;
-  var state: IState = null;
-  var turnIndex: number = null;
-  export var isHelpModalShown: boolean = false;
+  let animationEnded = false;
+  let canMakeMove = false;
+  let isComputerTurn = false;
+  let state: IState = null;
+  let turnIndex: number = null;
+  export let isHelpModalShown: boolean = false;
 
   export function init() {
     console.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
@@ -76,7 +76,7 @@ module game {
       return;
     }
     try {
-      var move = gameLogic.createMove(state.board, row, col, turnIndex);
+      let move = gameLogic.createMove(state.board, row, col, turnIndex);
       canMakeMove = false; // to prevent making another move
       gameService.makeMove(move);
     } catch (e) {
@@ -86,7 +86,7 @@ module game {
   }
 
   export function shouldShowImage(row: number, col: number): boolean {
-    var cell = state.board[row][col];
+    let cell = state.board[row][col];
     return cell !== "";
   }
 

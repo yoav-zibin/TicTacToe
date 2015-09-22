@@ -171,12 +171,12 @@ describe("In TicTacToe", function() {
   });
 
   it("getPossibleMoves returns exactly one cell", function() {
-    var board =
+    let board =
         [['O', 'O', 'X'],
          ['X', 'X', 'O'],
          ['O', 'X', '']];
-    var possibleMoves = gameLogic.getPossibleMoves(board, 0);
-    var expectedMove = [{endMatch: {endMatchScores: [0, 0]}},
+    let possibleMoves = gameLogic.getPossibleMoves(board, 0);
+    let expectedMove = [{endMatch: {endMatchScores: [0, 0]}},
         {set: {key: 'board', value:
           [['O', 'O', 'X'],
            ['X', 'X', 'O'],

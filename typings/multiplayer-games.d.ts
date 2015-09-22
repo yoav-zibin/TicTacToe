@@ -39,9 +39,10 @@ interface IOperation {
   endMatch?: IEndMatch;
 }
 declare type IMove = IOperation[];
-interface IState {
-  [index: string]: any;
-}
+// IState should be defined by the game, e.g., TicTacToe defines it as:
+// interface IState { board?: Board; delta?: BoardDelta; }
+// You can also define it as a general mapping of string to any:
+// interface IState { [index: string]: any; }
 interface IIsMoveOk {
   move: IMove;
   turnIndexBeforeMove : number;
