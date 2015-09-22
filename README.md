@@ -1,4 +1,4 @@
-TicTacToe
+Jungle Board Game
 =========
 
-TicTacToe game
+Jungle Board Game
