@@ -59,8 +59,8 @@ var gameLogic;
             'X...X...X',
             '..X.X.X..'
         ];
-        for (var i = 0; i < win_patterns.length; i++) {
-            var win_pattern = win_patterns[i];
+        for (var _i = 0; _i < win_patterns.length; _i++) {
+            var win_pattern = win_patterns[_i];
             var x_regexp = new RegExp(win_pattern);
             var o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
             if (x_regexp.test(boardString)) {

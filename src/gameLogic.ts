@@ -70,8 +70,7 @@ module gameLogic {
       'X...X...X',
       '..X.X.X..'
     ];
-    for (let i = 0; i < win_patterns.length; i++) {
-      let win_pattern = win_patterns[i];
+    for (let win_pattern of win_patterns) {
       let x_regexp = new RegExp(win_pattern);
       let o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
       if (x_regexp.test(boardString)) {
