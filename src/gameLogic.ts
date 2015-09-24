@@ -710,7 +710,7 @@ module gameLogic {
   /**
    * Returns true if Elephant can move
   **/
-  function canElephantMoveAnywhere(board: Board,
+  export function canElephantMoveAnywhere(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
     return getElephantPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
@@ -727,7 +727,7 @@ module gameLogic {
   /**
    * Returns true if Lion can move
   **/
-  function canLionMoveAnywhere(board: Board,
+  export function canLionMoveAnywhere(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
     return getLionPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
@@ -744,7 +744,7 @@ module gameLogic {
   /**
    * Returns true if Tiger can move
   **/
-  function canTigerMoveAnywhere(board: Board,
+  export function canTigerMoveAnywhere(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
     return getTigerPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
@@ -761,7 +761,7 @@ module gameLogic {
   /**
    * Returns true if Leopard can move
   **/
-  function canLeopardMoveAnywhere(board: Board,
+  export function canLeopardMoveAnywhere(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
     return getLeopardPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
@@ -778,7 +778,7 @@ module gameLogic {
   /**
    * Returns true if Dog can move
   **/
-  function canDogMoveAnywhere(board: Board,
+  export function canDogMoveAnywhere(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
     return getDogPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
@@ -795,7 +795,7 @@ module gameLogic {
   /**
    * Returns true if Wolf can move
   **/
-  function canWolfMoveAnywhere(board: Board,
+  export function canWolfMoveAnywhere(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
     return getWolfPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
@@ -812,7 +812,7 @@ module gameLogic {
   /**
    * Returns true if Cat can move
   **/
-  function canCatMoveAnywhere(board: Board,
+  export function canCatMoveAnywhere(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
     return getCatPossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
@@ -829,7 +829,7 @@ module gameLogic {
   /**
    * Returns true if Mouse can move
   **/
-  function canMouseMoveAnywhere(board: Board,
+  export function canMouseMoveAnywhere(board: Board,
     turnIndexBeforeMove: number, deltaFrom: BoardDelta): boolean {
     return getMousePossibleMoves(board, turnIndexBeforeMove, deltaFrom).length !== 0;
   }
