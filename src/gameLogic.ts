@@ -57,7 +57,8 @@ interface IState {
   delta?: BoardDelta;
 }
 
-module gameConstVals {
+module gameLogic {
+
   export const ROWS = 9;
   export const COLS = 7;
   export const BlackTraps: BoardDelta[] =
@@ -70,9 +71,7 @@ module gameConstVals {
     {row: 5,col: 4}, {row: 5, col: 5}];
   export const BlackDen: BoardDelta = {row: 8, col: 3};
   export const WhiteDen: BoardDelta = {row: 0, col: 3};
-}
 
-module gameLogic {
   /**
    * Returns the initial Jungle board, which is a 9x7 matrix containing ''.
   **/
