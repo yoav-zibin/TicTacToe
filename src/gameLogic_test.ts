@@ -31,7 +31,7 @@ describe("In Jungle ", function() {
           ['L', 'L', 'BWolf', 'L', 'BLeopard', 'L', 'BMouse'],
           ['L', 'BCat', 'L', 'BTrap', 'L', 'BDog', 'L'],
           ['BTiger', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'BLion']]}},
-        {set: {key: 'deltaFrom', value: {row: 6, col: 0}}}
+        {set: {key: 'deltaFrom', value: {row: 6, col: 0}}},
         {set: {key: 'deltaTo', value: {row: 5, col: 0}}}]);
   });
 
@@ -661,7 +661,7 @@ describe("In Jungle ", function() {
       [{setTurn: {turnIndex : 1}},
         {set: {key: 'board', value:
           [['WLion', 'L', 'WTrap', 'WDen', 'WTrap', 'L', 'WTiger'],
-          ['L', 'WDog', 'L', 'WTrap', 'L', 'WCat', 'L'],
+          ['L', 'L', 'L', 'WTrap', 'L', 'WCat', 'L'],
           ['WMouse', 'WLeopard', 'L', 'L', 'WWolf', 'L', 'WElephant'],
           ['L', 'R', 'R', 'BLeopard', 'R', 'R', 'L'],
           ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
@@ -750,8 +750,8 @@ describe("In Jungle ", function() {
           ['L', 'L', 'L', 'L', 'L', 'L', 'L'],
           ['L', 'BCat', 'L', 'BTrap', 'L', '', 'L'],
           ['L', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'L']]}},
-        {set: {key: 'deltaFrom', value: {row: 5, col: 3}}},
-        {set: {key: 'deltaTo', value: {row: 4, col: 3}}}]);
+        {set: {key: 'deltaFrom', value: {row: 6, col: 3}}},
+        {set: {key: 'deltaTo', value: {row: 5, col: 3}}}]);
   });
 
   it("null move is illegal", function() {
@@ -844,7 +844,7 @@ describe("In Jungle ", function() {
           ['L', 'L', 'BWolf', 'L', 'BLeopard', 'L', 'BMouse'],
           ['L', 'BCat', 'L', 'BTrap', 'L', 'BDog', 'L'],
           ['BTiger', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'BLion']]}},
-        {set: {key: 'deltaFrom', value: {row: 6, col: 0}}}
+        {set: {key: 'deltaFrom', value: {row: 6, col: 0}}},
         {set: {key: 'deltaTo', value: {row: 5, col: 0}}}]);
   });
 
@@ -861,11 +861,11 @@ describe("In Jungle ", function() {
           ['L', 'BElephant', 'BWolf', 'L', 'BLeopard', 'L', 'BMouse'],
           ['L', 'BCat', 'L', 'BTrap', 'L', 'BDog', 'L'],
           ['BTiger', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'BLion']]}},
-        {set: {key: 'deltaFrom', value: {row: 6, col: 0}}}
+        {set: {key: 'deltaFrom', value: {row: 6, col: 0}}},
         {set: {key: 'deltaTo', value: {row: 5, col: 0}}}]);
   });
 
-  IT("placing chess piece to the place already has own chess is illegal", function() {
+  it("placing chess piece to the place already has own chess is illegal", function() {
     expectIllegalMove(0,
       {board:
         [['L', 'L', 'WLion', 'WDen', 'WTrap', 'L', 'L'],
@@ -888,10 +888,8 @@ describe("In Jungle ", function() {
           ['BLion', 'L', 'L', 'L', 'L', 'L', 'L'],
           ['L', 'L', 'L', 'BTrap', 'L', '', 'L'],
           ['L', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'L']]}},
-        {set: {key: 'deltaFrom', value: {row: 7, col: 0}}}
+        {set: {key: 'deltaFrom', value: {row: 7, col: 0}}},
         {set: {key: 'deltaTo', value: {row: 6, col: 0}}}]);
   });
-
-
 
 });
