@@ -84,24 +84,6 @@ module gameLogic {
   }
 
   /**
-   * Returns all the possible moves for the given board and turnIndexBeforeMove.
-   * Returns an empty array if the game is over.
-   */
-  export function getPossibleMoves(board: Board, turnIndexBeforeMove: number): IMove[] {
-    let possibleMoves: IMove[] = [];
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        try {
-          possibleMoves.push(createMove(board, i, j, turnIndexBeforeMove));
-        } catch (e) {
-          // The cell in that position was full.
-        }
-      }
-    }
-    return possibleMoves;
-  }
-
-  /**
    * Returns the move that should be performed when player
    * with index turnIndexBeforeMove makes a move in cell row X col.
    */

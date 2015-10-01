@@ -1,4 +1,16 @@
 describe("aiService", function () {
+    it("getPossibleMoves returns exactly one cell", function () {
+        var board = [['O', 'O', 'X'],
+            ['X', 'X', 'O'],
+            ['O', 'X', '']];
+        var possibleMoves = aiService.getPossibleMoves(board, 0);
+        var expectedMove = [{ endMatch: { endMatchScores: [0, 0] } },
+            { set: { key: 'board', value: [['O', 'O', 'X'],
+                        ['X', 'X', 'O'],
+                        ['O', 'X', 'X']] } },
+            { set: { key: 'delta', value: { row: 2, col: 2 } } }];
+        expect(angular.equals(possibleMoves, [expectedMove])).toBe(true);
+    });
     it("X finds an immediate winning move", function () {
         var move = aiService.createComputerMove([['', '', 'O'],
             ['O', 'X', 'X'],

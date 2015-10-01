@@ -1,5 +1,30 @@
 var aiService;
 (function (aiService) {
+    /** Returns the move that the computer player should do for the given updateUI. */
+    function findComputerMove(updateUI) {
+        return createComputerMove(updateUI.stateAfterMove.board, updateUI.turnIndexAfterMove, 
+        // at most 1 second for the AI to choose a move (but might be much quicker)
+        { millisecondsLimit: 1000 });
+    }
+    aiService.findComputerMove = findComputerMove;
+    /**
+     * Returns all the possible moves for the given board and turnIndexBeforeMove.
+     * Returns an empty array if the game is over.
+     */
+    function getPossibleMoves(board, turnIndexBeforeMove) {
+        var possibleMoves = [];
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                try {
+                    possibleMoves.push(gameLogic.createMove(board, i, j, turnIndexBeforeMove));
+                }
+                catch (e) {
+                }
+            }
+        }
+        return possibleMoves;
+    }
+    aiService.getPossibleMoves = getPossibleMoves;
     /**
      * Returns the move that the computer player should do for the given board.
      * alphaBetaLimits is an object that sets a limit on the alpha-beta search,
@@ -27,7 +52,7 @@ var aiService;
         return 0;
     }
     function getNextStates(move, playerIndex) {
-        return gameLogic.getPossibleMoves(move[1].set.value, playerIndex);
+        return getPossibleMoves(move[1].set.value, playerIndex);
     }
     function getDebugStateToString(move) {
         return "\n" + move[1].set.value.join("\n") + "\n";

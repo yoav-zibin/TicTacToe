@@ -1,4 +1,31 @@
 module aiService {
+  /** Returns the move that the computer player should do for the given updateUI. */
+  export function findComputerMove(updateUI: IUpdateUI): IMove {
+    return createComputerMove(
+        updateUI.stateAfterMove.board,
+        updateUI.turnIndexAfterMove,
+        // at most 1 second for the AI to choose a move (but might be much quicker)
+        {millisecondsLimit: 1000})
+  }
+
+  /**
+   * Returns all the possible moves for the given board and turnIndexBeforeMove.
+   * Returns an empty array if the game is over.
+   */
+  export function getPossibleMoves(board: Board, turnIndexBeforeMove: number): IMove[] {
+    let possibleMoves: IMove[] = [];
+    for (let i = 0; i < gameLogic.ROWS; i++) {
+      for (let j = 0; j < gameLogic.COLS; j++) {
+        try {
+          possibleMoves.push(gameLogic.createMove(board, i, j, turnIndexBeforeMove));
+        } catch (e) {
+          // The cell in that position was full.
+        }
+      }
+    }
+    return possibleMoves;
+  }
+
   /**
    * Returns the move that the computer player should do for the given board.
    * alphaBetaLimits is an object that sets a limit on the alpha-beta search,
@@ -31,7 +58,7 @@ module aiService {
   }
 
   function getNextStates(move: IMove, playerIndex: number): IMove[] {
-    return gameLogic.getPossibleMoves(move[1].set.value, playerIndex);
+    return getPossibleMoves(move[1].set.value, playerIndex);
   }
 
   function getDebugStateToString(move: IMove): string {

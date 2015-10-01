@@ -2,8 +2,8 @@ module game {
   let animationEnded = false;
   let canMakeMove = false;
   let isComputerTurn = false;
+  let lastUpdateUI: IUpdateUI = null;
   let state: IState = null;
-  let turnIndex: number = null;
   export let isHelpModalShown: boolean = false;
 
   export function init() {
@@ -33,21 +33,18 @@ module game {
   }
 
   function sendComputerMove() {
-    gameService.makeMove(
-        aiService.createComputerMove(state.board, turnIndex,
-          // at most 1 second for the AI to choose a move (but might be much quicker)
-          {millisecondsLimit: 1000}));
+    gameService.makeMove(aiService.findComputerMove(lastUpdateUI));
   }
 
   function updateUI(params: IUpdateUI): void {
     animationEnded = false;
+    lastUpdateUI = params;
     state = params.stateAfterMove;
     if (!state.board) {
       state.board = gameLogic.getInitialBoard();
     }
     canMakeMove = params.turnIndexAfterMove >= 0 && // game is ongoing
       params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
-    turnIndex = params.turnIndexAfterMove;
 
     // Is it the computer's turn?
     isComputerTurn = canMakeMove &&
@@ -76,7 +73,8 @@ module game {
       return;
     }
     try {
-      let move = gameLogic.createMove(state.board, row, col, turnIndex);
+      let move = gameLogic.createMove(
+          state.board, row, col, lastUpdateUI.turnIndexAfterMove);
       canMakeMove = false; // to prevent making another move
       gameService.makeMove(move);
     } catch (e) {
