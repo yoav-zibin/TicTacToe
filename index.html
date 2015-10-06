@@ -4,7 +4,6 @@
 <!-- /build -->
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>TicTacToe</title>
   <meta name="description" content="TicTacToe game">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -102,14 +101,14 @@
         id="{{'e2e_test_div_' + row + 'x' + col}}">
       <div style="width:100%; height: 100%"
           ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
-          ng-show="game.shouldShowImage(row, col)">
-        <svg ng-show="game.isPieceO(row, col)"
+          ng-if="game.shouldShowImage(row, col)">
+        <svg ng-if="game.isPieceO(row, col)"
             id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
             width="100%" height="100%">
           <circle cx="50%" cy="50%" r="27%"
             stroke="blue" stroke-width="5%" fill="white" />
         </svg>
-        <svg ng-show="game.isPieceX(row, col)"
+        <svg ng-if="game.isPieceX(row, col)"
             id="{{'e2e_test_pieceX_' + row + 'x' + col}}"
             width="100%" height="100%">
           <line x1="25%" y1="25%"
