@@ -14,17 +14,24 @@ describe('TicTacToe', function() {
     return element(by.id('e2e_test_div_' + row + 'x' + col));
   }
 
-  function getPiece(row: number, col: number, pieceKind: string) {
-    return element(by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col));
-  }
-
-  function expectPiece(row: number, col: number, pieceKind: string) {
+  function expectPieceKindDisplayed(row: number, col: number, pieceKind: string, isDisplayed: boolean) {
+    let selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);
     // Careful when using animations and asserting isDisplayed:
     // Originally, my animation started from {opacity: 0;}
     // And then the image wasn't displayed.
     // I changed it to start from {opacity: 0.1;}
-    expect(getPiece(row, col, 'X').isDisplayed()).toEqual(pieceKind === "X" ? true : false);
-    expect(getPiece(row, col, 'O').isDisplayed()).toEqual(pieceKind === "O" ? true : false);
+    if (isDisplayed) {
+      expect(element(selector).isDisplayed()).toEqual(true);
+    } else {
+      element.all(selector).then(function(items) {
+        expect(items.length).toBe(0);
+      });
+    }
+  }
+
+  function expectPiece(row: number, col: number, pieceKind: string) {
+    expectPieceKindDisplayed(row, col, 'X', pieceKind === "X");
+    expectPieceKindDisplayed(row, col, 'O', pieceKind === "O");
   }
 
   function expectBoard(board: Board) {

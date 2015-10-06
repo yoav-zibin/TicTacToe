@@ -10,18 +10,28 @@ describe('TicTacToe', function () {
     function getDiv(row, col) {
         return element(by.id('e2e_test_div_' + row + 'x' + col));
     }
-    function getPiece(row, col, pieceKind) {
-        return element(by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col));
-    }
-    function expectPiece(row, col, pieceKind) {
+    function expectPieceKindDisplayed(row, col, pieceKind, isDisplayed) {
+        var selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);
         // Careful when using animations and asserting isDisplayed:
         // Originally, my animation started from {opacity: 0;}
         // And then the image wasn't displayed.
         // I changed it to start from {opacity: 0.1;}
-        expect(getPiece(row, col, 'X').isDisplayed()).toEqual(pieceKind === "X" ? true : false);
-        expect(getPiece(row, col, 'O').isDisplayed()).toEqual(pieceKind === "O" ? true : false);
+        if (isDisplayed) {
+            expect(element(selector).isDisplayed()).toEqual(true);
+        }
+        else {
+            element.all(selector).then(function (items) {
+                expect(items.length).toBe(0);
+            });
+        }
+    }
+    function expectPiece(row, col, pieceKind) {
+        expectPieceKindDisplayed(row, col, 'X', pieceKind === "X");
+        expectPieceKindDisplayed(row, col, 'O', pieceKind === "O");
     }
     function expectBoard(board) {
+        // I can't use gameLogic.ROWS/COLS (instead of 3) because gameLogic is not defined
+        // in end-to-end tests.
         for (var row = 0; row < 3; row++) {
             for (var col = 0; col < 3; col++) {
                 expectPiece(row, col, board[row][col]);
