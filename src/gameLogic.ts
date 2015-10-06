@@ -92,10 +92,14 @@ module gameLogic {
    * Even it is almost impossible to happen in this game, I also write this function
   **/
   function isTie(board: Board, turnIndexBeforeMove: number): boolean {
-    for(var i = 0; i < gameConstVals.ROWS; i++) {
-      for(var j = 0; j < gameConstVals.COLS; j++) {
+    var turn = getTurn(turnIndexBeforeMove);
+    for(var i = 0; i < ROWS; i++) {
+      for(var j = 0; j < COLS; j++) {
         var curPiece = board[i][j];
         var curPosition: BoardDelta = {row: i, col: j};
+        if(curPiece[0] !== turn) {
+          continue;
+        }
         switch (curPiece.substring(1)) {
           case "Mouse":
             if(canMouseMoveAnywhere(board, turnIndexBeforeMove, curPosition)) {
@@ -132,7 +136,7 @@ module gameLogic {
               return false;
             }
             break;
-          case "Elephant": return 7; break;
+          case "Elephant":
             if(canElephantMoveAnywhere(board, turnIndexBeforeMove, curPosition)) {
               return false;
             }
@@ -148,9 +152,17 @@ module gameLogic {
    * Returns turnIndex initial
    * 0: Black;    1: White
   **/
-  function getTurn(turnIndex):string {
+  function getTurn(turnIndex: number):string {
     return (turnIndex === 0 ? 'B' : 'W');
   }
+
+  /**
+   * Returns Opponent's turnIndex
+   * 0: Black;    1: White
+  **/
+  // function getOpponentTurn(turnIndex: number):string {
+  //   return (turnIndex === 0 ? 'W' : 'B');
+  // }
 
   /**
    * Returns id (int) for specific animal (string)
@@ -158,22 +170,22 @@ module gameLogic {
    * 5: Tiger;  6: Lion;   7: Elephant
   **/
   function getIdFromAnimal(animal: string): number {
-    switch (name) {
-      case "Mouse": return 0; break;
-      case "Cat": return 1; break;
-      case "Wolf": return 2; break;
-      case "Dog": return 3; break;
-      case "Leopard": return 4; break;
-      case "Tiger": return 5; break;
-      case "Lion": return 6; break;
-      case "Elephant": return 7; break;
-      default:
-        try {
-          throw new Error("Cannot transfor from this animal to int ID");
-        }
-        catch(err) {
-          console.log(err);
-        }
+    switch (animal) {
+      case 'Mouse': return 0;
+      case 'Cat': return 1;
+      case 'Wolf': return 2;
+      case 'Dog': return 3;
+      case 'Leopard': return 4;
+      case 'Tiger': return 5;
+      case 'Lion': return 6;
+      case 'Elephant': return 7;
+      // default:
+      //   try {
+      //     throw new Error("Cannot transfor from this animal to int ID");
+      //   }
+      //   catch(err) {
+      //     console.log(err);
+      //   }
     }
   }
 
@@ -181,8 +193,8 @@ module gameLogic {
    * Return true if the position out of board
   **/
   function isOutBoard(deltaFrom: BoardDelta):boolean {
-    if(deltaFrom.row < 0 || deltaFrom.row >= gameConstVals.ROWS
-      || deltaFrom.col < 0 || deltaFrom.col >= gameConstVals.COLS) {
+    if(deltaFrom.row < 0 || deltaFrom.row >= ROWS
+      || deltaFrom.col < 0 || deltaFrom.col >= COLS) {
       return true;
     }
     return false;
@@ -193,26 +205,26 @@ module gameLogic {
   **/
   function isOwnTrap(turnIndexBeforeMove: number, deltaFrom: BoardDelta):boolean {
     if(turnIndexBeforeMove === 0) {
-      for(var trap in gameConstVals.BlackTraps) {
+      for(let trap of BlackTraps) {
         if(angular.equals(trap, deltaFrom)) {
           return true;
         }
       }
       return false;
     }else if(turnIndexBeforeMove === 1) {
-      for(var trap in gameConstVals.WhiteTraps) {
+      for(let trap of WhiteTraps) {
         if(angular.equals(trap, deltaFrom)) {
           return true;
         }
       }
       return false;
     }else {
-      try {
-        throw new Error("turnIndexBeforeMove is wrong");
-      }
-      catch(err) {
-        console.log(err);
-      }
+      // try {
+      //   throw new Error("turnIndexBeforeMove is wrong");
+      // }
+      // catch(err) {
+      //   console.log(err);
+      // }
     }
   }
 
@@ -220,8 +232,8 @@ module gameLogic {
    * Return true if the position is in river
   **/
   function isInRiver(deltaFrom: BoardDelta):boolean {
-    for(var pos in gameConstVals.RiverPos) {
-      if(pos.col === deltaFrom.col && pos.row === deltaFrom.row) {
+    for(let pos of RiverPos) {
+      if(angular.equals(pos, deltaFrom)) {
         return true;
       }
     }
@@ -233,29 +245,29 @@ module gameLogic {
   **/
   function isOwnDen(turnIndexBeforeMove: number, deltaFrom: BoardDelta):boolean {
     if(turnIndexBeforeMove === 0) {
-      if(angular.equals(deltaFrom, gameConstVals.BlackDen)) {
+      if(angular.equals(deltaFrom, BlackDen)) {
         return true;
       }
       return false;
     }else if(turnIndexBeforeMove === 1) {
-      if(angular.equals(deltaFrom, gameConstVals.WhiteDen)) {
+      if(angular.equals(deltaFrom, WhiteDen)) {
         return true;
       }
       return false;
     }else {
-      try {
-        throw new Error("turnIndexBeforeMove is wrong");
-      }
-      catch(err) {
-        console.log(err);
-      }
+      // try {
+      //   throw new Error("turnIndexBeforeMove is wrong");
+      // }
+      // catch(err) {
+      //   console.log(err);
+      // }
     }
   }
 
   /**
    * Return true if the position has no chess piece
   **/
-  function noChessPiece(board: Board, deltaFrom: BoardDelta) {
+  function noChessPiece(board: Board, deltaFrom: BoardDelta): boolean {
     var row = deltaFrom.row;
     var col = deltaFrom.col;
     if(board[row][col] === 'L' || board[row][col] === 'R'
@@ -290,9 +302,9 @@ module gameLogic {
    * Return the winner (either 'W' or 'B') or '' if there is no winner
   **/
   function getWinner(board: Board): string {
-    if(board[gameConstVals.BlackDen.row][gameConstVals.BlackDen.col] !== 'BDen') {
+    if(board[BlackDen.row][BlackDen.col] !== 'BDen') {
       return 'W';
-    }else if(board[gameConstVals.WhiteDen.row][gameConstVals.WhiteDen.col] !== 'WDen') {
+    }else if(board[WhiteDen.row][WhiteDen.col] !== 'WDen') {
       return 'B';
     }else {
       return '';
@@ -305,8 +317,8 @@ module gameLogic {
    * include: Cat, Wolf, Dog, Leopard, Elephant
   **/
   function getLandAnimalPossibleMoves(board: Board, turnIndexBeforeMove: number,
-    deltaFrom: BoardDelta): IMove[] {
-      var possibleMoves: IMove[] = [];
+    deltaFrom: BoardDelta): BoardDelta[] {
+      var possibleMoves: BoardDelta[] = [];
 
       // for any animal there are at most four possible moves
       // up， down, left, right
@@ -316,16 +328,16 @@ module gameLogic {
       var rightMove: BoardDelta = {row: deltaFrom.row, col: deltaFrom.col + 1};
 
       if(canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, upMove)) {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, upMove));
+        possibleMoves.push(upMove);
       }
       if(canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, downMove)) {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, downMove));
+        possibleMoves.push(downMove);
       }
       if(canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, leftMove)) {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, leftMove));
+        possibleMoves.push(leftMove);
       }
       if(canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, rightMove)) {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, rightMove));
+        possibleMoves.push(rightMove);
       }
       return possibleMoves;
   }
@@ -367,11 +379,11 @@ module gameLogic {
       var temp1: string;
       var temp2: string;
       if(deltaFrom.col < deltaTo.col) {
-        temp1 = board[deltaFrom.row][deltaFrom+1];
-        temp2 = board[deltaFrom.row][deltaFrom+2];
+        temp1 = board[deltaFrom.row][deltaFrom.col+1];
+        temp2 = board[deltaFrom.row][deltaFrom.col+2];
       }else {
-        temp1 = board[deltaFrom.row][deltaFrom-1];
-        temp2 = board[deltaFrom.row][deltaFrom-2];
+        temp1 = board[deltaFrom.row][deltaFrom.col-1];
+        temp2 = board[deltaFrom.row][deltaFrom.col-2];
       }
       if( temp1.substring(1) === "Mouse" || temp2.substring(1) === "Mouse") {
         return true;
@@ -406,8 +418,8 @@ module gameLogic {
    * include: Tiger, Lion
   **/
   function getFlyAnimalPossibleMoves(board: Board, turnIndexBeforeMove: number,
-    deltaFrom: BoardDelta): IMove[] {
-      var possibleMoves: IMove[] = [];
+    deltaFrom: BoardDelta): BoardDelta[] {
+      var possibleMoves: BoardDelta[] = [];
 
       // for any animal there are at most four possible moves
       // up， down, left, right
@@ -417,11 +429,13 @@ module gameLogic {
         if(!isMouseOnWay(board, deltaFrom, upMove)) {
           upMove.row = upMove.row - 3;
           if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, upMove)) {
-            possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, upMove));
+            possibleMoves.push(upMove);
           }
         }
       }else {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, upMove));
+        if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, upMove)) {
+          possibleMoves.push(upMove);
+        }
       }
 
       var downMove: BoardDelta = {row: deltaFrom.row + 1, col: deltaFrom.col};
@@ -429,11 +443,13 @@ module gameLogic {
         if(!isMouseOnWay(board, deltaFrom, downMove)) {
           downMove.row = downMove.row + 3;
           if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, downMove)) {
-            possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, downMove));
+            possibleMoves.push(downMove);
           }
         }
       }else {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, downMove));
+        if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, downMove)) {
+          possibleMoves.push(downMove);
+        }
       }
 
       var leftMove: BoardDelta = {row: deltaFrom.row, col: deltaFrom.col - 1};
@@ -441,11 +457,13 @@ module gameLogic {
         if(!isMouseOnWay(board, deltaFrom, leftMove)) {
           leftMove.col = leftMove.col - 2;
           if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, leftMove)) {
-            possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, leftMove));
+            possibleMoves.push(leftMove);
           }
         }
       }else {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, leftMove));
+        if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, leftMove)) {
+          possibleMoves.push(leftMove);
+        }
       }
 
       var rightMove: BoardDelta = {row: deltaFrom.row, col: deltaFrom.col + 1};
@@ -453,11 +471,13 @@ module gameLogic {
         if(!isMouseOnWay(board, deltaFrom, rightMove)) {
           rightMove.col = rightMove.col + 2;
           if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, rightMove)) {
-            possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, rightMove));
+            possibleMoves.push(rightMove);
           }
         }
       }else {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, rightMove));
+        if(canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, rightMove)) {
+          possibleMoves.push(rightMove);
+        }
       }
 
       return possibleMoves;
@@ -478,12 +498,12 @@ module gameLogic {
       return false;
     }else if(deltaFrom.row === deltaTo.row) {
       // no fly: diff 1     fly: diff 3
-      if(Math.abs(deltaFrom.col - deltaTo.col) !== 1 || Math.abs(deltaFrom.col - deltaTo.col) !== 3) {
+      if(Math.abs(deltaFrom.col - deltaTo.col) !== 1 && Math.abs(deltaFrom.col - deltaTo.col) !== 3) {
         return false;
       }
     }else if(deltaFrom.col === deltaTo.col) {
       // no fly: diff 1     fly: diff 4
-      if(Math.abs(deltaFrom.row - deltaTo.row) !== 1 || Math.abs(deltaFrom.row - deltaTo.row) !== 4) {
+      if(Math.abs(deltaFrom.row - deltaTo.row) !== 1 && Math.abs(deltaFrom.row - deltaTo.row) !== 4) {
         return false;
       }
     }else if(angular.equals(deltaFrom, deltaTo)) {
@@ -595,8 +615,8 @@ module gameLogic {
    * include: Mouse
   **/
   function getSwimAnimalPossibleMoves(board: Board, turnIndexBeforeMove: number,
-    deltaFrom: BoardDelta): IMove[] {
-      var possibleMoves: IMove[] = [];
+    deltaFrom: BoardDelta): BoardDelta[] {
+      var possibleMoves: BoardDelta[] = [];
 
       // for any animal there are at most four possible moves
       // up， down, left, right
@@ -606,18 +626,17 @@ module gameLogic {
       var rightMove: BoardDelta = {row: deltaFrom.row, col: deltaFrom.col + 1};
 
       if(canSwimAnimalMove(board, turnIndexBeforeMove, deltaFrom, upMove)) {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, upMove));
+        possibleMoves.push(upMove);
       }
       if(canSwimAnimalMove(board, turnIndexBeforeMove, deltaFrom, downMove)) {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, downMove));
+        possibleMoves.push(downMove);
       }
       if(canSwimAnimalMove(board, turnIndexBeforeMove, deltaFrom, leftMove)) {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, leftMove));
+        possibleMoves.push(leftMove);
       }
       if(canSwimAnimalMove(board, turnIndexBeforeMove, deltaFrom, rightMove)) {
-        possibleMoves.push(createMove(board, turnIndexBeforeMove, deltaFrom, rightMove));
+        possibleMoves.push(rightMove);
       }
-
       return possibleMoves;
   }
 
@@ -701,8 +720,8 @@ module gameLogic {
    * Returns the list of available positions for Elephant to move
   **/
   export function getElephantPossibleMoves(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    turnIndexBeforeMove: number, deltaFrom: BoardDelta): BoardDelta[] {
+    var possibleMoves: BoardDelta[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
   }
 
@@ -718,8 +737,8 @@ module gameLogic {
    * Returns the list of available positions for Lion to move
   **/
   export function getLionPossibleMoves(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getFlyAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    turnIndexBeforeMove: number, deltaFrom: BoardDelta): BoardDelta[] {
+    var possibleMoves: BoardDelta[] = getFlyAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
   }
 
@@ -735,8 +754,8 @@ module gameLogic {
    * Returns the list of available positions for Tiger to move
   **/
   export function getTigerPossibleMoves(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getFlyAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    turnIndexBeforeMove: number, deltaFrom: BoardDelta): BoardDelta[] {
+    var possibleMoves: BoardDelta[] = getFlyAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
   }
 
@@ -752,8 +771,8 @@ module gameLogic {
    * Returns the list of available positions for Leopard to move
   **/
   export function getLeopardPossibleMoves(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    turnIndexBeforeMove: number, deltaFrom: BoardDelta): BoardDelta[] {
+    var possibleMoves: BoardDelta[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
   }
 
@@ -769,8 +788,8 @@ module gameLogic {
    * Returns the list of available positions for Dog to move
   **/
   export function getDogPossibleMoves(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    turnIndexBeforeMove: number, deltaFrom: BoardDelta): BoardDelta[] {
+    var possibleMoves: BoardDelta[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
   }
 
@@ -786,8 +805,8 @@ module gameLogic {
    * Returns the list of available positions for Wolf to move
   **/
   export function getWolfPossibleMoves(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    turnIndexBeforeMove: number, deltaFrom: BoardDelta): BoardDelta[] {
+    var possibleMoves: BoardDelta[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
   }
 
@@ -803,8 +822,8 @@ module gameLogic {
    * Returns the list of available positions for Cat to move
   **/
   export function getCatPossibleMoves(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    turnIndexBeforeMove: number, deltaFrom: BoardDelta): BoardDelta[] {
+    var possibleMoves: BoardDelta[] = getLandAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
   }
 
@@ -820,8 +839,8 @@ module gameLogic {
    * Returns the list of available positions for Mouse to move
   **/
   export function getMousePossibleMoves(board: Board,
-    turnIndexBeforeMove: number, deltaFrom: BoardDelta): IMove[] {
-    var possibleMoves: IMove[] = getSwimAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+    turnIndexBeforeMove: number, deltaFrom: BoardDelta): BoardDelta[] {
+    var possibleMoves: BoardDelta[] = getSwimAnimalPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
     return possibleMoves;
   }
 
@@ -837,95 +856,89 @@ module gameLogic {
    * Returns all the possible moves for the given board and turnIndexBeforeMove.
    * Returns an empty array if the game is over.
   **/
-  export function getPossibleMoves(board: Board, turnIndexBeforeMove: number): IMove[] {
-    var possibleMoves: IMove[] = [];
-    if(!board) {
-      return [];
-    }
-    var turn = getTurn(turnIndexBeforeMove);
-    for(var i = 0; i < gameConstVals.ROWS; i++){
-      for(var j = 0; j < gameConstVals.COLS; j++){
-        var piece = board[i][j];
-        if(piece !== 'L' && piece !== 'R' && piece.charAt(0) === turn) {
-          var deltaFrom: BoardDelta = {row: i, col: j};
-          var oneCaseMoves: IMove[];
-          switch(piece.substring(1)) {
-          case 'Elephant':
-            oneCaseMoves = getElephantPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(var move in oneCaseMoves) {
-                possibleMoves.push(move);
-              }
-            }
-            break;
-          case 'Lion':
-            oneCaseMoves = getLionPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(var move in oneCaseMoves) {
-                possibleMoves.push(move);
-              }
-            }
-            break;
-          }
-          case 'Tiger':
-            oneCaseMoves = getTigerPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(var move in oneCaseMoves) {
-                possibleMoves.push(move);
-              }
-            }
-            break;
-          }
-          case 'Leopard':
-            oneCaseMoves = getLeopardPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(var move in oneCaseMoves) {
-                possibleMoves.push(move);
-              }
-            }
-            break;
-          }
-          case 'Dog':
-            oneCaseMoves = getDogPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(var move in oneCaseMoves) {
-                possibleMoves.push(move);
-              }
-            }
-            break;
-          }
-          case 'Wolf':
-            oneCaseMoves = getWolfPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(var move in oneCaseMoves) {
-                possibleMoves.push(move);
-              }
-            }
-            break;
-          }
-          case 'Cat':
-            oneCaseMoves = getCatPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(var move in oneCaseMoves) {
-                possibleMoves.push(move);
-              }
-            }
-            break;
-          }
-          case 'Mouse':
-            oneCaseMoves = getMousePossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(var move in oneCaseMoves) {
-                possibleMoves.push(move);
-              }
-            }
-            break;
-          }
-        }
-      }
-    }
-    return possibleMoves;
-  }
+  // export function getPossibleMoves(board: Board, turnIndexBeforeMove: number): BoardDelta[] {
+  //   var possibleMoves: BoardDelta[] = [];
+  //   if(!board) {
+  //     return [];
+  //   }
+  //   var turn = getTurn(turnIndexBeforeMove);
+  //   for(var i = 0; i < ROWS; i++){
+  //     for(var j = 0; j < COLS; j++){
+  //       var piece = board[i][j];
+  //       if(piece !== 'L' && piece !== 'R' && piece.charAt(0) === turn) {
+  //         var deltaFrom: BoardDelta = {row: i, col: j};
+  //         var oneCaseMoves: BoardDelta[];
+  //         switch(piece.substring(1)) {
+  //         case 'Elephant':
+  //           oneCaseMoves = getElephantPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+  //           if(oneCaseMoves.length > 0) {
+  //             for(let move of oneCaseMoves) {
+  //               possibleMoves.push(move);
+  //             }
+  //           }
+  //           break;
+  //         case 'Lion':
+  //           oneCaseMoves = getLionPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+  //           if(oneCaseMoves.length > 0) {
+  //             for(let move of oneCaseMoves) {
+  //               possibleMoves.push(move);
+  //             }
+  //           }
+  //           break;
+  //         case 'Tiger':
+  //           oneCaseMoves = getTigerPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+  //           if(oneCaseMoves.length > 0) {
+  //             for(let move of oneCaseMoves) {
+  //               possibleMoves.push(move);
+  //             }
+  //           }
+  //           break;
+  //         case 'Leopard':
+  //           oneCaseMoves = getLeopardPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+  //           if(oneCaseMoves.length > 0) {
+  //             for(let move of oneCaseMoves) {
+  //               possibleMoves.push(move);
+  //             }
+  //           }
+  //           break;
+  //         case 'Dog':
+  //           oneCaseMoves = getDogPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+  //           if(oneCaseMoves.length > 0) {
+  //             for(let move of oneCaseMoves) {
+  //               possibleMoves.push(move);
+  //             }
+  //           }
+  //           break;
+  //         case 'Wolf':
+  //           oneCaseMoves = getWolfPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+  //           if(oneCaseMoves.length > 0) {
+  //             for(let move of oneCaseMoves) {
+  //               possibleMoves.push(move);
+  //             }
+  //           }
+  //           break;
+  //         case 'Cat':
+  //           oneCaseMoves = getCatPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+  //           if(oneCaseMoves.length > 0) {
+  //             for(let move of oneCaseMoves) {
+  //               possibleMoves.push(move);
+  //             }
+  //           }
+  //           break;
+  //         case 'Mouse':
+  //           oneCaseMoves = getMousePossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+  //           if(oneCaseMoves.length > 0) {
+  //             for(let move of oneCaseMoves) {
+  //               possibleMoves.push(move);
+  //             }
+  //           }
+  //           break;
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return possibleMoves;
+  // }
 
 
   /**
@@ -948,7 +961,7 @@ module gameLogic {
       throw new Error ("Cannot move to same position.");
     }
 
-    if(destination.substring === 'Den' && destination[0] === turn) {
+    if(destination.substring(1) === 'Den' && destination[0] === turn) {
       throw new Error("Cannot move into you own Den");
     }
 
@@ -1037,7 +1050,7 @@ module gameLogic {
         }
         break;
       case 'Mouse':
-        if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
+        if (canSwimAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
           if(isInRiver(deltaFrom)) {
             boardAfterMove[deltaFrom.row][deltaFrom.col] = 'R';
           }else {
@@ -1053,7 +1066,7 @@ module gameLogic {
     }
     var winner = getWinner(boardAfterMove);
     var firstOperation: IOperation;
-    if(winner !== '' || isTie(board, turnIndexBeforeMove)) {
+    if(winner !== '' || isTie(boardAfterMove, 1-turnIndexBeforeMove)) {
       // game is over
       firstOperation = {endMatch: {endMatchScores:
       winner === 'B' ? [1, 0] : winner === 'W' ? [0, 1] : [0, 0]}};

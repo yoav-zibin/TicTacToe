@@ -214,6 +214,33 @@ describe("In Jungle ", function() {
         {set: {key: 'deltaTo', value: {row: 3, col: 0}}}]);
   });
 
+  it("placing WLion in 3*0 (fly but Mouse on the way) is illegal", function() {
+    expectIllegalMove(1,
+      {board:
+        [['L', 'L', 'WTrap', 'WDen', 'WTrap', 'L', 'WTiger'],
+        ['L', 'WDog', 'L', 'WTrap', 'L', 'WCat', 'L'],
+        ['L', 'WLion', 'WLeopard', 'L', 'WWolf', 'L', 'WElephant'],
+        ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+        ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+        ['BElephant', 'WMouse', 'R', 'L', 'R', 'R', 'L'],
+        ['L', 'L', 'BWolf', 'L', 'BLeopard', 'L', 'BMouse'],
+        ['L', 'BCat', 'L', 'BTrap', 'L', 'BDog', 'L'],
+        ['BTiger', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'BLion']]},
+      [{setTurn: {turnIndex : 0}},
+        {set: {key: 'board', value:
+          [['L', 'L', 'WTrap', 'WDen', 'WTrap', 'L', 'WTiger'],
+          ['L', 'WDog', 'L', 'WTrap', 'L', 'WCat', 'L'],
+          ['L', 'L', 'WLeopard', 'L', 'WWolf', 'L', 'WElephant'],
+          ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+          ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+          ['BElephant', 'WMouse', 'R', 'L', 'R', 'R', 'L'],
+          ['L', 'WLion', 'BWolf', 'L', 'BLeopard', 'L', 'BMouse'],
+          ['L', 'BCat', 'L', 'BTrap', 'L', 'BDog', 'L'],
+          ['BTiger', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'BLion']]}},
+        {set: {key: 'deltaFrom', value: {row: 2, col: 1}}},
+        {set: {key: 'deltaTo', value: {row: 6, col: 1}}}]);
+  });
+
   it("placing BTiger in 4*3 is legal", function() {
     expectMoveOk(0,
       {board:
@@ -266,6 +293,33 @@ describe("In Jungle ", function() {
           ['L', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'BLion']]}},
         {set: {key: 'deltaFrom', value: {row: 5, col: 3}}},
         {set: {key: 'deltaTo', value: {row: 5, col: 0}}}]);
+  });
+
+  it("placing BTiger in 5*0 (fly through river) is legal", function() {
+    expectMoveOk(0,
+      {board:
+        [['WLion', 'L', 'WTrap', 'WDen', 'WTrap', 'L', 'WTiger'],
+        ['L', 'WDog', 'L', 'WTrap', 'L', 'WCat', 'L'],
+        ['WMouse', 'L', 'WLeopard', 'L', 'WWolf', 'L', 'WElephant'],
+        ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+        ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+        ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+        ['BElephant', 'L', 'BWolf', 'L', 'BLeopard', 'BTiger', 'BMouse'],
+        ['L', 'BCat', 'L', 'BTrap', 'L', 'BDog', 'L'],
+        ['L', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'BLion']]},
+      [{setTurn: {turnIndex : 1}},
+        {set: {key: 'board', value:
+          [['WLion', 'L', 'WTrap', 'WDen', 'WTrap', 'L', 'WTiger'],
+          ['L', 'WDog', 'L', 'WTrap', 'L', 'WCat', 'L'],
+          ['WMouse', 'L', 'WLeopard', 'L', 'WWolf', 'BTiger', 'WElephant'],
+          ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+          ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+          ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+          ['BElephant', 'L', 'BWolf', 'L', 'BLeopard', 'L', 'BMouse'],
+          ['L', 'BCat', 'L', 'BTrap', 'L', 'BDog', 'L'],
+          ['L', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'BLion']]}},
+        {set: {key: 'deltaFrom', value: {row: 6, col: 5}}},
+        {set: {key: 'deltaTo', value: {row: 2, col: 5}}}]);
   });
 
   it("placing BTiger in 5*5 (fly but Mouse on the way) is illegal", function() {
@@ -619,6 +673,33 @@ describe("In Jungle ", function() {
         {set: {key: 'deltaTo', value: {row: 0, col: 3}}}]);
   });
 
+  it("White player wins by move BDog to 0*3 is legal", function() {
+    expectIllegalMove(1,
+      {board:
+        [['L', 'L', 'WTrap', 'WDen', 'WTrap', 'L', 'L'],
+        ['L', 'L', 'L', 'WTrap', 'L', 'L', 'L'],
+        ['L', 'L', 'L', 'L', 'WWolf', 'L', 'WElephant'],
+        ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+        ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+        ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+        ['L', 'L', 'L', 'L', 'L', 'L', 'L'],
+        ['L', 'BCat', 'L', 'WDog', 'L', '', 'L'],
+        ['L', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'L']]},
+      [{endMatch: {endMatchScores: [0, 1]}},
+        {set: {key: 'board', value:
+          [['L', 'L', 'WTrap', 'WDen', 'WTrap', 'L', 'L'],
+          ['L', 'L', 'L', 'WTrap', 'L', 'L', 'L'],
+          ['L', 'L', 'L', 'L', 'WWolf', 'L', 'WElephant'],
+          ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+          ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+          ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+          ['L', 'L', 'L', 'L', 'L', 'L', 'L'],
+          ['L', 'BCat', 'L', 'BTrap', 'L', '', 'L'],
+          ['L', 'L', 'BTrap', 'WDog', 'BTrap', 'L', 'L']]}},
+        {set: {key: 'deltaFrom', value: {row: 7, col: 3}}},
+        {set: {key: 'deltaTo', value: {row: 8, col: 3}}}]);
+  });
+
   it("move chese pieces to own Den is illegal", function() {
     expectIllegalMove(1,
       {board:
@@ -752,6 +833,33 @@ describe("In Jungle ", function() {
           ['L', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'L']]}},
         {set: {key: 'deltaFrom', value: {row: 6, col: 3}}},
         {set: {key: 'deltaTo', value: {row: 5, col: 3}}}]);
+  });
+
+  it("the game ties when white player has no chess piece to move", function() {
+    expectMoveOk(0,
+      {board:
+        [['L', 'L', 'WTrap', 'WDen', 'WTrap', 'L', 'L'],
+        ['L', 'L', 'BTiger', 'WMouse', 'BLion', 'L', 'L'],
+        ['L', 'L', 'L', 'L', 'BDog', 'L', 'L'],
+        ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+        ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+        ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+        ['L', 'L', 'L', 'L', 'L', 'L', 'L'],
+        ['L', 'L', 'L', 'BTrap', 'L', 'L', 'L'],
+        ['L', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'L']]},
+      [{endMatch: {endMatchScores : [0, 0]}},
+        {set: {key: 'board', value:
+          [['L', 'L', 'WTrap', 'WDen', 'WTrap', 'L', 'L'],
+          ['L', 'L', 'BTiger', 'WMouse', 'BLion', 'L', 'L'],
+          ['L', 'L', 'L', 'BDog', 'L', 'L', 'L'],
+          ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+          ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+          ['L', 'R', 'R', 'L', 'R', 'R', 'L'],
+          ['L', 'L', 'L', 'L', 'L', 'L', 'L'],
+          ['L', 'L', 'L', 'BTrap', 'L', 'L', 'L'],
+          ['L', 'L', 'BTrap', 'BDen', 'BTrap', 'L', 'L']]}},
+        {set: {key: 'deltaFrom', value: {row: 2, col: 4}}},
+        {set: {key: 'deltaTo', value: {row: 2, col: 3}}}]);
   });
 
   it("null move is illegal", function() {
