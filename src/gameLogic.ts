@@ -152,7 +152,7 @@ module gameLogic {
    * Returns turnIndex initial
    * 0: Black;    1: White
   **/
-  function getTurn(turnIndex: number):string {
+  export function getTurn(turnIndex: number):string {
     return (turnIndex === 0 ? 'B' : 'W');
   }
 
@@ -238,6 +238,52 @@ module gameLogic {
       }
     }
     return false;
+  }
+
+  /**
+   * Return true if the position is in Black trap
+  **/
+  function isBlackTrap(deltaFrom: BoardDelta):boolean {
+    for(let pos of BlackTraps) {
+      if(angular.equals(pos, deltaFrom)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Return true if the position is in White trap
+  **/
+  function isWhiteTrap(deltaFrom: BoardDelta):boolean {
+    for(let pos of WhiteTraps) {
+      if(angular.equals(pos, deltaFrom)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Return true if the position is in Black trap
+  **/
+  function isBlackDen(deltaFrom: BoardDelta):boolean {
+    if(angular.equals(BlackDen, deltaFrom)) {
+      return true;
+    }else {
+      return false;
+    }
+  }
+
+  /**
+   * Return true if the position is in Black trap
+  **/
+  function isWhiteDen(deltaFrom: BoardDelta):boolean {
+    if(angular.equals(WhiteDen, deltaFrom)) {
+      return true;
+    }else {
+      return false;
+    }
   }
 
   /**
@@ -995,7 +1041,17 @@ module gameLogic {
     switch(animal) {
       case 'Elephant':
         if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
-          boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          if(isBlackTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BTrap'
+          }else if(isWhiteTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WTrap'
+          }else if(isBlackDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BDen'
+          }else if(isWhiteDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WDen'
+          }else {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          }
           boardAfterMove[deltaTo.row][deltaTo.col] = piece;
         }else {
           throw new Error("Illegal move for Elephant.");
@@ -1003,7 +1059,17 @@ module gameLogic {
         break;
       case 'Lion':
         if (canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
-          boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          if(isBlackTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BTrap'
+          }else if(isWhiteTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WTrap'
+          }else if(isBlackDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BDen'
+          }else if(isWhiteDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WDen'
+          }else {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          }
           boardAfterMove[deltaTo.row][deltaTo.col] = piece;
         }else {
           throw new Error("Illegal move for Lion.");
@@ -1011,7 +1077,17 @@ module gameLogic {
         break;
       case 'Tiger':
         if (canFlyAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
-          boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          if(isBlackTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BTrap'
+          }else if(isWhiteTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WTrap'
+          }else if(isBlackDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BDen'
+          }else if(isWhiteDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WDen'
+          }else {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          }
           boardAfterMove[deltaTo.row][deltaTo.col] = piece;
         }else {
           throw new Error("Illegal move for Lion.");
@@ -1019,15 +1095,35 @@ module gameLogic {
         break;
       case 'Leopard':
         if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
-         boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
-         boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+          if(isBlackTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BTrap'
+          }else if(isWhiteTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WTrap'
+          }else if(isBlackDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BDen'
+          }else if(isWhiteDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WDen'
+          }else {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          }
+          boardAfterMove[deltaTo.row][deltaTo.col] = piece;
        }else {
          throw new Error("Illegal move for Lion.");
        }
        break;
       case 'Dog':
         if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
-          boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          if(isBlackTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BTrap'
+          }else if(isWhiteTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WTrap'
+          }else if(isBlackDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BDen'
+          }else if(isWhiteDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WDen'
+          }else {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          }
           boardAfterMove[deltaTo.row][deltaTo.col] = piece;
         }else {
           throw new Error("Illegal move for Lion.");
@@ -1035,7 +1131,17 @@ module gameLogic {
         break;
       case 'Wolf':
         if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
-          boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          if(isBlackTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BTrap'
+          }else if(isWhiteTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WTrap'
+          }else if(isBlackDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BDen'
+          }else if(isWhiteDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WDen'
+          }else {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          }
           boardAfterMove[deltaTo.row][deltaTo.col] = piece;
         }else {
           throw new Error("Illegal move for Lion.");
@@ -1043,7 +1149,17 @@ module gameLogic {
         break;
       case 'Cat':
         if (canLandAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
-          boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          if(isBlackTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BTrap'
+          }else if(isWhiteTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WTrap'
+          }else if(isBlackDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BDen'
+          }else if(isWhiteDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WDen'
+          }else {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
+          }
           boardAfterMove[deltaTo.row][deltaTo.col] = piece;
         }else {
           throw new Error("Illegal move for Lion.");
@@ -1053,6 +1169,14 @@ module gameLogic {
         if (canSwimAnimalMove(board, turnIndexBeforeMove, deltaFrom, deltaTo)) {
           if(isInRiver(deltaFrom)) {
             boardAfterMove[deltaFrom.row][deltaFrom.col] = 'R';
+          }else if(isBlackTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BTrap'
+          }else if(isWhiteTrap(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WTrap'
+          }else if(isBlackDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'BDen'
+          }else if(isWhiteDen(deltaFrom)) {
+            boardAfterMove[deltaFrom.row][deltaFrom.col] = 'WDen'
           }else {
             boardAfterMove[deltaFrom.row][deltaFrom.col] = 'L';
           }

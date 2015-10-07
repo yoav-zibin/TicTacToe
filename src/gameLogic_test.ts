@@ -647,7 +647,7 @@ describe("In Jungle ", function() {
   });
 
   it("Black player wins by move BDog to 0*3 is legal", function() {
-    expectIllegalMove(0,
+    expectMoveOk(0,
       {board:
         [['L', 'L', 'WTrap', 'WDen', 'WTrap', 'L', 'L'],
         ['L', 'L', 'L', 'BDog', 'L', 'L', 'L'],
@@ -674,7 +674,7 @@ describe("In Jungle ", function() {
   });
 
   it("White player wins by move BDog to 0*3 is legal", function() {
-    expectIllegalMove(1,
+    expectMoveOk(1,
       {board:
         [['L', 'L', 'WTrap', 'WDen', 'WTrap', 'L', 'L'],
         ['L', 'L', 'L', 'WTrap', 'L', 'L', 'L'],
