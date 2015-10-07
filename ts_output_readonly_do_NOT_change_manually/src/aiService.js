@@ -37,9 +37,7 @@ var aiService;
         // 0) endMatch or setTurn
         // 1) {set: {key: 'board', value: ...}}
         // 2) {set: {key: 'delta', value: ...}}]
-        return alphaBetaService.alphaBetaDecision([null, { set: { key: 'board', value: board } }], playerIndex, getNextStates, getStateScoreForIndex0, 
-        // If you want to see debugging output in the console, then surf to index.html?debug
-        window.location.search === '?debug' ? getDebugStateToString : null, alphaBetaLimits);
+        return alphaBetaService.alphaBetaDecision([null, { set: { key: 'board', value: board } }], playerIndex, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
     }
     aiService.createComputerMove = createComputerMove;
     function getStateScoreForIndex0(move, playerIndex) {
@@ -53,8 +51,5 @@ var aiService;
     }
     function getNextStates(move, playerIndex) {
         return getPossibleMoves(move[1].set.value, playerIndex);
-    }
-    function getDebugStateToString(move) {
-        return "\n" + move[1].set.value.join("\n") + "\n";
     }
 })(aiService || (aiService = {}));

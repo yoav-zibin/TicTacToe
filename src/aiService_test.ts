@@ -30,6 +30,25 @@ describe("aiService", function() {
     expect(angular.equals(move, expectedMove)).toBe(true);
   });
 
+  it("X finds an immediate winning move in less than a second", function() {
+    let move = aiService.findComputerMove(<IUpdateUI>{
+      turnIndexAfterMove: 0,
+      stateAfterMove: {
+        board: [['', '', 'O'],
+                ['O', 'X', 'X'],
+                ['O', 'X', 'O']]
+      }
+    });
+    let expectedMove =
+        [{endMatch: {endMatchScores: [1, 0]}},
+          {set: {key: 'board', value:
+              [['', 'X', 'O'],
+               ['O', 'X', 'X'],
+               ['O', 'X', 'O']]}},
+          {set: {key: 'delta', value: {row: 0, col: 1}}}];
+    expect(angular.equals(move, expectedMove)).toBe(true);
+  });
+
   it("O finds an immediate winning move", function() {
     let move = aiService.createComputerMove(
         [['', '', 'O'],

@@ -41,10 +41,7 @@ module aiService {
     // 2) {set: {key: 'delta', value: ...}}]
     return alphaBetaService.alphaBetaDecision(
         [null, {set: {key: 'board', value: board}}],
-        playerIndex, getNextStates, getStateScoreForIndex0,
-        // If you want to see debugging output in the console, then surf to index.html?debug
-        window.location.search === '?debug' ? getDebugStateToString : null,
-        alphaBetaLimits);
+        playerIndex, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
   }
 
   function getStateScoreForIndex0(move: IMove, playerIndex: number): number {
@@ -59,9 +56,5 @@ module aiService {
 
   function getNextStates(move: IMove, playerIndex: number): IMove[] {
     return getPossibleMoves(move[1].set.value, playerIndex);
-  }
-
-  function getDebugStateToString(move: IMove): string {
-    return "\n" + move[1].set.value.join("\n") + "\n";
   }
 }
