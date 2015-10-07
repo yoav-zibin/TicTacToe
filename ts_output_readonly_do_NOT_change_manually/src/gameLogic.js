@@ -73,24 +73,6 @@ var gameLogic;
         return '';
     }
     /**
-     * Returns all the possible moves for the given board and turnIndexBeforeMove.
-     * Returns an empty array if the game is over.
-     */
-    function getPossibleMoves(board, turnIndexBeforeMove) {
-        var possibleMoves = [];
-        for (var i = 0; i < gameLogic.ROWS; i++) {
-            for (var j = 0; j < gameLogic.COLS; j++) {
-                try {
-                    possibleMoves.push(createMove(board, i, j, turnIndexBeforeMove));
-                }
-                catch (e) {
-                }
-            }
-        }
-        return possibleMoves;
-    }
-    gameLogic.getPossibleMoves = getPossibleMoves;
-    /**
      * Returns the move that should be performed when player
      * with index turnIndexBeforeMove makes a move in cell row X col.
      */
