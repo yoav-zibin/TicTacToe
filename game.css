@@ -1,8 +1,22 @@
 .r {
-  border-right: 4pt solid black;
+  /*border-right: 2pt solid #B8860B;*/
+  border: 2pt solid #B8860B;
 }
 .b {
-  border-bottom: 4pt solid black;
+  /*border-bottom: 2pt solid #B8860B;*/
+  border: 2pt solid #B8860B;
+}
+
+.cell {
+  border: 2pt solid #B8860B;
+}
+
+.land {
+  background: #FFEE99;
+}
+
+.river {
+  background: #99FFFF;
 }
 
 .slowlyAppear {
