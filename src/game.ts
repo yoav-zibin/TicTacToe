@@ -104,7 +104,7 @@ module game {
 }
 
 angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
-  .run(['initGameServices', function (initGameServices: any) {
+  .run(function () {
   $rootScope['game'] = game;
   translate.setLanguage('en',  {
     RULES_OF_TICTACTOE: "Rules of TicTacToe",
@@ -113,4 +113,4 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
     CLOSE: "Close"
   });
   game.init();
-}]);
+});
