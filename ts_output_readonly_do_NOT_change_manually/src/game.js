@@ -34,6 +34,7 @@ var game;
         gameService.makeMove(aiService.findComputerMove(lastUpdateUI));
     }
     function updateUI(params) {
+        log.info("Game got updateUI:", params);
         animationEnded = false;
         lastUpdateUI = params;
         state = params.stateAfterMove;
@@ -60,7 +61,7 @@ var game;
         }
     }
     function cellClicked(row, col) {
-        log.info(["Clicked on cell:", row, col]);
+        log.info("Clicked on cell:", row, col);
         if (window.location.search === '?throwException') {
             throw new Error("Throwing the error because URL has '?throwException'");
         }
