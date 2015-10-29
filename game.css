@@ -6,11 +6,11 @@
 }
 
 .slowlyAppear {
-	-webkit-animation: slowlyAppear 0.5s linear;
-	-moz-animation: slowlyAppear 0.5s linear;
-	-ms-animation: slowlyAppear 0.5s linear;
-	-o-animation: slowlyAppear 0.5s linear;
-	animation: slowlyAppear 0.5s linear;
+  -webkit-animation: slowlyAppear 0.5s linear;
+  -moz-animation: slowlyAppear 0.5s linear;
+  -ms-animation: slowlyAppear 0.5s linear;
+  -o-animation: slowlyAppear 0.5s linear;
+  animation: slowlyAppear 0.5s linear;
 }
 
 @-webkit-keyframes slowlyAppear {
