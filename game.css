@@ -10,6 +10,26 @@
   background: #99FFFF;
 }
 
+.WTrap {
+  background-image: url(imgs/WTrap.gif);
+  background-size: 100% 100%;
+}
+
+.BTrap {
+  background-image: url(imgs/BTrap.gif);
+  background-size: 100% 100%;
+}
+
+.WDen {
+  background-image: url(imgs/WDen.gif);
+  background-size: 100% 100%;
+}
+
+.BDen {
+  background-image: url(imgs/BDen.gif);
+  background-size: 100% 100%;
+}
+
 .slowlyAppear {
 	-webkit-animation: slowlyAppear 0.5s linear;
 	-moz-animation: slowlyAppear 0.5s linear;

@@ -7,6 +7,10 @@ module game {
   let turnIndex: number = null;
   export let isHelpModalShown: boolean = false;
 
+  let clickCounter = 0;
+  let deltaFrom: BoardDelta = {row: -1, col: -1};
+  let deltaTo: BoardDelta = {row: -1, col: -1};
+
   export function init() {
     console.log("Translation of 'RULES_OF_JUNGLE' is " + translate('RULES_OF_JUNGLE'));
     resizeGameAreaService.setWidthToHeight(7 / 9);
@@ -69,21 +73,42 @@ module game {
     }
   }
 
-  // export function cellClicked(row: number, col: number): void {
-  //   log.info(["Clicked on cell:", row, col]);
-  //   if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
-  //     throw new Error("Throwing the error because URL has '?throwException'");
-  //   }
-  //   if (!canMakeMove) {
-  //     return;
-  //   }
-  //   try {
-  //
-  //   } catch (e) {
-  //     log.info(["Cell is already full in position:", row, col]);
-  //     return;
-  //   }
-  // }
+  export function cellClicked(row: number, col: number): void {
+    log.info(["Clicked on cell:", row, col]);
+    if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
+      throw new Error("Throwing the error because URL has '?throwException'");
+    }
+    if (!canMakeMove) {
+      return;
+    }
+    try {
+      if(clickCounter === 0) {
+        deltaFrom.row = row;
+        deltaFrom.col = col;
+        clickCounter++;
+        return;
+      }else if(clickCounter === 1) {
+        clickCounter = 0;
+        
+        deltaTo.row = row;
+        deltaTo.col = col;
+        let move = gameLogic.createMove(state.board, lastUpdateUI.turnIndexAfterMove, deltaFrom, deltaTo);
+
+        canMakeMove = false;
+        gameService.makeMove(move);
+
+        deltaFrom.row = -1;
+        deltaFrom.col = -1;
+        deltaTo.row = -1;
+        deltaTo.col = -1;
+      }else {
+        throw new Error("There are something wrong for click");
+      }
+    } catch (e) {
+      log.info(["Illegal movement from", row, col]);
+      return;
+    }
+  }
 
   export function shouldShowImage(row: number, col: number): boolean {
     var cell = state.board[row][col];
@@ -180,7 +205,7 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
   $rootScope['game'] = game;
   translate.setLanguage('en', {
     RULES_OF_JUNGLE: "Rules of Jungle",
-    RULES_SLIDE1: "You and your opponent take turns to mark the grid in an empty spot. The first mark is X, then O, then X, then O, etc.",
+    RULES_SLIDE1: "There are two players, black and white. Black goes first. Each player has eight different pieces representing different animals.",
     RULES_SLIDE2: "Higher ranking pieces can capture all pieces of identical or weaker ranking. However there is one exception: The mouse may capture the elephant, while the elephant cannot capture the mouse",
     RULES_SLIDE3: "The animal ranking, from strongest to weakest, is: Elephant, Lion, Tiger, Leopard, Wolf, Dog, Cat, Mouse",
     RULES_SLIDE4: "The rat is the only animal that is allowed to go onto a water square. The rat may not capture the elephant or another rat on land directly from a water square.",
