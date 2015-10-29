@@ -1,0 +1,59 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 70%;
+  height: 90%;
+  overflow: hidden;
+  position: fixed!important;
+}
+/* To prevent long-press that will bring up copy-paste dialog. */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -moz-touch-callout: none;
+  -ms-touch-callout: none;
+  touch-callout: none;
+}
+
+/* Help screen uses a carousel and a modal dialog. */
+.carousel-indicators li {
+  background-color: black;
+}
+.carousel-indicators .active {
+  background-color: green;
+}
+.modal-dialog {
+  z-index: 1001;
+}
+.overlayModal {
+  text-align:center;
+  z-index: 1000;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width:100%;
+  height:100%;
+  transition: visibility 0s linear 0.25s, opacity 0.25s linear;
+  -moz-transition: visibility 0s linear 0.25s, opacity 0.25s linear;
+  -webkit-transition: visibility 0s linear 0.25s, opacity 0.25s linear;
+}
+.zeroOpacity {
+  visibility: hidden;
+  opacity: 0;
+}
+.oneOpacity {
+  visibility:visible;
+  opacity:1;
+  transition-delay:0s;
+}
+.modal-backdrop {
+  z-index: 1000;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width:100%;
+  height:100%;
+}

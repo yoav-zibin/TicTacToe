@@ -2,16 +2,16 @@
  * This is the logic service for chess. The game board is represented as a
  * 2D array (9*7). All elements are listed below:
  *
- * LionW:      White Lion          LionB:      Black Lion
- * TigerW:     White Tiger         TigerB:     Black Tiger
- * DogW:       White Dog           DogB:       Black Dog
- * CatW:       White Cat           CatB:       Black Cat
- * MouseW:     White Mouse         MouseB:     Black Mouse
- * LeopardW:   White Leopard       LeopardB:   Black Leopard
- * WolfW:      White Wolf          WolfB:      Black Wolf
- * ElephantW:  White Elephant      ElephantB:  Black Elephant
- * TrapW:      White Trap          TrapB:      Black Trap
- * DenW:       White Home          DenB:       Black Home
+ * WLion:      White Lion          BLion:      Black Lion
+ * WTiger:     White Tiger         BTiger:     Black Tiger
+ * WDog:       White Dog           BDog:       Black Dog
+ * WCat:       White Cat           BCat:       Black Cat
+ * WMouse:     White Mouse         BMouse:     Black Mouse
+ * WLeopard:   White Leopard       BLeopard:   Black Leopard
+ * WWolf:      White Wolf          BWolf:      Black Wolf
+ * WElephant:  White Elephant      BElephant:  Black Elephant
+ * WTrap:      White Trap          BTrap:      Black Trap
+ * WDen:       White Home          BDen:       Black Home
  *
  * L: Land                       R: River
  *
@@ -1188,7 +1188,11 @@ var gameLogic;
         var firstOperation;
         if (winner !== '' || isTie(boardAfterMove, 1 - turnIndexBeforeMove)) {
             // game is over
-            firstOperation = { endMatch: { endMatchScores: winner === 'B' ? [1, 0] : winner === 'W' ? [0, 1] : [0, 0] } };
+            firstOperation = {
+                endMatch: {
+                    endMatchScores: winner === 'B' ? [1, 0] : winner === 'W' ? [0, 1] : [0, 0]
+                }
+            };
         }
         else {
             // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
