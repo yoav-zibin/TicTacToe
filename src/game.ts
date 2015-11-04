@@ -6,10 +6,31 @@ module game {
   let state: IState = null;
   let turnIndex: number = null;
   export let isHelpModalShown: boolean = false;
+  let shouldRotateBoard: boolean = false;
 
   let clickCounter = 0;
-  let deltaFrom: BoardDelta = {row: -1, col: -1};
-  let deltaTo: BoardDelta = {row: -1, col: -1};
+  let deltaFrom: BoardDelta = { row: -1, col: -1 };
+  let deltaTo: BoardDelta = { row: -1, col: -1 };
+  let draggingStartedRowCol: BoardDelta = { row: -1, col: -1 }; // The {row: YY, col: XX} where dragging started.
+  let draggingPieceAvailableMoves: any = [];
+
+  interface WidthHeight {
+    width: number;
+    height: number;
+  }
+
+  interface TopLeft {
+    top: number;
+    left: number;
+  }
+
+  let gameArea: HTMLElement;
+  let draggingLines: HTMLElement;
+  let verticalDraggingLine: HTMLElement;
+  let horizontalDraggingLine: HTMLElement;
+  var draggingPiece: HTMLElement;
+
+  let nextZIndex = 61;
 
   export function init() {
     console.log("Translation of 'RULES_OF_JUNGLE' is " + translate('RULES_OF_JUNGLE'));
@@ -25,6 +46,8 @@ module game {
     document.addEventListener("animationend", animationEndedCallback, false); // standard
     document.addEventListener("webkitAnimationEnd", animationEndedCallback, false); // WebKit
     document.addEventListener("oanimationend", animationEndedCallback, false); // Opera
+
+    dragAndDropService.addDragListener("gameArea", handleDragEvent);
   }
 
   function animationEndedCallback() {
@@ -71,41 +94,214 @@ module game {
         sendComputerMove();
       }
     }
+
+    // If the play mode is not pass and play then "rotate" the board
+    // for the player. Therefore the board will always look from the
+    // point of view of the player in single player mode...
+    if (params.playMode === "playWhite") {
+      shouldRotateBoard = true;
+    } else {
+      shouldRotateBoard = false;
+    }
   }
 
-  export function cellClicked(row: number, col: number): void {
-    log.info(["Clicked on cell:", row, col]);
+  // export function cellClicked(row: number, col: number): void {
+  //   log.info(["Clicked on cell:", row, col]);
+  //   if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
+  //     throw new Error("Throwing the error because URL has '?throwException'");
+  //   }
+  //   if (!canMakeMove) {
+  //     return;
+  //   }
+  //   try {
+  //     if (clickCounter === 0) {
+  //       deltaFrom.row = row;
+  //       deltaFrom.col = col;
+  //       clickCounter++;
+  //       return;
+  //     } else if (clickCounter === 1) {
+  //       clickCounter = 0;
+  //
+  //       deltaTo.row = row;
+  //       deltaTo.col = col;
+  //       let move = gameLogic.createMove(state.board, lastUpdateUI.turnIndexAfterMove, deltaFrom, deltaTo);
+  //
+  //       canMakeMove = false;
+  //       gameService.makeMove(move);
+  //
+  //       deltaFrom.row = -1;
+  //       deltaFrom.col = -1;
+  //       deltaTo.row = -1;
+  //       deltaTo.col = -1;
+  //     } else {
+  //       throw new Error("There are something wrong for click");
+  //     }
+  //   } catch (e) {
+  //     log.info(["Illegal movement from", row, col]);
+  //     return;
+  //   }
+  // }
+
+
+  export function handleDragEvent(type: string, clientX: number, clientY: number) {
+    gameArea = document.getElementById("gameArea");
+    draggingLines = document.getElementById("draggingLines");
+    verticalDraggingLine = document.getElementById("verticalDraggingLine");
+    horizontalDraggingLine = document.getElementById("horizontalDraggingLine");
+
+    var x = clientX - gameArea.offsetLeft;
+    var y = clientY - gameArea.offsetTop;
+
+    // Inside gameArea. Let's find the containing board's row and col
+    var col = Math.floor(gameLogic.COLS * x / gameArea.clientWidth);
+    var row = Math.floor(gameLogic.ROWS * y / gameArea.clientHeight);
+    var r_col = col;
+    var r_row = row;
+
+    // if (shouldRotateBoard) {
+    //   r_row = gameLogic.ROWS - row;
+    //   r_col = gameLogic.COLS - col;
+    // }
+
+    var pieceKind = getPieceKindId(row, col);
+    if (pieceKind === "") {
+      draggingLines.style.display = "none";
+      return;
+    }
+
+    // is outside gameArea?
+    if (x < 0 || y < 0 || x >= gameArea.clientWidth || y >= gameArea.clientHeight) {
+      // draggingLines.style.display = "none";
+      if (draggingPiece) {
+        var size = getSquareWidthHeight();
+        setDraggingPieceTopLeft({ top: y - size.height / 2, left: x - size.width / 2 });
+      } else {
+        return;
+      }
+    }else {
+      draggingLines.style.display = "inline";
+
+      var centerXY = getSquareCenterXY(row, col);
+      verticalDraggingLine.setAttribute("x1", centerXY.width.toString());
+      verticalDraggingLine.setAttribute("x2", centerXY.width.toString());
+      horizontalDraggingLine.setAttribute("y1", centerXY.height.toString());
+      horizontalDraggingLine.setAttribute("y2", centerXY.height.toString());
+
+      // var topLeft = getSquareTopLeft(row, col);
+      // draggingPiece.style.left = topLeft.left + "px";
+      // draggingPiece.style.top = topLeft.top + "px";
+
+      if (type === "touchstart") {
+        // drag start
+        deltaFrom = { row: row, col: col };
+        var curPiece = state.board[row][col];
+
+        if (curPiece && validPiece(curPiece)) {
+          draggingPiece = document.getElementById('img_' + getPieceKindId(row, col) + row + 'x' + col);
+
+          // if (draggingPiece) {
+          //   draggingPiece.style['z-index'] = ++nextZIndex;
+          //   draggingPiece.style['width'] = '80%';
+          //   draggingPiece.style['height'] = '80%';
+          //   draggingPiece.style['top'] = '10%';
+          //   draggingPiece.style['left'] = '10%';
+          //   draggingPiece.style['position'] = 'absolute';
+          // }
+
+          // draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(r_row, r_col);
+          // for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
+          //   draggingPieceAvailableMoves[i].style['stroke-width'] = '1';
+          //   draggingPieceAvailableMoves[i].style['stroke'] = 'purple';
+          //   draggingPieceAvailableMoves[i].setAttribute("rx", "10");
+          //   draggingPieceAvailableMoves[i].setAttribute("ry", "10");
+          // }
+        }
+      }
+
+      if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+        // drag ended
+        draggingLines.style.display = "none";
+        deltaTo = { row: row, col: col };
+        dragDone(deltaFrom, deltaTo);
+      } else {
+        // drag continue
+        // setDraggingPieceTopLeft(getSquareTopLeft(row, col));
+        // centerXY = getSquareCenterXY(row, col);
+      }
+
+    }
+
+  }
+
+  function validPiece(piece: string): boolean {
+    if (piece === "L" || piece === "R" || piece === "WTrap" || piece === "BTrap" || piece === "WDen" || piece === "BDen") {
+      return false;
+    }
+    var turn: string = gameLogic.getTurn(turnIndex);
+    if (turn === piece[0]) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function getSquareWidthHeight(): WidthHeight {
+    var res: WidthHeight = { width: gameArea.clientWidth / gameLogic.COLS, height: gameArea.clientHeight / gameLogic.ROWS };
+    return res;
+  }
+
+  function getSquareCenterXY(row: number, col: number): WidthHeight {
+    var size = getSquareWidthHeight();
+    var res: WidthHeight = { width: col * size.width + size.width / 2, height: row * size.height + size.height / 2 };
+    return res;
+  }
+
+  function setDraggingPieceTopLeft(topleft: TopLeft) {
+    var originalSize = getSquareTopLeft(draggingStartedRowCol.row, draggingStartedRowCol.col);
+    draggingPiece.style.left = (topleft.left - originalSize.left) + "px";
+    draggingPiece.style.top = (topleft.top - originalSize.top) + "px";
+  }
+
+  function getSquareTopLeft(row: number, col: number): TopLeft {
+    var size = getSquareWidthHeight();
+    var res: TopLeft = { top: row * size.height, left: col * size.width };
+    return res;
+  }
+
+  function dragDone(deltaFrom: BoardDelta, deltaTo: BoardDelta) {
+    dragDoneHandler(deltaFrom, deltaTo);
+  }
+
+  function getDraggingPieceAvailableMoves(row: number, col: number): any {
+
+  }
+
+  function dragDoneHandler(deltaFrom: BoardDelta, deltaTo: BoardDelta) {
+    var msg = "Dragged piece from " + deltaFrom.row + "*" + deltaFrom.col + " to " + deltaTo.row + "*" + deltaTo.col;
+    log.info(msg);
     if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
       throw new Error("Throwing the error because URL has '?throwException'");
     }
+
     if (!canMakeMove) {
       return;
     }
+
+    // need to rotate the angle if playWhite
+    // if (shouldRotateBoard) {
+    //   deltaFrom.row = gameLogic.ROWS - deltaFrom.row;
+    //   deltaFrom.col = gameLogic.COLS - deltaFrom.col;
+    //   deltaTo.row = gameLogic.ROWS - deltaTo.row;
+    //   deltaTo.col = gameLogic.COLS - deltaTo.col;
+    // }
+
     try {
-      if(clickCounter === 0) {
-        deltaFrom.row = row;
-        deltaFrom.col = col;
-        clickCounter++;
-        return;
-      }else if(clickCounter === 1) {
-        clickCounter = 0;
-        
-        deltaTo.row = row;
-        deltaTo.col = col;
-        let move = gameLogic.createMove(state.board, lastUpdateUI.turnIndexAfterMove, deltaFrom, deltaTo);
-
-        canMakeMove = false;
-        gameService.makeMove(move);
-
-        deltaFrom.row = -1;
-        deltaFrom.col = -1;
-        deltaTo.row = -1;
-        deltaTo.col = -1;
-      }else {
-        throw new Error("There are something wrong for click");
-      }
+      let move = gameLogic.createMove(state.board, lastUpdateUI.turnIndexAfterMove, deltaFrom, deltaTo);
+      canMakeMove = false;
+      gameService.makeMove(move);
+      log.info(["Make movement from" + deltaFrom.row + "*" + deltaFrom.col + " to " + deltaTo.row + "*" + deltaTo.col]);
     } catch (e) {
-      log.info(["Illegal movement from", row, col]);
+      log.info(["Illegal movement from" + deltaFrom.row + "*" + deltaFrom.col + " to " + deltaTo.row + "*" + deltaTo.col]);
       return;
     }
   }
@@ -198,7 +394,23 @@ module game {
     }
   }
 
+  export function getPieceKindId(row: number, col: number): string {
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row;
+      col = gameLogic.COLS - col;
+    }
+    var cell: string = state.board[row][col];
+    if (cell) {
+      return cell;
+    } else {
+      return "";
+    }
+  }
+
+
 }
+
+
 
 angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
   .run(function() {

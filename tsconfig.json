@@ -30,12 +30,12 @@
         "placeOpenBraceOnNewLineForControlBlocks": false
     },
     "files": [
-        "./src/aiService.ts",
         "./src/aiService_test.ts",
+        "./src/aiService.ts",
         "./src/end_to_end_tests.ts",
         "./src/game.ts",
-        "./src/gameLogic.ts",
         "./src/gameLogic_test.ts",
+        "./src/gameLogic.ts",
         "./typings/angular-protractor/angular-protractor.d.ts",
         "./typings/angularjs/angular.d.ts",
         "./typings/jasmine/jasmine.d.ts",
