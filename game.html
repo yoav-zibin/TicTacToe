@@ -156,7 +156,7 @@
       <div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6]" style="position:absolute; top:0; left:{{col * 100 / 7}}%; width:{{100 / 7}}%; height:100%;" ng-class="{'cell': true, 'land': game.isLand(row, col), 'river': game.isRiver(row, col)}" id="{{'div_' + row + 'x' + col}}">
         <div style="width:100%; height: 100%" ng-class="{'WTrap': game.isWTrap(row, col), 'BTrap': game.isBTrap(row, col), 'WDen': game.isWDen(row, col), 'BDen': game.isBDen(row, col)}">
           <svg width="100%" height="100%" style="position:absolute;" ng-show="true">
-            <img style="width:100%; height: 100%" ng-show="game.shouldShowImage(row, col)" ng-src="{{ game.getImageSrc(row, col) }}" id="{{'img_' + getPieceKindId(row, col) + row + 'x' + col}}">
+            <img style="width:100%; height: 100%;" ng-show="game.shouldShowImage(row, col)" ng-src="{{ game.getImageSrc(row, col) }}" id="{{'img_' + game.getPieceKindId(row, col) + '_' + row + 'x' + col}}">
           </svg>
         </div>
       </div>

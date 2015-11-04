@@ -11,7 +11,6 @@ var game;
     var clickCounter = 0;
     var deltaFrom = { row: -1, col: -1 };
     var deltaTo = { row: -1, col: -1 };
-    var draggingStartedRowCol = { row: -1, col: -1 }; // The {row: YY, col: XX} where dragging started.
     var draggingPieceAvailableMoves = [];
     var gameArea;
     var draggingLines;
@@ -128,23 +127,9 @@ var game;
         horizontalDraggingLine = document.getElementById("horizontalDraggingLine");
         var x = clientX - gameArea.offsetLeft;
         var y = clientY - gameArea.offsetTop;
-        // Inside gameArea. Let's find the containing board's row and col
-        var col = Math.floor(gameLogic.COLS * x / gameArea.clientWidth);
-        var row = Math.floor(gameLogic.ROWS * y / gameArea.clientHeight);
-        var r_col = col;
-        var r_row = row;
-        // if (shouldRotateBoard) {
-        //   r_row = gameLogic.ROWS - row;
-        //   r_col = gameLogic.COLS - col;
-        // }
-        var pieceKind = getPieceKindId(row, col);
-        if (pieceKind === "") {
-            draggingLines.style.display = "none";
-            return;
-        }
         // is outside gameArea?
         if (x < 0 || y < 0 || x >= gameArea.clientWidth || y >= gameArea.clientHeight) {
-            // draggingLines.style.display = "none";
+            draggingLines.style.display = "none";
             if (draggingPiece) {
                 var size = getSquareWidthHeight();
                 setDraggingPieceTopLeft({ top: y - size.height / 2, left: x - size.width / 2 });
@@ -155,6 +140,15 @@ var game;
         }
         else {
             draggingLines.style.display = "inline";
+            // Inside gameArea. Let's find the containing board's row and col
+            var col = Math.floor(gameLogic.COLS * x / gameArea.clientWidth);
+            var row = Math.floor(gameLogic.ROWS * y / gameArea.clientHeight);
+            var r_col = col;
+            var r_row = row;
+            // if (shouldRotateBoard) {
+            //   r_row = gameLogic.ROWS - row;
+            //   r_col = gameLogic.COLS - col;
+            // }
             var centerXY = getSquareCenterXY(row, col);
             verticalDraggingLine.setAttribute("x1", centerXY.width.toString());
             verticalDraggingLine.setAttribute("x2", centerXY.width.toString());
@@ -163,13 +157,26 @@ var game;
             // var topLeft = getSquareTopLeft(row, col);
             // draggingPiece.style.left = topLeft.left + "px";
             // draggingPiece.style.top = topLeft.top + "px";
-            if (type === "touchstart") {
+            if (type === "touchstart" && deltaFrom.row < 0 && deltaFrom.col < 0) {
                 // drag start
-                deltaFrom = { row: row, col: col };
                 var curPiece = state.board[row][col];
                 if (curPiece && validPiece(curPiece)) {
-                    draggingPiece = document.getElementById('img_' + getPieceKindId(row, col) + row + 'x' + col);
+                    deltaFrom = { row: row, col: col };
+                    var tempid = 'img_' + getPieceKindId(row, col) + '_' + row + 'x' + col;
+                    draggingPiece = document.getElementById(tempid);
+                    if (draggingPiece) {
+                        draggingPiece.style['z-index'] = ++nextZIndex;
+                        draggingPiece.style['width'] = '115%';
+                        draggingPiece.style['height'] = '115%';
+                        draggingPiece.style['top'] = '10%';
+                        draggingPiece.style['left'] = '10%';
+                        draggingPiece.style['position'] = 'absolute';
+                    }
                 }
+            }
+            if (!draggingPiece) {
+                draggingLines.style.display = "none";
+                return;
             }
             if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
                 // drag ended
@@ -178,7 +185,21 @@ var game;
                 dragDone(deltaFrom, deltaTo);
             }
             else {
+                // drag continue
+                setDraggingPieceTopLeft(getSquareTopLeft(row, col));
+                centerXY = getSquareCenterXY(row, col);
             }
+        }
+        if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+            // drag ended
+            // return the piece to it's original style (then angular will take care to hide it).
+            setDraggingPieceTopLeft(getSquareTopLeft(deltaFrom.row, deltaFrom.col));
+            draggingPiece.style['width'] = '100%';
+            draggingPiece.style['height'] = '100%';
+            draggingPiece.style['position'] = 'absolute';
+            deltaFrom = { row: -1, col: -1 };
+            deltaTo = { row: -1, col: -1 };
+            draggingPiece = null;
         }
     }
     game.handleDragEvent = handleDragEvent;
@@ -204,7 +225,7 @@ var game;
         return res;
     }
     function setDraggingPieceTopLeft(topleft) {
-        var originalSize = getSquareTopLeft(draggingStartedRowCol.row, draggingStartedRowCol.col);
+        var originalSize = getSquareTopLeft(deltaFrom.row, deltaFrom.col);
         draggingPiece.style.left = (topleft.left - originalSize.left) + "px";
         draggingPiece.style.top = (topleft.top - originalSize.top) + "px";
     }
@@ -238,10 +259,10 @@ var game;
             var move = gameLogic.createMove(state.board, lastUpdateUI.turnIndexAfterMove, deltaFrom, deltaTo);
             canMakeMove = false;
             gameService.makeMove(move);
-            log.info(["Make movement from" + deltaFrom.row + "*" + deltaFrom.col + " to " + deltaTo.row + "*" + deltaTo.col]);
+            log.info(["Make movement from " + deltaFrom.row + "x" + deltaFrom.col + " to " + deltaTo.row + "x" + deltaTo.col]);
         }
         catch (e) {
-            log.info(["Illegal movement from" + deltaFrom.row + "*" + deltaFrom.col + " to " + deltaTo.row + "*" + deltaTo.col]);
+            log.info(["Illegal movement from " + deltaFrom.row + "x" + deltaFrom.col + " to " + deltaTo.row + "x" + deltaTo.col]);
             return;
         }
     }
@@ -337,16 +358,16 @@ var game;
         }
     }
     function getPieceKindId(row, col) {
-        if (shouldRotateBoard) {
-            row = gameLogic.ROWS - row;
-            col = gameLogic.COLS - col;
-        }
+        // if (shouldRotateBoard) {
+        //   row = gameLogic.ROWS - row;
+        //   col = gameLogic.COLS - col;
+        // }
         var cell = state.board[row][col];
-        if (cell) {
-            return cell;
+        if (cell === 'R' || cell === 'L' || cell === 'WDen' || cell === 'BDen' || cell === 'WTrap' || cell === 'BTrap') {
+            return '';
         }
         else {
-            return "";
+            return cell;
         }
     }
     game.getPieceKindId = getPieceKindId;
