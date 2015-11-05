@@ -169,24 +169,20 @@ module game {
       var r_col = col;
       var r_row = row;
 
-      // if (shouldRotateBoard) {
-      //   r_row = gameLogic.ROWS - row;
-      //   r_col = gameLogic.COLS - col;
-      // }
+      if (shouldRotateBoard) {
+        r_row = gameLogic.ROWS - row;
+        r_col = gameLogic.COLS - col;
+      }
 
-      var centerXY = getSquareCenterXY(row, col);
+      var centerXY = getSquareCenterXY(r_row, r_col);
       verticalDraggingLine.setAttribute("x1", centerXY.width.toString());
       verticalDraggingLine.setAttribute("x2", centerXY.width.toString());
       horizontalDraggingLine.setAttribute("y1", centerXY.height.toString());
       horizontalDraggingLine.setAttribute("y2", centerXY.height.toString());
 
-      // var topLeft = getSquareTopLeft(row, col);
-      // draggingPiece.style.left = topLeft.left + "px";
-      // draggingPiece.style.top = topLeft.top + "px";
-
       if (type === "touchstart" && deltaFrom.row < 0 && deltaFrom.col < 0) {
         // drag start
-        var curPiece = state.board[row][col];
+        var curPiece = state.board[r_row][r_col];
 
         if (curPiece && validPiece(curPiece)) {
           deltaFrom = { row: row, col: col };
@@ -196,8 +192,8 @@ module game {
             draggingPiece.style['z-index'] = ++nextZIndex;
             draggingPiece.style['width'] = '115%';
             draggingPiece.style['height'] = '115%';
-            draggingPiece.style['top'] = '10%';
-            draggingPiece.style['left'] = '10%';
+            // draggingPiece.style['top'] = '10%';
+            // draggingPiece.style['left'] = '10%';
             draggingPiece.style['position'] = 'absolute';
           }
 
@@ -295,12 +291,12 @@ module game {
     }
 
     // need to rotate the angle if playWhite
-    // if (shouldRotateBoard) {
-    //   deltaFrom.row = gameLogic.ROWS - deltaFrom.row;
-    //   deltaFrom.col = gameLogic.COLS - deltaFrom.col;
-    //   deltaTo.row = gameLogic.ROWS - deltaTo.row;
-    //   deltaTo.col = gameLogic.COLS - deltaTo.col;
-    // }
+    if (shouldRotateBoard) {
+      deltaFrom.row = gameLogic.ROWS - deltaFrom.row;
+      deltaFrom.col = gameLogic.COLS - deltaFrom.col;
+      deltaTo.row = gameLogic.ROWS - deltaTo.row;
+      deltaTo.col = gameLogic.COLS - deltaTo.col;
+    }
 
     try {
       let move = gameLogic.createMove(state.board, lastUpdateUI.turnIndexAfterMove, deltaFrom, deltaTo);
@@ -318,13 +314,22 @@ module game {
     var possibleMoves = gameLogic.getPiecePossibleMoves(state.board, lastUpdateUI.turnIndexAfterMove, r_deltaFrom);
     var tempdraggingPieceAvailableMoves: any = [];
     for (let move of possibleMoves) {
-      var tempid = "background" + move.row + 'x' + move.col;
+      var r_move = move;
+      if(shouldRotateBoard) {
+        r_move.row = gameLogic.ROWS - r_move.row;
+        r_move.col = gameLogic.COLS - r_move.col;
+      }
+      var tempid = "background" + r_move.row + 'x' + r_move.col;
       tempdraggingPieceAvailableMoves.push(document.getElementById(tempid));
     }
     return tempdraggingPieceAvailableMoves;
   }
 
   export function shouldShowImage(row: number, col: number): boolean {
+    if(shouldRotateBoard) {
+      row = gameLogic.ROWS - row;
+      col = gameLogic.COLS - col;
+    }
     var cell = state.board[row][col];
     if (cell === 'L' || cell === 'R' || cell === 'WDen' || cell === 'BDen' || cell === 'WTrap' || cell === 'BTrap') {
       return false;
@@ -384,6 +389,10 @@ module game {
   }
 
   export function getImageSrc(row: number, col: number) {
+    if(shouldRotateBoard) {
+      row = gameLogic.ROWS - row;
+      col = gameLogic.COLS - col;
+    }
     var cell: string = state.board[row][col];
     return getPieceKind(cell);
   }
@@ -413,10 +422,10 @@ module game {
   }
 
   export function getPieceKindId(row: number, col: number): string {
-    // if (shouldRotateBoard) {
-    //   row = gameLogic.ROWS - row;
-    //   col = gameLogic.COLS - col;
-    // }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row;
+      col = gameLogic.COLS - col;
+    }
     var cell: string = state.board[row][col];
     if (cell === 'R' || cell === 'L' || cell === 'WDen' || cell === 'BDen' || cell === 'WTrap' || cell === 'BTrap') {
       return '';
@@ -424,7 +433,6 @@ module game {
       return cell;
     }
   }
-
 
 }
 

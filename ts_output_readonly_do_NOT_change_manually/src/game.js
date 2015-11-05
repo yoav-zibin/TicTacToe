@@ -145,21 +145,18 @@ var game;
             var row = Math.floor(gameLogic.ROWS * y / gameArea.clientHeight);
             var r_col = col;
             var r_row = row;
-            // if (shouldRotateBoard) {
-            //   r_row = gameLogic.ROWS - row;
-            //   r_col = gameLogic.COLS - col;
-            // }
-            var centerXY = getSquareCenterXY(row, col);
+            if (shouldRotateBoard) {
+                r_row = gameLogic.ROWS - row;
+                r_col = gameLogic.COLS - col;
+            }
+            var centerXY = getSquareCenterXY(r_row, r_col);
             verticalDraggingLine.setAttribute("x1", centerXY.width.toString());
             verticalDraggingLine.setAttribute("x2", centerXY.width.toString());
             horizontalDraggingLine.setAttribute("y1", centerXY.height.toString());
             horizontalDraggingLine.setAttribute("y2", centerXY.height.toString());
-            // var topLeft = getSquareTopLeft(row, col);
-            // draggingPiece.style.left = topLeft.left + "px";
-            // draggingPiece.style.top = topLeft.top + "px";
             if (type === "touchstart" && deltaFrom.row < 0 && deltaFrom.col < 0) {
                 // drag start
-                var curPiece = state.board[row][col];
+                var curPiece = state.board[r_row][r_col];
                 if (curPiece && validPiece(curPiece)) {
                     deltaFrom = { row: row, col: col };
                     draggingPiece = document.getElementById('img_' + getPieceKindId(row, col) + '_' + row + 'x' + col);
@@ -167,8 +164,8 @@ var game;
                         draggingPiece.style['z-index'] = ++nextZIndex;
                         draggingPiece.style['width'] = '115%';
                         draggingPiece.style['height'] = '115%';
-                        draggingPiece.style['top'] = '10%';
-                        draggingPiece.style['left'] = '10%';
+                        // draggingPiece.style['top'] = '10%';
+                        // draggingPiece.style['left'] = '10%';
                         draggingPiece.style['position'] = 'absolute';
                     }
                     draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(r_row, r_col);
@@ -255,12 +252,12 @@ var game;
             return;
         }
         // need to rotate the angle if playWhite
-        // if (shouldRotateBoard) {
-        //   deltaFrom.row = gameLogic.ROWS - deltaFrom.row;
-        //   deltaFrom.col = gameLogic.COLS - deltaFrom.col;
-        //   deltaTo.row = gameLogic.ROWS - deltaTo.row;
-        //   deltaTo.col = gameLogic.COLS - deltaTo.col;
-        // }
+        if (shouldRotateBoard) {
+            deltaFrom.row = gameLogic.ROWS - deltaFrom.row;
+            deltaFrom.col = gameLogic.COLS - deltaFrom.col;
+            deltaTo.row = gameLogic.ROWS - deltaTo.row;
+            deltaTo.col = gameLogic.COLS - deltaTo.col;
+        }
         try {
             var move = gameLogic.createMove(state.board, lastUpdateUI.turnIndexAfterMove, deltaFrom, deltaTo);
             canMakeMove = false;
@@ -278,12 +275,21 @@ var game;
         var tempdraggingPieceAvailableMoves = [];
         for (var _i = 0; _i < possibleMoves.length; _i++) {
             var move = possibleMoves[_i];
-            var tempid = "background" + move.row + 'x' + move.col;
+            var r_move = move;
+            if (shouldRotateBoard) {
+                r_move.row = gameLogic.ROWS - r_move.row;
+                r_move.col = gameLogic.COLS - r_move.col;
+            }
+            var tempid = "background" + r_move.row + 'x' + r_move.col;
             tempdraggingPieceAvailableMoves.push(document.getElementById(tempid));
         }
         return tempdraggingPieceAvailableMoves;
     }
     function shouldShowImage(row, col) {
+        if (shouldRotateBoard) {
+            row = gameLogic.ROWS - row;
+            col = gameLogic.COLS - col;
+        }
         var cell = state.board[row][col];
         if (cell === 'L' || cell === 'R' || cell === 'WDen' || cell === 'BDen' || cell === 'WTrap' || cell === 'BTrap') {
             return false;
@@ -349,6 +355,10 @@ var game;
     }
     game.shouldSlowlyAppear = shouldSlowlyAppear;
     function getImageSrc(row, col) {
+        if (shouldRotateBoard) {
+            row = gameLogic.ROWS - row;
+            col = gameLogic.COLS - col;
+        }
         var cell = state.board[row][col];
         return getPieceKind(cell);
     }
@@ -375,10 +385,10 @@ var game;
         }
     }
     function getPieceKindId(row, col) {
-        // if (shouldRotateBoard) {
-        //   row = gameLogic.ROWS - row;
-        //   col = gameLogic.COLS - col;
-        // }
+        if (shouldRotateBoard) {
+            row = gameLogic.ROWS - row;
+            col = gameLogic.COLS - col;
+        }
         var cell = state.board[row][col];
         if (cell === 'R' || cell === 'L' || cell === 'WDen' || cell === 'BDen' || cell === 'WTrap' || cell === 'BTrap') {
             return '';
