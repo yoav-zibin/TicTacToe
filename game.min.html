@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="myApp" ng-strict-di manifest="game.appcache">
+
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>TicTacToe</title>
-  <meta name="description" content="TicTacToe game">
+  <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+  <title>Jungle-Board-Game</title>
+  <meta name="description" content="Jungle-Board-Game">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
   <!-- The crossorigin attribute controls, for scripts that are obtained from other origins, whether error information will be exposed. -->
@@ -19,13 +20,15 @@
 
   <script src="http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js"></script>
 
+
+
   <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
   <link rel="stylesheet" type="text/css" href="game.css">
 </head>
+
 <body ng-cloak>
   <div style="position:absolute; bottom:5px; left: 5px; z-index:10;">
-    <span ng-click="game.isHelpModalShown = true"
-        class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+    <span ng-click="game.isHelpModalShown = true" class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
   </div>
 
   <div class="overlayModal" ng-class="{zeroOpacity: !game.isHelpModalShown, oneOpacity: game.isHelpModalShown}" aria-hidden="true">
@@ -33,13 +36,15 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" ng-click="game.isHelpModalShown = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" ng-click="game.isHelpModalShown = false" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
           <h4 class="modal-title" id="myModalLabel">
-            {{ 'RULES_OF_TICTACTOE' | translate }}
+            {{ 'RULES_OF_JUNGLE' | translate }}
           </h4>
         </div>
         <div class="modal-body">
-          <carousel style="height: 150px">
+          <carousel style="height: 200px">
             <slide>
               <table>
                 <tr>
@@ -47,7 +52,7 @@
                     {{ 'RULES_SLIDE1' | translate }}
                   </td>
                   <td>
-                    <img src="imgs/HelpSlide1.png" style="height:100px;">
+                    <img src="imgs/HelpSlide1.gif" style="height:160px; width: 125px;">
                   </td>
                 </tr>
               </table>
@@ -56,10 +61,57 @@
               <table>
                 <tr>
                   <td>
-                  {{ 'RULES_SLIDE2' | translate }}
+                    {{ 'RULES_SLIDE2' | translate }}
                   </td>
                   <td>
-                    <img src="imgs/HelpSlide2.png" style="height:100px;">
+                    <img src="imgs/HelpSlide2.gif" style="height:160; width: 125px;">
+                  </td>
+                </tr>
+              </table>
+            </slide>
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                    {{ 'RULES_SLIDE3' | translate }}
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+              </table>
+            </slide>
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                    {{ 'RULES_SLIDE4' | translate }}
+                  </td>
+                  <td>
+                    <img src="imgs/HelpSlide3.gif" style="height:160; width: 125px;">
+                  </td>
+                </tr>
+              </table>
+            </slide>
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                    {{ 'RULES_SLIDE5' | translate }}
+                  </td>
+                  <td>
+                    <img src="imgs/HelpSlide4.gif" style="height:160; width: 125px;">
+                  </td>
+                </tr>
+              </table>
+            </slide>
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                    {{ 'RULES_SLIDE6' | translate }}
+                  </td>
+                  <td>
+                    <img src="imgs/HelpSlide5.gif" style="height:160; width: 125px;">
                   </td>
                 </tr>
               </table>
@@ -75,40 +127,35 @@
     </div>
   </div>
 
-<div id="gameArea">
+  <div id="gameArea">
 
-  <div ng-repeat="row in [0, 1, 2]"
-      style="position:absolute; top:{{row * 33}}%; left:0; width:100%; height:33%;">
-    <div ng-repeat="col in [0, 1, 2]"
-        style="position:absolute; top:0; left:{{col * 33}}%; width:33%; height:100%;"
-        ng-class="{r: col < 2, b: row < 2}"
-        ng-click="game.cellClicked(row, col)"
-        id="{{'e2e_test_div_' + row + 'x' + col}}">
-      <div style="width:100%; height: 100%"
-          ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
-          ng-show="game.shouldShowImage(row, col)">
-        <svg ng-show="game.isPieceO(row, col)"
-            id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <circle cx="50%" cy="50%" r="27%"
-            stroke="blue" stroke-width="5%" fill="white" />
-        </svg>
-        <svg ng-show="game.isPieceX(row, col)"
-            id="{{'e2e_test_pieceX_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <line x1="25%" y1="25%"
-                x2="75%" y2="75%"
-                stroke="red"
-                stroke-width="5%"/>
-          <line x1="25%" y1="75%"
-                x2="75%" y2="25%"
-                stroke="red"
-                stroke-width="5%"/>
-        </svg>
+    <svg id="draggingLines" width="100%" height="100%" style="display:none; position:absolute; z-index: 30;">
+      <line id="horizontalDraggingLine" x1="0" y1="12.5%" x2="100%" y2="12.5%" stroke="red" stroke-width="0.5%" />
+      <line id="verticalDraggingLine" y1="0" x1="12.5%" y2="100%" x2="12.5%" stroke="red" stroke-width="0.5%" />
+    </svg>
+
+    <div ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8]" style="position:absolute; top:{{row * 100 / 9}}%; left:0; width:100%; height:{{100 / 9}}%;">
+      <div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6]"
+        style="position:absolute; top:0; left:{{col * 100 / 7}}%; width:{{100 / 7}}%; height:100%;"
+        id="{{'div_' + row + 'x' + col}}">
+
+        <div style="width:100%; height: 100%; border: 1px solid #B8860B;"
+          ng-class="{'land': game.isLand(row, col), 'river': game.isRiver(row, col), 'WTrap': game.isWTrap(row, col), 'BTrap': game.isBTrap(row, col), 'WDen': game.isWDen(row, col), 'BDen': game.isBDen(row, col)}"
+          id="background{{row}}x{{col}}">
+
+          <img style="width:100%; height: 100%;"
+          ng-class="{'canSelect': game.canSelect(row, col), 'isBlackPiece': game.isBlackPiece(row, col), 'isWhitePiece': game.isWhitePiece(row, col)}"
+          ng-show="game.shouldShowImage(row, col)"
+          ng-src="{{ game.getImageSrc(row, col) }}"
+          id="{{'img_' + game.getPieceKindId(row, col) + '_' + row + 'x' + col}}">
+
+        </div>
+
       </div>
     </div>
+
   </div>
-</div>
 
 </body>
+
 </html>
