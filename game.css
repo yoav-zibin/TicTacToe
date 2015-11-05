@@ -3,11 +3,15 @@
 }
 
 .land {
+  position: absolute;
   background: #FFEE99;
+  /*z-index: 10;*/
 }
 
 .river {
+  position: absolute;
   background: #99FFFF;
+  /*z-index: 10;*/
 }
 
 .WTrap {

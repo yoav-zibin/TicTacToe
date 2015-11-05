@@ -162,8 +162,7 @@ var game;
                 var curPiece = state.board[row][col];
                 if (curPiece && validPiece(curPiece)) {
                     deltaFrom = { row: row, col: col };
-                    var tempid = 'img_' + getPieceKindId(row, col) + '_' + row + 'x' + col;
-                    draggingPiece = document.getElementById(tempid);
+                    draggingPiece = document.getElementById('img_' + getPieceKindId(row, col) + '_' + row + 'x' + col);
                     if (draggingPiece) {
                         draggingPiece.style['z-index'] = ++nextZIndex;
                         draggingPiece.style['width'] = '115%';
@@ -171,6 +170,10 @@ var game;
                         draggingPiece.style['top'] = '10%';
                         draggingPiece.style['left'] = '10%';
                         draggingPiece.style['position'] = 'absolute';
+                    }
+                    draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(r_row, r_col);
+                    for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
+                        draggingPieceAvailableMoves[i].style['border'] = "5px solid #99FF33";
                     }
                 }
             }
@@ -197,9 +200,13 @@ var game;
             draggingPiece.style['width'] = '100%';
             draggingPiece.style['height'] = '100%';
             draggingPiece.style['position'] = 'absolute';
+            for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
+                draggingPieceAvailableMoves[i].style['border'] = "1px solid #B8860B";
+            }
             deltaFrom = { row: -1, col: -1 };
             deltaTo = { row: -1, col: -1 };
             draggingPiece = null;
+            draggingPieceAvailableMoves = [];
         }
     }
     game.handleDragEvent = handleDragEvent;
@@ -224,6 +231,7 @@ var game;
         var res = { width: col * size.width + size.width / 2, height: row * size.height + size.height / 2 };
         return res;
     }
+    // this function just help to continue show the dragged piece when dragging it
     function setDraggingPieceTopLeft(topleft) {
         var originalSize = getSquareTopLeft(deltaFrom.row, deltaFrom.col);
         draggingPiece.style.left = (topleft.left - originalSize.left) + "px";
@@ -236,8 +244,6 @@ var game;
     }
     function dragDone(deltaFrom, deltaTo) {
         dragDoneHandler(deltaFrom, deltaTo);
-    }
-    function getDraggingPieceAvailableMoves(row, col) {
     }
     function dragDoneHandler(deltaFrom, deltaTo) {
         var msg = "Dragged piece from " + deltaFrom.row + "*" + deltaFrom.col + " to " + deltaTo.row + "*" + deltaTo.col;
@@ -265,6 +271,17 @@ var game;
             log.info(["Illegal movement from " + deltaFrom.row + "x" + deltaFrom.col + " to " + deltaTo.row + "x" + deltaTo.col]);
             return;
         }
+    }
+    function getDraggingPieceAvailableMoves(r_row, r_col) {
+        var r_deltaFrom = { row: r_row, col: r_col };
+        var possibleMoves = gameLogic.getPiecePossibleMoves(state.board, lastUpdateUI.turnIndexAfterMove, r_deltaFrom);
+        var tempdraggingPieceAvailableMoves = [];
+        for (var _i = 0; _i < possibleMoves.length; _i++) {
+            var move = possibleMoves[_i];
+            var tempid = "background" + move.row + 'x' + move.col;
+            tempdraggingPieceAvailableMoves.push(document.getElementById(tempid));
+        }
+        return tempdraggingPieceAvailableMoves;
     }
     function shouldShowImage(row, col) {
         var cell = state.board[row][col];

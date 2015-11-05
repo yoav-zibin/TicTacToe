@@ -948,6 +948,42 @@ var gameLogic;
     //   return possibleMoves;
     // }
     /**
+     * Returns all the possible moves for the given piece.
+     * Returns an empty array if the game is over.
+    **/
+    function getPiecePossibleMoves(board, turnIndexBeforeMove, deltaFrom) {
+        var piece = board[deltaFrom.row][deltaFrom.col];
+        var possibleMoves;
+        switch (piece.substring(1)) {
+            case 'Elephant':
+                possibleMoves = getElephantPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                break;
+            case 'Lion':
+                possibleMoves = getLionPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                break;
+            case 'Tiger':
+                possibleMoves = getTigerPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                break;
+            case 'Leopard':
+                possibleMoves = getLeopardPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                break;
+            case 'Dog':
+                possibleMoves = getDogPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                break;
+            case 'Wolf':
+                possibleMoves = getWolfPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                break;
+            case 'Cat':
+                possibleMoves = getCatPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                break;
+            case 'Mouse':
+                possibleMoves = getMousePossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                break;
+        }
+        return possibleMoves;
+    }
+    gameLogic.getPiecePossibleMoves = getPiecePossibleMoves;
+    /**
      * Returns the move that should be performed when player
      * with index turnIndexBeforeMove makes a move in cell row X col.
      * @deltaFrom: start position of the piece
