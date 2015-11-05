@@ -348,12 +348,13 @@ var game;
         }
     }
     game.isBDen = isBDen;
-    function shouldSlowlyAppear(row, col) {
-        return !animationEnded &&
-            state.delta &&
-            state.delta.row === row && state.delta.col === col;
-    }
-    game.shouldSlowlyAppear = shouldSlowlyAppear;
+    // export function shouldSlowlyAppear(row: number, col: number): boolean {
+    //   if(shouldRotateBoard) {
+    //     row = gameLogic.ROWS - row;
+    //     col = gameLogic.COLS - col;
+    //   }
+    //   return !animationEnded && deltaTo.row === row && deltaTo.col === col;
+    // }
     function getImageSrc(row, col) {
         if (shouldRotateBoard) {
             row = gameLogic.ROWS - row;
@@ -398,6 +399,49 @@ var game;
         }
     }
     game.getPieceKindId = getPieceKindId;
+    function isBlackPiece(row, col) {
+        if (shouldRotateBoard) {
+            row = gameLogic.ROWS - row;
+            col = gameLogic.COLS - col;
+        }
+        var piece = state.board[row][col];
+        return piece.charAt(0) === 'B' && piece !== 'BTrap' && piece !== 'BDen';
+    }
+    game.isBlackPiece = isBlackPiece;
+    function isWhitePiece(row, col) {
+        if (shouldRotateBoard) {
+            row = gameLogic.ROWS - row;
+            col = gameLogic.COLS - col;
+        }
+        var piece = state.board[row][col];
+        return piece.charAt(0) === 'W' && piece !== 'WTrap' && piece !== 'WDen';
+    }
+    game.isWhitePiece = isWhitePiece;
+    function canSelect(row, col) {
+        if (!state.board) {
+            return true;
+        }
+        if (shouldRotateBoard) {
+            row = gameLogic.ROWS - row;
+            col = gameLogic.COLS - col;
+        }
+        var piece = state.board[row][col];
+        var turn = gameLogic.getTurn(turnIndex);
+        if (turn === piece.charAt(0) && piece.substring(1) !== 'Den' && piece.substring(1) !== 'Trap') {
+            var temp_deltaFrom = { row: row, col: col };
+            var possibleMoves = gameLogic.getPiecePossibleMoves(state.board, lastUpdateUI.turnIndexAfterMove, temp_deltaFrom);
+            if (possibleMoves.length > 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    game.canSelect = canSelect;
 })(game || (game = {}));
 angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
     .run(function () {

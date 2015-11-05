@@ -34,6 +34,22 @@
   background-size: 100% 100%;
 }
 
+.isBlackPiece.canSelect {
+  animation: black-blink 2s infinite;
+  -webkit-animation: black-blink 2s infinite;
+  -moz-animation: black-blink 2s infinite;
+  -ms-animation: black-blink 2s infinite;
+  -o-animation: black-blink 2s infinite;
+}
+
+.isWhitePiece.canSelect {
+  animation: white-blink 2s infinite;
+  -webkit-animation: white-blink 2s infinite;
+  -moz-animation: white-blink 2s infinite;
+  -ms-animation: white-blink 2s infinite;
+  -o-animation: white-blink 2s infinite;
+}
+
 .slowlyAppear {
 	-webkit-animation: slowlyAppear 0.5s linear;
 	-moz-animation: slowlyAppear 0.5s linear;

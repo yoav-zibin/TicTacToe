@@ -315,7 +315,7 @@ module game {
     var tempdraggingPieceAvailableMoves: any = [];
     for (let move of possibleMoves) {
       var r_move = move;
-      if(shouldRotateBoard) {
+      if (shouldRotateBoard) {
         r_move.row = gameLogic.ROWS - r_move.row;
         r_move.col = gameLogic.COLS - r_move.col;
       }
@@ -326,7 +326,7 @@ module game {
   }
 
   export function shouldShowImage(row: number, col: number): boolean {
-    if(shouldRotateBoard) {
+    if (shouldRotateBoard) {
       row = gameLogic.ROWS - row;
       col = gameLogic.COLS - col;
     }
@@ -382,14 +382,16 @@ module game {
     }
   }
 
-  export function shouldSlowlyAppear(row: number, col: number): boolean {
-    return !animationEnded &&
-      state.delta &&
-      state.delta.row === row && state.delta.col === col;
-  }
+  // export function shouldSlowlyAppear(row: number, col: number): boolean {
+  //   if(shouldRotateBoard) {
+  //     row = gameLogic.ROWS - row;
+  //     col = gameLogic.COLS - col;
+  //   }
+  //   return !animationEnded && deltaTo.row === row && deltaTo.col === col;
+  // }
 
   export function getImageSrc(row: number, col: number) {
-    if(shouldRotateBoard) {
+    if (shouldRotateBoard) {
       row = gameLogic.ROWS - row;
       col = gameLogic.COLS - col;
     }
@@ -433,6 +435,49 @@ module game {
       return cell;
     }
   }
+
+  export function isBlackPiece(row: number, col: number): boolean {
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row;
+      col = gameLogic.COLS - col;
+    }
+    var piece = state.board[row][col]
+    return piece.charAt(0) === 'B' && piece !== 'BTrap' && piece !== 'BDen';
+  }
+
+  export function isWhitePiece(row: number, col: number): boolean {
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row;
+      col = gameLogic.COLS - col;
+    }
+    var piece = state.board[row][col]
+    return piece.charAt(0) === 'W' && piece !== 'WTrap' && piece !== 'WDen';
+  }
+
+  export function canSelect(row: number, col: number): boolean {
+    if (!state.board) {
+      return true;
+    }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row;
+      col = gameLogic.COLS - col;
+    }
+
+    var piece = state.board[row][col];
+    var turn = gameLogic.getTurn(turnIndex);
+    if (turn === piece.charAt(0) && piece.substring(1) !== 'Den' && piece.substring(1) !== 'Trap') {
+      var temp_deltaFrom: BoardDelta = { row: row, col: col };
+      var possibleMoves = gameLogic.getPiecePossibleMoves(state.board, lastUpdateUI.turnIndexAfterMove, temp_deltaFrom);
+      if (possibleMoves.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
 
 }
 

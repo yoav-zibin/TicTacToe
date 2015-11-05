@@ -159,7 +159,11 @@
           ng-class="{'land': game.isLand(row, col), 'river': game.isRiver(row, col), 'WTrap': game.isWTrap(row, col), 'BTrap': game.isBTrap(row, col), 'WDen': game.isWDen(row, col), 'BDen': game.isBDen(row, col)}"
           id="background{{row}}x{{col}}">
 
-          <img style="width:100%; height: 100%;" ng-show="game.shouldShowImage(row, col)" ng-src="{{ game.getImageSrc(row, col) }}" id="{{'img_' + game.getPieceKindId(row, col) + '_' + row + 'x' + col}}">
+          <img style="width:100%; height: 100%;"
+          ng-class="{'canSelect': game.canSelect(row, col), 'isBlackPiece': game.isBlackPiece(row, col), 'isWhitePiece': game.isWhitePiece(row, col)}"
+          ng-show="game.shouldShowImage(row, col)"
+          ng-src="{{ game.getImageSrc(row, col) }}"
+          id="{{'img_' + game.getPieceKindId(row, col) + '_' + row + 'x' + col}}">
 
         </div>
 
