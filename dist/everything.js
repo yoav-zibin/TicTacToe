@@ -163,15 +163,18 @@ var gameLogic;
         $rootScope.$apply(function () {
             log.info("Animation ended");
             animationEnded = true;
-            if (isComputerTurn) {
-                sendComputerMove();
-            }
+            sendComputerMove();
         });
     }
     function sendComputerMove() {
+        if (!isComputerTurn) {
+            return;
+        }
+        isComputerTurn = false; // to make sure the computer can only move once.
         gameService.makeMove(aiService.findComputerMove(lastUpdateUI));
     }
     function updateUI(params) {
+        log.info("Game got updateUI:", params);
         animationEnded = false;
         lastUpdateUI = params;
         state = params.stateAfterMove;
@@ -198,7 +201,7 @@ var gameLogic;
         }
     }
     function cellClicked(row, col) {
-        log.info(["Clicked on cell:", row, col]);
+        log.info("Clicked on cell:", row, col);
         if (window.location.search === '?throwException') {
             throw new Error("Throwing the error because URL has '?throwException'");
         }

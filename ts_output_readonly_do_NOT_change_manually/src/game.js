@@ -25,12 +25,14 @@ var game;
         $rootScope.$apply(function () {
             log.info("Animation ended");
             animationEnded = true;
-            if (isComputerTurn) {
-                sendComputerMove();
-            }
+            sendComputerMove();
         });
     }
     function sendComputerMove() {
+        if (!isComputerTurn) {
+            return;
+        }
+        isComputerTurn = false; // to make sure the computer can only move once.
         gameService.makeMove(aiService.findComputerMove(lastUpdateUI));
     }
     function updateUI(params) {
