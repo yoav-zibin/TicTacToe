@@ -161,7 +161,7 @@ module game {
         return;
       }
     } else {
-      draggingLines.style.display = "inline";
+      // draggingLines.style.display = "inline";
 
       // Inside gameArea. Let's find the containing board's row and col
       var col = Math.floor(gameLogic.COLS * x / gameArea.clientWidth);

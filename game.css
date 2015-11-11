@@ -35,19 +35,19 @@
 }
 
 img.isBlackPiece.canSelect {
-  animation: white-blink 2s infinite;
-  -webkit-animation: white-blink 2s infinite;
-  /*-moz-animation: black-blink 2s infinite;
+  animation: black-blink 2s infinite;
+  -webkit-animation: black-blink 2s infinite;
+  -moz-animation: black-blink 2s infinite;
   -ms-animation: black-blink 2s infinite;
-  -o-animation: black-blink 2s infinite;*/
+  -o-animation: black-blink 2s infinite;
 }
 
 img.isWhitePiece.canSelect {
-  animation: black-blink 2s infinite;
-  -webkit-animation: black-blink 2s infinite;
-  /*-moz-animation: white-blink 2s infinite;
+  animation: white-blink 2s infinite;
+  -webkit-animation: white-blink 2s infinite;
+  -moz-animation: white-blink 2s infinite;
   -ms-animation: white-blink 2s infinite;
-  -o-animation: white-blink 2s infinite;*/
+  -o-animation: white-blink 2s infinite;
 }
 
 .slowlyAppear {
@@ -77,4 +77,36 @@ img.isWhitePiece.canSelect {
 
 td {
   padding:0 5px 0 5px;
+}
+
+/****************************************
+Blink key frames
+****************************************/
+@keyframes white-blink {
+  50% {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+    -webkit-box-shadow:0 0 18px #ffb515;
+  }
+}
+@-webkit-keyframes white-blink {
+  50% {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+    -webkit-box-shadow:0 0 18px #ffb515;
+  }
+}
+
+@keyframes black-blink {
+  50% {
+    filter: brightness(1.6);
+    -webkit-filter: brightness(1.6);
+    -webkit-box-shadow:0 0 18px #4C0000;
+  }
+}
+@-webkit-keyframes black-blink {
+  50% {
+    filter: brightness(1.6);
+    -webkit-filter: brightness(1.6);
+    -webkit-box-shadow:0 0 18px #4C0000;
 }
