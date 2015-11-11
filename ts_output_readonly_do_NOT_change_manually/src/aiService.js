@@ -108,9 +108,29 @@ var aiService;
         // 0) endMatch or setTurn
         // 1) {set: {key: 'board', value: ...}}
         // 2) {set: {key: 'delta', value: ...}}]
-        return alphaBetaService.alphaBetaDecision([null, { set: { key: 'board', value: board } }], playerIndex, getNextStates, getStateScoreForIndex0,
-        // If you want to see debugging output in the console, then surf to game.html?debug
-        window.location.search === '?debug' ? getDebugStateToString : null, alphaBetaLimits);
+        // modify the ai part
+        // if the play's pieces is more than 4 then, do randomSeed
+        // otherwise, use alphaBeta algorithm
+        var turn = gameLogic.getTurn(playerIndex);
+        var pieceCount = 0;
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                var curPiece = board[i][j];
+                if (curPiece[0] === turn && curPiece.substring(1) !== "Den" && curPiece.substring(1) !== "Trap") {
+                    pieceCount++;
+                }
+            }
+        }
+        if (pieceCount > 4) {
+            var possibleMoves = getPossibleMoves(board, playerIndex);
+            var index = Math.floor(Math.random() * possibleMoves.length);
+            return possibleMoves[index];
+        }
+        else {
+            return alphaBetaService.alphaBetaDecision([null, { set: { key: 'board', value: board } }], playerIndex, getNextStates, getStateScoreForIndex0, 
+            // If you want to see debugging output in the console, then surf to game.html?debug
+            window.location.search === '?debug' ? getDebugStateToString : null, alphaBetaLimits);
+        }
     }
     aiService.createComputerMove = createComputerMove;
     function getStateScoreForIndex0(move, playerIndex) {
@@ -120,7 +140,7 @@ var aiService;
                 : endMatchScores[0] < endMatchScores[1] ? Number.NEGATIVE_INFINITY
                     : 0;
         }
-        return 0;  
+        return 0;
     }
     function getNextStates(move, playerIndex) {
         return getPossibleMoves(move[1].set.value, playerIndex);
