@@ -1326,7 +1326,7 @@ var gameLogic;
         });
     }
     function sendComputerMove() {
-        gameService.makeMove(aiService.createComputerMove(state.board, turnIndex, 
+        gameService.makeMove(aiService.createComputerMove(state.board, turnIndex,
         // at most 1 second for the AI to choose a move (but might be much quicker)
         { millisecondsLimit: 1000 }));
     }
@@ -1421,7 +1421,7 @@ var gameLogic;
             }
         }
         else {
-            draggingLines.style.display = "inline";
+            // draggingLines.style.display = "inline";
             // Inside gameArea. Let's find the containing board's row and col
             var col = Math.floor(gameLogic.COLS * x / gameArea.clientWidth);
             var row = Math.floor(gameLogic.ROWS * y / gameArea.clientHeight);
@@ -1862,7 +1862,7 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
                 : endMatchScores[0] < endMatchScores[1] ? Number.NEGATIVE_INFINITY
                     : 0;
         }
-        return 0;  
+        return 0;
     }
     function getNextStates(move, playerIndex) {
         return getPossibleMoves(move[1].set.value, playerIndex);
