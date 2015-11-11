@@ -60,10 +60,15 @@ module game {
   }
 
   function sendComputerMove() {
-    gameService.makeMove(
-      aiService.createComputerMove(state.board, turnIndex,
-        // at most 1 second for the AI to choose a move (but might be much quicker)
-        { millisecondsLimit: 1000 }));
+    // gameService.makeMove(
+    //   aiService.createComputerMove(state.board, turnIndex,
+    //     // at most 1 second for the AI to choose a move (but might be much quicker)
+    //     { millisecondsLimit: 1000 }));
+    $timeout(function() {
+      gameService.makeMove(
+        aiService.createComputerMove(state.board, turnIndex,
+          { millisecondsLimit: 1000 }));
+    }, 500)
   }
 
   function updateUI(params: IUpdateUI): void {
@@ -71,6 +76,7 @@ module game {
     animationEnded = false;
     lastUpdateUI = params;
     state = params.stateAfterMove;
+
     if (!state.board) {
       state.board = gameLogic.getInitialBoard();
     }
