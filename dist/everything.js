@@ -1326,9 +1326,13 @@ var gameLogic;
         });
     }
     function sendComputerMove() {
-        gameService.makeMove(aiService.createComputerMove(state.board, turnIndex,
-        // at most 1 second for the AI to choose a move (but might be much quicker)
-        { millisecondsLimit: 1000 }));
+        // gameService.makeMove(
+        //   aiService.createComputerMove(state.board, turnIndex,
+        //     // at most 1 second for the AI to choose a move (but might be much quicker)
+        //     { millisecondsLimit: 1000 }));
+        $timeout(function () {
+            gameService.makeMove(aiService.createComputerMove(state.board, turnIndex, { millisecondsLimit: 800 }));
+        }, 500);
     }
     function updateUI(params) {
         log.info("Game got updateUI:", params);
@@ -1446,8 +1450,6 @@ var gameLogic;
                         draggingPiece.style['z-index'] = ++nextZIndex;
                         draggingPiece.style['width'] = '115%';
                         draggingPiece.style['height'] = '115%';
-                        // draggingPiece.style['top'] = '10%';
-                        // draggingPiece.style['left'] = '10%';
                         draggingPiece.style['position'] = 'absolute';
                     }
                     draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(r_row, r_col);
@@ -1850,9 +1852,29 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
         // 0) endMatch or setTurn
         // 1) {set: {key: 'board', value: ...}}
         // 2) {set: {key: 'delta', value: ...}}]
-        return alphaBetaService.alphaBetaDecision([null, { set: { key: 'board', value: board } }], playerIndex, getNextStates, getStateScoreForIndex0,
-        // If you want to see debugging output in the console, then surf to game.html?debug
-        window.location.search === '?debug' ? getDebugStateToString : null, alphaBetaLimits);
+        // modify the ai part
+        // if the play's pieces is more than 4 then, do randomSeed
+        // otherwise, use alphaBeta algorithm
+        var turn = gameLogic.getTurn(playerIndex);
+        var pieceCount = 0;
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                var curPiece = board[i][j];
+                if (curPiece[0] === turn && curPiece.substring(1) !== "Den" && curPiece.substring(1) !== "Trap") {
+                    pieceCount++;
+                }
+            }
+        }
+        if (pieceCount > 4) {
+            var possibleMoves = getPossibleMoves(board, playerIndex);
+            var index = Math.floor(Math.random() * possibleMoves.length);
+            return possibleMoves[index];
+        }
+        else {
+            return alphaBetaService.alphaBetaDecision([null, { set: { key: 'board', value: board } }], playerIndex, getNextStates, getStateScoreForIndex0, 
+            // If you want to see debugging output in the console, then surf to game.html?debug
+            window.location.search === '?debug' ? getDebugStateToString : null, alphaBetaLimits);
+        }
     }
     aiService.createComputerMove = createComputerMove;
     function getStateScoreForIndex0(move, playerIndex) {

@@ -67,7 +67,7 @@ module game {
     $timeout(function() {
       gameService.makeMove(
         aiService.createComputerMove(state.board, turnIndex,
-          { millisecondsLimit: 1000 }));
+          { millisecondsLimit: 800 }));
     }, 500)
   }
 
