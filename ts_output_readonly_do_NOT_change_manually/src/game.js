@@ -164,8 +164,6 @@ var game;
                         draggingPiece.style['z-index'] = ++nextZIndex;
                         draggingPiece.style['width'] = '115%';
                         draggingPiece.style['height'] = '115%';
-                        // draggingPiece.style['top'] = '10%';
-                        // draggingPiece.style['left'] = '10%';
                         draggingPiece.style['position'] = 'absolute';
                     }
                     draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(r_row, r_col);
