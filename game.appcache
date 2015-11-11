@@ -19,6 +19,23 @@ imgs/HelpSlide3.gif
 imgs/HelpSlide4.gif
 imgs/HelpSlide5.gif
 imgs/BCat.gif
+imgs/WCat.gif
+imgs/BElephant.gif
+imgs/WElephant.gif
+imgs/BLeopard.gif
+imgs/WLeopard.gif
+imgs/BLion.gif
+imgs/WLion.gif
+imgs/BMouse.gif
+imgs/WMouse.gif
+imgs/BTiger.gif
+imgs/WTiger.gif
+imgs/BWolf.gif
+imgs/WWolf.gif
+imgs/BTrap.gif
+imgs/WTrap.gif
+imgs/BDen.gif
+imgs/WDen.gif
 
 NETWORK:
 dist/everything.min.js.map
