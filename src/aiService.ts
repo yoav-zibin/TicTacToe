@@ -6,81 +6,81 @@ module aiService {
   **/
   export function getPossibleMoves(board: Board, turnIndexBeforeMove: number): IMove[] {
     var possibleMoves: IMove[] = [];
-    if(!board) {
+    if (!board) {
       return [];
     }
     var turn = gameLogic.getTurn(turnIndexBeforeMove);
-    for(var i = 0; i < gameLogic.ROWS; i++){
-      for(var j = 0; j < gameLogic.COLS; j++){
+    for (var i = 0; i < gameLogic.ROWS; i++) {
+      for (var j = 0; j < gameLogic.COLS; j++) {
         var piece = board[i][j];
-        if(piece !== 'L' && piece !== 'R' && piece.charAt(0) === turn) {
-          var deltaFrom: BoardDelta = {row: i, col: j};
+        if (piece !== 'L' && piece !== 'R' && piece.charAt(0) === turn) {
+          var deltaFrom: BoardDelta = { row: i, col: j };
           var oneCaseMoves: BoardDelta[];
-          switch(piece.substring(1)) {
-          case 'Elephant':
-            oneCaseMoves = gameLogic.getElephantPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(let deltaTo of oneCaseMoves) {
-                possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+          switch (piece.substring(1)) {
+            case 'Elephant':
+              oneCaseMoves = gameLogic.getElephantPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+              if (oneCaseMoves.length > 0) {
+                for (let deltaTo of oneCaseMoves) {
+                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                }
               }
-            }
-            break;
-          case 'Lion':
-            oneCaseMoves = gameLogic.getLionPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(let deltaTo of oneCaseMoves) {
-                possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+              break;
+            case 'Lion':
+              oneCaseMoves = gameLogic.getLionPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+              if (oneCaseMoves.length > 0) {
+                for (let deltaTo of oneCaseMoves) {
+                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                }
               }
-            }
-            break;
-          case 'Tiger':
-            oneCaseMoves = gameLogic.getTigerPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(let deltaTo of oneCaseMoves) {
-                possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+              break;
+            case 'Tiger':
+              oneCaseMoves = gameLogic.getTigerPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+              if (oneCaseMoves.length > 0) {
+                for (let deltaTo of oneCaseMoves) {
+                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                }
               }
-            }
-            break;
-          case 'Leopard':
-            oneCaseMoves = gameLogic.getLeopardPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(let deltaTo of oneCaseMoves) {
-                possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+              break;
+            case 'Leopard':
+              oneCaseMoves = gameLogic.getLeopardPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+              if (oneCaseMoves.length > 0) {
+                for (let deltaTo of oneCaseMoves) {
+                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                }
               }
-            }
-            break;
-          case 'Dog':
-            oneCaseMoves = gameLogic.getDogPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(let deltaTo of oneCaseMoves) {
-                possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+              break;
+            case 'Dog':
+              oneCaseMoves = gameLogic.getDogPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+              if (oneCaseMoves.length > 0) {
+                for (let deltaTo of oneCaseMoves) {
+                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                }
               }
-            }
-            break;
-          case 'Wolf':
-            oneCaseMoves = gameLogic.getWolfPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(let deltaTo of oneCaseMoves) {
-                possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+              break;
+            case 'Wolf':
+              oneCaseMoves = gameLogic.getWolfPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+              if (oneCaseMoves.length > 0) {
+                for (let deltaTo of oneCaseMoves) {
+                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                }
               }
-            }
-            break;
-          case 'Cat':
-            oneCaseMoves = gameLogic.getCatPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(let deltaTo of oneCaseMoves) {
-                possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+              break;
+            case 'Cat':
+              oneCaseMoves = gameLogic.getCatPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+              if (oneCaseMoves.length > 0) {
+                for (let deltaTo of oneCaseMoves) {
+                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                }
               }
-            }
-            break;
-          case 'Mouse':
-            oneCaseMoves = gameLogic.getMousePossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-            if(oneCaseMoves.length > 0) {
-              for(let deltaTo of oneCaseMoves) {
-                possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+              break;
+            case 'Mouse':
+              oneCaseMoves = gameLogic.getMousePossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+              if (oneCaseMoves.length > 0) {
+                for (let deltaTo of oneCaseMoves) {
+                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                }
               }
-            }
-            break;
+              break;
           }
         }
       }
@@ -96,25 +96,46 @@ module aiService {
    * millisecondsLimit is a time limit, and maxDepth is a depth limit.
    */
   export function createComputerMove(
-      board: Board, playerIndex: number, alphaBetaLimits: IAlphaBetaLimits): IMove {
+    board: Board, playerIndex: number, alphaBetaLimits: IAlphaBetaLimits): IMove {
     // We use alpha-beta search, where the search states are Jungle-Board-Game moves.
     // Recal that a Jungle-Board-Game move has 3 operations:
     // 0) endMatch or setTurn
     // 1) {set: {key: 'board', value: ...}}
     // 2) {set: {key: 'delta', value: ...}}]
-    return alphaBetaService.alphaBetaDecision(
-        [null, {set: {key: 'board', value: board}}],
+
+    // modify the ai part
+    // if the play's pieces is more than 4 then, do randomSeed
+    // otherwise, use alphaBeta algorithm
+    var turn = gameLogic.getTurn(playerIndex);
+    var pieceCount: number = 0;
+    for (var i = 0; i < gameLogic.ROWS; i++) {
+      for (var j = 0; j < gameLogic.COLS; j++) {
+        var curPiece = board[i][j];
+        if (curPiece[0] === turn && curPiece.substring(1) !== "Den" && curPiece.substring(1) !== "Trap") {
+          pieceCount++;
+        }
+      }
+    }
+
+    if (pieceCount > 4) {
+      var possibleMoves: IMove[] = getPossibleMoves(board, playerIndex);
+      var index = Math.floor(Math.random() * possibleMoves.length);
+      return possibleMoves[index];
+    } else {
+      return alphaBetaService.alphaBetaDecision(
+        [null, { set: { key: 'board', value: board } }],
         playerIndex, getNextStates, getStateScoreForIndex0,
         // If you want to see debugging output in the console, then surf to game.html?debug
         window.location.search === '?debug' ? getDebugStateToString : null,
         alphaBetaLimits);
+    }
   }
 
   function getStateScoreForIndex0(move: IMove, playerIndex: number): number {
     if (move[0].endMatch) {
       var endMatchScores = move[0].endMatch.endMatchScores;
       return endMatchScores[0] > endMatchScores[1] ? Number.POSITIVE_INFINITY
-          : endMatchScores[0] < endMatchScores[1] ? Number.NEGATIVE_INFINITY
+        : endMatchScores[0] < endMatchScores[1] ? Number.NEGATIVE_INFINITY
           : 0;
     }
     return 0;
