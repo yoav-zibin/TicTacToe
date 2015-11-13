@@ -49,7 +49,7 @@ var game;
         //     // at most 1 second for the AI to choose a move (but might be much quicker)
         //     { millisecondsLimit: 1000 }));
         $timeout(function () {
-            gameService.makeMove(aiService.createComputerMove(state.board, turnIndex, { millisecondsLimit: 800 }));
+            gameService.makeMove(aiService.createComputerMove(state.board, turnIndex, { millisecondsLimit: 1000 }));
         }, 500);
     }
     function updateUI(params) {

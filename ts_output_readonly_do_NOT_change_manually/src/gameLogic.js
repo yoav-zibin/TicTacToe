@@ -145,9 +145,10 @@ var gameLogic;
      * Returns Opponent's turnIndex
      * 0: Black;    1: White
     **/
-    // function getOpponentTurn(turnIndex: number):string {
-    //   return (turnIndex === 0 ? 'W' : 'B');
-    // }
+    function getOpponentTurn(turnIndex) {
+        return (turnIndex === 0 ? 'W' : 'B');
+    }
+    gameLogic.getOpponentTurn = getOpponentTurn;
     /**
      * Returns id (int) for specific animal (string)
      * 0: Mouse;    1: Cat;    2: Wolf;    3: Dog;    4: Leopard;
@@ -864,89 +865,98 @@ var gameLogic;
      * Returns all the possible moves for the given board and turnIndexBeforeMove.
      * Returns an empty array if the game is over.
     **/
-    // export function getPossibleMoves(board: Board, turnIndexBeforeMove: number): BoardDelta[] {
-    //   var possibleMoves: BoardDelta[] = [];
-    //   if(!board) {
-    //     return [];
-    //   }
-    //   var turn = getTurn(turnIndexBeforeMove);
-    //   for(var i = 0; i < ROWS; i++){
-    //     for(var j = 0; j < COLS; j++){
-    //       var piece = board[i][j];
-    //       if(piece !== 'L' && piece !== 'R' && piece.charAt(0) === turn) {
-    //         var deltaFrom: BoardDelta = {row: i, col: j};
-    //         var oneCaseMoves: BoardDelta[];
-    //         switch(piece.substring(1)) {
-    //         case 'Elephant':
-    //           oneCaseMoves = getElephantPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-    //           if(oneCaseMoves.length > 0) {
-    //             for(let move of oneCaseMoves) {
-    //               possibleMoves.push(move);
-    //             }
-    //           }
-    //           break;
-    //         case 'Lion':
-    //           oneCaseMoves = getLionPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-    //           if(oneCaseMoves.length > 0) {
-    //             for(let move of oneCaseMoves) {
-    //               possibleMoves.push(move);
-    //             }
-    //           }
-    //           break;
-    //         case 'Tiger':
-    //           oneCaseMoves = getTigerPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-    //           if(oneCaseMoves.length > 0) {
-    //             for(let move of oneCaseMoves) {
-    //               possibleMoves.push(move);
-    //             }
-    //           }
-    //           break;
-    //         case 'Leopard':
-    //           oneCaseMoves = getLeopardPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-    //           if(oneCaseMoves.length > 0) {
-    //             for(let move of oneCaseMoves) {
-    //               possibleMoves.push(move);
-    //             }
-    //           }
-    //           break;
-    //         case 'Dog':
-    //           oneCaseMoves = getDogPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-    //           if(oneCaseMoves.length > 0) {
-    //             for(let move of oneCaseMoves) {
-    //               possibleMoves.push(move);
-    //             }
-    //           }
-    //           break;
-    //         case 'Wolf':
-    //           oneCaseMoves = getWolfPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-    //           if(oneCaseMoves.length > 0) {
-    //             for(let move of oneCaseMoves) {
-    //               possibleMoves.push(move);
-    //             }
-    //           }
-    //           break;
-    //         case 'Cat':
-    //           oneCaseMoves = getCatPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-    //           if(oneCaseMoves.length > 0) {
-    //             for(let move of oneCaseMoves) {
-    //               possibleMoves.push(move);
-    //             }
-    //           }
-    //           break;
-    //         case 'Mouse':
-    //           oneCaseMoves = getMousePossibleMoves(board, turnIndexBeforeMove, deltaFrom);
-    //           if(oneCaseMoves.length > 0) {
-    //             for(let move of oneCaseMoves) {
-    //               possibleMoves.push(move);
-    //             }
-    //           }
-    //           break;
-    //         }
-    //       }
-    //     }
-    //   }
-    //   return possibleMoves;
-    // }
+    function getPossibleMoves(board, turnIndexBeforeMove) {
+        var possibleMoves = [];
+        if (!board) {
+            return [];
+        }
+        var turn = getTurn(turnIndexBeforeMove);
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                var piece = board[i][j];
+                if (piece !== 'L' && piece !== 'R' && piece.charAt(0) === turn) {
+                    var deltaFrom = { row: i, col: j };
+                    var oneCaseMoves;
+                    switch (piece.substring(1)) {
+                        case 'Elephant':
+                            oneCaseMoves = getElephantPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                            if (oneCaseMoves.length > 0) {
+                                for (var _i = 0; _i < oneCaseMoves.length; _i++) {
+                                    var move = oneCaseMoves[_i];
+                                    possibleMoves.push(move);
+                                }
+                            }
+                            break;
+                        case 'Lion':
+                            oneCaseMoves = getLionPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                            if (oneCaseMoves.length > 0) {
+                                for (var _a = 0; _a < oneCaseMoves.length; _a++) {
+                                    var move = oneCaseMoves[_a];
+                                    possibleMoves.push(move);
+                                }
+                            }
+                            break;
+                        case 'Tiger':
+                            oneCaseMoves = getTigerPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                            if (oneCaseMoves.length > 0) {
+                                for (var _b = 0; _b < oneCaseMoves.length; _b++) {
+                                    var move = oneCaseMoves[_b];
+                                    possibleMoves.push(move);
+                                }
+                            }
+                            break;
+                        case 'Leopard':
+                            oneCaseMoves = getLeopardPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                            if (oneCaseMoves.length > 0) {
+                                for (var _c = 0; _c < oneCaseMoves.length; _c++) {
+                                    var move = oneCaseMoves[_c];
+                                    possibleMoves.push(move);
+                                }
+                            }
+                            break;
+                        case 'Dog':
+                            oneCaseMoves = getDogPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                            if (oneCaseMoves.length > 0) {
+                                for (var _d = 0; _d < oneCaseMoves.length; _d++) {
+                                    var move = oneCaseMoves[_d];
+                                    possibleMoves.push(move);
+                                }
+                            }
+                            break;
+                        case 'Wolf':
+                            oneCaseMoves = getWolfPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                            if (oneCaseMoves.length > 0) {
+                                for (var _e = 0; _e < oneCaseMoves.length; _e++) {
+                                    var move = oneCaseMoves[_e];
+                                    possibleMoves.push(move);
+                                }
+                            }
+                            break;
+                        case 'Cat':
+                            oneCaseMoves = getCatPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                            if (oneCaseMoves.length > 0) {
+                                for (var _f = 0; _f < oneCaseMoves.length; _f++) {
+                                    var move = oneCaseMoves[_f];
+                                    possibleMoves.push(move);
+                                }
+                            }
+                            break;
+                        case 'Mouse':
+                            oneCaseMoves = getMousePossibleMoves(board, turnIndexBeforeMove, deltaFrom);
+                            if (oneCaseMoves.length > 0) {
+                                for (var _g = 0; _g < oneCaseMoves.length; _g++) {
+                                    var move = oneCaseMoves[_g];
+                                    possibleMoves.push(move);
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+        return possibleMoves;
+    }
+    gameLogic.getPossibleMoves = getPossibleMoves;
     /**
      * Returns all the possible moves for the given piece.
      * Returns an empty array if the game is over.

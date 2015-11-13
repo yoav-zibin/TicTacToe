@@ -4,12 +4,26 @@ module aiService {
    * Returns all the possible moves for the given board and turnIndexBeforeMove.
    * Returns an empty array if the game is over.
   **/
-  export function getPossibleMoves(board: Board, turnIndexBeforeMove: number): IMove[] {
-    var possibleMoves: IMove[] = [];
+  interface threeTypeMoves {
+    lowLevelMoves: IMove[];
+    midLevelMoves: IMove[];
+    highLevelMoves: IMove[];
+  }
+
+  export function getPossibleMoves(board: Board, turnIndexBeforeMove: number): threeTypeMoves {
+    var lowLevelMoves: IMove[] = [];
+    var midLevelMoves: IMove[] = [];
+    var highLevelMoves: IMove[] = [];
+    var resMoves: threeTypeMoves = {
+      lowLevelMoves: lowLevelMoves,
+      midLevelMoves: midLevelMoves,
+      highLevelMoves: highLevelMoves
+    };
     if (!board) {
-      return [];
+      return resMoves;
     }
     var turn = gameLogic.getTurn(turnIndexBeforeMove);
+    var opponentTurn = gameLogic.getOpponentTurn(turnIndexBeforeMove);
     for (var i = 0; i < gameLogic.ROWS; i++) {
       for (var j = 0; j < gameLogic.COLS; j++) {
         var piece = board[i][j];
@@ -21,7 +35,20 @@ module aiService {
               oneCaseMoves = gameLogic.getElephantPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
               if (oneCaseMoves.length > 0) {
                 for (let deltaTo of oneCaseMoves) {
-                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  var temp1 = turn + 'Den';
+                  var temp2 = opponentTurn + 'Trap';
+
+                  if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                    lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  }else {
+                    if (board[deltaTo.row][deltaTo.col] === temp2) {
+                      highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else if (board[deltaTo.row][deltaTo.col] === temp1){
+                      lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else {
+                      midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }
+                  }
                 }
               }
               break;
@@ -29,7 +56,20 @@ module aiService {
               oneCaseMoves = gameLogic.getLionPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
               if (oneCaseMoves.length > 0) {
                 for (let deltaTo of oneCaseMoves) {
-                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  var temp1 = turn + 'Den';
+                  var temp2 = opponentTurn + 'Trap';
+
+                  if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                    lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  }else {
+                    if (board[deltaTo.row][deltaTo.col] === temp2) {
+                      highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else if (board[deltaTo.row][deltaTo.col] === temp1){
+                      lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else {
+                      midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }
+                  }
                 }
               }
               break;
@@ -37,7 +77,20 @@ module aiService {
               oneCaseMoves = gameLogic.getTigerPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
               if (oneCaseMoves.length > 0) {
                 for (let deltaTo of oneCaseMoves) {
-                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  var temp1 = turn + 'Den';
+                  var temp2 = opponentTurn + 'Trap';
+
+                  if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                    lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  }else {
+                    if (board[deltaTo.row][deltaTo.col] === temp2) {
+                      highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else if (board[deltaTo.row][deltaTo.col] === temp1){
+                      lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else {
+                      midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }
+                  }
                 }
               }
               break;
@@ -45,7 +98,20 @@ module aiService {
               oneCaseMoves = gameLogic.getLeopardPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
               if (oneCaseMoves.length > 0) {
                 for (let deltaTo of oneCaseMoves) {
-                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  var temp1 = turn + 'Den';
+                  var temp2 = opponentTurn + 'Trap';
+
+                  if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                    lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  }else {
+                    if (board[deltaTo.row][deltaTo.col] === temp2) {
+                      highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else if (board[deltaTo.row][deltaTo.col] === temp1){
+                      lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else {
+                      midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }
+                  }
                 }
               }
               break;
@@ -53,7 +119,20 @@ module aiService {
               oneCaseMoves = gameLogic.getDogPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
               if (oneCaseMoves.length > 0) {
                 for (let deltaTo of oneCaseMoves) {
-                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  var temp1 = turn + 'Den';
+                  var temp2 = opponentTurn + 'Trap';
+
+                  if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                    lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  }else {
+                    if (board[deltaTo.row][deltaTo.col] === temp2) {
+                      highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else if (board[deltaTo.row][deltaTo.col] === temp1){
+                      lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else {
+                      midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }
+                  }
                 }
               }
               break;
@@ -61,7 +140,20 @@ module aiService {
               oneCaseMoves = gameLogic.getWolfPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
               if (oneCaseMoves.length > 0) {
                 for (let deltaTo of oneCaseMoves) {
-                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  var temp1 = turn + 'Den';
+                  var temp2 = opponentTurn + 'Trap';
+
+                  if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                    lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  }else {
+                    if (board[deltaTo.row][deltaTo.col] === temp2) {
+                      highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else if (board[deltaTo.row][deltaTo.col] === temp1){
+                      lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else {
+                      midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }
+                  }
                 }
               }
               break;
@@ -69,7 +161,20 @@ module aiService {
               oneCaseMoves = gameLogic.getCatPossibleMoves(board, turnIndexBeforeMove, deltaFrom);
               if (oneCaseMoves.length > 0) {
                 for (let deltaTo of oneCaseMoves) {
-                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  var temp1 = turn + 'Den';
+                  var temp2 = opponentTurn + 'Trap';
+
+                  if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                    lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  }else {
+                    if (board[deltaTo.row][deltaTo.col] === temp2) {
+                      highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else if (board[deltaTo.row][deltaTo.col] === temp1){
+                      lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else {
+                      midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }
+                  }
                 }
               }
               break;
@@ -77,7 +182,20 @@ module aiService {
               oneCaseMoves = gameLogic.getMousePossibleMoves(board, turnIndexBeforeMove, deltaFrom);
               if (oneCaseMoves.length > 0) {
                 for (let deltaTo of oneCaseMoves) {
-                  possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  var temp1 = turn + 'Den';
+                  var temp2 = opponentTurn + 'Trap';
+
+                  if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                    lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                  }else {
+                    if (board[deltaTo.row][deltaTo.col] === temp2) {
+                      highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else if (board[deltaTo.row][deltaTo.col] === temp1){
+                      lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }else {
+                      midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                    }
+                  }
                 }
               }
               break;
@@ -85,7 +203,8 @@ module aiService {
         }
       }
     }
-    return possibleMoves;
+    resMoves = {lowLevelMoves: lowLevelMoves, midLevelMoves: midLevelMoves, highLevelMoves: highLevelMoves};
+    return resMoves;
   }
 
 
@@ -107,6 +226,7 @@ module aiService {
     // if the play's pieces is more than 4 then, do randomSeed
     // otherwise, use alphaBeta algorithm
     var turn = gameLogic.getTurn(playerIndex);
+    var opponentTurn = gameLogic.getOpponentTurn(playerIndex);
     var pieceCount: number = 0;
     for (var i = 0; i < gameLogic.ROWS; i++) {
       for (var j = 0; j < gameLogic.COLS; j++) {
@@ -116,18 +236,23 @@ module aiService {
         }
       }
     }
+    var threeTypeMoves = getPossibleMoves(board, playerIndex);
+    var lowLevelMoves: IMove[] = threeTypeMoves.lowLevelMoves;
+    var midLevelMoves: IMove[] = threeTypeMoves.midLevelMoves;
+    var highLevelMoves: IMove[] = threeTypeMoves.highLevelMoves;
 
-    if (pieceCount > 4) {
-      var possibleMoves: IMove[] = getPossibleMoves(board, playerIndex);
-      var index = Math.floor(Math.random() * possibleMoves.length);
-      return possibleMoves[index];
-    } else {
-      return alphaBetaService.alphaBetaDecision(
-        [null, { set: { key: 'board', value: board } }],
-        playerIndex, getNextStates, getStateScoreForIndex0,
-        // If you want to see debugging output in the console, then surf to game.html?debug
-        window.location.search === '?debug' ? getDebugStateToString : null,
-        alphaBetaLimits);
+    var index = 0;
+    var resMove: IMove;
+    if (highLevelMoves.length !== 0) {
+      return highLevelMoves[0];
+    }else if (midLevelMoves.length === 1) {
+      return midLevelMoves[0];
+    }else if (midLevelMoves.length > 1){
+      index = Math.floor(Math.random() * midLevelMoves.length);
+      return midLevelMoves[index];
+    }else {
+      index = Math.floor(Math.random() * lowLevelMoves.length);
+      return lowLevelMoves[index];
     }
   }
 
@@ -142,7 +267,18 @@ module aiService {
   }
 
   function getNextStates(move: IMove, playerIndex: number): IMove[] {
-    return getPossibleMoves(move[1].set.value, playerIndex);
+    var threeTypeMoves = getPossibleMoves(move[1].set.value, playerIndex);
+    var possibleMoves: IMove[] = [];
+    for(var i = 0; i < threeTypeMoves.highLevelMoves.length; i++) {
+      possibleMoves.push(threeTypeMoves.highLevelMoves[i]);
+    }
+    for(var i = 0; i < threeTypeMoves.midLevelMoves.length; i++) {
+      possibleMoves.push(threeTypeMoves.midLevelMoves[i]);
+    }
+    for(var i = 0; i < threeTypeMoves.lowLevelMoves.length; i++) {
+      possibleMoves.push(threeTypeMoves.lowLevelMoves[i]);
+    }
+    return possibleMoves;
   }
 
   function getDebugStateToString(move: IMove): string {

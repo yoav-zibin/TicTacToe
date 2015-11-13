@@ -1,15 +1,19 @@
 var aiService;
 (function (aiService) {
-    /**
-     * Returns all the possible moves for the given board and turnIndexBeforeMove.
-     * Returns an empty array if the game is over.
-    **/
     function getPossibleMoves(board, turnIndexBeforeMove) {
-        var possibleMoves = [];
+        var lowLevelMoves = [];
+        var midLevelMoves = [];
+        var highLevelMoves = [];
+        var resMoves = {
+            lowLevelMoves: lowLevelMoves,
+            midLevelMoves: midLevelMoves,
+            highLevelMoves: highLevelMoves
+        };
         if (!board) {
-            return [];
+            return resMoves;
         }
         var turn = gameLogic.getTurn(turnIndexBeforeMove);
+        var opponentTurn = gameLogic.getOpponentTurn(turnIndexBeforeMove);
         for (var i = 0; i < gameLogic.ROWS; i++) {
             for (var j = 0; j < gameLogic.COLS; j++) {
                 var piece = board[i][j];
@@ -22,7 +26,22 @@ var aiService;
                             if (oneCaseMoves.length > 0) {
                                 for (var _i = 0; _i < oneCaseMoves.length; _i++) {
                                     var deltaTo = oneCaseMoves[_i];
-                                    possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    var temp1 = turn + 'Den';
+                                    var temp2 = opponentTurn + 'Trap';
+                                    if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                                        lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    }
+                                    else {
+                                        if (board[deltaTo.row][deltaTo.col] === temp2) {
+                                            highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else if (board[deltaTo.row][deltaTo.col] === temp1) {
+                                            lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else {
+                                            midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                    }
                                 }
                             }
                             break;
@@ -31,7 +50,22 @@ var aiService;
                             if (oneCaseMoves.length > 0) {
                                 for (var _a = 0; _a < oneCaseMoves.length; _a++) {
                                     var deltaTo = oneCaseMoves[_a];
-                                    possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    var temp1 = turn + 'Den';
+                                    var temp2 = opponentTurn + 'Trap';
+                                    if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                                        lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    }
+                                    else {
+                                        if (board[deltaTo.row][deltaTo.col] === temp2) {
+                                            highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else if (board[deltaTo.row][deltaTo.col] === temp1) {
+                                            lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else {
+                                            midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                    }
                                 }
                             }
                             break;
@@ -40,7 +74,22 @@ var aiService;
                             if (oneCaseMoves.length > 0) {
                                 for (var _b = 0; _b < oneCaseMoves.length; _b++) {
                                     var deltaTo = oneCaseMoves[_b];
-                                    possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    var temp1 = turn + 'Den';
+                                    var temp2 = opponentTurn + 'Trap';
+                                    if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                                        lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    }
+                                    else {
+                                        if (board[deltaTo.row][deltaTo.col] === temp2) {
+                                            highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else if (board[deltaTo.row][deltaTo.col] === temp1) {
+                                            lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else {
+                                            midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                    }
                                 }
                             }
                             break;
@@ -49,7 +98,22 @@ var aiService;
                             if (oneCaseMoves.length > 0) {
                                 for (var _c = 0; _c < oneCaseMoves.length; _c++) {
                                     var deltaTo = oneCaseMoves[_c];
-                                    possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    var temp1 = turn + 'Den';
+                                    var temp2 = opponentTurn + 'Trap';
+                                    if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                                        lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    }
+                                    else {
+                                        if (board[deltaTo.row][deltaTo.col] === temp2) {
+                                            highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else if (board[deltaTo.row][deltaTo.col] === temp1) {
+                                            lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else {
+                                            midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                    }
                                 }
                             }
                             break;
@@ -58,7 +122,22 @@ var aiService;
                             if (oneCaseMoves.length > 0) {
                                 for (var _d = 0; _d < oneCaseMoves.length; _d++) {
                                     var deltaTo = oneCaseMoves[_d];
-                                    possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    var temp1 = turn + 'Den';
+                                    var temp2 = opponentTurn + 'Trap';
+                                    if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                                        lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    }
+                                    else {
+                                        if (board[deltaTo.row][deltaTo.col] === temp2) {
+                                            highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else if (board[deltaTo.row][deltaTo.col] === temp1) {
+                                            lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else {
+                                            midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                    }
                                 }
                             }
                             break;
@@ -67,7 +146,22 @@ var aiService;
                             if (oneCaseMoves.length > 0) {
                                 for (var _e = 0; _e < oneCaseMoves.length; _e++) {
                                     var deltaTo = oneCaseMoves[_e];
-                                    possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    var temp1 = turn + 'Den';
+                                    var temp2 = opponentTurn + 'Trap';
+                                    if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                                        lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    }
+                                    else {
+                                        if (board[deltaTo.row][deltaTo.col] === temp2) {
+                                            highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else if (board[deltaTo.row][deltaTo.col] === temp1) {
+                                            lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else {
+                                            midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                    }
                                 }
                             }
                             break;
@@ -76,7 +170,22 @@ var aiService;
                             if (oneCaseMoves.length > 0) {
                                 for (var _f = 0; _f < oneCaseMoves.length; _f++) {
                                     var deltaTo = oneCaseMoves[_f];
-                                    possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    var temp1 = turn + 'Den';
+                                    var temp2 = opponentTurn + 'Trap';
+                                    if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                                        lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    }
+                                    else {
+                                        if (board[deltaTo.row][deltaTo.col] === temp2) {
+                                            highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else if (board[deltaTo.row][deltaTo.col] === temp1) {
+                                            lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else {
+                                            midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                    }
                                 }
                             }
                             break;
@@ -85,7 +194,22 @@ var aiService;
                             if (oneCaseMoves.length > 0) {
                                 for (var _g = 0; _g < oneCaseMoves.length; _g++) {
                                     var deltaTo = oneCaseMoves[_g];
-                                    possibleMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    var temp1 = turn + 'Den';
+                                    var temp2 = opponentTurn + 'Trap';
+                                    if (board[deltaTo.row][deltaTo.col] === 'R' || board[deltaTo.row][deltaTo.col] === 'L') {
+                                        lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                    }
+                                    else {
+                                        if (board[deltaTo.row][deltaTo.col] === temp2) {
+                                            highLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else if (board[deltaTo.row][deltaTo.col] === temp1) {
+                                            lowLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                        else {
+                                            midLevelMoves.push(gameLogic.createMove(board, turnIndexBeforeMove, deltaFrom, deltaTo));
+                                        }
+                                    }
                                 }
                             }
                             break;
@@ -93,7 +217,8 @@ var aiService;
                 }
             }
         }
-        return possibleMoves;
+        resMoves = { lowLevelMoves: lowLevelMoves, midLevelMoves: midLevelMoves, highLevelMoves: highLevelMoves };
+        return resMoves;
     }
     aiService.getPossibleMoves = getPossibleMoves;
     /**
@@ -112,6 +237,7 @@ var aiService;
         // if the play's pieces is more than 4 then, do randomSeed
         // otherwise, use alphaBeta algorithm
         var turn = gameLogic.getTurn(playerIndex);
+        var opponentTurn = gameLogic.getOpponentTurn(playerIndex);
         var pieceCount = 0;
         for (var i = 0; i < gameLogic.ROWS; i++) {
             for (var j = 0; j < gameLogic.COLS; j++) {
@@ -121,15 +247,25 @@ var aiService;
                 }
             }
         }
-        if (pieceCount > 4) {
-            var possibleMoves = getPossibleMoves(board, playerIndex);
-            var index = Math.floor(Math.random() * possibleMoves.length);
-            return possibleMoves[index];
+        var threeTypeMoves = getPossibleMoves(board, playerIndex);
+        var lowLevelMoves = threeTypeMoves.lowLevelMoves;
+        var midLevelMoves = threeTypeMoves.midLevelMoves;
+        var highLevelMoves = threeTypeMoves.highLevelMoves;
+        var index = 0;
+        var resMove;
+        if (highLevelMoves.length !== 0) {
+            return highLevelMoves[0];
+        }
+        else if (midLevelMoves.length === 1) {
+            return midLevelMoves[0];
+        }
+        else if (midLevelMoves.length > 1) {
+            index = Math.floor(Math.random() * midLevelMoves.length);
+            return midLevelMoves[index];
         }
         else {
-            return alphaBetaService.alphaBetaDecision([null, { set: { key: 'board', value: board } }], playerIndex, getNextStates, getStateScoreForIndex0, 
-            // If you want to see debugging output in the console, then surf to game.html?debug
-            window.location.search === '?debug' ? getDebugStateToString : null, alphaBetaLimits);
+            index = Math.floor(Math.random() * lowLevelMoves.length);
+            return lowLevelMoves[index];
         }
     }
     aiService.createComputerMove = createComputerMove;
@@ -143,7 +279,18 @@ var aiService;
         return 0;
     }
     function getNextStates(move, playerIndex) {
-        return getPossibleMoves(move[1].set.value, playerIndex);
+        var threeTypeMoves = getPossibleMoves(move[1].set.value, playerIndex);
+        var possibleMoves = [];
+        for (var i = 0; i < threeTypeMoves.highLevelMoves.length; i++) {
+            possibleMoves.push(threeTypeMoves.highLevelMoves[i]);
+        }
+        for (var i = 0; i < threeTypeMoves.midLevelMoves.length; i++) {
+            possibleMoves.push(threeTypeMoves.midLevelMoves[i]);
+        }
+        for (var i = 0; i < threeTypeMoves.lowLevelMoves.length; i++) {
+            possibleMoves.push(threeTypeMoves.lowLevelMoves[i]);
+        }
+        return possibleMoves;
     }
     function getDebugStateToString(move) {
         return "\n" + move[1].set.value.join("\n") + "\n";
