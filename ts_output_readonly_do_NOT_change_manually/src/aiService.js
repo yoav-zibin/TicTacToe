@@ -1,8 +1,8 @@
 var aiService;
 (function (aiService) {
     /** Returns the move that the computer player should do for the given updateUI. */
-    function findComputerMove(updateUI) {
-        return createComputerMove(updateUI.stateAfterMove.board, updateUI.turnIndexAfterMove, 
+    function findComputerMove(move) {
+        return createComputerMove(move.stateAfterMove.board, move.turnIndexAfterMove, 
         // at most 1 second for the AI to choose a move (but might be much quicker)
         { millisecondsLimit: 1000 });
     }
@@ -33,16 +33,14 @@ var aiService;
      */
     function createComputerMove(board, playerIndex, alphaBetaLimits) {
         // We use alpha-beta search, where the search states are TicTacToe moves.
-        // Recal that a TicTacToe move has 3 operations:
-        // 0) endMatch or setTurn
-        // 1) {set: {key: 'board', value: ...}}
-        // 2) {set: {key: 'delta', value: ...}}]
-        return alphaBetaService.alphaBetaDecision([null, { set: { key: 'board', value: board } }], playerIndex, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
+        var state = { board: board, delta: null };
+        var move = { stateAfterMove: state, turnIndexAfterMove: playerIndex, endMatchScores: null };
+        return alphaBetaService.alphaBetaDecision(move, playerIndex, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
     }
     aiService.createComputerMove = createComputerMove;
     function getStateScoreForIndex0(move, playerIndex) {
-        if (move[0].endMatch) {
-            var endMatchScores = move[0].endMatch.endMatchScores;
+        var endMatchScores = move.endMatchScores;
+        if (endMatchScores) {
             return endMatchScores[0] > endMatchScores[1] ? Number.POSITIVE_INFINITY
                 : endMatchScores[0] < endMatchScores[1] ? Number.NEGATIVE_INFINITY
                     : 0;
@@ -50,6 +48,6 @@ var aiService;
         return 0;
     }
     function getNextStates(move, playerIndex) {
-        return getPossibleMoves(move[1].set.value, playerIndex);
+        return getPossibleMoves(move.stateAfterMove.board, playerIndex);
     }
 })(aiService || (aiService = {}));

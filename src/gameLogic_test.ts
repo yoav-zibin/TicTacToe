@@ -1,172 +1,143 @@
 describe("In TicTacToe", function() {
+  let OK = true;
+  let ILLEGAL = true;
+  let X_TURN = 0;
+  let O_TURN = 1;
+  let NO_ONE_TURN: number = null;
+  let NO_ONE_WINS: number[] = null;
+  let X_WIN_SCORES = [1, 0];
+  let O_WIN_SCORES = [0, 1];
+  let TIE_SCORES = [0, 0];
 
   function expectMove(
-      turnIndexBeforeMove: number, stateBeforeMove: IState, move: IMove, isOk: boolean): void {
+      isOk: boolean,
+      turnIndexBeforeMove: number,
+      boardBeforeMove: Board,
+      row: number,
+      col: number,
+      boardAfterMove: Board,
+      turnIndexAfterMove: number,
+      endMatchScores: number[]): void {
     expect(gameLogic.isMoveOk({
       turnIndexBeforeMove: turnIndexBeforeMove,
-      turnIndexAfterMove: null,
-      stateBeforeMove: stateBeforeMove,
-      stateAfterMove: null,
-      move: move,
+      stateBeforeMove: {board: boardBeforeMove, delta: null},
+      move: {turnIndexAfterMove: turnIndexAfterMove, endMatchScores: endMatchScores, stateAfterMove: {board: boardAfterMove, delta: {row: row, col: col}}},
       numberOfPlayers: null})).toBe(isOk);
   }
 
-  function expectMoveOk(turnIndexBeforeMove: number, stateBeforeMove: IState, move: IMove): void {
-    expectMove(turnIndexBeforeMove, stateBeforeMove, move, true);
-  }
-
-  function expectIllegalMove(turnIndexBeforeMove: number, stateBeforeMove: IState, move: IMove): void {
-    expectMove(turnIndexBeforeMove, stateBeforeMove, move, false);
-  }
-
   it("placing X in 0x0 from initial state is legal", function() {
-    expectMoveOk(0, <IState>{},
-      [{setTurn: {turnIndex : 1}},
-        {set: {key: 'board', value:
-          [['X', '', ''],
-           ['', '', ''],
-           ['', '', '']]}},
-        {set: {key: 'delta', value: {row: 0, col: 0}}}]);
+    expectMove(OK, X_TURN, null, 0, 0,
+      [['X', '', ''],
+       ['', '', ''],
+       ['', '', '']], O_TURN, NO_ONE_WINS);
+  });
+
+  it("placing X in 0x0 from initial state but setting the turn to yourself is illegal", function() {
+    expectMove(ILLEGAL, X_TURN, null, 0, 0,
+      [['X', '', ''],
+       ['', '', ''],
+       ['', '', '']], X_TURN, NO_ONE_WINS);
+  });
+
+  it("placing X in 0x0 from initial state and winning is illegal", function() {
+    expectMove(ILLEGAL, X_TURN, null, 0, 0,
+      [['X', '', ''],
+       ['', '', ''],
+       ['', '', '']], NO_ONE_TURN, X_WIN_SCORES);
+  });
+
+  it("placing X in 0x0 from initial state and setting the wrong board is illegal", function() {
+    expectMove(OK, X_TURN, null, 0, 0,
+      [['X', 'X', ''],
+       ['', '', ''],
+       ['', '', '']], O_TURN, NO_ONE_WINS);
   });
 
   it("placing O in 0x1 after X placed X in 0x0 is legal", function() {
-    expectMoveOk(1,
-      {board:
-        [['X', '', ''],
-         ['', '', ''],
-         ['', '', '']], delta: {row: 0, col: 0}},
-      [{setTurn: {turnIndex : 0}},
-        {set: {key: 'board', value:
-          [['X', 'O', ''],
-           ['', '', ''],
-           ['', '', '']]}},
-        {set: {key: 'delta', value: {row: 0, col: 1}}}]);
+    expectMove(OK, O_TURN,
+      [['X', '', ''],
+       ['', '', ''],
+       ['', '', '']], 0, 1,
+      [['X', 'O', ''],
+       ['', '', ''],
+       ['', '', '']], X_TURN, NO_ONE_WINS);
   });
 
   it("placing an O in a non-empty position is illegal", function() {
-    expectIllegalMove(1,
-      {board:
-        [['X', '', ''],
-         ['', '', ''],
-         ['', '', '']], delta: {row: 0, col: 0}},
-      [{setTurn: {turnIndex : 0}},
-        {set: {key: 'board', value:
-          [['O', '', ''],
-           ['', '', ''],
-           ['', '', '']]}},
-        {set: {key: 'delta', value: {row: 0, col: 0}}}]);
+    expectMove(ILLEGAL, O_TURN,
+      [['X', '', ''],
+       ['', '', ''],
+       ['', '', '']], 0, 0,
+      [['O', '', ''],
+       ['', '', ''],
+       ['', '', '']], X_TURN, NO_ONE_WINS);
   });
 
   it("cannot move after the game is over", function() {
-    expectIllegalMove(1,
-      {board:
-        [['X', 'O', ''],
-         ['X', 'O', ''],
-         ['X', '', '']], delta: {row: 2, col: 0}},
-      [{setTurn: {turnIndex : 0}},
-        {set: {key: 'board', value:
-          [['X', 'O', ''],
-           ['X', 'O', ''],
-           ['X', 'O', '']]}},
-        {set: {key: 'delta', value: {row: 2, col: 1}}}]);
+    expectMove(ILLEGAL, O_TURN,
+      [['X', 'O', ''],
+       ['X', 'O', ''],
+       ['X', '', '']], 2, 1,
+      [['X', 'O', ''],
+       ['X', 'O', ''],
+       ['X', 'O', '']], X_TURN, NO_ONE_WINS);
   });
 
   it("placing O in 2x1 is legal", function() {
-    expectMoveOk(1,
-      {board:
-        [['O', 'X', ''],
-         ['X', 'O', ''],
-         ['X', '', '']], delta: {row: 2, col: 0}},
-      [{setTurn: {turnIndex : 0}},
-        {set: {key: 'board', value:
-          [['O', 'X', ''],
-           ['X', 'O', ''],
-           ['X', 'O', '']]}},
-        {set: {key: 'delta', value: {row: 2, col: 1}}}]);
+    expectMove(OK, O_TURN,
+      [['O', 'X', ''],
+       ['X', 'O', ''],
+       ['X', '', '']], 2, 1,
+      [['O', 'X', ''],
+       ['X', 'O', ''],
+       ['X', 'O', '']], X_TURN, NO_ONE_WINS);
   });
 
   it("X wins by placing X in 2x0 is legal", function() {
-    expectMoveOk(0,
-      {board:
-        [['X', 'O', ''],
-         ['X', 'O', ''],
-         ['', '', '']], delta: {row: 1, col: 1}},
-      [{endMatch: {endMatchScores: [1, 0]}},
-            {set: {key: 'board', value:
-              [['X', 'O', ''],
-               ['X', 'O', ''],
-               ['X', '', '']]}},
-            {set: {key: 'delta', value: {row: 2, col: 0}}}]);
+    expectMove(OK, X_TURN,
+      [['X', 'O', ''],
+       ['X', 'O', ''],
+       ['', '', '']], 2, 0,
+      [['X', 'O', ''],
+       ['X', 'O', ''],
+       ['X', '', '']], NO_ONE_TURN, X_WIN_SCORES);
   });
 
   it("O wins by placing O in 1x1 is legal", function() {
-    expectMoveOk(1,
-      {board:
-        [['X', 'X', 'O'],
-         ['X', '', ''],
-         ['O', '', '']], delta: {row: 0, col: 1}},
-      [{endMatch: {endMatchScores: [0, 1]}},
-            {set: {key: 'board', value:
-              [['X', 'X', 'O'],
-               ['X', 'O', ''],
-               ['O', '', '']]}},
-            {set: {key: 'delta', value: {row: 1, col: 1}}}]);
+    expectMove(OK, O_TURN,
+      [['X', 'X', 'O'],
+       ['X', '', ''],
+       ['O', '', '']], 1, 1,
+      [['X', 'X', 'O'],
+       ['X', 'O', ''],
+       ['O', '', '']], NO_ONE_TURN, O_WIN_SCORES);
   });
 
   it("the game ties when there are no more empty cells", function() {
-    expectMoveOk(0,
-      {board:
-        [['X', 'O', 'X'],
-         ['X', 'O', 'O'],
-         ['O', 'X', '']], delta: {row: 2, col: 0}},
-      [{endMatch: {endMatchScores: [0, 0]}},
-            {set: {key: 'board', value:
-              [['X', 'O', 'X'],
-               ['X', 'O', 'O'],
-               ['O', 'X', 'X']]}},
-            {set: {key: 'delta', value: {row: 2, col: 2}}}]);
-  });
-
-  it("null move is illegal", function() {
-    expectIllegalMove(0, <IState>{}, null);
+    expectMove(OK, X_TURN,
+      [['X', 'O', 'X'],
+       ['X', 'O', 'O'],
+       ['O', 'X', '']], 2, 2,
+      [['X', 'O', 'X'],
+       ['X', 'O', 'O'],
+       ['O', 'X', 'X']], NO_ONE_TURN, TIE_SCORES);
   });
 
   it("move without board is illegal", function() {
-    expectIllegalMove(0, <IState>{}, [{setTurn: {turnIndex : 1}}]);
+    expectMove(ILLEGAL, X_TURN,
+      [['X', 'O', 'X'],
+       ['X', 'O', 'O'],
+       ['O', 'X', '']], 2, 2,
+      null, NO_ONE_TURN, TIE_SCORES);
   });
 
-  it("move without delta is illegal", function() {
-    expectIllegalMove(0, <IState>{}, [{setTurn: {turnIndex : 1}},
-      {set: {key: 'board', value:
-        [['X', '', ''],
-         ['', '', ''],
-         ['', '', '']]}}]);
-  });
-
-  it("placing X outside the board (in 3x0) is illegal", function() {
-    expectIllegalMove(0, <IState>{}, [{setTurn: {turnIndex : 1}},
-      {set: {key: 'board', value:
-        [['X', '', ''],
-         ['', '', ''],
-         ['', '', '']]}},
-      {set: {key: 'delta', value: {row: 3, col: 0}}}]);
-  });
-
-  it("placing X in 0x0 but setTurn to yourself is illegal", function() {
-    expectIllegalMove(0, <IState>{}, [{setTurn: {turnIndex : 0}},
-      {set: {key: 'board', value:
-        [['X', '', ''],
-         ['', '', ''],
-         ['', '', '']]}},
-      {set: {key: 'delta', value: {row: 0, col: 0}}}]);
-  });
-
-  it("placing X in 0x0 but setting the board wrong is illegal", function() {
-    expectIllegalMove(0, <IState>{}, [{setTurn: {turnIndex : 1}},
-      {set: {key: 'board', value:
-        [['X', 'X', ''],
-         ['', '', ''],
-         ['', '', '']]}},
-      {set: {key: 'delta', value: {row: 0, col: 0}}}]);
+  it("placing X outside the board (in 0x3) is illegal", function() {
+    expectMove(ILLEGAL, X_TURN,
+      [['', '', ''],
+       ['', '', ''],
+       ['', '', '']], 0, 3,
+      [['', '', '', 'X'],
+       ['', '', ''],
+       ['', '', '']], O_TURN, NO_ONE_WINS);
   });
 });

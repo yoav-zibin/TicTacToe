@@ -102,41 +102,32 @@ module gameLogic {
     let boardAfterMove = angular.copy(board);
     boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
     let winner = getWinner(boardAfterMove);
-    let firstOperation: IOperation;
+    let endMatchScores: number[] = null;
+    let turnIndexAfterMove: number = null;
     if (winner !== '' || isTie(boardAfterMove)) {
       // Game over.
-      firstOperation = {endMatch: {endMatchScores:
-        winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0]}};
+      endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
-      firstOperation = {setTurn: {turnIndex: 1 - turnIndexBeforeMove}};
+      turnIndexAfterMove = 1 - turnIndexBeforeMove;
     }
     let delta: BoardDelta = {row: row, col: col};
-    return [firstOperation,
-            {set: {key: 'board', value: boardAfterMove}},
-            {set: {key: 'delta', value: delta}}];
+    let stateAfterMove: IState = {delta: delta, board: boardAfterMove};
+    return {endMatchScores: endMatchScores, turnIndexAfterMove: turnIndexAfterMove, stateAfterMove: stateAfterMove};
   }
 
-  export function isMoveOk(params: IIsMoveOk): boolean {
-    let move = params.move;
-    let turnIndexBeforeMove = params.turnIndexBeforeMove;
-    let stateBeforeMove: IState = params.stateBeforeMove;
-    // The state and turn after move are not needed in TicTacToe (or in any game where all state is public).
-    //let turnIndexAfterMove = params.turnIndexAfterMove;
-    //let stateAfterMove = params.stateAfterMove;
-
-    // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
-    // to verify that move is legal.
+  export function isMoveOk(stateTransition: IStateTransition): boolean {
     try {
-      // Example move:
-      // [{setTurn: {turnIndex : 1},
-      //  {set: {key: 'board', value: [['X', '', ''], ['', '', ''], ['', '', '']]}},
-      //  {set: {key: 'delta', value: {row: 0, col: 0}}}]
-      let deltaValue: BoardDelta = move[2].set.value;
+      // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
+      // to verify that the move is OK.
+      let turnIndexBeforeMove = stateTransition.turnIndexBeforeMove;
+      let stateBeforeMove: IState = stateTransition.stateBeforeMove;
+      let move: IMove = stateTransition.move;
+      let deltaValue: BoardDelta = stateTransition.move.stateAfterMove.delta;
       let row = deltaValue.row;
       let col = deltaValue.col;
-      let board = stateBeforeMove.board;
-      let expectedMove = createMove(board, row, col, turnIndexBeforeMove);
+      let boardBeforeMove = stateBeforeMove.board;
+      let expectedMove = createMove(boardBeforeMove, row, col, turnIndexBeforeMove);
       if (!angular.equals(move, expectedMove)) {
         return false;
       }
@@ -145,5 +136,17 @@ module gameLogic {
       return false;
     }
     return true;
+  }
+
+  export function forSimpleTestHtml() {
+    var move = gameLogic.createMove(undefined, 0, 0, 0);
+    console.log("move=", move);
+    var params: IStateTransition = {
+      turnIndexBeforeMove: 0,
+      stateBeforeMove: {board: null, delta: null},
+      move: move,
+      numberOfPlayers: 2};
+    var res = gameLogic.isMoveOk(params);
+    console.log("params=", params, "result=", res);
   }
 }

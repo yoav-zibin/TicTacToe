@@ -2,14 +2,14 @@ module game {
   let animationEnded = false;
   let canMakeMove = false;
   let isComputerTurn = false;
-  let lastUpdateUI: IUpdateUI = null;
+  let lastMove: IMove = null;
   let state: IState = null;
   export let isHelpModalShown: boolean = false;
 
   export function init() {
     console.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
     resizeGameAreaService.setWidthToHeight(1);
-    gameService.setGame({
+    moveService.setGame({
       minNumberOfPlayers: 2,
       maxNumberOfPlayers: 2,
       isMoveOk: gameLogic.isMoveOk,
@@ -35,19 +35,19 @@ module game {
       return;
     }
     isComputerTurn = false; // to make sure the computer can only move once.
-    gameService.makeMove(aiService.findComputerMove(lastUpdateUI));
+    moveService.makeMove(aiService.findComputerMove(lastMove));
   }
 
   function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
     animationEnded = false;
-    lastUpdateUI = params;
-    state = params.stateAfterMove;
+    lastMove = params.move;
+    state = lastMove.stateAfterMove;
     if (!state.board) {
       state.board = gameLogic.getInitialBoard();
     }
-    canMakeMove = params.turnIndexAfterMove >= 0 && // game is ongoing
-      params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
+    canMakeMove = params.move.turnIndexAfterMove >= 0 && // game is ongoing
+      params.yourPlayerIndex === lastMove.turnIndexAfterMove; // it's my turn
 
     // Is it the computer's turn?
     isComputerTurn = canMakeMove &&
@@ -76,10 +76,10 @@ module game {
       return;
     }
     try {
-      let move = gameLogic.createMove(
-          state.board, row, col, lastUpdateUI.turnIndexAfterMove);
+      let nextMove = gameLogic.createMove(
+          state.board, row, col, lastMove.turnIndexAfterMove);
       canMakeMove = false; // to prevent making another move
-      gameService.makeMove(move);
+      moveService.makeMove(nextMove);
     } catch (e) {
       log.info(["Cell is already full in position:", row, col]);
       return;

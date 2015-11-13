@@ -1,9 +1,9 @@
 module aiService {
   /** Returns the move that the computer player should do for the given updateUI. */
-  export function findComputerMove(updateUI: IUpdateUI): IMove {
+  export function findComputerMove(move: IMove): IMove {
     return createComputerMove(
-        updateUI.stateAfterMove.board,
-        updateUI.turnIndexAfterMove,
+        move.stateAfterMove.board,
+        move.turnIndexAfterMove,
         // at most 1 second for the AI to choose a move (but might be much quicker)
         {millisecondsLimit: 1000});
   }
@@ -35,18 +35,15 @@ module aiService {
   export function createComputerMove(
       board: Board, playerIndex: number, alphaBetaLimits: IAlphaBetaLimits): IMove {
     // We use alpha-beta search, where the search states are TicTacToe moves.
-    // Recal that a TicTacToe move has 3 operations:
-    // 0) endMatch or setTurn
-    // 1) {set: {key: 'board', value: ...}}
-    // 2) {set: {key: 'delta', value: ...}}]
+    let state: IState = {board: board, delta: null};
+    let move: IMove = {stateAfterMove: state, turnIndexAfterMove: playerIndex, endMatchScores: null};
     return alphaBetaService.alphaBetaDecision(
-        [null, {set: {key: 'board', value: board}}],
-        playerIndex, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
+        move, playerIndex, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
   }
 
   function getStateScoreForIndex0(move: IMove, playerIndex: number): number {
-    if (move[0].endMatch) {
-      let endMatchScores = move[0].endMatch.endMatchScores;
+    let endMatchScores = move.endMatchScores;
+    if (endMatchScores) {
       return endMatchScores[0] > endMatchScores[1] ? Number.POSITIVE_INFINITY
           : endMatchScores[0] < endMatchScores[1] ? Number.NEGATIVE_INFINITY
           : 0;
@@ -55,6 +52,6 @@ module aiService {
   }
 
   function getNextStates(move: IMove, playerIndex: number): IMove[] {
-    return getPossibleMoves(move[1].set.value, playerIndex);
+    return getPossibleMoves(move.stateAfterMove.board, playerIndex);
   }
 }
