@@ -35,19 +35,19 @@
 }
 
 img.isBlackPiece.canSelect {
-  animation: black-blink 2s infinite;
-  -webkit-animation: black-blink 2s infinite;
-  -moz-animation: black-blink 2s infinite;
-  -ms-animation: black-blink 2s infinite;
-  -o-animation: black-blink 2s infinite;
-}
-
-img.isWhitePiece.canSelect {
   animation: white-blink 2s infinite;
   -webkit-animation: white-blink 2s infinite;
   -moz-animation: white-blink 2s infinite;
   -ms-animation: white-blink 2s infinite;
   -o-animation: white-blink 2s infinite;
+}
+
+img.isWhitePiece.canSelect {
+  animation: black-blink 2s infinite;
+  -webkit-animation: black-blink 2s infinite;
+  -moz-animation: black-blink 2s infinite;
+  -ms-animation: black-blink 2s infinite;
+  -o-animation: black-blink 2s infinite;
 }
 
 .slowlyAppear {
