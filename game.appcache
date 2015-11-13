@@ -13,8 +13,6 @@ http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js
 http://yoav-zibin.github.io/emulator/main.css
 dist/everything.min.js
 game.css
-imgs/HelpSlide1.png
-imgs/HelpSlide2.png
 
 NETWORK:
 dist/everything.min.js.map
