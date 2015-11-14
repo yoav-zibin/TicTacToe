@@ -13,7 +13,10 @@ var gameLogic;
         }
         return board;
     }
-    gameLogic.getInitialBoard = getInitialBoard;
+    function getInitialState() {
+        return { board: getInitialBoard(), delta: null };
+    }
+    gameLogic.getInitialState = getInitialState;
     /**
      * Returns true if the game ended in a tie because there are no empty cells.
      * E.g., isTie returns true for the following board:
@@ -76,11 +79,11 @@ var gameLogic;
      * Returns the move that should be performed when player
      * with index turnIndexBeforeMove makes a move in cell row X col.
      */
-    function createMove(board, row, col, turnIndexBeforeMove) {
-        if (!board) {
-            // Initially (at the beginning of the match), the board in state is undefined.
-            board = getInitialBoard();
+    function createMove(stateBeforeMove, row, col, turnIndexBeforeMove) {
+        if (!stateBeforeMove) {
+            stateBeforeMove = getInitialState();
         }
+        var board = stateBeforeMove.board;
         if (board[row][col] !== '') {
             throw new Error("One can only make a move in an empty position!");
         }
@@ -90,54 +93,48 @@ var gameLogic;
         var boardAfterMove = angular.copy(board);
         boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
         var winner = getWinner(boardAfterMove);
-        var endMatchScores = null;
-        var turnIndexAfterMove = null;
+        var endMatchScores;
+        var turnIndexAfterMove;
         if (winner !== '' || isTie(boardAfterMove)) {
             // Game over.
+            turnIndexAfterMove = -1;
             endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
         }
         else {
             // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
             turnIndexAfterMove = 1 - turnIndexBeforeMove;
+            endMatchScores = null;
         }
         var delta = { row: row, col: col };
         var stateAfterMove = { delta: delta, board: boardAfterMove };
         return { endMatchScores: endMatchScores, turnIndexAfterMove: turnIndexAfterMove, stateAfterMove: stateAfterMove };
     }
     gameLogic.createMove = createMove;
-    function isMoveOk(stateTransition) {
-        try {
-            // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
-            // to verify that the move is OK.
-            var turnIndexBeforeMove = stateTransition.turnIndexBeforeMove;
-            var stateBeforeMove = stateTransition.stateBeforeMove;
-            var move = stateTransition.move;
-            var deltaValue = stateTransition.move.stateAfterMove.delta;
-            var row = deltaValue.row;
-            var col = deltaValue.col;
-            var boardBeforeMove = stateBeforeMove.board;
-            var expectedMove = createMove(boardBeforeMove, row, col, turnIndexBeforeMove);
-            if (!angular.equals(move, expectedMove)) {
-                return false;
-            }
+    function checkMoveOk(stateTransition) {
+        // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
+        // to verify that the move is OK.
+        var turnIndexBeforeMove = stateTransition.turnIndexBeforeMove;
+        var stateBeforeMove = stateTransition.stateBeforeMove;
+        var move = stateTransition.move;
+        var deltaValue = stateTransition.move.stateAfterMove.delta;
+        var row = deltaValue.row;
+        var col = deltaValue.col;
+        var expectedMove = createMove(stateBeforeMove, row, col, turnIndexBeforeMove);
+        if (!angular.equals(move, expectedMove)) {
+            throw new Error("Expected move=" + angular.toJson(expectedMove, true) +
+                ", but got move=" + angular.toJson(move, true));
         }
-        catch (e) {
-            // if there are any exceptions then the move is illegal
-            return false;
-        }
-        return true;
     }
-    gameLogic.isMoveOk = isMoveOk;
+    gameLogic.checkMoveOk = checkMoveOk;
     function forSimpleTestHtml() {
-        var move = gameLogic.createMove(undefined, 0, 0, 0);
+        var move = gameLogic.createMove(null, 0, 0, 0);
         console.log("move=", move);
         var params = {
             turnIndexBeforeMove: 0,
             stateBeforeMove: { board: null, delta: null },
             move: move,
             numberOfPlayers: 2 };
-        var res = gameLogic.isMoveOk(params);
-        console.log("params=", params, "result=", res);
+        gameLogic.checkMoveOk(params);
     }
     gameLogic.forSimpleTestHtml = forSimpleTestHtml;
 })(gameLogic || (gameLogic = {}));

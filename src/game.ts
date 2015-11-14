@@ -2,7 +2,7 @@ module game {
   let animationEnded = false;
   let canMakeMove = false;
   let isComputerTurn = false;
-  let lastMove: IMove = null;
+  let move: IMove = null;
   let state: IState = null;
   export let isHelpModalShown: boolean = false;
 
@@ -12,7 +12,7 @@ module game {
     moveService.setGame({
       minNumberOfPlayers: 2,
       maxNumberOfPlayers: 2,
-      isMoveOk: gameLogic.isMoveOk,
+      checkMoveOk: gameLogic.checkMoveOk,
       updateUI: updateUI
     });
 
@@ -35,19 +35,19 @@ module game {
       return;
     }
     isComputerTurn = false; // to make sure the computer can only move once.
-    moveService.makeMove(aiService.findComputerMove(lastMove));
+    moveService.makeMove(aiService.findComputerMove(move));
   }
 
   function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
     animationEnded = false;
-    lastMove = params.move;
-    state = lastMove.stateAfterMove;
-    if (!state.board) {
-      state.board = gameLogic.getInitialBoard();
+    move = params.move;
+    state = move.stateAfterMove;
+    if (!state) {
+      state = gameLogic.getInitialState();
     }
-    canMakeMove = params.move.turnIndexAfterMove >= 0 && // game is ongoing
-      params.yourPlayerIndex === lastMove.turnIndexAfterMove; // it's my turn
+    canMakeMove = move.turnIndexAfterMove >= 0 && // game is ongoing
+      params.yourPlayerIndex === move.turnIndexAfterMove; // it's my turn
 
     // Is it the computer's turn?
     isComputerTurn = canMakeMove &&
@@ -77,7 +77,7 @@ module game {
     }
     try {
       let nextMove = gameLogic.createMove(
-          state.board, row, col, lastMove.turnIndexAfterMove);
+          state, row, col, move.turnIndexAfterMove);
       canMakeMove = false; // to prevent making another move
       moveService.makeMove(nextMove);
     } catch (e) {

@@ -5,10 +5,11 @@ declare var $interval: angular.IIntervalService;
 
 // IState should be defined by the game, e.g., TicTacToe defines it as:
 // interface IState { board: Board; delta: BoardDelta; }
-// In a move, you need to set either turnIndexAfterMove or endMatchScores (but not both)
+// When the match ends, set turnIndexAfterMove -1 and endMatchScores to an array of scores.
+// When the match is ongoing, set turnIndexAfterMove to a valid index and endMatchScores to null.
 interface IMove {
-  endMatchScores?: number[];
-  turnIndexAfterMove?: number;
+  endMatchScores: number[];
+  turnIndexAfterMove: number;
   stateAfterMove: IState;
 }
 interface IStateTransition {
@@ -27,14 +28,11 @@ interface IUpdateUI extends IStateTransition {
   playersInfo: IPlayerInfo[];
   yourPlayerIndex: number;
   playMode: PlayMode;
-  moveNumber: number;
-  randomSeed: string;
-  endMatchScores?: number[];
 }
 interface IGame {
   minNumberOfPlayers: number;
   maxNumberOfPlayers: number;
-  isMoveOk(stateTransition: IStateTransition): boolean;
+  checkMoveOk(stateTransition: IStateTransition): void;
   updateUI(update: IUpdateUI): void;
 }
 interface IMoveService {

@@ -13,7 +13,10 @@ var gameLogic;
         }
         return board;
     }
-    gameLogic.getInitialBoard = getInitialBoard;
+    function getInitialState() {
+        return { board: getInitialBoard(), delta: null };
+    }
+    gameLogic.getInitialState = getInitialState;
     /**
      * Returns true if the game ended in a tie because there are no empty cells.
      * E.g., isTie returns true for the following board:
@@ -59,8 +62,8 @@ var gameLogic;
             'X...X...X',
             '..X.X.X..'
         ];
-        for (var _i = 0; _i < win_patterns.length; _i++) {
-            var win_pattern = win_patterns[_i];
+        for (var _i = 0, win_patterns_1 = win_patterns; _i < win_patterns_1.length; _i++) {
+            var win_pattern = win_patterns_1[_i];
             var x_regexp = new RegExp(win_pattern);
             var o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
             if (x_regexp.test(boardString)) {
@@ -76,11 +79,11 @@ var gameLogic;
      * Returns the move that should be performed when player
      * with index turnIndexBeforeMove makes a move in cell row X col.
      */
-    function createMove(board, row, col, turnIndexBeforeMove) {
-        if (!board) {
-            // Initially (at the beginning of the match), the board in state is undefined.
-            board = getInitialBoard();
+    function createMove(stateBeforeMove, row, col, turnIndexBeforeMove) {
+        if (!stateBeforeMove) {
+            stateBeforeMove = getInitialState();
         }
+        var board = stateBeforeMove.board;
         if (board[row][col] !== '') {
             throw new Error("One can only make a move in an empty position!");
         }
@@ -90,67 +93,66 @@ var gameLogic;
         var boardAfterMove = angular.copy(board);
         boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
         var winner = getWinner(boardAfterMove);
-        var firstOperation;
+        var endMatchScores;
+        var turnIndexAfterMove;
         if (winner !== '' || isTie(boardAfterMove)) {
             // Game over.
-            firstOperation = { endMatch: { endMatchScores: winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0] } };
+            turnIndexAfterMove = -1;
+            endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
         }
         else {
             // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
-            firstOperation = { setTurn: { turnIndex: 1 - turnIndexBeforeMove } };
+            turnIndexAfterMove = 1 - turnIndexBeforeMove;
+            endMatchScores = null;
         }
         var delta = { row: row, col: col };
-        return [firstOperation,
-            { set: { key: 'board', value: boardAfterMove } },
-            { set: { key: 'delta', value: delta } }];
+        var stateAfterMove = { delta: delta, board: boardAfterMove };
+        return { endMatchScores: endMatchScores, turnIndexAfterMove: turnIndexAfterMove, stateAfterMove: stateAfterMove };
     }
     gameLogic.createMove = createMove;
-    function isMoveOk(params) {
-        var move = params.move;
-        var turnIndexBeforeMove = params.turnIndexBeforeMove;
-        var stateBeforeMove = params.stateBeforeMove;
-        // The state and turn after move are not needed in TicTacToe (or in any game where all state is public).
-        //let turnIndexAfterMove = params.turnIndexAfterMove;
-        //let stateAfterMove = params.stateAfterMove;
+    function checkMoveOk(stateTransition) {
         // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
-        // to verify that move is legal.
-        try {
-            // Example move:
-            // [{setTurn: {turnIndex : 1},
-            //  {set: {key: 'board', value: [['X', '', ''], ['', '', ''], ['', '', '']]}},
-            //  {set: {key: 'delta', value: {row: 0, col: 0}}}]
-            var deltaValue = move[2].set.value;
-            var row = deltaValue.row;
-            var col = deltaValue.col;
-            var board = stateBeforeMove.board;
-            var expectedMove = createMove(board, row, col, turnIndexBeforeMove);
-            if (!angular.equals(move, expectedMove)) {
-                return false;
-            }
+        // to verify that the move is OK.
+        var turnIndexBeforeMove = stateTransition.turnIndexBeforeMove;
+        var stateBeforeMove = stateTransition.stateBeforeMove;
+        var move = stateTransition.move;
+        var deltaValue = stateTransition.move.stateAfterMove.delta;
+        var row = deltaValue.row;
+        var col = deltaValue.col;
+        var expectedMove = createMove(stateBeforeMove, row, col, turnIndexBeforeMove);
+        if (!angular.equals(move, expectedMove)) {
+            throw new Error("Expected move=" + angular.toJson(expectedMove, true) +
+                ", but got move=" + angular.toJson(move, true));
         }
-        catch (e) {
-            // if there are any exceptions then the move is illegal
-            return false;
-        }
-        return true;
     }
-    gameLogic.isMoveOk = isMoveOk;
+    gameLogic.checkMoveOk = checkMoveOk;
+    function forSimpleTestHtml() {
+        var move = gameLogic.createMove(null, 0, 0, 0);
+        console.log("move=", move);
+        var params = {
+            turnIndexBeforeMove: 0,
+            stateBeforeMove: { board: null, delta: null },
+            move: move,
+            numberOfPlayers: 2 };
+        gameLogic.checkMoveOk(params);
+    }
+    gameLogic.forSimpleTestHtml = forSimpleTestHtml;
 })(gameLogic || (gameLogic = {}));
 ;var game;
 (function (game) {
     var animationEnded = false;
     var canMakeMove = false;
     var isComputerTurn = false;
-    var lastUpdateUI = null;
+    var move = null;
     var state = null;
     game.isHelpModalShown = false;
     function init() {
         console.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
         resizeGameAreaService.setWidthToHeight(1);
-        gameService.setGame({
+        moveService.setGame({
             minNumberOfPlayers: 2,
             maxNumberOfPlayers: 2,
-            isMoveOk: gameLogic.isMoveOk,
+            checkMoveOk: gameLogic.checkMoveOk,
             updateUI: updateUI
         });
         // See http://www.sitepoint.com/css3-animation-javascript-event-handlers/
@@ -171,18 +173,18 @@ var gameLogic;
             return;
         }
         isComputerTurn = false; // to make sure the computer can only move once.
-        gameService.makeMove(aiService.findComputerMove(lastUpdateUI));
+        moveService.makeMove(aiService.findComputerMove(move));
     }
     function updateUI(params) {
         log.info("Game got updateUI:", params);
         animationEnded = false;
-        lastUpdateUI = params;
-        state = params.stateAfterMove;
-        if (!state.board) {
-            state.board = gameLogic.getInitialBoard();
+        move = params.move;
+        state = move.stateAfterMove;
+        if (!state) {
+            state = gameLogic.getInitialState();
         }
-        canMakeMove = params.turnIndexAfterMove >= 0 &&
-            params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
+        canMakeMove = move.turnIndexAfterMove >= 0 &&
+            params.yourPlayerIndex === move.turnIndexAfterMove; // it's my turn
         // Is it the computer's turn?
         isComputerTurn = canMakeMove &&
             params.playersInfo[params.yourPlayerIndex].playerId === '';
@@ -209,9 +211,9 @@ var gameLogic;
             return;
         }
         try {
-            var move = gameLogic.createMove(state.board, row, col, lastUpdateUI.turnIndexAfterMove);
+            var nextMove = gameLogic.createMove(state, row, col, move.turnIndexAfterMove);
             canMakeMove = false; // to prevent making another move
-            gameService.makeMove(move);
+            moveService.makeMove(nextMove);
         }
         catch (e) {
             log.info(["Cell is already full in position:", row, col]);
@@ -253,22 +255,22 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
 ;var aiService;
 (function (aiService) {
     /** Returns the move that the computer player should do for the given updateUI. */
-    function findComputerMove(updateUI) {
-        return createComputerMove(updateUI.stateAfterMove.board, updateUI.turnIndexAfterMove, 
+    function findComputerMove(move) {
+        return createComputerMove(move, 
         // at most 1 second for the AI to choose a move (but might be much quicker)
         { millisecondsLimit: 1000 });
     }
     aiService.findComputerMove = findComputerMove;
     /**
-     * Returns all the possible moves for the given board and turnIndexBeforeMove.
+     * Returns all the possible moves for the given state and turnIndexBeforeMove.
      * Returns an empty array if the game is over.
      */
-    function getPossibleMoves(board, turnIndexBeforeMove) {
+    function getPossibleMoves(state, turnIndexBeforeMove) {
         var possibleMoves = [];
         for (var i = 0; i < gameLogic.ROWS; i++) {
             for (var j = 0; j < gameLogic.COLS; j++) {
                 try {
-                    possibleMoves.push(gameLogic.createMove(board, i, j, turnIndexBeforeMove));
+                    possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
                 }
                 catch (e) {
                 }
@@ -278,23 +280,19 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
     }
     aiService.getPossibleMoves = getPossibleMoves;
     /**
-     * Returns the move that the computer player should do for the given board.
+     * Returns the move that the computer player should do for the given state.
      * alphaBetaLimits is an object that sets a limit on the alpha-beta search,
      * and it has either a millisecondsLimit or maxDepth field:
      * millisecondsLimit is a time limit, and maxDepth is a depth limit.
      */
-    function createComputerMove(board, playerIndex, alphaBetaLimits) {
+    function createComputerMove(move, alphaBetaLimits) {
         // We use alpha-beta search, where the search states are TicTacToe moves.
-        // Recal that a TicTacToe move has 3 operations:
-        // 0) endMatch or setTurn
-        // 1) {set: {key: 'board', value: ...}}
-        // 2) {set: {key: 'delta', value: ...}}]
-        return alphaBetaService.alphaBetaDecision([null, { set: { key: 'board', value: board } }], playerIndex, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
+        return alphaBetaService.alphaBetaDecision(move, move.turnIndexAfterMove, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
     }
     aiService.createComputerMove = createComputerMove;
     function getStateScoreForIndex0(move, playerIndex) {
-        if (move[0].endMatch) {
-            var endMatchScores = move[0].endMatch.endMatchScores;
+        var endMatchScores = move.endMatchScores;
+        if (endMatchScores) {
             return endMatchScores[0] > endMatchScores[1] ? Number.POSITIVE_INFINITY
                 : endMatchScores[0] < endMatchScores[1] ? Number.NEGATIVE_INFINITY
                     : 0;
@@ -302,6 +300,6 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
         return 0;
     }
     function getNextStates(move, playerIndex) {
-        return getPossibleMoves(move[1].set.value, playerIndex);
+        return getPossibleMoves(move.stateAfterMove, playerIndex);
     }
 })(aiService || (aiService = {}));

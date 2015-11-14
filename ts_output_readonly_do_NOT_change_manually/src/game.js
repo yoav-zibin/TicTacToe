@@ -3,7 +3,7 @@ var game;
     var animationEnded = false;
     var canMakeMove = false;
     var isComputerTurn = false;
-    var lastMove = null;
+    var move = null;
     var state = null;
     game.isHelpModalShown = false;
     function init() {
@@ -12,7 +12,7 @@ var game;
         moveService.setGame({
             minNumberOfPlayers: 2,
             maxNumberOfPlayers: 2,
-            isMoveOk: gameLogic.isMoveOk,
+            checkMoveOk: gameLogic.checkMoveOk,
             updateUI: updateUI
         });
         // See http://www.sitepoint.com/css3-animation-javascript-event-handlers/
@@ -33,18 +33,18 @@ var game;
             return;
         }
         isComputerTurn = false; // to make sure the computer can only move once.
-        moveService.makeMove(aiService.findComputerMove(lastMove));
+        moveService.makeMove(aiService.findComputerMove(move));
     }
     function updateUI(params) {
         log.info("Game got updateUI:", params);
         animationEnded = false;
-        lastMove = params.move;
-        state = lastMove.stateAfterMove;
-        if (!state.board) {
-            state.board = gameLogic.getInitialBoard();
+        move = params.move;
+        state = move.stateAfterMove;
+        if (!state) {
+            state = gameLogic.getInitialState();
         }
-        canMakeMove = params.move.turnIndexAfterMove >= 0 &&
-            params.yourPlayerIndex === lastMove.turnIndexAfterMove; // it's my turn
+        canMakeMove = move.turnIndexAfterMove >= 0 &&
+            params.yourPlayerIndex === move.turnIndexAfterMove; // it's my turn
         // Is it the computer's turn?
         isComputerTurn = canMakeMove &&
             params.playersInfo[params.yourPlayerIndex].playerId === '';
@@ -71,7 +71,7 @@ var game;
             return;
         }
         try {
-            var nextMove = gameLogic.createMove(state.board, row, col, lastMove.turnIndexAfterMove);
+            var nextMove = gameLogic.createMove(state, row, col, move.turnIndexAfterMove);
             canMakeMove = false; // to prevent making another move
             moveService.makeMove(nextMove);
         }

@@ -1,9 +1,9 @@
 describe("In TicTacToe", function() {
   let OK = true;
-  let ILLEGAL = true;
+  let ILLEGAL = false;
   let X_TURN = 0;
   let O_TURN = 1;
-  let NO_ONE_TURN: number = null;
+  let NO_ONE_TURN = -1;
   let NO_ONE_WINS: number[] = null;
   let X_WIN_SCORES = [1, 0];
   let O_WIN_SCORES = [0, 1];
@@ -18,11 +18,30 @@ describe("In TicTacToe", function() {
       boardAfterMove: Board,
       turnIndexAfterMove: number,
       endMatchScores: number[]): void {
-    expect(gameLogic.isMoveOk({
+    let stateTransition: IStateTransition = {
       turnIndexBeforeMove: turnIndexBeforeMove,
-      stateBeforeMove: {board: boardBeforeMove, delta: null},
-      move: {turnIndexAfterMove: turnIndexAfterMove, endMatchScores: endMatchScores, stateAfterMove: {board: boardAfterMove, delta: {row: row, col: col}}},
-      numberOfPlayers: null})).toBe(isOk);
+      stateBeforeMove: boardBeforeMove ? {board: boardBeforeMove, delta: null} : null,
+      move: {
+        turnIndexAfterMove: turnIndexAfterMove,
+        endMatchScores: endMatchScores,
+        stateAfterMove: {board: boardAfterMove, delta: {row: row, col: col}}
+      },
+      numberOfPlayers: null
+    };
+    if (isOk) {
+      gameLogic.checkMoveOk(stateTransition);
+    } else {
+      // We expect an exception to be thrown :)
+      let didThrowException = false;
+      try {
+        gameLogic.checkMoveOk(stateTransition);
+      } catch (e) {
+        didThrowException = true;
+      }
+      if (!didThrowException) {
+        throw new Error("We expect an illegal move, but checkMoveOk didn't throw any exception!")
+      }
+    }
   }
 
   it("placing X in 0x0 from initial state is legal", function() {
@@ -47,7 +66,7 @@ describe("In TicTacToe", function() {
   });
 
   it("placing X in 0x0 from initial state and setting the wrong board is illegal", function() {
-    expectMove(OK, X_TURN, null, 0, 0,
+    expectMove(ILLEGAL, X_TURN, null, 0, 0,
       [['X', 'X', ''],
        ['', '', ''],
        ['', '', '']], O_TURN, NO_ONE_WINS);
