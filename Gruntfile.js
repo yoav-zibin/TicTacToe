@@ -44,7 +44,7 @@ module.exports = function(grunt) {
         ]
       },
       dist: {
-        src: 'dist/css/everything.css'
+        src: 'dist/css/everything.min.css'
       }
     },
     uglify: {
