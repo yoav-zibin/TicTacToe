@@ -1,0 +1,19 @@
+.r {
+  border-right: 4pt solid black;
+}
+.b {
+  border-bottom: 4pt solid black;
+}
+
+.slowlyAppear {
+  animation: slowlyAppear 0.5s linear;
+}
+
+@keyframes slowlyAppear {
+  from {opacity: 0.1;}
+  to {opacity: 1;}
+}
+
+td {
+  padding:0 5px 0 5px;
+}

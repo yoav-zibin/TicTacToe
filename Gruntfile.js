@@ -9,17 +9,43 @@ module.exports = function(grunt) {
         singleRun: true
       }
     },
+    copy: {
+      imgs: {
+        expand: true,
+        src: 'imgs/*.*',
+        dest: 'dist/'
+      }
+    },
     concat: {
       options: {
         separator: ';',
       },
-      dist: {
+      js: {
         src: [
           'ts_output_readonly_do_NOT_change_manually/src/gameLogic.js',
           'ts_output_readonly_do_NOT_change_manually/src/game.js',
           'ts_output_readonly_do_NOT_change_manually/src/aiService.js'],
-        dest: 'dist/everything.js',
+        dest: 'dist/js/everything.js',
       },
+      css: {
+        src: 'css/*.css',
+        dest: 'dist/css/everything.min.css',
+      },
+    },
+    postcss: {
+      options: {
+        map: {
+          inline: false, // save all sourcemaps as separate files...
+          annotation: 'dist/css/maps/' // ...to the specified directory
+        },
+        processors: [
+          require('autoprefixer')(), // add vendor prefixes
+          require('cssnano')() // minify the result
+        ]
+      },
+      dist: {
+        src: 'dist/css/everything.css'
+      }
     },
     uglify: {
       options: {
@@ -27,14 +53,14 @@ module.exports = function(grunt) {
       },
       my_target: {
         files: {
-          'dist/everything.min.js': ['dist/everything.js']
+          'dist/js/everything.min.js': ['dist/js/everything.js']
         }
       }
     },
     processhtml: {
       dist: {
         files: {
-          'index.min.html': ['index.html']
+          'dist/index.min.html': ['index.html']
         }
       }
     },
@@ -51,18 +77,18 @@ module.exports = function(grunt) {
             'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/glyphicons-halflings-regular.ttf',
             'http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js',
             'http://yoav-zibin.github.io/emulator/main.css',
-            'dist/everything.min.js',
-            'game.css',
+            'js/everything.min.js',
+            'css/everything.min.css',
             'imgs/HelpSlide1.png',
             'imgs/HelpSlide2.png'
           ],
           network: [
-            'dist/everything.min.js.map',
-            'dist/everything.js'
+            'js/everything.min.js.map',
+            'js/everything.js'
           ],
           timestamp: true
         },
-        dest: 'game.appcache',
+        dest: 'dist/index.min.appcache',
         src: []
       }
     },
@@ -99,7 +125,8 @@ module.exports = function(grunt) {
   // Default task(s).
   grunt.registerTask('default', [
       'karma',
-      'concat', 'uglify',
+      'copy',
+      'concat', 'postcss', 'uglify',
       'processhtml', 'manifest',
       'http-server', 'protractor']);
 

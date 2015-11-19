@@ -2,7 +2,7 @@
 
 describe('TicTacToe', function() {
   function getPage(page: string) {
-    browser.get('http://localhost:9000/' + page);
+    browser.get('http://localhost:9000/dist/' + page);
     browser.sleep(200); // Wait for the first updateUI to arrive.
   }
 
