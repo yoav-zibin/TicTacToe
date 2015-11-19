@@ -29,7 +29,7 @@ module.exports = function(grunt) {
       },
       css: {
         src: 'css/*.css',
-        dest: 'dist/css/everything.min.css',
+        dest: 'dist/css/everything.min.css', // It will be minified by postcss, which overwrites the file.
       },
     },
     postcss: {
