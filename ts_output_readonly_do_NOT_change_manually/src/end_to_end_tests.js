@@ -95,7 +95,7 @@ describe('TicTacToe', function () {
         expectPiece(0, 0, 'O');
     });
     it('with onlyAIs should work', function () {
-        browser.get('index.min.html?onlyAIs');
+        getPage('index.min.html?onlyAIs');
         browser.sleep(2000); // wait for AI to make at least one move
         expectPiece(0, 0, 'X');
     });
