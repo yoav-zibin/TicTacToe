@@ -16,6 +16,7 @@
     "grunt-postcss": "^0.7.1",
     "grunt-processhtml": "~0.3.7",
     "grunt-protractor-runner": "~1.2.1",
+    "grunt-shell": "^1.1.2",
     "http-server": "~0.7.5",
     "jasmine-core": "~2.1.0",
     "karma": "~0.12.31",
