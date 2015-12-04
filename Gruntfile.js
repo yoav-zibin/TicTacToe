@@ -93,8 +93,8 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    macOSxShell: {
-      auto_resize_images: {
+    shell: {
+      auto_resize_images_on_mac: {
         command: auto_resize_images_command
       }
     },
