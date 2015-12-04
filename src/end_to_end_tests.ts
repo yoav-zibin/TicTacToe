@@ -29,9 +29,9 @@ describe('TicTacToe', function() {
     }
   }
 
-  function expectPiece(row: number, col: number, pieceKind: string) {
-    expectPieceKindDisplayed(row, col, 'X', pieceKind === "X");
-    expectPieceKindDisplayed(row, col, 'O', pieceKind === "O");
+  function expectPiece(row: number, col: number, expectedPieceKind: string) {
+    expectPieceKindDisplayed(row, col, 'X', expectedPieceKind === "X");
+    expectPieceKindDisplayed(row, col, 'O', expectedPieceKind === "O");
   }
 
   function expectBoard(board: Board) {
@@ -44,9 +44,9 @@ describe('TicTacToe', function() {
     }
   }
 
-  function clickDivAndExpectPiece(row: number, col: number, pieceKind: string): void {
+  function clickDivAndExpectPiece(row: number, col: number, expectedPieceKind: string): void {
     getDiv(row, col).click();
-    expectPiece(row, col, pieceKind);
+    expectPiece(row, col, expectedPieceKind);
   }
 
   it('should have a title', function () {
