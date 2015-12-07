@@ -140,11 +140,14 @@ var gameLogic;
 })(gameLogic || (gameLogic = {}));
 ;var game;
 (function (game) {
-    var animationEnded = false;
-    var canMakeMove = false;
-    var isComputerTurn = false;
-    var move = null;
-    var state = null;
+    // I export all variables to make it easy to debug in the browser by
+    // simply typing in the console:
+    // game.state
+    game.animationEnded = false;
+    game.canMakeMove = false;
+    game.isComputerTurn = false;
+    game.move = null;
+    game.state = null;
     game.isHelpModalShown = false;
     function init() {
         console.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
@@ -164,37 +167,37 @@ var gameLogic;
     function animationEndedCallback() {
         $rootScope.$apply(function () {
             log.info("Animation ended");
-            animationEnded = true;
+            game.animationEnded = true;
             sendComputerMove();
         });
     }
     function sendComputerMove() {
-        if (!isComputerTurn) {
+        if (!game.isComputerTurn) {
             return;
         }
-        isComputerTurn = false; // to make sure the computer can only move once.
-        moveService.makeMove(aiService.findComputerMove(move));
+        game.isComputerTurn = false; // to make sure the computer can only move once.
+        moveService.makeMove(aiService.findComputerMove(game.move));
     }
     function updateUI(params) {
         log.info("Game got updateUI:", params);
-        animationEnded = false;
-        move = params.move;
-        state = move.stateAfterMove;
-        if (!state) {
-            state = gameLogic.getInitialState();
+        game.animationEnded = false;
+        game.move = params.move;
+        game.state = game.move.stateAfterMove;
+        if (!game.state) {
+            game.state = gameLogic.getInitialState();
         }
-        canMakeMove = move.turnIndexAfterMove >= 0 &&
-            params.yourPlayerIndex === move.turnIndexAfterMove; // it's my turn
+        game.canMakeMove = game.move.turnIndexAfterMove >= 0 &&
+            params.yourPlayerIndex === game.move.turnIndexAfterMove; // it's my turn
         // Is it the computer's turn?
-        isComputerTurn = canMakeMove &&
+        game.isComputerTurn = game.canMakeMove &&
             params.playersInfo[params.yourPlayerIndex].playerId === '';
-        if (isComputerTurn) {
+        if (game.isComputerTurn) {
             // To make sure the player won't click something and send a move instead of the computer sending a move.
-            canMakeMove = false;
+            game.canMakeMove = false;
             // We calculate the AI move only after the animation finishes,
             // because if we call aiService now
             // then the animation will be paused until the javascript finishes.
-            if (!state.delta) {
+            if (!game.state.delta) {
                 // This is the first move in the match, so
                 // there is not going to be an animation, so
                 // call sendComputerMove() now (can happen in ?onlyAIs mode)
@@ -207,12 +210,12 @@ var gameLogic;
         if (window.location.search === '?throwException') {
             throw new Error("Throwing the error because URL has '?throwException'");
         }
-        if (!canMakeMove) {
+        if (!game.canMakeMove) {
             return;
         }
         try {
-            var nextMove = gameLogic.createMove(state, row, col, move.turnIndexAfterMove);
-            canMakeMove = false; // to prevent making another move
+            var nextMove = gameLogic.createMove(game.state, row, col, game.move.turnIndexAfterMove);
+            game.canMakeMove = false; // to prevent making another move
             moveService.makeMove(nextMove);
         }
         catch (e) {
@@ -222,22 +225,22 @@ var gameLogic;
     }
     game.cellClicked = cellClicked;
     function shouldShowImage(row, col) {
-        var cell = state.board[row][col];
+        var cell = game.state.board[row][col];
         return cell !== "";
     }
     game.shouldShowImage = shouldShowImage;
     function isPieceX(row, col) {
-        return state.board[row][col] === 'X';
+        return game.state.board[row][col] === 'X';
     }
     game.isPieceX = isPieceX;
     function isPieceO(row, col) {
-        return state.board[row][col] === 'O';
+        return game.state.board[row][col] === 'O';
     }
     game.isPieceO = isPieceO;
     function shouldSlowlyAppear(row, col) {
-        return !animationEnded &&
-            state.delta &&
-            state.delta.row === row && state.delta.col === col;
+        return !game.animationEnded &&
+            game.state.delta &&
+            game.state.delta.row === row && game.state.delta.col === col;
     }
     game.shouldSlowlyAppear = shouldSlowlyAppear;
 })(game || (game = {}));

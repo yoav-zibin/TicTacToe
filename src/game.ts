@@ -1,9 +1,12 @@
 module game {
-  let animationEnded = false;
-  let canMakeMove = false;
-  let isComputerTurn = false;
-  let move: IMove = null;
-  let state: IState = null;
+  // I export all variables to make it easy to debug in the browser by
+  // simply typing in the console:
+  // game.state
+  export let animationEnded = false;
+  export let canMakeMove = false;
+  export let isComputerTurn = false;
+  export let move: IMove = null;
+  export let state: IState = null;
   export let isHelpModalShown: boolean = false;
 
   export function init() {
