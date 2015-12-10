@@ -143,7 +143,7 @@ module gameLogic {
     console.log("move=", move);
     var params: IStateTransition = {
       turnIndexBeforeMove: 0,
-      stateBeforeMove: {board: null, delta: null},
+      stateBeforeMove: null,
       move: move,
       numberOfPlayers: 2};
     gameLogic.checkMoveOk(params);
