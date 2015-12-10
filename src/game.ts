@@ -23,6 +23,15 @@ module game {
     document.addEventListener("animationend", animationEndedCallback, false); // standard
     document.addEventListener("webkitAnimationEnd", animationEndedCallback, false); // WebKit
     document.addEventListener("oanimationend", animationEndedCallback, false); // Opera
+
+    let w: any = window;
+    if (w["HTMLInspector"]) {
+      setTimeout(function () {
+        w["HTMLInspector"].inspect({
+          excludeRules: ["unused-classes", "script-placement"],
+        });
+      }, 0);
+    }
   }
 
   function animationEndedCallback() {

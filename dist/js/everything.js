@@ -131,7 +131,7 @@ var gameLogic;
         console.log("move=", move);
         var params = {
             turnIndexBeforeMove: 0,
-            stateBeforeMove: { board: null, delta: null },
+            stateBeforeMove: null,
             move: move,
             numberOfPlayers: 2 };
         gameLogic.checkMoveOk(params);
@@ -162,6 +162,14 @@ var gameLogic;
         document.addEventListener("animationend", animationEndedCallback, false); // standard
         document.addEventListener("webkitAnimationEnd", animationEndedCallback, false); // WebKit
         document.addEventListener("oanimationend", animationEndedCallback, false); // Opera
+        var w = window;
+        if (w["HTMLInspector"]) {
+            setTimeout(function () {
+                w["HTMLInspector"].inspect({
+                    excludeRules: ["unused-classes", "script-placement"],
+                });
+            }, 0);
+        }
     }
     game.init = init;
     function animationEndedCallback() {
