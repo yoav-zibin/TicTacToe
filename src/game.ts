@@ -26,11 +26,11 @@ module game {
 
     let w: any = window;
     if (w["HTMLInspector"]) {
-      setTimeout(function () {
+      setInterval(function () {
         w["HTMLInspector"].inspect({
           excludeRules: ["unused-classes", "script-placement"],
         });
-      }, 0);
+      }, 3000);
     }
   }
 

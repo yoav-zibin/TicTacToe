@@ -24,11 +24,11 @@ var game;
         document.addEventListener("oanimationend", animationEndedCallback, false); // Opera
         var w = window;
         if (w["HTMLInspector"]) {
-            setTimeout(function () {
+            setInterval(function () {
                 w["HTMLInspector"].inspect({
                     excludeRules: ["unused-classes", "script-placement"],
                 });
-            }, 0);
+            }, 3000);
         }
     }
     game.init = init;
