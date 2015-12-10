@@ -9,7 +9,8 @@
         "rootDir": ".",
         "outDir": "ts_output_readonly_do_NOT_change_manually/",
         "sourceMap": false,
-        "noLib": false
+        "noLib": false,
+        "newLine": "CRLF"
     },
     "filesGlob": [
         "./**/*.ts",
