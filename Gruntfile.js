@@ -122,10 +122,6 @@ module.exports = function(grunt) {
           'ts_output_readonly_do_NOT_change_manually/src/aiService.js'],
         dest: 'dist/js/everything.js',
       },
-      css: {
-        src: 'css/*.css',
-        dest: 'dist/css/everything.min.css', // It will be minified by postcss, which overwrites the file.
-      },
     },
     postcss: {
       options: {
@@ -139,7 +135,8 @@ module.exports = function(grunt) {
         ]
       },
       dist: {
-        src: 'dist/css/everything.min.css'
+        src: 'css/game.css',
+        dest: 'dist/css/everything.min.css',
       }
     },
     uglify: {
@@ -205,7 +202,7 @@ module.exports = function(grunt) {
     protractor: {
       options: {
         configFile: "protractor.conf.js", // Default config file
-        keepAlive: true, // If false, the grunt process stops when the test fails.
+        keepAlive: false, // If false, the grunt process stops when the test fails.
         noColor: false, // If true, protractor will not use colors in its output.
         args: {
           // Arguments passed to the command
