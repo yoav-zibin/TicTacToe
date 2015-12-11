@@ -1,5 +1,5 @@
 module aiService {
-  /** Returns the move that the computer player should do for the given updateUI. */
+  /** Returns the move that the computer player should do for the given state in move. */
   export function findComputerMove(move: IMove): IMove {
     return createComputerMove(move,
         // at most 1 second for the AI to choose a move (but might be much quicker)
