@@ -33,6 +33,11 @@ imgs/BTrap.gif
 imgs/WTrap.gif
 imgs/BDen.gif
 imgs/WDen.gif
+imgs/HelpSlide1.gif
+imgs/HelpSlide2.gif
+imgs/HelpSlide3.gif
+imgs/HelpSlide4.gif
+imgs/HelpSlide5.gif
 
 NETWORK:
 dist/everything.min.js.map
