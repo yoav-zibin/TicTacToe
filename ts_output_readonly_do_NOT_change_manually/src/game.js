@@ -111,6 +111,15 @@ var game;
             game.state.delta.row === row && game.state.delta.col === col;
     }
     game.shouldSlowlyAppear = shouldSlowlyAppear;
+    function clickedOnModal(evt) {
+        if (evt.target === evt.currentTarget) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            game.isHelpModalShown = false;
+        }
+        return true;
+    }
+    game.clickedOnModal = clickedOnModal;
 })(game || (game = {}));
 angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
     .run(function () {

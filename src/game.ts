@@ -116,6 +116,15 @@ module game {
         state.delta &&
         state.delta.row === row && state.delta.col === col;
   }
+
+  export function clickedOnModal(evt: Event) {
+    if (evt.target === evt.currentTarget) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      isHelpModalShown = false;
+    }
+    return true;
+  }
 }
 
 angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
