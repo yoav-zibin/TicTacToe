@@ -47,10 +47,7 @@
   <!-- /build -->
 </head>
 <body ng-cloak>
-  <div style="position:absolute; bottom:5px; left: 5px; z-index:10;">
-    <span ng-click="game.isHelpModalShown = true"
-        class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-  </div>
+  <div  class="help-tip" ng-click="game.isHelpModalShown = true" aria-hidden="true"></div>
 
   <div class="overlayModal" ng-click="game.clickedOnModal($event)"
       ng-class="{zeroOpacity: !game.isHelpModalShown, oneOpacity: game.isHelpModalShown}" aria-hidden="true">

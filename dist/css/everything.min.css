@@ -1,2 +1,2 @@
-.r{border-right:4pt solid #000}.b{border-bottom:4pt solid #000}.slowlyAppear{-webkit-animation:a .5s linear;animation:a .5s linear}@-webkit-keyframes a{0%{opacity:.1}to{opacity:1}}@keyframes a{0%{opacity:.1}to{opacity:1}}td{padding:0 5px}
+.r{border-right:4pt solid #000}.b{border-bottom:4pt solid #000}.slowlyAppear{-webkit-animation:a .5s linear;animation:a .5s linear}@-webkit-keyframes a{0%{opacity:.1}to{opacity:1}}@keyframes a{0%{opacity:.1}to{opacity:1}}td{padding:0 5px}.help-tip{position:absolute;bottom:5px;left:5px;z-index:1;text-align:center;background-color:#bcdbea;border-radius:50%;width:40px;height:40px;font-size:22px;line-height:42px;cursor:default}.help-tip:before{content:'?';font-weight:700;color:#fff}
 /*# sourceMappingURL=maps/everything.min.css.map */
