@@ -7,9 +7,6 @@ describe('TicTacToe', function () {
     beforeEach(function () {
         getPage('index.min.html');
     });
-    function getDiv(row, col) {
-        return element(by.id('e2e_test_div_' + row + 'x' + col));
-    }
     function expectPieceKindDisplayed(row, col, pieceKind, isDisplayed) {
         var selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);
         // Careful when using animations and asserting isDisplayed:
@@ -39,7 +36,7 @@ describe('TicTacToe', function () {
         }
     }
     function clickDivAndExpectPiece(row, col, expectedPieceKind) {
-        getDiv(row, col).click();
+        element(by.id('e2e_test_div_' + row + 'x' + col)).click();
         expectPiece(row, col, expectedPieceKind);
     }
     it('should have a title', function () {

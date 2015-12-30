@@ -10,10 +10,6 @@ describe('TicTacToe', function() {
     getPage('index.min.html');
   });
 
-  function getDiv(row: number, col: number) {
-    return element(by.id('e2e_test_div_' + row + 'x' + col));
-  }
-
   function expectPieceKindDisplayed(row: number, col: number, pieceKind: string, isDisplayed: boolean) {
     let selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);
     // Careful when using animations and asserting isDisplayed:
@@ -45,7 +41,7 @@ describe('TicTacToe', function() {
   }
 
   function clickDivAndExpectPiece(row: number, col: number, expectedPieceKind: string): void {
-    getDiv(row, col).click();
+    element(by.id('e2e_test_div_' + row + 'x' + col)).click();
     expectPiece(row, col, expectedPieceKind);
   }
 
