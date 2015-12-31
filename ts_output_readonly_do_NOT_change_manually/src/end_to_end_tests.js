@@ -17,9 +17,7 @@ describe('TicTacToe', function () {
             expect(element(selector).isDisplayed()).toEqual(true);
         }
         else {
-            element.all(selector).then(function (items) {
-                expect(items.length).toBe(0);
-            });
+            expect(element(selector).isPresent()).toEqual(false);
         }
     }
     function expectPiece(row, col, expectedPieceKind) {
