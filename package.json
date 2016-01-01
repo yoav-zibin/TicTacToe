@@ -17,6 +17,7 @@
     "grunt-processhtml": "*",
     "grunt-protractor-runner": "*",
     "grunt-shell": "*",
+    "grunt-ts": "*",
     "http-server": "*",
     "jasmine-core": "*",
     "karma": "*",
@@ -31,5 +32,14 @@
     "prestart": "npm install",
     "start": "http-server -a localhost -p 9000 -c-1",
     "test": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoav-zibin/TicTacToe.git"
+  },
+  "author": "Yoav Zibin",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/yoav-zibin/TicTacToe/issues"
   }
 }

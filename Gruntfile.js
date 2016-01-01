@@ -98,6 +98,11 @@ module.exports = function(grunt) {
         command: auto_resize_images_command
       }
     },
+    ts: {
+      default: {
+        tsconfig: true
+      }
+    },
     karma: {
       unit: {
         configFile: 'karma.conf.js',
@@ -217,6 +222,7 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('default', [
+      'ts',
       'karma',
       'copy',
       'concat', 'postcss', 'uglify',
