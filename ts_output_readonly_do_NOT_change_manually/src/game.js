@@ -132,3 +132,4 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
     });
     game.init();
 });
+//# sourceMappingURL=game.js.map

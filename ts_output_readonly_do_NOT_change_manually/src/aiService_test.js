@@ -98,3 +98,4 @@ describe("aiService", function () {
         expect(angular.equals(move.stateAfterMove.delta, { row: 0, col: 0 })).toBe(true);
     });
 });
+//# sourceMappingURL=aiService_test.js.map

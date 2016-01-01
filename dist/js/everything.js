@@ -62,8 +62,8 @@ var gameLogic;
             'X...X...X',
             '..X.X.X..'
         ];
-        for (var _i = 0, win_patterns_1 = win_patterns; _i < win_patterns_1.length; _i++) {
-            var win_pattern = win_patterns_1[_i];
+        for (var _i = 0; _i < win_patterns.length; _i++) {
+            var win_pattern = win_patterns[_i];
             var x_regexp = new RegExp(win_pattern);
             var o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
             if (x_regexp.test(boardString)) {
@@ -138,7 +138,9 @@ var gameLogic;
     }
     gameLogic.forSimpleTestHtml = forSimpleTestHtml;
 })(gameLogic || (gameLogic = {}));
-;var game;
+//# sourceMappingURL=gameLogic.js.map
+;
+var game;
 (function (game) {
     // I export all variables to make it easy to debug in the browser by
     // simply typing in the console:
@@ -272,9 +274,11 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
     });
     game.init();
 });
-;var aiService;
+//# sourceMappingURL=game.js.map
+;
+var aiService;
 (function (aiService) {
-    /** Returns the move that the computer player should do for the given updateUI. */
+    /** Returns the move that the computer player should do for the given state in move. */
     function findComputerMove(move) {
         return createComputerMove(move, 
         // at most 1 second for the AI to choose a move (but might be much quicker)
@@ -323,3 +327,4 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
         return getPossibleMoves(move.stateAfterMove, playerIndex);
     }
 })(aiService || (aiService = {}));
+//# sourceMappingURL=aiService.js.map

@@ -1,6 +1,6 @@
 var aiService;
 (function (aiService) {
-    /** Returns the move that the computer player should do for the given updateUI. */
+    /** Returns the move that the computer player should do for the given state in move. */
     function findComputerMove(move) {
         return createComputerMove(move, 
         // at most 1 second for the AI to choose a move (but might be much quicker)
@@ -49,3 +49,4 @@ var aiService;
         return getPossibleMoves(move.stateAfterMove, playerIndex);
     }
 })(aiService || (aiService = {}));
+//# sourceMappingURL=aiService.js.map
