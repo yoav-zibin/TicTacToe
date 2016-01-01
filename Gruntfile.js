@@ -100,6 +100,9 @@ module.exports = function(grunt) {
     },
     ts: {
       default: {
+        options: {
+          fast: 'never' // disable the grunt-ts fast feature
+        },
         tsconfig: true
       }
     },
