@@ -6,6 +6,7 @@
         "noImplicitAny": true,
         "suppressImplicitAnyIndexErrors": false,
         "removeComments": false,
+        "baseDir": ".",
         "rootDir": ".",
         "outDir": "ts_output_readonly_do_NOT_change_manually/",
         "sourceMap": true,
