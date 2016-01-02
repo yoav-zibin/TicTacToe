@@ -1,5 +1,5 @@
+declare var require: any;
 /* https://github.com/angular/protractor/blob/master/docs/toc.md */
-
 describe('TicTacToe', function() {
   function getPage(page: string) {
     browser.get('http://localhost:9000/dist/' + page);
@@ -8,6 +8,13 @@ describe('TicTacToe', function() {
 
   beforeEach(function() {
     getPage('index.min.html');
+  });
+
+  afterEach(function() {
+    browser.manage().logs().get('browser').then(function(browserLog) {
+      console.log('log: ' + require('util').inspect(browserLog));
+      expect(browserLog.length).toEqual(0);
+    });
   });
 
   function expectPieceKindDisplayed(row: number, col: number, pieceKind: string, isDisplayed: boolean) {

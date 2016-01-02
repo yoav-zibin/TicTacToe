@@ -7,6 +7,12 @@ describe('TicTacToe', function () {
     beforeEach(function () {
         getPage('index.min.html');
     });
+    afterEach(function () {
+        browser.manage().logs().get('browser').then(function (browserLog) {
+            console.log('log: ' + require('util').inspect(browserLog));
+            expect(browserLog.length).toEqual(0);
+        });
+    });
     function expectPieceKindDisplayed(row, col, pieceKind, isDisplayed) {
         var selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);
         // Careful when using animations and asserting isDisplayed:
