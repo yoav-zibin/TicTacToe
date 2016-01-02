@@ -118,10 +118,6 @@ module.exports = function(grunt) {
         src: 'imgs/*.*',
         dest: 'dist/'
       },
-      favicon: {
-        src: 'favicon.ico',
-        dest: 'dist/'
-      }
     },
     concat: {
       options: {
@@ -186,7 +182,6 @@ module.exports = function(grunt) {
             'css/everything.min.css',
             'imgs/HelpSlide1.png',
             'imgs/HelpSlide2.png',
-            '/favicon.ico',
           ],
           network: [
             'js/everything.min.js.map',
