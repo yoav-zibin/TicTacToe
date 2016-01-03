@@ -128,7 +128,7 @@ var gameLogic;
     gameLogic.checkMoveOk = checkMoveOk;
     function forSimpleTestHtml() {
         var move = gameLogic.createMove(null, 0, 0, 0);
-        console.log("move=", move);
+        log.log("move=", move);
         var params = {
             turnIndexBeforeMove: 0,
             stateBeforeMove: null,
@@ -152,7 +152,7 @@ var game;
     game.state = null;
     game.isHelpModalShown = false;
     function init() {
-        console.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
+        log.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
         resizeGameAreaService.setWidthToHeight(1);
         moveService.setGame({
             minNumberOfPlayers: 2,
