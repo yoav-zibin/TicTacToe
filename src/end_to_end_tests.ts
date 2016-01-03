@@ -2,12 +2,12 @@ declare var require: any;
 /* https://github.com/angular/protractor/blob/master/docs/toc.md */
 describe('TicTacToe', function() {
   function getPage(page: string) {
-    browser.get('http://localhost:9000/dist/' + page);
+    browser.get('http://localhost:9000/dist/index.min.html?isProtractor=true&' + page);
     browser.sleep(200); // Wait for the first updateUI to arrive.
   }
 
   beforeEach(function() {
-    getPage('index.min.html');
+    getPage('');
   });
 
   afterEach(function() {
@@ -108,14 +108,14 @@ describe('TicTacToe', function() {
   });
 
   it('with playAgainstTheComputer should work', function () {
-    getPage('index.min.html?playAgainstTheComputer');
+    getPage('playAgainstTheComputer');
     clickDivAndExpectPiece(1, 0, "X");
     browser.sleep(2000); // wait for AI to make at least one move
     expectPiece(0, 0, 'O');
   });
 
   it('with onlyAIs should work', function () {
-    getPage('index.min.html?onlyAIs');
+    getPage('onlyAIs');
     browser.sleep(2000); // wait for AI to make at least one move
     expectPiece(0, 0, 'X');
   });
