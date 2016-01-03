@@ -140,7 +140,7 @@ module gameLogic {
 
   export function forSimpleTestHtml() {
     var move = gameLogic.createMove(null, 0, 0, 0);
-    console.log("move=", move);
+    log.log("move=", move);
     var params: IStateTransition = {
       turnIndexBeforeMove: 0,
       stateBeforeMove: null,
