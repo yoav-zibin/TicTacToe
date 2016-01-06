@@ -1,3 +1,4 @@
+;
 var game;
 (function (game) {
     // I export all variables to make it easy to debug in the browser by
@@ -10,6 +11,7 @@ var game;
     game.state = null;
     game.isHelpModalShown = false;
     function init() {
+        translate.setTranslations(getTranslations());
         log.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
         resizeGameAreaService.setWidthToHeight(1);
         moveService.setGame({
@@ -32,6 +34,26 @@ var game;
         }
     }
     game.init = init;
+    function getTranslations() {
+        return {
+            RULES_OF_TICTACTOE: {
+                en: "Rules of TicTacToe",
+                iw: "חוקי המשחק",
+            },
+            RULES_SLIDE1: {
+                en: "You and your opponent take turns to mark the grid in an empty spot. The first mark is X, then O, then X, then O, etc.",
+                iw: "אתה והיריב מסמנים איקס או עיגול כל תור",
+            },
+            RULES_SLIDE2: {
+                en: "The first to mark a whole row, column or diagonal wins.",
+                iw: "הראשון שמסמן שורה, עמודה או אלכסון מנצח",
+            },
+            CLOSE: {
+                en: "Close",
+                iw: "סגור",
+            },
+        };
+    }
     function animationEndedCallback() {
         $rootScope.$apply(function () {
             log.info("Animation ended");
@@ -124,12 +146,6 @@ var game;
 angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
     .run(function () {
     $rootScope['game'] = game;
-    translate.setLanguage('en', {
-        RULES_OF_TICTACTOE: "Rules of TicTacToe",
-        RULES_SLIDE1: "You and your opponent take turns to mark the grid in an empty spot. The first mark is X, then O, then X, then O, etc.",
-        RULES_SLIDE2: "The first to mark a whole row, column or diagonal wins.",
-        CLOSE: "Close"
-    });
     game.init();
 });
 //# sourceMappingURL=game.js.map

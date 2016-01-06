@@ -63,7 +63,7 @@ interface StringDictionary {
 interface ITranslateService {
   (translationId: string, interpolateParams?: StringDictionary): string;
   getLanguage(): string;
-  setLanguage(language: string, codeToL10N: StringDictionary): void;
+  setTranslations(idToLanguageToL10n: Translations): void;
 }
 declare var translate: ITranslateService;
 
