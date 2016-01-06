@@ -16,6 +16,7 @@ module game {
 
   export function init() {
     translate.setTranslations(getTranslations());
+    translate.setLanguage('en');
     log.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
     resizeGameAreaService.setWidthToHeight(1);
     moveService.setGame({

@@ -64,6 +64,7 @@ interface ITranslateService {
   (translationId: string, interpolateParams?: StringDictionary): string;
   getLanguage(): string;
   setTranslations(idToLanguageToL10n: Translations): void;
+  setLanguage(language: string): void;
 }
 declare var translate: ITranslateService;
 
