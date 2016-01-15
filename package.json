@@ -1,15 +1,20 @@
 {
+  "name": "TicTacToe",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoav-zibin/TicTacToe.git"
+  },
   "version": "1.0.0",
-  "name": "Game",
-  "main": "index.html",
   "devDependencies": {
     "autoprefixer": "*",
     "cssnano": "*",
+    "elementor": "*",
     "grunt": "*",
     "grunt-cli": "*",
     "grunt-contrib-concat": "*",
     "grunt-contrib-copy": "*",
     "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
     "grunt-http-server": "*",
     "grunt-karma": "*",
     "grunt-manifest": "*",
@@ -34,13 +39,5 @@
     "start": "http-server -a localhost -p 9000 -c-1",
     "test": "grunt"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yoav-zibin/TicTacToe.git"
-  },
-  "author": "Yoav Zibin",
-  "license": "BSD-2-Clause",
-  "bugs": {
-    "url": "https://github.com/yoav-zibin/TicTacToe/issues"
-  }
+  "author": "Yoav Zibin"
 }
