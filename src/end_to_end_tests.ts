@@ -1,23 +1,71 @@
-declare var require: any;
-/* https://github.com/angular/protractor/blob/master/docs/toc.md */
-describe('TicTacToe', function() {
-  function getPage(page: string) {
-    browser.get('http://localhost:9000/dist/index.min.html?isProtractor=true&' + page);
-    browser.sleep(200); // Wait for the first updateUI to arrive.
-  }
+// This file has end-to-end tests using protractor, see:
+// https://github.com/angular/protractor/blob/master/docs/toc.md 
+declare var require: (module: string) => any;
+function expectEmptyBrowserLogs() {
+  browser.manage().logs().get('browser').then(function(browserLog) {
+    // See if there are any errors (warnings are ok)
+    let hasErrors = false;
+    for (let log of browserLog) {
+      let level = log.level.name;
+      if (level === 'INFO' || level === 'WARNING') continue; // (warnings are ok)
+      console.log('\n\n\nlog: ' + require('util').inspect(browserLog) + "\n\n\n");
+      hasErrors = true;
+    }
+    if (hasErrors) {
+      // It's better to pause, and look and console.
+      console.error("Browser has a warning/error in the logs. Opens the developer console and look at the logs.");
+      browser.pause();
+    }
+  });
+}
 
-  beforeEach(function() {
+let lastTest: any;
+module JasmineOverrides {
+  let jasmineAny = (<any>jasmine);
+  let executeMock = jasmineAny.Spec.prototype.execute
+  let jasmineSpec = jasmineAny.Spec;
+  jasmineSpec.prototype.execute = function (...args: any[]) {
+      lastTest = this.result;
+      executeMock.apply(this, args);
+  };
+  // Pause for expect failures
+  let originalAddExpectationResult = jasmineSpec.prototype.addExpectationResult;
+  jasmineSpec.prototype.addExpectationResult = function () {
+    if (!arguments[0]) {
+      console.error("\n\nFailure in test:\n" + 
+          arguments[1].message + "\n" + 
+          (arguments[1].error ? " stacktrace=\n\n" + arguments[1].error.stack : '') +
+          "\n\n\n" +
+          " Failure arguments=" + JSON.stringify(arguments));
+      browser.pause();
+    }
+    return originalAddExpectationResult.apply(this, arguments);
+  };
+  // Pause on exception
+  protractor.promise.controlFlow().on('uncaughtException', function(e: any) {
+    console.error('Unhandled error: ' + e);
+    browser.pause();
+  });
+}
+
+describe('TicTacToe', function() {
+  browser.driver.manage().window().setSize(400, 600);
+  browser.driver.manage().window().setPosition(10, 10);
+  
+  let checkNoErrorInLogsIntervalId: number = null;
+  beforeEach(()=>{
+    console.log('\n\n\nRunning test: ', lastTest.fullName);
+    checkNoErrorInLogsIntervalId = setInterval(expectEmptyBrowserLogs, 100);
     getPage('');
   });
-
-  afterEach(function() {
-    browser.manage().logs().get('browser').then(function(browserLog) {
-      if (browserLog.length !== 0) {
-        console.log('log: ' + require('util').inspect(browserLog));
-      }
-      expect(browserLog.length).toEqual(0);
-    });
+  afterEach(()=>{
+    expectEmptyBrowserLogs();
+    clearInterval(checkNoErrorInLogsIntervalId);
   });
+  
+  function getPage(page: string) {
+    browser.get('http://localhost:9000/dist/index.min.html?' + page);
+  }
 
   function expectPieceKindDisplayed(row: number, col: number, pieceKind: string, isDisplayed: boolean) {
     let selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);
@@ -38,7 +86,7 @@ describe('TicTacToe', function() {
   }
 
   function expectBoard(board: Board) {
-    // I can't use gameLogic.ROWS/COLS (instead of 3) because gameLogic is not defined
+    // Careful: one can't use gameLogic.ROWS/COLS (instead of 3) because gameLogic is not defined
     // in end-to-end tests.
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {

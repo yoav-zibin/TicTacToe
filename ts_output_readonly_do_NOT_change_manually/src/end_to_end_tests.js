@@ -1,20 +1,71 @@
-/* https://github.com/angular/protractor/blob/master/docs/toc.md */
+function expectEmptyBrowserLogs() {
+    browser.manage().logs().get('browser').then(function (browserLog) {
+        // See if there are any errors (warnings are ok)
+        var hasErrors = false;
+        for (var _i = 0; _i < browserLog.length; _i++) {
+            var log_1 = browserLog[_i];
+            var level = log_1.level.name;
+            if (level === 'INFO' || level === 'WARNING')
+                continue; // (warnings are ok)
+            console.log('\n\n\nlog: ' + require('util').inspect(browserLog) + "\n\n\n");
+            hasErrors = true;
+        }
+        if (hasErrors) {
+            // It's better to pause, and look and console.
+            console.error("Browser has a warning/error in the logs. Opens the developer console and look at the logs.");
+            browser.pause();
+        }
+    });
+}
+var lastTest;
+var JasmineOverrides;
+(function (JasmineOverrides) {
+    var jasmineAny = jasmine;
+    var executeMock = jasmineAny.Spec.prototype.execute;
+    var jasmineSpec = jasmineAny.Spec;
+    jasmineSpec.prototype.execute = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i - 0] = arguments[_i];
+        }
+        lastTest = this.result;
+        executeMock.apply(this, args);
+    };
+    // Pause for expect failures
+    var originalAddExpectationResult = jasmineSpec.prototype.addExpectationResult;
+    jasmineSpec.prototype.addExpectationResult = function () {
+        if (!arguments[0]) {
+            console.error("\n\nFailure in test:\n" +
+                arguments[1].message + "\n" +
+                (arguments[1].error ? " stacktrace=\n\n" + arguments[1].error.stack : '') +
+                "\n\n\n" +
+                " Failure arguments=" + JSON.stringify(arguments));
+            browser.pause();
+        }
+        return originalAddExpectationResult.apply(this, arguments);
+    };
+    // Pause on exception
+    protractor.promise.controlFlow().on('uncaughtException', function (e) {
+        console.error('Unhandled error: ' + e);
+        browser.pause();
+    });
+})(JasmineOverrides || (JasmineOverrides = {}));
 describe('TicTacToe', function () {
-    function getPage(page) {
-        browser.get('http://localhost:9000/dist/index.min.html?isProtractor=true&' + page);
-        browser.sleep(200); // Wait for the first updateUI to arrive.
-    }
+    browser.driver.manage().window().setSize(400, 600);
+    browser.driver.manage().window().setPosition(10, 10);
+    var checkNoErrorInLogsIntervalId = null;
     beforeEach(function () {
+        console.log('\n\n\nRunning test: ', lastTest.fullName);
+        checkNoErrorInLogsIntervalId = setInterval(expectEmptyBrowserLogs, 100);
         getPage('');
     });
     afterEach(function () {
-        browser.manage().logs().get('browser').then(function (browserLog) {
-            if (browserLog.length !== 0) {
-                console.log('log: ' + require('util').inspect(browserLog));
-            }
-            expect(browserLog.length).toEqual(0);
-        });
+        expectEmptyBrowserLogs();
+        clearInterval(checkNoErrorInLogsIntervalId);
     });
+    function getPage(page) {
+        browser.get('http://localhost:9000/dist/index.min.html?' + page);
+    }
     function expectPieceKindDisplayed(row, col, pieceKind, isDisplayed) {
         var selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);
         // Careful when using animations and asserting isDisplayed:
@@ -33,7 +84,7 @@ describe('TicTacToe', function () {
         expectPieceKindDisplayed(row, col, 'O', expectedPieceKind === "O");
     }
     function expectBoard(board) {
-        // I can't use gameLogic.ROWS/COLS (instead of 3) because gameLogic is not defined
+        // Careful: one can't use gameLogic.ROWS/COLS (instead of 3) because gameLogic is not defined
         // in end-to-end tests.
         for (var row = 0; row < 3; row++) {
             for (var col = 0; col < 3; col++) {

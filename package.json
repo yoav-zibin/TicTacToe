@@ -14,7 +14,6 @@
     "grunt-contrib-concat": "*",
     "grunt-contrib-copy": "*",
     "grunt-contrib-uglify": "*",
-    "grunt-contrib-watch": "*",
     "grunt-http-server": "*",
     "grunt-karma": "*",
     "grunt-manifest": "*",

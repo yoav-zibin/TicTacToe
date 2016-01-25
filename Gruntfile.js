@@ -231,5 +231,6 @@ module.exports = function(grunt) {
       'concat', 'postcss', 'uglify',
       'processhtml', 'manifest',
       'http-server', 'protractor']);
-
+  grunt.registerTask('e2e', [
+      'http-server', 'protractor']);
 };
