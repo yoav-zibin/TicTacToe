@@ -1,8 +1,7 @@
 exports.config = {
   specs: ['ts_output_readonly_do_NOT_change_manually/src/end_to_end_tests.js'],
   allScriptsTimeout: 11000,
-  // TODO: use Safari, Chrome and Firefox with multipleCapabilities.
-  // safari (important for iOS), and Safari&Chrome incognito, test old chrome versions, offline mode, etc.
+  // TODO: test Safari&Chrome incognito and offline mode.
   multiCapabilities: [{
     'browserName': 'firefox'
   }, {

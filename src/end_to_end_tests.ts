@@ -8,12 +8,12 @@ function expectEmptyBrowserLogs() {
     for (let log of browserLog) {
       let level = log.level.name;
       if (level === 'INFO' || level === 'WARNING') continue; // (warnings are ok)
-      console.log('\n\n\nlog: ' + require('util').inspect(browserLog) + "\n\n\n");
       hasErrors = true;
     }
     if (hasErrors) {
-      // It's better to pause, and look and console.
+      // It's better to pause, and look and console, then showing this which creates a lot of clutter:
       console.error("Browser has a warning/error in the logs. Opens the developer console and look at the logs.");
+      //console.log('\n\n\nlog: ' + require('util').inspect(browserLog) + "\n\n\n");
       browser.pause();
     }
   });
