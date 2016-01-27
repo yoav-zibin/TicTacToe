@@ -1840,7 +1840,7 @@ declare var browser: protractor.IBrowser;
 declare var by: protractor.IProtractorLocatorStrategy;
 declare var By: protractor.IProtractorLocatorStrategy;
 declare var element: protractor.Element;
-declare var $: cssSelectorHelper;
+declare var $: cssSelectorHelper | JQueryStatic;
 declare var $$: cssArraySelectorHelper;
 
 declare module 'protractor' {

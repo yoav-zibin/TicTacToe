@@ -8,7 +8,6 @@
   "devDependencies": {
     "autoprefixer": "*",
     "cssnano": "*",
-    "elementor": "*",
     "grunt": "*",
     "grunt-cli": "*",
     "grunt-contrib-concat": "*",
@@ -34,7 +33,7 @@
   },
   "scripts": {
     "postinstall": "webdriver-manager update",
-    "prestart": "sudo npm install -g node-gyp",
+    "prestart": "npm install",
     "start": "http-server -a localhost -p 9000 -c-1",
     "test": "grunt"
   },

@@ -64,7 +64,7 @@ describe('TicTacToe', function () {
         clearInterval(checkNoErrorInLogsIntervalId);
     });
     function getPage(page) {
-        browser.get('index.min.html?' + page);
+        browser.get('/dist/index.min.html?' + page);
     }
     function expectPieceKindDisplayed(row, col, pieceKind, isDisplayed) {
         var selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);
@@ -102,7 +102,7 @@ describe('TicTacToe', function () {
     it('should have an empty TicTacToe board', function () {
         expectBoard([['', '', ''],
             ['', '', ''],
-            ['', '', 'O']]);
+            ['', '', '']]);
     });
     it('should show X if I click in 0x0', function () {
         clickDivAndExpectPiece(0, 0, "X");
