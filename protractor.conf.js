@@ -14,7 +14,7 @@ exports.config = {
       "mobileEmulation": { "deviceName": "Apple iPhone 4" },
     },
   }],
-  baseUrl: 'http://localhost:9000/',
+  baseUrl: 'http://localhost:9000/dist/',
   framework: 'jasmine',
   jasmineNodeOpts: {
     defaultTimeoutInterval: 30000

@@ -34,7 +34,7 @@
   },
   "scripts": {
     "postinstall": "webdriver-manager update",
-    "prestart": "npm install",
+    "prestart": "sudo npm install -g node-gyp",
     "start": "http-server -a localhost -p 9000 -c-1",
     "test": "grunt"
   },

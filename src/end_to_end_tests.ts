@@ -64,7 +64,7 @@ describe('TicTacToe', function() {
   });
   
   function getPage(page: string) {
-    browser.get('http://localhost:9000/dist/index.min.html?' + page);
+    browser.get('index.min.html?' + page);
   }
 
   function expectPieceKindDisplayed(row: number, col: number, pieceKind: string, isDisplayed: boolean) {
@@ -108,7 +108,7 @@ describe('TicTacToe', function() {
     expectBoard(
         [['', '', ''],
          ['', '', ''],
-         ['', '', '']]);
+         ['', '', 'O']]);
   });
 
   it('should show X if I click in 0x0', function () {
