@@ -44,7 +44,6 @@
         "typings/multiplayer-games.d.ts",
         "typings/selenium-webdriver/selenium-webdriver.d.ts"
     ],
-    "exclude": [],
     "atom": {
         "rewriteTsconfig": true
     }
