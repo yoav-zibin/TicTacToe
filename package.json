@@ -1,8 +1,8 @@
 {
-  "name": "TicTacToe",
+  "name": "Pioneers",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yoav-zibin/TicTacToe.git"
+    "url": "https://github.com/GabrielWen/Pioneers.git"
   },
   "version": "1.0.0",
   "devDependencies": {
