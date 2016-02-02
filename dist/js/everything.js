@@ -180,7 +180,7 @@ var game;
     function getTranslations() {
         return {
             RULES_OF_TICTACTOE: {
-                en: "Rules of TicTacToe",
+                en: "Rules of Pioneers",
                 iw: "חוקי המשחק",
             },
             RULES_SLIDE1: {
