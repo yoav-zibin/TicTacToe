@@ -35,7 +35,7 @@
     "postinstall": "webdriver-manager update",
     "prestart": "npm install",
     "start": "http-server -a localhost -p 9000 -c-1",
-    "test": "grunt"
+    "test": "node --harmony ./node_modules/.bin/grunt"
   },
   "author": "Yoav Zibin"
 }
