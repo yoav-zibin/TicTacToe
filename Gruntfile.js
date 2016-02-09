@@ -226,11 +226,10 @@ module.exports = function(grunt) {
   // Default task(s).
   grunt.registerTask('default', [
       'ts',
-      'karma',
       'copy',
       'concat', 'postcss', 'uglify',
       'processhtml', 'manifest',
-      'http-server', 'protractor']);
+      'http-server']);
   grunt.registerTask('e2e', [
       'http-server', 'protractor']);
 };
