@@ -6,7 +6,7 @@ module gameLogic {
   function getInitialBoard(): Board {
     let board: Board = [];
 
-    //TODO: Shuffle terrains
+    //TODO: Shuffle & terrains
     for (let i = 0; i < ROWS; i++) {
       board[i] = [];
       for (let j = 0; j < COLS; j++) {
@@ -136,7 +136,7 @@ module gameLogic {
   /**
    * Validation logics
    */
-  function rollDice(prevState: IState, nextState: IState): void {
+  function rollDice(prevState: IState, nextState: IState, idx: number): void {
     if (prevState.diceRolled) {
       throw new Error('Dices already rolled');
     }
@@ -155,7 +155,57 @@ module gameLogic {
     }
   }
 
-  
+  function checkRobberMove(prevState: IState, nextState: IState, idx: number): void {
+    if (angular.equals(prevState.robber, nextState.robber)) {
+      throw new Error('Need to move robber');
+    }
+  }
+
+  function checkTradeResourceWithBank(prevState: IState, nextState: IState, idx: number): void {
+    if (!prevState.diceRolled) {
+      throw new Error('Need to roll dices first');
+    }
+    let selling = {item: Resource.Dust, num: 0};
+    let buying = {item: Resource.Dust, num: 0};
+
+    for (let i = 0; i < Resource.SIZE; i++) {
+      if (nextState.players[idx].resources[i] < 0) {
+        throw new Error('Insufficient resources');
+      }
+      if (nextState.players[idx].resources[i] < prevState.players[idx].resources[i]) {
+        selling = {
+          item: i,
+          num: prevState.players[idx].resources[i] - nextState.players[idx].resources[i]
+        };
+      }
+      if (nextState.players[idx].resources[i] > prevState.players[idx].resources[i]) {
+        buying = {
+          item: i,
+          num: nextState.players[idx].resources[i] - prevState.players[idx].resources[i]
+        };
+      }
+    }
+
+    if (selling.item === buying.item) {
+      throw new Error('Cannot trade the same resources');
+    }
+    //TODO: Need to integrate with harbors
+    if (buying.num * 4 !== selling.num) {
+      throw new Error('Wrong trading ratio');
+    }
+  }
+
+  function checkBuildDevCards(prevState: IState, nextState: IState, idx: number): void {
+    if (!prevState.diceRolled) {
+      throw new Error('Need to roll dices first');
+    }
+
+    for (let i = 0; i < Resource.SIZE; i++) {
+      if (nextState.players[idx].resources[i] < 0) {
+        throw new Error('Insufficient resources');
+      }
+    }
+  }
 
   export function checkMoveOk(stateTransition: IStateTransition): void {
 
