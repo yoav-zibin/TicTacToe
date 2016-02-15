@@ -11,28 +11,32 @@ var game;
     game.state = null;
     game.isHelpModalShown = false;
     function init() {
+        /*
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
         log.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
         resizeGameAreaService.setWidthToHeight(1);
         moveService.setGame({
-            minNumberOfPlayers: 2,
-            maxNumberOfPlayers: 2,
-            checkMoveOk: gameLogic.checkMoveOk,
-            updateUI: updateUI
+          minNumberOfPlayers: 2,
+          maxNumberOfPlayers: 2,
+          checkMoveOk: gameLogic.checkMoveOk,
+          updateUI: updateUI
         });
+    
         // See http://www.sitepoint.com/css3-animation-javascript-event-handlers/
         document.addEventListener("animationend", animationEndedCallback, false); // standard
         document.addEventListener("webkitAnimationEnd", animationEndedCallback, false); // WebKit
         document.addEventListener("oanimationend", animationEndedCallback, false); // Opera
-        var w = window;
+    
+        let w: any = window;
         if (w["HTMLInspector"]) {
-            setInterval(function () {
-                w["HTMLInspector"].inspect({
-                    excludeRules: ["unused-classes", "script-placement"],
-                });
-            }, 3000);
+          setInterval(function () {
+            w["HTMLInspector"].inspect({
+              excludeRules: ["unused-classes", "script-placement"],
+            });
+          }, 3000);
         }
+        */
     }
     game.init = init;
     function getTranslations() {
@@ -97,49 +101,62 @@ var game;
         }
     }
     function cellClicked(row, col) {
+        /*
         log.info("Clicked on cell:", row, col);
-        if (window.location.search === '?throwException') {
-            throw new Error("Throwing the error because URL has '?throwException'");
+        if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
+          throw new Error("Throwing the error because URL has '?throwException'");
         }
-        if (!game.canMakeMove) {
-            return;
+        if (!canMakeMove) {
+          return;
         }
         try {
-            var nextMove = gameLogic.createMove(game.state, row, col, game.move.turnIndexAfterMove);
-            game.canMakeMove = false; // to prevent making another move
-            moveService.makeMove(nextMove);
+          let nextMove = gameLogic.createMove(
+              state, row, col, move.turnIndexAfterMove);
+          canMakeMove = false; // to prevent making another move
+          moveService.makeMove(nextMove);
+        } catch (e) {
+          log.info(["Cell is already full in position:", row, col]);
+          return;
         }
-        catch (e) {
-            log.info(["Cell is already full in position:", row, col]);
-            return;
-        }
+        */
     }
     game.cellClicked = cellClicked;
     function shouldShowImage(row, col) {
-        var cell = game.state.board[row][col];
+        /*
+        let cell = state.board[row][col];
         return cell !== "";
+        */
+        return true;
     }
     game.shouldShowImage = shouldShowImage;
     function isPieceX(row, col) {
-        return game.state.board[row][col] === 'X';
+        //return state.board[row][col] === 'X';
+        return true;
     }
     game.isPieceX = isPieceX;
     function isPieceO(row, col) {
-        return game.state.board[row][col] === 'O';
+        //return state.board[row][col] === 'O';
+        return true;
     }
     game.isPieceO = isPieceO;
     function shouldSlowlyAppear(row, col) {
-        return !game.animationEnded &&
-            game.state.delta &&
-            game.state.delta.row === row && game.state.delta.col === col;
+        /*
+        return !animationEnded &&
+            state.delta &&
+            state.delta.row === row && state.delta.col === col;
+        */
+        return false;
     }
     game.shouldSlowlyAppear = shouldSlowlyAppear;
     function clickedOnModal(evt) {
+        /*
         if (evt.target === evt.currentTarget) {
-            evt.preventDefault();
-            evt.stopPropagation();
-            game.isHelpModalShown = false;
+          evt.preventDefault();
+          evt.stopPropagation();
+          isHelpModalShown = false;
         }
+        return true;
+        */
         return true;
     }
     game.clickedOnModal = clickedOnModal;

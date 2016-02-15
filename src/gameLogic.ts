@@ -161,6 +161,14 @@ module gameLogic {
     }
   }
 
+  function checkResources(resources: Resources): void {
+    for (let i = 0; i < Resource.SIZE; i++) {
+      if (resources[i] < 0) {
+        throw new Error('Insufficient resources');
+      }
+    }
+  }
+
   function checkTradeResourceWithBank(prevState: IState, nextState: IState, idx: number): void {
     if (!prevState.diceRolled) {
       throw new Error('Need to roll dices first');
@@ -168,10 +176,8 @@ module gameLogic {
     let selling = {item: Resource.Dust, num: 0};
     let buying = {item: Resource.Dust, num: 0};
 
+    checkResources(nextState.players[idx].resources);
     for (let i = 0; i < Resource.SIZE; i++) {
-      if (nextState.players[idx].resources[i] < 0) {
-        throw new Error('Insufficient resources');
-      }
       if (nextState.players[idx].resources[i] < prevState.players[idx].resources[i]) {
         selling = {
           item: i,
@@ -195,16 +201,25 @@ module gameLogic {
     }
   }
 
+  /**
+  * XXX: Assuming UI will disable this feature when bank has no dev cards
+  */
   function checkBuildDevCards(prevState: IState, nextState: IState, idx: number): void {
     if (!prevState.diceRolled) {
       throw new Error('Need to roll dices first');
     }
 
-    for (let i = 0; i < Resource.SIZE; i++) {
-      if (nextState.players[idx].resources[i] < 0) {
-        throw new Error('Insufficient resources');
-      }
+    checkResources(nextState.players[idx].resources);
+  }
+
+  function checkPlayDevCard(prevState: IState, nextState: IState, idx: number): void {
+    if (!prevState.diceRolled) {
+      throw new Error('Need to roll dices first');
     }
+    if (prevState.devCardsPlayed) {
+      throw new Error('Already played development cards');
+    }
+    //TODO: Check when playing year of plenty
   }
 
   export function checkMoveOk(stateTransition: IStateTransition): void {
