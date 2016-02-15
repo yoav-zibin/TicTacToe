@@ -177,6 +177,7 @@ module gameLogic {
     let buying = {item: Resource.Dust, num: 0};
 
     checkResources(nextState.players[idx].resources);
+
     for (let i = 0; i < Resource.SIZE; i++) {
       if (nextState.players[idx].resources[i] < prevState.players[idx].resources[i]) {
         selling = {
@@ -191,7 +192,6 @@ module gameLogic {
         };
       }
     }
-
     if (selling.item === buying.item) {
       throw new Error('Cannot trade the same resources');
     }
