@@ -34,6 +34,7 @@
         "src/aiService.ts",
         "src/game.ts",
         "src/gameLogic.ts",
+        "src/common.ts",
         "typings/angular-protractor/angular-protractor.d.ts",
         "typings/angularjs/angular.d.ts",
         "typings/jasmine/jasmine.d.ts",

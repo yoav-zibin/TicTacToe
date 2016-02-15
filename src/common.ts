@@ -29,11 +29,14 @@ enum Construction {
 }
 
 enum MoveType {
+  INIT,
   ROLL_DICE,
   BUILD,
-  DEVCARD,
+  KNIGHT,
+  PROGRESS,
   TRADE,
   ROBBER_EVENT,
+  ROBBER_MOVE,
   ROB_PLAYER,
   TRANSACTION_WITH_BANK,
   WIN,
@@ -41,7 +44,7 @@ enum MoveType {
   SIZE
 }
 
-type PioBoard = Hex[][];
+type Board = Hex[][];
 type Players = Player[];
 type Resources = number[];
 type DevCards = number[];
@@ -90,16 +93,19 @@ interface Awards {
   }
 }
 
-interface PioBoardDelta {
-  board: PioBoard;
+interface StateDelta {
+  board: Board;
+  dices: Dices;
   players: Players;
   bank: Bank;
   robber: Robber;
   awards: Awards;
   diceRolled: boolean;
   devCardsPlayed: boolean;
+  moveType: MoveType;
+  eventIdx: number;
 }
 
-interface PioIState extends PioBoardDelta {
-  delta: PioBoardDelta;
+interface IState extends StateDelta {
+  delta: StateDelta;
 }

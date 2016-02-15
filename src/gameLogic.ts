@@ -1,151 +1,163 @@
-type Board = string[][];
-interface BoardDelta {
-  row: number;
-  col: number;
-}
-interface IState {
-  board: Board;
-  delta: BoardDelta;
-}
-
 module gameLogic {
-  export const ROWS = 3;
-  export const COLS = 3;
+  export const ROWS = 7;
+  export const COLS = 7;
+  export const NUM_PLAYERS = 4;
 
-  /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   function getInitialBoard(): Board {
     let board: Board = [];
+
+    //TODO: Shuffle terrains
     for (let i = 0; i < ROWS; i++) {
       board[i] = [];
       for (let j = 0; j < COLS; j++) {
-        board[i][j] = '';
+        let edges: Edges = [-1, -1, -1, -1, -1, -1];
+        let vertices: Vertices = [-1, -1, -1, -1, -1, -1];
+        let hex: Hex = {
+          label: Resource.Dust,
+          edges: edges,
+          vertices: vertices,
+          rollNum: -1,
+          tradingRatio: 4,
+          hasRobber: false
+        };
+        board[i][j] = hex;
       }
     }
+
     return board;
   }
 
-  export function getInitialState(): IState {
-    return {board: getInitialBoard(), delta: null};
+  function getInitialArray(size: number): number[] {
+    let ret: number[] = [];
+    for (let i = 0; i < size; i++) {
+      ret[i] = 0;
+    }
+
+    return ret;
   }
 
-  /**
-   * Returns true if the game ended in a tie because there are no empty cells.
-   * E.g., isTie returns true for the following board:
-   *     [['X', 'O', 'X'],
-   *      ['X', 'O', 'O'],
-   *      ['O', 'X', 'X']]
-   */
-  function isTie(board: Board): boolean {
+  function getInitialPlayers(): Players {
+    let players: Players = [];
+
+    for (let i = 0; i < NUM_PLAYERS; i++) {
+      players[i] = {
+        id: i,
+        points: 0,
+        resources: getInitialArray(Resource.SIZE),
+        devCards: getInitialArray(DevCard.SIZE),
+        knightsPlayed: 0,
+        longestRoad: 0,
+        constructions: getInitialArray(Construction.SIZE)
+      };
+    }
+
+    return players;
+  }
+
+  function getInitialBank(): Bank {
+    let bank: Bank = {
+      resources: getInitialArray(Resource.SIZE),
+      devCards: getInitialArray(DevCard.SIZE)
+    };
+
+    //Assign total size of resources/devCards in bank according to rules
+    for (let i = 0; i < Resource.SIZE; i++) {
+      bank.resources[i] = 19;
+    }
+    for (let i = 0; i < DevCard.SIZE; i++) {
+      switch (i) {
+        case DevCard.Knight:
+          bank.devCards[i] = 14;
+        case DevCard.Monopoly:
+          bank.devCards[i] = 2;
+        case DevCard.RoadBuilding:
+          bank.devCards[i] = 2;
+        case DevCard.YearOfPlenty:
+          bank.devCards[i] = 2;
+        case DevCard.VictoryPoint:
+          bank.devCards[i] = 5;
+        default:
+          break;
+      }
+    }
+
+    return bank;
+  }
+
+  function getInitialAwards(): Awards {
+    return {
+      longestRoad: {
+        player: -1,
+        length: 4
+      },
+      largestArmy: {
+        player: -1,
+        num: 2
+      }
+    };
+  }
+
+  function getInitialRobber(board: Board): Robber {
+    let row: number = -1;
+    let col: number = -1;
+
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
-        if (board[i][j] === '') {
-          // If there is an empty cell then we do not have a tie.
-          return false;
+        if (board[i][j].hasRobber) {
+          row = i;
+          col = j;
+          break;
         }
       }
     }
-    // No empty cells, so we have a tie!
-    return true;
+
+    return { row: row, col: col};
+  }
+
+  export function getInitialState(): IState {
+    let board: Board = getInitialBoard();
+    let robber: Robber = getInitialRobber(board);
+
+    return {
+      board: board,
+      dices: [1, 1],
+      players: getInitialPlayers(),
+      bank: getInitialBank(),
+      awards: getInitialAwards(),
+      robber: robber,
+      diceRolled: false,
+      devCardsPlayed: false,
+      delta: null,
+      moveType: MoveType.INIT,
+      eventIdx: -1
+    };
   }
 
   /**
-   * Return the winner (either 'X' or 'O') or '' if there is no winner.
-   * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-   * E.g., getWinner returns 'X' for the following board:
-   *     [['X', 'O', ''],
-   *      ['X', 'O', ''],
-   *      ['X', '', '']]
+   * Validation logics
    */
-  function getWinner(board: Board): string {
-    let boardString = '';
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        let cell = board[i][j];
-        boardString += cell === '' ? ' ' : cell;
-      }
+  function rollDice(prevState: IState, nextState: IState): void {
+    if (prevState.diceRolled) {
+      throw new Error('Dices already rolled');
     }
-    let win_patterns = [
-      'XXX......',
-      '...XXX...',
-      '......XXX',
-      'X..X..X..',
-      '.X..X..X.',
-      '..X..X..X',
-      'X...X...X',
-      '..X.X.X..'
-    ];
-    for (let win_pattern of win_patterns) {
-      let x_regexp = new RegExp(win_pattern);
-      let o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
-      if (x_regexp.test(boardString)) {
-        return 'X';
-      }
-      if (o_regexp.test(boardString)) {
-        return 'O';
-      }
-    }
-    return '';
   }
 
-  /**
-   * Returns the move that should be performed when player
-   * with index turnIndexBeforeMove makes a move in cell row X col.
-   */
-  export function createMove(
-      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number): IMove {
-    if (!stateBeforeMove) { // stateBeforeMove is null in a new match.
-      stateBeforeMove = getInitialState();
+  function checkRobberEvent(prevState: IState, nextState: IState, idx: number): void {
+    let prevSum: number = 0;
+    let nextSum: number = 0;
+    for (let i = 0; i < Resource.SIZE; i++) {
+      prevSum += prevState.players[idx].resources[i];
+      nextSum += nextState.players[idx].resources[i];
     }
-    let board: Board = stateBeforeMove.board;
-    if (board[row][col] !== '') {
-      throw new Error("One can only make a move in an empty position!");
+
+    if (prevSum > 7 && nextSum > prevSum / 2) {
+      throw new Error('Need to toss half of resource cards');
     }
-    if (getWinner(board) !== '' || isTie(board)) {
-      throw new Error("Can only make a move if the game is not over!");
-    }
-    let boardAfterMove = angular.copy(board);
-    boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
-    let winner = getWinner(boardAfterMove);
-    let endMatchScores: number[];
-    let turnIndexAfterMove: number;
-    if (winner !== '' || isTie(boardAfterMove)) {
-      // Game over.
-      turnIndexAfterMove = -1;
-      endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
-    } else {
-      // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
-      turnIndexAfterMove = 1 - turnIndexBeforeMove;
-      endMatchScores = null;
-    }
-    let delta: BoardDelta = {row: row, col: col};
-    let stateAfterMove: IState = {delta: delta, board: boardAfterMove};
-    return {endMatchScores: endMatchScores, turnIndexAfterMove: turnIndexAfterMove, stateAfterMove: stateAfterMove};
   }
+
+  
 
   export function checkMoveOk(stateTransition: IStateTransition): void {
-    // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
-    // to verify that the move is OK.
-    let turnIndexBeforeMove = stateTransition.turnIndexBeforeMove;
-    let stateBeforeMove: IState = stateTransition.stateBeforeMove;
-    let move: IMove = stateTransition.move;
-    let deltaValue: BoardDelta = stateTransition.move.stateAfterMove.delta;
-    let row = deltaValue.row;
-    let col = deltaValue.col;
-    let expectedMove = createMove(stateBeforeMove, row, col, turnIndexBeforeMove);
-    if (!angular.equals(move, expectedMove)) {
-      throw new Error("Expected move=" + angular.toJson(expectedMove, true) +
-          ", but got stateTransition=" + angular.toJson(stateTransition, true))
-    }
-  }
 
-  export function forSimpleTestHtml() {
-    var move = gameLogic.createMove(null, 0, 0, 0);
-    log.log("move=", move);
-    var params: IStateTransition = {
-      turnIndexBeforeMove: 0,
-      stateBeforeMove: null,
-      move: move,
-      numberOfPlayers: 2};
-    gameLogic.checkMoveOk(params);
   }
 }
