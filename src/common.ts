@@ -56,6 +56,7 @@ interface Hex {
   vertices: Vertices;
   rollNum: number;
   tradingRatio: number;
+  hasRobber: boolean;
 }
 
 interface Player {
@@ -73,6 +74,11 @@ interface Bank {
   devCards: DevCards;
 }
 
+interface Robber {
+  row: number;
+  col: number;
+}
+
 interface Awards {
   longestRoad: {
     player: number,
@@ -88,19 +94,12 @@ interface PioBoardDelta {
   board: PioBoard;
   players: Players;
   bank: Bank;
+  robber: Robber;
   awards: Awards;
   diceRolled: boolean;
   devCardsPlayed: boolean;
 }
 
-interface PioIState {
-  board: PioBoard;
-  players: Players;
-  bank: Bank;
-  awards: Awards;
-  diceRolled: boolean;
-  devCardsPlayed: boolean;
+interface PioIState extends PioBoardDelta {
   delta: PioBoardDelta;
 }
-
-

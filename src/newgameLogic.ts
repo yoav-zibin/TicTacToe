@@ -6,6 +6,7 @@ module PiogameLogic {
   function getInitialBoard(): PioBoard {
     let board: PioBoard = [];
 
+    //TODO: Shuffle terrains
     for (let i = 0; i < ROWS; i++) {
       board[i] = [];
       for (let j = 0; j < COLS; j++) {
@@ -16,7 +17,8 @@ module PiogameLogic {
           edges: edges,
           vertices: vertices,
           rollNum: -1,
-          tradingRatio: 4
+          tradingRatio: 4,
+          hasRobber: false
         };
         board[i][j] = hex;
       }
@@ -95,15 +97,46 @@ module PiogameLogic {
     };
   }
 
-  export function getInitialState(): PioIState {
+  function getInitialRobber(board: PioBoard): Robber {
+    let row: number = -1;
+    let col: number = -1;
+
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        if (board[i][j].hasRobber) {
+          row = i;
+          col = j;
+          break;
+        }
+      }
+    }
+
     return {
-      board: getInitialBoard(),
+      row: row,
+      col: col
+    };
+  }
+
+  export function getInitialState(): PioIState {
+    let board: PioBoard = getInitialBoard();
+    let robber: Robber = getInitialRobber(board);
+
+    return {
+      board: board,
       players: getInitialPlayers(),
       bank: getInitialBank(),
       awards: getInitialAwards(),
+      robber: robber,
       diceRolled: false,
       devCardsPlayed: false,
       delta: null
     };
+  }
+
+  /**
+   * Validation logics
+   */
+  export function PiocheckMoveOk(stateTransition: IStateTransition): void {
+
   }
 }
