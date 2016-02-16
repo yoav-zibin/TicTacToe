@@ -15,7 +15,7 @@ module aiService {
     for (let i = 0; i < gameLogic.ROWS; i++) {
       for (let j = 0; j < gameLogic.COLS; j++) {
         try {
-          possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
+          //possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
         } catch (e) {
           // The cell in that position was full.
         }
