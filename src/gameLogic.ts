@@ -213,9 +213,6 @@ module gameLogic {
   }
 
   function checkPlayDevCard(prevState: IState, nextState: IState, idx: number): void {
-    if (!prevState.diceRolled) {
-      throw new Error('Need to roll dices first');
-    }
     if (prevState.devCardsPlayed) {
       throw new Error('Already played development cards');
     }

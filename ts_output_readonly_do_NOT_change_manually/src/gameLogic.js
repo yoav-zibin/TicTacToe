@@ -187,9 +187,6 @@ var gameLogic;
         checkResources(nextState.players[idx].resources);
     }
     function checkPlayDevCard(prevState, nextState, idx) {
-        if (!prevState.diceRolled) {
-            throw new Error('Need to roll dices first');
-        }
         if (prevState.devCardsPlayed) {
             throw new Error('Already played development cards');
         }
