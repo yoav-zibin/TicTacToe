@@ -15,6 +15,7 @@ module game {
   export let isHelpModalShown: boolean = false;
 
   export function init() {
+    /*
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
     log.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
@@ -39,12 +40,13 @@ module game {
         });
       }, 3000);
     }
+    */
   }
 
   function getTranslations(): Translations {
     return {
       RULES_OF_TICTACTOE: {
-        en: "Rules of TicTacToe",
+        en: "Rules of Pioneers",
         iw: "חוקי המשחק",
       },
       RULES_SLIDE1: {
@@ -108,6 +110,7 @@ module game {
   }
 
   export function cellClicked(row: number, col: number): void {
+    /*
     log.info("Clicked on cell:", row, col);
     if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
       throw new Error("Throwing the error because URL has '?throwException'");
@@ -124,33 +127,45 @@ module game {
       log.info(["Cell is already full in position:", row, col]);
       return;
     }
+    */
   }
 
   export function shouldShowImage(row: number, col: number): boolean {
+    /*
     let cell = state.board[row][col];
     return cell !== "";
+    */
+    return true;
   }
 
   export function isPieceX(row: number, col: number): boolean {
-    return state.board[row][col] === 'X';
+    //return state.board[row][col] === 'X';
+    return true;
   }
 
   export function isPieceO(row: number, col: number): boolean {
-    return state.board[row][col] === 'O';
+    //return state.board[row][col] === 'O';
+    return true;
   }
 
   export function shouldSlowlyAppear(row: number, col: number): boolean {
+    /*
     return !animationEnded &&
         state.delta &&
         state.delta.row === row && state.delta.col === col;
+    */
+    return false;
   }
 
   export function clickedOnModal(evt: Event) {
+    /*
     if (evt.target === evt.currentTarget) {
       evt.preventDefault();
       evt.stopPropagation();
       isHelpModalShown = false;
     }
+    return true;
+    */
     return true;
   }
 }
