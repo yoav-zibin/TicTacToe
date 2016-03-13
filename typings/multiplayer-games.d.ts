@@ -69,7 +69,8 @@ interface ITranslateService {
 declare var translate: ITranslateService;
 
 interface IResizeGameAreaService {
-  setWidthToHeight(widthToHeightRatio: number): void;
+  setWidthToHeight(widthToHeightRatio: number,
+    dimensionsChanged?: (gameAreaWidth: number, gameAreaHeight: number)=>void): void;
 }
 declare var resizeGameAreaService: IResizeGameAreaService;
 

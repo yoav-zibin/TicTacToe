@@ -1,0 +1,144 @@
+2016-03-10 16:45:12.295 Google Chrome[21266:1217112] NSWindow warning: adding an unknown subview: <FullSizeContentView: 0x7f8dd8179ff0>. Break on NSLog to debug.
+2016-03-10 16:45:12.295 Google Chrome[21266:1217112] Call stack:
+(
+    "+callStackSymbols disabled for performance reasons"
+)
+[21343,1952423936:16:45:16.092945] Native Client module will be loaded at base address 0x0000539800000000
+Mar 10 16:45:17  Google Chrome Helper[21344] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 10 16:45:19  Google Chrome Helper[21344] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 10 16:45:20  Google Chrome Helper[21357] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 10 16:45:23  Google Chrome Helper[21357] <Error>: CGAffineTransformInvert: singular matrix.
+[21337:17671:0310/165646:ERROR:ipc_channel_posix.cc(475)] pipe error on 3 Currently writing message of size: 52: Socket is not connected
+[22679:1295:0310/165733:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[22679:1295:0310/165733:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[22679:1295:0310/165736:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[22679:1295:0310/165738:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[22679:1295:0310/165740:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[22679:1295:0310/165742:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+2016-03-10 16:57:53.302 Google Chrome Helper[22687:1229123] Couldn't set selectedTextBackgroundColor from default ()
+[22679:1295:0310/165755:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+2016-03-10 16:58:29.293 Google Chrome Helper[22689:1229233] Couldn't set selectedTextColor from default ()
+2016-03-10 16:58:29.294 Google Chrome Helper[22689:1229233] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-10 17:05:02.024 Google Chrome Helper[21344:1217895] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-10 17:09:49.379 Google Chrome Helper[22978:1232339] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0310/182917:ERROR:socket_stream.cc(210)] Closing stream with result -101
+2016-03-10 18:53:03.975 Google Chrome Helper[21357:1218125] Couldn't set selectedTextBackgroundColor from default ()
+Mar 10 18:53:49  Google Chrome Helper[25130] <Error>: CGAffineTransformInvert: singular matrix.
+Vector smash protection is enabled.
+Mar 10 19:00:30  Google Chrome Helper[25391] <Error>: CGAffineTransformInvert: singular matrix.
+Vector smash protection is enabled.
+Vector smash protection is enabled.
+Mar 10 19:05:56  Google Chrome Helper[25603] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 10 19:06:04  Google Chrome Helper[25605] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 10 19:06:21  Google Chrome Helper[25607] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 10 19:06:25  Google Chrome Helper[25608] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-10 19:07:50.787 Google Chrome Helper[25631:1252255] Couldn't set selectedControlColor from default ()
+[21266:33539:0310/203404:ERROR:socket_stream.cc(210)] Closing stream with result -101
+2016-03-10 20:35:41.013 Google Chrome Helper[24910:1245043] Couldn't set selectedTextColor from default ()
+2016-03-10 20:35:41.013 Google Chrome Helper[24910:1245043] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-10 20:37:53.108 Google Chrome Helper[29070:1275390] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0310/230557:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/000816:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/010856:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/020936:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/031015:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/041055:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/051134:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/061213:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/071253:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/081418:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/091457:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:93199:0311/102845:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:33539:0311/102847:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:93199:0311/102847:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:93199:0311/102847:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+2016-03-11 10:35:10.660 Google Chrome Helper[33142:1304874] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 10:36:21.753 Google Chrome Helper[33123:1304788] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 10:40:18.349 Google Chrome Helper[33576:1307875] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 10:40:23.772 Google Chrome Helper[33575:1307725] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 10:42:35.500 Google Chrome Helper[33647:1308837] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0311/113330:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:33539:0311/123636:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+Mar 11 12:38:18  Google Chrome Helper[35789] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-11 12:38:54.924 Google Chrome Helper[35789:1325031] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 12:41:40.647 Google Chrome Helper[35825:1325585] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 12:43:58.746 Google Chrome Helper[35959:1326855] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 12:54:26.531 Google Chrome Helper[35195:1321528] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0311/132213:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:93199:0311/132220:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[37775:1295:0311/132331:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[37775:1295:0311/132331:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+2016-03-11 13:25:57.411 Google Chrome Helper[37818:1336668] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0311/151557:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+2016-03-11 15:17:11.872 Google Chrome Helper[38280:1339276] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 15:31:58.064 Google Chrome Helper[39785:1346133] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 15:35:25.837 Google Chrome Helper[40179:1350042] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 15:44:16.798 Google Chrome Helper[40550:1353668] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 16:18:12.812 Google Chrome Helper[42649:1367965] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0311/173416:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/183457:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:93199:0311/183458:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+2016-03-11 18:39:36.670 Google Chrome Helper[25813:1253924] Couldn't set selectedControlColor from default ()
+[21266:33539:0311/201034:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/211114:ERROR:socket_stream.cc(210)] Closing stream with result -101
+2016-03-11 21:25:45.395 Google Chrome Helper[49416:1416853] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 21:26:19.219 Google Chrome Helper[49418:1417003] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-11 21:30:51.305 Google Chrome Helper[49416:1416853] Couldn't set selectedTextColor from default ()
+[21266:33539:0311/223704:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0311/233914:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/014103:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/024144:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/034224:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/044304:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/054344:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/064509:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/074548:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/084629:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/094709:ERROR:socket_stream.cc(210)] Closing stream with result -101
+Mar 12 09:59:33  Google Chrome Helper[51675] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 12 09:59:43  Google Chrome Helper[51676] <Error>: CGAffineTransformInvert: singular matrix.
+Vector smash protection is enabled.
+Mar 12 10:01:10  Google Chrome Helper[51807] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-12 10:04:07.249 Google Chrome Helper[51641:1443211] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-12 10:04:40.001 Google Chrome Helper[51807:1444922] Couldn't set selectedTextBackgroundColor from default ()
+Mar 12 10:05:17  Google Chrome Helper[51980] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-12 10:06:20.665 Google Chrome Helper[51981:1446672] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-12 10:06:36.353 Google Chrome Helper[21358:1218128] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0312/120936:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:2827:0312/131008:ERROR:gcm_channel_status_request.cc(89)] GCM channel request failed.
+[21266:33539:0312/131025:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/141236:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/151316:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/160237:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+Mar 12 16:03:06  Google Chrome Helper[53067] <Error>: CGAffineTransformInvert: singular matrix.
+[54490:1295:0312/160924:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[54490:1295:0312/160925:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+Vector smash protection is enabled.
+2016-03-12 16:22:56.787 Google Chrome Helper[54831:1466700] Couldn't set selectedTextBackgroundColor from default ()
+Mar 12 16:22:59  Google Chrome Helper[55988] <Error>: CGAffineTransformInvert: singular matrix.
+[55990:31491:0312/162301:ERROR:webrtcsession.cc(1446)] ConnectDataChannel called when data_channel_ is NULL.
+Vector smash protection is enabled.
+Vector smash protection is enabled.
+Mar 12 16:33:58  Google Chrome Helper[56444] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 12 16:33:58  Google Chrome Helper[56444] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 12 16:34:01  Google Chrome Helper[56444] <Error>: CGAffineTransformInvert: singular matrix.
+[21266:33539:0312/183631:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:33539:0312/193853:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/203933:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/214013:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0312/234202:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/004242:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/014324:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/034404:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/044445:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/054609:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/064647:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/074728:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/084808:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/094848:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/102710:ERROR:socket_stream.cc(210)] Closing stream with result -101
+Mar 13 10:27:12  Google Chrome Helper[58432] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-13 10:28:16.515 Google Chrome Helper[58687:1503417] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0313/123117:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/133142:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:33539:0313/140729:ERROR:socket_stream.cc(210)] Closing stream with result -101
