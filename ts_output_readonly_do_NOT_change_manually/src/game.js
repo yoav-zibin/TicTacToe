@@ -107,15 +107,17 @@ var game;
         if (!game.canMakeMove) {
             return;
         }
+        var nextMove = null;
         try {
-            var nextMove = gameLogic.createMove(game.state, row, col, game.move.turnIndexAfterMove);
-            game.canMakeMove = false; // to prevent making another move
-            moveService.makeMove(nextMove);
+            nextMove = gameLogic.createMove(game.state, row, col, game.move.turnIndexAfterMove);
         }
         catch (e) {
             log.info(["Cell is already full in position:", row, col]);
             return;
         }
+        // Move is legal, make it!
+        game.canMakeMove = false; // to prevent making another move
+        moveService.makeMove(nextMove);
     }
     game.cellClicked = cellClicked;
     function shouldShowImage(row, col) {

@@ -142,3 +142,707 @@ Mar 13 10:27:12  Google Chrome Helper[58432] <Error>: CGAffineTransformInvert: s
 [21266:33539:0313/123117:ERROR:socket_stream.cc(210)] Closing stream with result -101
 [21266:33539:0313/133142:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
 [21266:33539:0313/140729:ERROR:socket_stream.cc(210)] Closing stream with result -101
+2016-03-13 14:54:09.726 Google Chrome Helper[62834:1531853] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0313/155544:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/165626:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/175837:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/185917:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/195957:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:93199:0313/210011:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:33539:0313/210038:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:93199:0313/220056:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:33539:0313/220117:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0313/230158:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0314/000237:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0314/010317:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0314/030508:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0314/040547:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0314/050627:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0314/060711:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0314/070750:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0314/080831:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:33539:0314/090919:ERROR:socket_stream.cc(210)] Closing stream with result -101
+2016-03-14 09:28:26.121 Google Chrome[21266:1217112] Inconsistent set of values to create NSBitmapImageRep
+2016-03-14 09:28:26.122 Google Chrome[21266:1217112] It does not make sense to draw an image when [NSGraphicsContext currentContext] is nil.  This is a programming error. Break on void _NSWarnForDrawingImageWithNoCurrentContext() to debug.  This will be logged only once.  This may break in the future.
+2016-03-14 09:28:26.122 Google Chrome[21266:1217112] Inconsistent set of values to create NSBitmapImageRep
+Mar 14 09:28:33  Google Chrome Helper[67145] <Error>: CGAffineTransformInvert: singular matrix.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_url_request_info.cpp(219)] Missing colon in HTTP header line "".
+Mar 14 09:30:09  Google Chrome Helper[67218] <Error>: CGAffineTransformInvert: singular matrix.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+[WARNING:/Volumes/Builds/jenkins/ws/St_Make/code/flash/platform/pepper/pep_viewclient.cpp(357)] Could not create display context.
+Vector smash protection is enabled.
+2016-03-14 12:29:40.636 Google Chrome[21266:1217112] Inconsistent set of values to create NSBitmapImageRep
+2016-03-14 12:29:40.636 Google Chrome[21266:1217112] Inconsistent set of values to create NSBitmapImageRep
+[87806:1295:0314/142053:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[87806:1295:0314/142054:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+2016-03-14 14:21:08.903 Google Chrome Helper[87805:1711152] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-14 15:41:45.100 Google Chrome Helper[90939:1731686] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-14 15:43:21.706 Google Chrome Helper[92729:1747251] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-14 15:43:54.645 Google Chrome Helper[92729:1747251] Couldn't set selectedTextColor from default ()
+[21266:33539:0314/164920:ERROR:socket_stream.cc(210)] Closing stream with result -101
+2016-03-14 17:15:30.454 Google Chrome Helper[93167:1752430] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-14 17:20:50.806 Google Chrome Helper[93561:1755783] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-14 17:22:59.234 Google Chrome Helper[93523:1755280] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-14 17:24:46.177 Google Chrome Helper[93630:1756451] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0315/120514:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:93199:0315/120515:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:33539:0315/130741:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0315/140821:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0315/150504:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[97934:1295:0315/150516:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[97934:1295:0315/150516:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+2016-03-15 15:10:10.669 Google Chrome Helper[98165:1784224] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-15 15:11:05.468 Google Chrome Helper[98165:1784224] Couldn't set selectedTextColor from default ()
+2016-03-15 15:11:20.414 Google Chrome Helper[98088:1783314] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-15 15:14:14.484 Google Chrome Helper[98086:1783250] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-15 15:15:01.387 Google Chrome Helper[98365:1786123] Couldn't set selectedTextBackgroundColor from default ()
+Mar 15 16:48:51  Google Chrome Helper[8011] <Error>: CGAffineTransformInvert: singular matrix.
+[21266:29707:0315/164858:ERROR:native_process_launcher.cc(133)] Can't find manifest for native messaging host com.google.chrome.remote_desktop
+[21266:29707:0315/164858:ERROR:native_process_launcher.cc(133)] Can't find manifest for native messaging host com.google.chrome.remote_desktop
+[8027,1952423936:16:48:59.173261] Native Client module will be loaded at base address 0x000026dc00000000
+[21266:29451:0315/164859:ERROR:native_process_launcher.cc(133)] Can't find manifest for native messaging host com.google.chrome.remote_desktop
+[21266:33539:0315/164859:ERROR:pnacl_host.cc(454)] TranslationFinished: TranslationID 285,1409090549 not found.
+[8032,1952423936:16:49:02.462840] Native Client module will be loaded at base address 0x0000245100000000
+[0315/204902:INFO:chromoting_instance.cc(630)] Connecting to yzibin@google.com/chromoting983AEA6E. Local jid: yzibin@google.com/chromoting20CA39FB.
+[8507:1295:0315/165837:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[8507:1295:0315/165837:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[8507:1295:0315/165837:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[21269:1295:0315/165838:ERROR:gpu_video_decode_accelerator.cc(375)] HW video decode not available for profile 11
+[0315/205838:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0315/205838:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0315/205838:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0315/205838:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0315/205838:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0315/205838:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0315/205838:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0315/205838:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205838:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0315/205840:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0315/205840:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0315/205840:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0315/205840:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0315/205840:INFO:chromoting_client.cc(172)] Using stun connection for mux channel
+[0315/205840:INFO:chromoting_client.cc(172)] Using stun connection for video channel
+[0315/205843:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0315/205843:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0315/205843:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0315/205843:WARNING:relayport.cc(472)] No more relay addresses left to try
+2016-03-15 17:00:13.218 Google Chrome Helper[8524:1838385] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-15 17:18:59.072 Google Chrome Helper[9338:1843897] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-15 17:19:20.839 Google Chrome Helper[9421:1844544] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-15 17:22:06.591 Google Chrome Helper[10506:1848084] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-15 17:22:53.908 Google Chrome Helper[10506:1848084] Couldn't set selectedTextColor from default ()
+2016-03-15 17:33:58.365 Google Chrome Helper[11077:1851619] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-15 17:36:41.066 Google Chrome Helper[11217:1852494] Couldn't set selectedTextBackgroundColor from default ()
+Vector smash protection is enabled.
+2016-03-15 17:51:16.695 Google Chrome Helper[12032:1858286] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-15 18:07:16.346 Google Chrome Helper[12756:1863750] Couldn't set selectedTextBackgroundColor from default ()
+Mar 15 18:28:56  Google Chrome Helper[16398] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 15 18:29:09  Google Chrome Helper[16401] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-15 18:30:33.785 Google Chrome Helper[16432:1881837] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-15 18:35:55.868 Google Chrome Helper[16844:1887278] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-15 19:12:13.851 Google Chrome Helper[18412:1904764] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0315/192100:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:33539:0315/202146:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0315/212457:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0315/222537:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0315/232617:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/002633:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:33539:0316/012721:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/032910:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/042949:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/053028:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/063108:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/073147:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/083313:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/093352:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/103430:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[20937:1295:0316/104045:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[20937:1295:0316/104045:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[20937:1295:0316/104046:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+2016-03-16 10:40:56.633 Google Chrome Helper[20936:1935124] Couldn't set selectedTextColor from default ()
+2016-03-16 10:40:56.633 Google Chrome Helper[20936:1935124] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0316/114154:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/124233:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/134313:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0316/143421:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+2016-03-16 15:13:08.042 Google Chrome Helper[25103:1963501] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-16 15:23:31.527 Google Chrome Helper[25477:1967180] Couldn't set selectedTextColor from default ()
+2016-03-16 15:23:31.528 Google Chrome Helper[25477:1967180] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-16 15:42:51.890 Google Chrome Helper[26959:1974966] Couldn't set selectedTextBackgroundColor from default ()
+Mar 16 15:46:27  Google Chrome Helper[27049] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-16 15:49:03.580 Google Chrome Helper[27097:1976540] Couldn't set selectedTextBackgroundColor from default ()
+Mar 16 16:14:34  Google Chrome Helper[27878] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 16 16:14:55  Google Chrome Helper[27882] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 16 16:17:35  Google Chrome Helper[27951] <Error>: CGAffineTransformInvert: singular matrix.
+[21266:33539:0316/162537:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+Mar 16 16:26:16  Google Chrome Helper[29547] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-16 16:26:34.741 Google Chrome Helper[29547:1991554] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-16 16:31:04.292 Google Chrome Helper[27096:1976344] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-16 16:42:05.580 Google Chrome Helper[30528:1997467] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0316/174826:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+2016-03-16 17:49:23.763 Google Chrome Helper[33447:2016032] Couldn't set selectedTextBackgroundColor from default ()
+Mar 16 18:23:45  Google Chrome Helper[35361] <Error>: CGAffineTransformInvert: singular matrix.
+Vector smash protection is enabled.
+2016-03-16 18:27:40.603 Google Chrome Helper[35420:2030316] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0317/104333:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+Mar 17 10:44:18  Google Chrome Helper[36426] <Error>: CGAffineTransformInvert: singular matrix.
+[36707:1295:0317/104610:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[36707:1295:0317/104611:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[36707:1295:0317/104611:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+Mar 17 10:46:23  Google Chrome Helper[36710] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 17 10:46:52  Google Chrome Helper[36711] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 17 10:46:53  Google Chrome Helper[36711] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 17 10:46:53  Google Chrome Helper[36711] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 17 10:47:00  Google Chrome Helper[36711] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 17 10:47:01  Google Chrome Helper[36711] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 17 10:47:01  Google Chrome Helper[36711] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-17 10:47:55.068 Google Chrome Helper[36711:2036284] Couldn't set selectedTextBackgroundColor from default ()
+Mar 17 10:47:59  Google Chrome Helper[36796] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 17 10:57:08  Google Chrome Helper[37792] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-17 10:57:35.874 Google Chrome Helper[37792:2041609] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0317/132537:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+2016-03-17 13:27:17.407 Google Chrome Helper[41230:2062657] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-17 13:29:28.923 Google Chrome Helper[41269:2063271] Couldn't set selectedTextColor from default ()
+2016-03-17 13:29:28.923 Google Chrome Helper[41269:2063271] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-17 13:35:41.220 Google Chrome Helper[41468:2065447] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-17 13:36:35.109 Google Chrome Helper[41448:2065234] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-17 13:36:38.753 Google Chrome Helper[9338:1843897] Couldn't set selectedTextColor from default ()
+2016-03-17 13:36:56.128 Google Chrome Helper[41532:2066003] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-17 13:38:45.902 Google Chrome Helper[41469:2065553] Couldn't set selectedTextBackgroundColor from default ()
+Mar 17 13:44:54  Google Chrome Helper[41747] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-17 13:52:32.785 Google Chrome Helper[41811:2069662] Couldn't set selectedTextBackgroundColor from default ()
+Mar 17 13:52:39  Google Chrome Helper[41975] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 17 13:53:00  Google Chrome Helper[41976] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 17 13:53:00  Google Chrome Helper[41976] <Error>: CGAffineTransformInvert: singular matrix.
+Vector smash protection is enabled.
+2016-03-17 14:27:57.719 Google Chrome Helper[45486:2094862] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-17 14:36:33.548 Google Chrome Helper[45882:2098414] Couldn't set selectedTextBackgroundColor from default ()
+Mar 17 14:51:37  Google Chrome Helper[47154] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-17 14:52:04.267 Google Chrome Helper[47155:2104704] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-17 14:56:53.663 Google Chrome Helper[47323:2106747] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-17 14:59:44.878 Google Chrome Helper[18761:1908696] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-17 15:43:48.729 Google Chrome Helper[37706:1335511] Couldn't set selectedTextBackgroundColor from default ()
+Mar 17 15:44:05  Google Chrome Helper[50772] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 17 15:46:25  Google Chrome Helper[50906] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 17 15:55:17  Google Chrome Helper[51514] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-17 15:57:56.779 Google Chrome Helper[51515:2142052] Couldn't set selectedTextBackgroundColor from default ()
+Mar 17 16:17:23  Google Chrome Helper[53953] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-17 16:19:25.721 Google Chrome Helper[53954:2156540] Couldn't set selectedTextBackgroundColor from default ()
+Mar 17 16:20:12  Google Chrome Helper[54097] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-17 16:28:34.035 Google Chrome Helper[54677:2163205] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-17 16:32:20.829 Google Chrome Helper[21354:1218077] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-17 16:39:25.579 Google Chrome Helper[56653:2172892] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0317/174105:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0317/184230:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0317/194310:ERROR:ssl_client_socket_openssl.cc(1149)] handshake failed; returned -1, SSL error code 1, net_error -101
+[21266:33539:0317/194310:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0317/204405:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0317/214445:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0317/234633:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/004656:ERROR:ssl_client_socket_openssl.cc(1149)] handshake failed; returned -1, SSL error code 1, net_error -101
+[21266:33539:0318/004656:ERROR:ssl_client_socket_openssl.cc(1149)] handshake failed; returned -1, SSL error code 1, net_error -101
+[21266:33539:0318/004713:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/014754:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/024835:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/034914:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/045038:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/055118:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/065158:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/075238:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/085318:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/095358:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/105437:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/115516:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[58286:1295:0318/121030:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[58286:1295:0318/121030:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[58286:1295:0318/121031:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[21266:33539:0318/131959:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/142038:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/152119:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/162416:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/172456:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/180715:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/185745:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0318/193314:ERROR:socket_stream.cc(210)] Closing stream with result -101
+2016-03-18 19:40:05.112 Google Chrome Helper[61806:2223785] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-18 19:49:50.649 Google Chrome Helper[62381:2228851] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-18 20:01:31.594 Google Chrome Helper[62675:2231831] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-18 20:14:17.304 Google Chrome Helper[65674:2248781] Couldn't set selectedTextBackgroundColor from default ()
+nativeproxy: error: Unable to stat pipe path /Users/yzibin/Library/Application Support/Google/Drive/GoogleDriveIpcPipe
+
+nativeproxy: error: Unable to get underlying pipe path.
+
+nativeproxy: error: Failure connecting to Ipc
+
+2016-03-18 20:15:46.075 Google Chrome Helper[65923:2250575] Couldn't set selectedTextBackgroundColor from default ()
+Mar 18 20:16:07  Google Chrome Helper[65923] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-18 20:22:25.116 Google Chrome Helper[66211:2253331] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-18 20:24:25.745 Google Chrome Helper[66374:2254362] Couldn't set selectedTextBackgroundColor from default ()
+Mar 18 20:52:29  Google Chrome Helper[69051] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-18 20:53:40.110 Google Chrome Helper[69131:2272661] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-18 20:54:46.351 Google Chrome Helper[69233:2273403] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-18 20:55:29.161 Google Chrome Helper[69091:2272265] Couldn't set selectedTextColor from default ()
+2016-03-18 20:55:29.162 Google Chrome Helper[69091:2272265] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-18 21:19:32.922 Google Chrome Helper[70337:2282276] Couldn't set selectedTextColor from default ()
+2016-03-18 21:19:32.923 Google Chrome Helper[70337:2282276] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0318/220517:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:33539:0318/230908:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/001118:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/011158:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/021238:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/031318:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/041358:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/051437:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/061516:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/071641:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/075704:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:93199:0319/085713:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:33539:0319/085715:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:93199:0319/085715:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:93199:0319/085715:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:33539:0319/095809:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/105849:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/112943:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0319/113116:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+Mar 19 11:33:03  Google Chrome Helper[75943] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 19 11:35:05  Google Chrome Helper[76023] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 19 11:35:05  Google Chrome Helper[76023] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 19 11:35:36  Google Chrome Helper[76036] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 19 11:35:47  Google Chrome Helper[76075] <Error>: CGAffineTransformInvert: singular matrix.
+[76226:1295:0319/113749:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[76226:1295:0319/113750:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[76226:1295:0319/113750:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+Mar 19 11:41:48  Google Chrome Helper[76351] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 19 11:44:25  Google Chrome Helper[76540] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-19 11:50:35.222 Google Chrome Helper[76075:2322319] Couldn't set selectedTextBackgroundColor from default ()
+Mar 19 11:54:17  Google Chrome Helper[76980] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-19 11:54:59.137 Google Chrome Helper[76980:2329728] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0319/130535:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+Mar 19 13:05:45  Google Chrome Helper[77476] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-19 13:06:39.538 Google Chrome Helper[77476:2332615] Couldn't set selectedTextBackgroundColor from default ()
+Mar 19 13:06:56  Google Chrome Helper[77608] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-19 13:08:35.189 Google Chrome Helper[77610:2333718] Couldn't set selectedTextBackgroundColor from default ()
+Mar 19 13:08:37  Google Chrome Helper[77693] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-19 13:09:14.575 Google Chrome Helper[77693:2334417] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0319/173632:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+Mar 19 17:43:21  Google Chrome Helper[78762] <Error>: CGAffineTransformInvert: singular matrix.
+[21266:33539:0319/185132:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0320/141954:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:93199:0320/141957:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:33539:0320/152212:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0320/162252:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0320/172332:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0320/183503:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0320/193759:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0320/203839:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0320/213918:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0320/224129:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0320/234210:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/004252:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/014416:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/024456:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/034536:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/044617:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/054657:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/064737:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/074818:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/084859:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/105048:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[84563:1295:0321/105513:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[84563:1295:0321/105513:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[84563:1295:0321/105513:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+Mar 21 10:56:35  Google Chrome Helper[84656] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 21 10:56:35  Google Chrome Helper[84656] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 21 10:58:22  Google Chrome Helper[84736] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-21 10:58:48.259 Google Chrome Helper[84656:2396891] Couldn't set selectedTextBackgroundColor from default ()
+Mar 21 11:02:46  Google Chrome Helper[84940] <Error>: CGAffineTransformInvert: singular matrix.
+[21266:29707:0321/110316:ERROR:native_process_launcher.cc(133)] Can't find manifest for native messaging host com.google.chrome.remote_desktop
+[21266:29451:0321/110316:ERROR:native_process_launcher.cc(133)] Can't find manifest for native messaging host com.google.chrome.remote_desktop
+[84980,1952423936:11:03:16.420363] Native Client module will be loaded at base address 0x00005f8a00000000
+[21266:54531:0321/110316:ERROR:native_process_launcher.cc(133)] Can't find manifest for native messaging host com.google.chrome.remote_desktop
+[84981,1952423936:11:03:24.496216] Native Client module will be loaded at base address 0x0000213800000000
+[84982,1952423936:11:03:24.769174] Native Client module will be loaded at base address 0x00002ee200000000
+[84983,1952423936:11:03:24.948711] Native Client module will be loaded at base address 0x0000364e00000000
+[0321/150325:INFO:chromoting_instance.cc(630)] Connecting to yzibin@google.com/chromoting1027114D. Local jid: yzibin@google.com/chromoting35D79499.
+[84986:1295:0321/110327:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[84986:1295:0321/110328:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[84986:1295:0321/110328:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[84989,1952423936:11:03:31.344972] Native Client module will be loaded at base address 0x00002f5200000000
+[0321/150331:INFO:chromoting_instance.cc(630)] Connecting to yzibin@google.com/chromoting1027114D. Local jid: yzibin@google.com/chromotingF8124103.
+[21269:1295:0321/110333:ERROR:gpu_video_decode_accelerator.cc(375)] HW video decode not available for profile 11
+[0321/150333:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/150333:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/150333:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/150333:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/150333:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/150333:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/150333:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/150333:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150333:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/150334:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/150334:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/150334:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/150334:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/150334:INFO:chromoting_client.cc(172)] Using stun connection for mux channel
+[0321/150334:INFO:chromoting_client.cc(172)] Using stun connection for video channel
+[0321/150337:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/150337:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/150337:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/150337:WARNING:relayport.cc(472)] No more relay addresses left to try
+2016-03-21 11:04:04.116 Google Chrome Helper[85010:2400665] Couldn't set selectedTextBackgroundColor from default ()
+Mar 21 11:07:38  Google Chrome Helper[85229] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-21 11:09:44.852 Google Chrome Helper[85250:2402815] Couldn't set selectedTextBackgroundColor from default ()
+Vector smash protection is enabled.
+Vector smash protection is enabled.
+Vector smash protection is enabled.
+Vector smash protection is enabled.
+[0321/153832:INFO:chromoting_client.cc(172)] Using stun connection for mux channel
+[0321/153832:INFO:chromoting_client.cc(172)] Using stun connection for video channel
+[0321/153918:INFO:chromoting_client.cc(172)] Using stun connection for mux channel
+[0321/153918:INFO:chromoting_client.cc(172)] Using stun connection for video channel
+[0321/154018:INFO:chromoting_client.cc(172)] Using stun connection for mux channel
+[0321/154018:INFO:chromoting_client.cc(172)] Using stun connection for video channel
+[0321/173900:ERROR:pepper_packet_socket_factory.cc(352)] Send failed on a UDP socket: -2
+[0321/173900:ERROR:pepper_packet_socket_factory.cc(352)] Send failed on a UDP socket: -2
+[92425,1952423936:13:39:01.254174] Native Client module will be loaded at base address 0x00001a1600000000
+[0321/173901:INFO:chromoting_instance.cc(630)] Connecting to yzibin@google.com/chromoting1027114D. Local jid: yzibin@google.com/chromoting787BB0FD.
+[21269:1295:0321/133902:ERROR:gpu_video_decode_accelerator.cc(375)] HW video decode not available for profile 11
+[0321/173902:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/173902:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/173902:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/173902:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/173902:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/173902:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/173902:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/173902:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173902:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/173904:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/173904:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/173904:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/173904:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/173904:INFO:chromoting_client.cc(172)] Using stun connection for video channel
+[0321/173904:INFO:chromoting_client.cc(172)] Using relay connection for mux channel
+[0321/173907:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/173907:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/173907:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/173907:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/173912:INFO:chromoting_client.cc(172)] Using stun connection for mux channel
+[21266:33539:0321/133927:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[92476,1952423936:14:39:45.943319] Native Client module will be loaded at base address 0x00005b6200000000
+[0321/183946:INFO:chromoting_instance.cc(630)] Connecting to yzibin@google.com/chromoting1027114D. Local jid: yzibin@google.com/chromoting586135A9.
+[21269:1295:0321/143947:ERROR:gpu_video_decode_accelerator.cc(375)] HW video decode not available for profile 11
+[0321/183947:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/183947:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/183947:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/183947:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/183947:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/183947:WARNING:pepper_port_allocator.cc(104)] URLLoader failed: -2
+[0321/183947:WARNING:pepper_port_allocator.cc(104)] URLLoader failed: -2
+[0321/183948:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/183948:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/183948:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/183948:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/183948:INFO:chromoting_client.cc(172)] Using stun connection for video channel
+[0321/183948:INFO:chromoting_client.cc(172)] Using stun connection for mux channel
+[0321/183951:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/183951:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/183951:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/183951:WARNING:relayport.cc(472)] No more relay addresses left to try
+[21266:33539:0321/144006:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[92638,1952423936:15:41:46.224183] Native Client module will be loaded at base address 0x0000474100000000
+[0321/194146:INFO:chromoting_instance.cc(630)] Connecting to yzibin@google.com/chromoting1027114D. Local jid: yzibin@google.com/chromoting7B48653D.
+[21269:1295:0321/154148:ERROR:gpu_video_decode_accelerator.cc(375)] HW video decode not available for profile 11
+[0321/194148:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/194148:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/194148:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/194148:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/194148:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:pepper_port_allocator.cc(104)] URLLoader failed: -2
+[0321/194148:WARNING:pepper_port_allocator.cc(104)] URLLoader failed: -2
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194148:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194149:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/194149:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/194149:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/194149:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/194149:INFO:chromoting_client.cc(172)] Using stun connection for mux channel
+[0321/194149:INFO:chromoting_client.cc(172)] Using stun connection for video channel
+[0321/194152:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/194152:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/194152:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/194152:WARNING:relayport.cc(472)] No more relay addresses left to try
+[21266:33539:0321/154218:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[92671,1952423936:15:43:42.001467] Native Client module will be loaded at base address 0x0000615500000000
+[0321/194342:INFO:chromoting_instance.cc(630)] Connecting to yzibin@google.com/chromoting1027114D. Local jid: yzibin@google.com/chromotingAEDABD6B.
+[21269:1295:0321/154343:ERROR:gpu_video_decode_accelerator.cc(375)] HW video decode not available for profile 11
+[0321/194343:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/194343:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/194343:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/194343:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/194343:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194343:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0321/194344:INFO:chromoting_client.cc(172)] Using stun connection for video channel
+[0321/194344:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0321/194344:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0321/194345:INFO:chromoting_client.cc(172)] Using relay connection for mux channel
+[0321/194346:INFO:chromoting_client.cc(172)] Using stun connection for mux channel
+[0321/194347:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0321/194347:WARNING:relayport.cc(472)] No more relay addresses left to try
+[10377,1952423936:20:05:50.471473] Native Client module will be loaded at base address 0x0000010100000000
+[0322/000550:INFO:chromoting_instance.cc(630)] Connecting to yzibin@google.com/chromoting1027114D. Local jid: yzibin@google.com/chromoting6F819951.
+[21269:1295:0321/200552:ERROR:gpu_video_decode_accelerator.cc(375)] HW video decode not available for profile 11
+[0322/000552:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/000552:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/000552:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/000552:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/000552:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/000552:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/000552:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/000552:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000552:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/000553:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/000553:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/000553:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/000553:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/000553:INFO:chromoting_client.cc(172)] Using stun connection for mux channel
+[0322/000553:INFO:chromoting_client.cc(172)] Using stun connection for video channel
+[0322/000556:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0322/000556:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0322/000556:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0322/000556:WARNING:relayport.cc(472)] No more relay addresses left to try
+[21266:33539:0321/200603:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[10449,1952423936:21:06:36.243819] Native Client module will be loaded at base address 0x0000563100000000
+[0322/010636:INFO:chromoting_instance.cc(630)] Connecting to yzibin@google.com/chromoting1027114D. Local jid: yzibin@google.com/chromoting4E09E058.
+[21269:1295:0321/210638:ERROR:gpu_video_decode_accelerator.cc(375)] HW video decode not available for profile 11
+[0322/010638:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/010638:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/010638:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/010638:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/010638:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010638:WARNING:stunport.cc(379)] Jingle:Port[:0:0:stun:Net[en0:fe80:0:0:x:x:x:x:x/0:Unknown]]: StunPort: stun host lookup received error 0
+[0322/010639:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/010639:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/010639:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::fce6:b0ff:fe45:fcda]:0, error: -108
+[0322/010639:ERROR:pepper_packet_socket_factory.cc(243)] Failed to bind UDP socket to [fe80::7a31:c1ff:feb8:2488]:0, error: -108
+[0322/010639:INFO:chromoting_client.cc(172)] Using stun connection for video channel
+[0322/010639:INFO:chromoting_client.cc(172)] Using stun connection for mux channel
+[0322/010642:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0322/010642:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0322/010642:WARNING:relayport.cc(472)] No more relay addresses left to try
+[0322/010642:WARNING:relayport.cc(472)] No more relay addresses left to try
+[21266:33539:0321/210647:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/220907:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0321/231031:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/001112:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/011151:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/021318:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/031358:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/041438:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/051517:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/061557:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/071637:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/081717:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/091757:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/101839:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/112004:ERROR:socket_stream.cc(210)] Closing stream with result -101
+2016-03-22 11:35:25.020 Google Chrome Helper[12030:2593470] Couldn't set selectedTextBackgroundColor from default ()
+Mar 22 11:36:13  Google Chrome Helper[12142] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 22 11:36:20  Google Chrome Helper[12143] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-22 11:46:06.373 Google Chrome Helper[12143:2594748] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-22 11:51:05.485 Google Chrome Helper[13205:2602097] Couldn't set selectedTextBackgroundColor from default ()
+Mar 22 12:01:18  Google Chrome Helper[14727] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 22 12:02:56  Google Chrome Helper[14819] <Error>: CGAffineTransformInvert: singular matrix.
+[21266:33539:0322/140438:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/150633:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/154201:ERROR:socket_stream.cc(210)] Closing stream with result -101
+Vector smash protection is enabled.
+[21181:1295:0322/155903:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[21181:1295:0322/155903:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+[21181:1295:0322/155903:ERROR:render_media_log.cc(20)] MediaEvent: PIPELINE_ERROR demuxer: could not open
+2016-03-22 16:12:41.968 Google Chrome Helper[22501:2663018] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0322/171023:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:93199:0322/171035:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:33539:0322/171044:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+Mar 22 17:10:58  Google Chrome Helper[37706] <Error>: CGAffineTransformInvert: singular matrix.
+Mar 22 17:10:58  Google Chrome Helper[26705] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-22 18:18:21.295 Google Chrome Helper[31609:2713226] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-22 18:20:36.994 Google Chrome Helper[31593:2713149] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-22 18:22:36.182 Google Chrome Helper[31759:2714442] Couldn't set selectedTextBackgroundColor from default ()
+2016-03-22 18:32:53.518 Google Chrome Helper[26705:2682817] Couldn't set selectedTextBackgroundColor from default ()
+Mar 22 18:44:34  Google Chrome Helper[33234] <Error>: CGAffineTransformInvert: singular matrix.
+2016-03-22 18:44:41.485 Google Chrome Helper[33234:2724902] Couldn't set selectedTextBackgroundColor from default ()

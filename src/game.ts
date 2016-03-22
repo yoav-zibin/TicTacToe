@@ -117,15 +117,17 @@ module game {
     if (!canMakeMove) {
       return;
     }
+    let nextMove: IMove = null;
     try {
-      let nextMove = gameLogic.createMove(
+      nextMove = gameLogic.createMove(
           state, row, col, move.turnIndexAfterMove);
-      canMakeMove = false; // to prevent making another move
-      moveService.makeMove(nextMove);
     } catch (e) {
       log.info(["Cell is already full in position:", row, col]);
       return;
     }
+    // Move is legal, make it!
+    canMakeMove = false; // to prevent making another move
+    moveService.makeMove(nextMove);
   }
 
   export function shouldShowImage(row: number, col: number): boolean {
