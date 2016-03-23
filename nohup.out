@@ -846,3 +846,24 @@ Mar 22 17:10:58  Google Chrome Helper[26705] <Error>: CGAffineTransformInvert: s
 2016-03-22 18:32:53.518 Google Chrome Helper[26705:2682817] Couldn't set selectedTextBackgroundColor from default ()
 Mar 22 18:44:34  Google Chrome Helper[33234] <Error>: CGAffineTransformInvert: singular matrix.
 2016-03-22 18:44:41.485 Google Chrome Helper[33234:2724902] Couldn't set selectedTextBackgroundColor from default ()
+[21266:33539:0322/190345:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:93199:0322/190356:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:33539:0322/190406:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:93199:0322/190445:ERROR:get_updates_processor.cc(250)] PostClientToServerMessage() failed during GetUpdates
+[21266:33539:0322/190458:ERROR:connection_factory_impl.cc(367)] Failed to connect to MCS endpoint with error -131
+[21266:33539:0322/204955:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/215035:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/225115:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0322/235405:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0323/005446:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0323/015526:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0323/025606:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0323/035646:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0323/045726:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0323/055851:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0323/065932:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0323/080013:ERROR:socket_stream.cc(210)] Closing stream with result -101
+[21266:33539:0323/090615:ERROR:socket_stream.cc(210)] Closing stream with result -101
+Mar 23 09:06:27  Google Chrome Helper[37745] <Error>: CGAffineTransformInvert: singular matrix.
+[21266:33539:0323/111047:ERROR:socket_stream.cc(210)] Closing stream with result -101
+2016-03-23 11:17:09.848 Google Chrome Helper[43252:2800915] Couldn't set selectedTextBackgroundColor from default ()
