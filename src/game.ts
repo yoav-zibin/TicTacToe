@@ -159,7 +159,7 @@ module game {
   }
 }
 
-angular.module('myApp', ['ui.bootstrap', 'gameServices'])
+angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
   .run(function () {
     $rootScope['game'] = game;
     game.init();
