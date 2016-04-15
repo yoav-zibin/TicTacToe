@@ -128,7 +128,7 @@ module gameLogic {
     let turnIndexBeforeMove = stateTransition.turnIndexBeforeMove;
     let stateBeforeMove: IState = stateTransition.stateBeforeMove;
     let move: IMove = stateTransition.move;
-    let deltaValue: BoardDelta = stateTransition.move.stateAfterMove.delta;
+    let deltaValue: BoardDelta = move.stateAfterMove.delta;
     let row = deltaValue.row;
     let col = deltaValue.col;
     let expectedMove = createMove(stateBeforeMove, row, col, turnIndexBeforeMove);
