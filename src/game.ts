@@ -29,8 +29,7 @@ module game {
     document.addEventListener("animationend", animationEndedCallback, false); // standard
     document.addEventListener("webkitAnimationEnd", animationEndedCallback, false); // WebKit
     document.addEventListener("oanimationend", animationEndedCallback, false); // Opera
-    setTimeout(animationEndedCallback, 1000); // Just in case animation ended is not fired by some browser.
-
+    
     let w: any = window;
     if (w["HTMLInspector"]) {
       setInterval(function () {
