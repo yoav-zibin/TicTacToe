@@ -7,7 +7,6 @@ module game {
   // I export all variables to make it easy to debug in the browser by
   // simply typing in the console:
   // game.state
-  export let animationEnded = false;
   export let canMakeMove = false;
   export let isComputerTurn = false;
   export let move: IMove = null;
@@ -30,7 +29,7 @@ module game {
     document.addEventListener("animationend", animationEndedCallback, false); // standard
     document.addEventListener("webkitAnimationEnd", animationEndedCallback, false); // WebKit
     document.addEventListener("oanimationend", animationEndedCallback, false); // Opera
-    setTimeout(animationEndedCallback, 1000); // Just in case animationEnded is not fired by some browser.
+    setTimeout(animationEndedCallback, 1000); // Just in case animation ended is not fired by some browser.
 
     let w: any = window;
     if (w["HTMLInspector"]) {
@@ -64,10 +63,8 @@ module game {
   }
 
   function animationEndedCallback() {
-    if (animationEnded) return;
     $rootScope.$apply(function () {
       log.info("Animation ended");
-      animationEnded = true;
       sendComputerMove();
     });
   }
@@ -82,7 +79,6 @@ module game {
 
   function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
-    animationEnded = false;
     move = params.move;
     state = move.stateAfterMove;
     if (!state) {
@@ -144,8 +140,7 @@ module game {
   }
 
   export function shouldSlowlyAppear(row: number, col: number): boolean {
-    return !animationEnded &&
-        state.delta &&
+    return state.delta &&
         state.delta.row === row && state.delta.col === col;
   }
 

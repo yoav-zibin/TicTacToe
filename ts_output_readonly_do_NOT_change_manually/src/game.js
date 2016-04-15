@@ -4,7 +4,6 @@ var game;
     // I export all variables to make it easy to debug in the browser by
     // simply typing in the console:
     // game.state
-    game.animationEnded = false;
     game.canMakeMove = false;
     game.isComputerTurn = false;
     game.move = null;
@@ -25,7 +24,7 @@ var game;
         document.addEventListener("animationend", animationEndedCallback, false); // standard
         document.addEventListener("webkitAnimationEnd", animationEndedCallback, false); // WebKit
         document.addEventListener("oanimationend", animationEndedCallback, false); // Opera
-        setTimeout(animationEndedCallback, 1000); // Just in case animationEnded is not fired by some browser.
+        setTimeout(animationEndedCallback, 1000); // Just in case animation ended is not fired by some browser.
         var w = window;
         if (w["HTMLInspector"]) {
             setInterval(function () {
@@ -57,11 +56,8 @@ var game;
         };
     }
     function animationEndedCallback() {
-        if (game.animationEnded)
-            return;
         $rootScope.$apply(function () {
             log.info("Animation ended");
-            game.animationEnded = true;
             sendComputerMove();
         });
     }
@@ -74,7 +70,6 @@ var game;
     }
     function updateUI(params) {
         log.info("Game got updateUI:", params);
-        game.animationEnded = false;
         game.move = params.move;
         game.state = game.move.stateAfterMove;
         if (!game.state) {
@@ -134,8 +129,7 @@ var game;
     }
     game.isPieceO = isPieceO;
     function shouldSlowlyAppear(row, col) {
-        return !game.animationEnded &&
-            game.state.delta &&
+        return game.state.delta &&
             game.state.delta.row === row && game.state.delta.col === col;
     }
     game.shouldSlowlyAppear = shouldSlowlyAppear;

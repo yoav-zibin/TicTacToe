@@ -116,7 +116,7 @@ var gameLogic;
         var turnIndexBeforeMove = stateTransition.turnIndexBeforeMove;
         var stateBeforeMove = stateTransition.stateBeforeMove;
         var move = stateTransition.move;
-        var deltaValue = stateTransition.move.stateAfterMove.delta;
+        var deltaValue = move.stateAfterMove.delta;
         var row = deltaValue.row;
         var col = deltaValue.col;
         var expectedMove = createMove(stateBeforeMove, row, col, turnIndexBeforeMove);
