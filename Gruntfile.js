@@ -84,9 +84,9 @@ module.exports = function(grunt) {
         scale_to_height + ' ' + scale_to_width +
         ' -s format bmp --out ' + output_directory + '/temp/' + dimensions + '.bmp');
     commands.push('sips ' + output_directory +
-      '/temp/' + dimensions + '.bmp -s format jpeg --padToHeightWidth ' +
+      '/temp/' + dimensions + '.bmp -s format png --padToHeightWidth ' +
       height + ' ' + width +
-      ' --padColor ' + padColor + ' --out ' + output_directory + '/' + desired_size + ".jpg");
+      ' --padColor ' + padColor + ' --out ' + output_directory + '/' + desired_size + ".png");
   }
   commands.push('rm -rf ' + output_directory + '/temp');
   var auto_resize_images_command = commands.join(" && ");
