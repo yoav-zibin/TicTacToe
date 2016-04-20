@@ -143,12 +143,13 @@ var gameLogic;
 ;
 var game;
 (function (game) {
+    // Global variables are cleared when getting updateUI.
     // I export all variables to make it easy to debug in the browser by
-    // simply typing in the console:
-    // game.state
-    game.canMakeMove = false;
-    game.isComputerTurn = false;
-    game.move = null;
+    // simply typing in the console, e.g.,
+    // game.currentUpdateUI
+    game.currentUpdateUI = null;
+    game.didMakeMove = false; // You can only make one move per updateUI
+    game.animationEndedTimeout = null;
     game.state = null;
     game.isHelpModalShown = false;
     function init() {
@@ -162,11 +163,6 @@ var game;
             checkMoveOk: gameLogic.checkMoveOk,
             updateUI: updateUI
         });
-        // See http://www.sitepoint.com/css3-animation-javascript-event-handlers/
-        document.addEventListener("animationend", animationEndedCallback, false); // standard
-        document.addEventListener("webkitAnimationEnd", animationEndedCallback, false); // WebKit
-        document.addEventListener("oanimationend", animationEndedCallback, false); // Opera
-        setTimeout(animationEndedCallback, 1000); // Just in case animation ended is not fired by some browser.
         var w = window;
         if (w["HTMLInspector"]) {
             setInterval(function () {
@@ -197,64 +193,88 @@ var game;
             },
         };
     }
-    function animationEndedCallback() {
-        $rootScope.$apply(function () {
-            log.info("Animation ended");
-            sendComputerMove();
-        });
-    }
-    function sendComputerMove() {
-        if (!game.isComputerTurn) {
-            return;
-        }
-        game.isComputerTurn = false; // to make sure the computer can only move once.
-        moveService.makeMove(aiService.findComputerMove(game.move));
-    }
     function updateUI(params) {
         log.info("Game got updateUI:", params);
-        game.move = params.move;
-        game.state = game.move.stateAfterMove;
-        if (!game.state) {
+        game.didMakeMove = false; // Only one move per updateUI
+        game.isHelpModalShown = false;
+        game.currentUpdateUI = params;
+        clearAnimationTimeout();
+        game.state = params.move.stateAfterMove;
+        if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
+            // This is the first move in the match, so
+            // there is not going to be an animation, so
+            // call maybeSendComputerMove() now (can happen in ?onlyAIs mode)
+            maybeSendComputerMove();
         }
-        game.canMakeMove = game.move.turnIndexAfterMove >= 0 &&
-            params.yourPlayerIndex === game.move.turnIndexAfterMove; // it's my turn
-        // Is it the computer's turn?
-        game.isComputerTurn = game.canMakeMove &&
-            params.playersInfo[params.yourPlayerIndex].playerId === '';
-        if (game.isComputerTurn) {
-            // To make sure the player won't click something and send a move instead of the computer sending a move.
-            game.canMakeMove = false;
+        else {
             // We calculate the AI move only after the animation finishes,
             // because if we call aiService now
             // then the animation will be paused until the javascript finishes.
-            if (!game.state.delta) {
-                // This is the first move in the match, so
-                // there is not going to be an animation, so
-                // call sendComputerMove() now (can happen in ?onlyAIs mode)
-                sendComputerMove();
-            }
+            game.animationEndedTimeout = $timeout(animationEndedCallback, 500);
         }
+    }
+    function animationEndedCallback() {
+        log.info("Animation ended");
+        maybeSendComputerMove();
+    }
+    function clearAnimationTimeout() {
+        if (game.animationEndedTimeout) {
+            $timeout.cancel(game.animationEndedTimeout);
+            game.animationEndedTimeout = null;
+        }
+    }
+    function maybeSendComputerMove() {
+        if (!isComputerTurn())
+            return;
+        var move = aiService.findComputerMove(game.currentUpdateUI.move);
+        log.info("Computer move: ", move);
+        makeMove(move);
+    }
+    function makeMove(move) {
+        if (game.didMakeMove) {
+            return;
+        }
+        game.didMakeMove = true;
+        moveService.makeMove(move);
+    }
+    function isFirstMove() {
+        return !game.currentUpdateUI.move.stateAfterMove;
+    }
+    function yourPlayerIndex() {
+        return game.currentUpdateUI.yourPlayerIndex;
+    }
+    function isComputer() {
+        return game.currentUpdateUI.playersInfo[game.currentUpdateUI.yourPlayerIndex].playerId === '';
+    }
+    function isComputerTurn() {
+        return isMyTurn() && isComputer();
+    }
+    function isHumanTurn() {
+        return isMyTurn() && !isComputer();
+    }
+    function isMyTurn() {
+        return !game.didMakeMove &&
+            game.currentUpdateUI.move.turnIndexAfterMove >= 0 &&
+            game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.move.turnIndexAfterMove; // it's my turn
     }
     function cellClicked(row, col) {
         log.info("Clicked on cell:", row, col);
+        if (!isHumanTurn())
+            return;
         if (window.location.search === '?throwException') {
             throw new Error("Throwing the error because URL has '?throwException'");
         }
-        if (!game.canMakeMove) {
-            return;
-        }
         var nextMove = null;
         try {
-            nextMove = gameLogic.createMove(game.state, row, col, game.move.turnIndexAfterMove);
+            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.move.turnIndexAfterMove);
         }
         catch (e) {
             log.info(["Cell is already full in position:", row, col]);
             return;
         }
         // Move is legal, make it!
-        game.canMakeMove = false; // to prevent making another move
-        moveService.makeMove(nextMove);
+        makeMove(nextMove);
     }
     game.cellClicked = cellClicked;
     function shouldShowImage(row, col) {
