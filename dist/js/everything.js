@@ -80,6 +80,7 @@ var gameLogic;
      * with index turnIndexBeforeMove makes a move in cell row X col.
      */
     function createMove(stateBeforeMove, row, col, turnIndexBeforeMove) {
+        // TODO: cleanup for next semester: remove this if (waiting for old versions to disappear).
         if (!stateBeforeMove) {
             stateBeforeMove = getInitialState();
         }
@@ -110,12 +111,21 @@ var gameLogic;
         return { endMatchScores: endMatchScores, turnIndexAfterMove: turnIndexAfterMove, stateAfterMove: stateAfterMove };
     }
     gameLogic.createMove = createMove;
+    function createInitialMove() {
+        return { endMatchScores: null, turnIndexAfterMove: 0,
+            stateAfterMove: getInitialState() };
+    }
+    gameLogic.createInitialMove = createInitialMove;
     function checkMoveOk(stateTransition) {
         // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
         // to verify that the move is OK.
         var turnIndexBeforeMove = stateTransition.turnIndexBeforeMove;
         var stateBeforeMove = stateTransition.stateBeforeMove;
         var move = stateTransition.move;
+        if (!stateBeforeMove && turnIndexBeforeMove === 0 &&
+            angular.equals(createInitialMove(), move)) {
+            return;
+        }
         var deltaValue = move.stateAfterMove.delta;
         var row = deltaValue.row;
         var col = deltaValue.col;
@@ -226,10 +236,8 @@ var game;
         game.state = params.move.stateAfterMove;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
-            // This is the first move in the match, so
-            // there is not going to be an animation, so
-            // call maybeSendComputerMove() now (can happen in ?onlyAIs mode)
-            maybeSendComputerMove();
+            if (isMyTurn())
+                makeMove(gameLogic.createInitialMove());
         }
         else {
             // We calculate the AI move only after the animation finishes,

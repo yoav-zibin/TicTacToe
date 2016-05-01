@@ -84,10 +84,8 @@ var game;
         game.state = params.move.stateAfterMove;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
-            // This is the first move in the match, so
-            // there is not going to be an animation, so
-            // call maybeSendComputerMove() now (can happen in ?onlyAIs mode)
-            maybeSendComputerMove();
+            if (isMyTurn())
+                makeMove(gameLogic.createInitialMove());
         }
         else {
             // We calculate the AI move only after the animation finishes,

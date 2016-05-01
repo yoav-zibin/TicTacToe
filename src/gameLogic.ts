@@ -93,6 +93,7 @@ module gameLogic {
    */
   export function createMove(
       stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number): IMove {
+    // TODO: cleanup for next semester: remove this if (waiting for old versions to disappear).
     if (!stateBeforeMove) { // stateBeforeMove is null in a new match.
       stateBeforeMove = getInitialState();
     }
@@ -121,6 +122,11 @@ module gameLogic {
     let stateAfterMove: IState = {delta: delta, board: boardAfterMove};
     return {endMatchScores: endMatchScores, turnIndexAfterMove: turnIndexAfterMove, stateAfterMove: stateAfterMove};
   }
+  
+  export function createInitialMove(): IMove {
+    return {endMatchScores: null, turnIndexAfterMove: 0, 
+        stateAfterMove: getInitialState()};  
+  }
 
   export function checkMoveOk(stateTransition: IStateTransition): void {
     // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
@@ -128,6 +134,10 @@ module gameLogic {
     let turnIndexBeforeMove = stateTransition.turnIndexBeforeMove;
     let stateBeforeMove: IState = stateTransition.stateBeforeMove;
     let move: IMove = stateTransition.move;
+    if (!stateBeforeMove && turnIndexBeforeMove === 0 &&
+        angular.equals(createInitialMove(), move)) {
+      return;
+    }
     let deltaValue: BoardDelta = move.stateAfterMove.delta;
     let row = deltaValue.row;
     let col = deltaValue.col;

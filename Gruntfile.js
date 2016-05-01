@@ -14,6 +14,8 @@ module.exports = function(grunt) {
     "512x512",
     "50x50",
     "200x200",
+    "180x120",
+    "1280x720",
     "320x50",
     "android/7inTablet-615x984",
     "android/10inTablet-656x1048",

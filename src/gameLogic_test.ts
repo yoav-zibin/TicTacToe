@@ -9,6 +9,24 @@ describe("In TicTacToe", function() {
   let O_WIN_SCORES = [0, 1];
   let TIE_SCORES = [0, 0];
 
+  function expectStateTransition(
+        isOk: boolean, stateTransition: IStateTransition) {
+    if (isOk) {
+      gameLogic.checkMoveOk(stateTransition);
+    } else {
+      // We expect an exception to be thrown :)
+      let didThrowException = false;
+      try {
+        gameLogic.checkMoveOk(stateTransition);
+      } catch (e) {
+        didThrowException = true;
+      }
+      if (!didThrowException) {
+        throw new Error("We expect an illegal move, but checkMoveOk didn't throw any exception!")
+      }
+    }   
+  }
+    
   function expectMove(
       isOk: boolean,
       turnIndexBeforeMove: number,
@@ -28,22 +46,41 @@ describe("In TicTacToe", function() {
       },
       numberOfPlayers: null
     };
-    if (isOk) {
-      gameLogic.checkMoveOk(stateTransition);
-    } else {
-      // We expect an exception to be thrown :)
-      let didThrowException = false;
-      try {
-        gameLogic.checkMoveOk(stateTransition);
-      } catch (e) {
-        didThrowException = true;
-      }
-      if (!didThrowException) {
-        throw new Error("We expect an illegal move, but checkMoveOk didn't throw any exception!")
-      }
-    }
+    expectStateTransition(isOk, stateTransition);
   }
 
+  it("Initial move", function() {
+    expectStateTransition(OK, {
+      turnIndexBeforeMove: X_TURN,
+      stateBeforeMove: null,
+      move: {
+        turnIndexAfterMove: X_TURN,
+        endMatchScores: NO_ONE_WINS,
+        stateAfterMove: {board: 
+          [['', '', ''],
+          ['', '', ''],
+          ['', '', '']], delta: null}
+      },
+      numberOfPlayers: null
+    });
+  });
+  
+  it("Initial move setting turn to O player is illegal", function() {
+    expectStateTransition(ILLEGAL, {
+      turnIndexBeforeMove: X_TURN,
+      stateBeforeMove: null,
+      move: {
+        turnIndexAfterMove: O_TURN,
+        endMatchScores: NO_ONE_WINS,
+        stateAfterMove: {board: 
+          [['', '', ''],
+          ['', '', ''],
+          ['', '', '']], delta: null}
+      },
+      numberOfPlayers: null
+    });
+  });
+  
   it("placing X in 0x0 from initial state is legal", function() {
     expectMove(OK, X_TURN, null, 0, 0,
       [['X', '', ''],
