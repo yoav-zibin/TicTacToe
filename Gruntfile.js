@@ -141,7 +141,7 @@ module.exports = function(grunt) {
         },
         processors: [
           require('autoprefixer')(), // add vendor prefixes
-          require('cssnano')() // minify the result
+          require('cssnano')({safe: true}) // minify the result, skipping unsafe optimizations
         ]
       },
       dist: {
@@ -171,8 +171,8 @@ module.exports = function(grunt) {
         options: {
           basePath: '.',
           cache: [
-            'http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js',
-            'http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-touch.min.js',
+            'http://yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.min.js',
+            'http://yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular-touch.min.js',
             'http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js',
             'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css',
             // glyphicons for the carousel

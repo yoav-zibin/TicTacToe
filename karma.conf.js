@@ -4,7 +4,7 @@ module.exports = function(config) {
     basePath : './',
 
     files : [
-      'http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.js',
+      'http://yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.js',
       'ts_output_readonly_do_NOT_change_manually/src/gameLogic.js',
       'ts_output_readonly_do_NOT_change_manually/src/aiService.js',
       'http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.js',
