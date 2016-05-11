@@ -63,8 +63,24 @@ describe('TicTacToe', function() {
     clearInterval(checkNoErrorInLogsIntervalId);
   });
   
+  
+  function safePromise<T>(p: webdriver.promise.Promise<T>): webdriver.promise.Promise<T> {
+    return p.then((x:any)=>x, ()=>false);
+  }
+  function waitUntil(fn: ()=>any) {
+    browser.driver.wait(fn, 10000);
+  }
+  function waitForElementToDisappear(elem: protractor.ElementFinder) {
+    waitUntil(()=>safePromise(elem.isPresent()).then(
+        (isPresent)=>isPresent ? 
+          safePromise(elem.isDisplayed()).then((isDisplayed)=>!isDisplayed) : !isPresent));
+  }
+  
   function getPage(page: string) {
     browser.get('/dist/index.min.html?' + page);
+    // Help screen is shown by default.
+    element(by.id('e2e_test_close_help_screen')).click();
+    waitForElementToDisappear(element(by.id('e2e_test_close_help_screen')));
   }
 
   function expectPieceKindDisplayed(row: number, col: number, pieceKind: string, isDisplayed: boolean) {

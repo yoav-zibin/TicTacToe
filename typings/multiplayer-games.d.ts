@@ -34,6 +34,7 @@ interface IGame {
   maxNumberOfPlayers: number;
   checkMoveOk(stateTransition: IStateTransition): void;
   updateUI(update: IUpdateUI): void;
+  gotMessageFromPlatform(message: any): void;
 }
 interface IMoveService {
   setGame(game: IGame): void;

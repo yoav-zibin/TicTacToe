@@ -63,8 +63,21 @@ describe('TicTacToe', function () {
         expectEmptyBrowserLogs();
         clearInterval(checkNoErrorInLogsIntervalId);
     });
+    function safePromise(p) {
+        return p.then(function (x) { return x; }, function () { return false; });
+    }
+    function waitUntil(fn) {
+        browser.driver.wait(fn, 10000);
+    }
+    function waitForElementToDisappear(elem) {
+        waitUntil(function () { return safePromise(elem.isPresent()).then(function (isPresent) { return isPresent ?
+            safePromise(elem.isDisplayed()).then(function (isDisplayed) { return !isDisplayed; }) : !isPresent; }); });
+    }
     function getPage(page) {
         browser.get('/dist/index.min.html?' + page);
+        // Help screen is shown by default.
+        element(by.id('e2e_test_close_help_screen')).click();
+        waitForElementToDisappear(element(by.id('e2e_test_close_help_screen')));
     }
     function expectPieceKindDisplayed(row, col, pieceKind, isDisplayed) {
         var selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);

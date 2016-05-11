@@ -171,7 +171,8 @@ var game;
             minNumberOfPlayers: 2,
             maxNumberOfPlayers: 2,
             checkMoveOk: gameLogic.checkMoveOk,
-            updateUI: updateUI
+            updateUI: updateUI,
+            gotMessageFromPlatform: null,
         });
         var w = window;
         if (w["HTMLInspector"]) {
@@ -230,7 +231,6 @@ var game;
     function updateUI(params) {
         log.info("Game got updateUI:", params);
         game.didMakeMove = false; // Only one move per updateUI
-        game.isHelpModalShown = false;
         game.currentUpdateUI = params;
         clearAnimationTimeout();
         game.state = params.move.stateAfterMove;

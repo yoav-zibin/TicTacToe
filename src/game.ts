@@ -29,7 +29,8 @@ module game {
       minNumberOfPlayers: 2,
       maxNumberOfPlayers: 2,
       checkMoveOk: gameLogic.checkMoveOk,
-      updateUI: updateUI
+      updateUI: updateUI,
+      gotMessageFromPlatform: null,
     });
 
     let w: any = window;
@@ -90,7 +91,6 @@ module game {
   function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
     didMakeMove = false; // Only one move per updateUI
-    isHelpModalShown = false;
     currentUpdateUI = params;
     clearAnimationTimeout();
     state = params.move.stateAfterMove;
