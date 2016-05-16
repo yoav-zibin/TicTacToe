@@ -32,15 +32,6 @@ module game {
       updateUI: updateUI,
       gotMessageFromPlatform: null,
     });
-
-    let w: any = window;
-    if (w["HTMLInspector"]) {
-      setInterval(function () {
-        w["HTMLInspector"].inspect({
-          excludeRules: ["unused-classes", "script-placement"],
-        });
-      }, 3000);
-    }
   }
 
   function getTranslations(): Translations {
@@ -88,7 +79,7 @@ module game {
     };
   }
 
-  function updateUI(params: IUpdateUI): void {
+  export function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
     didMakeMove = false; // Only one move per updateUI
     currentUpdateUI = params;

@@ -22,14 +22,6 @@ var game;
             updateUI: updateUI,
             gotMessageFromPlatform: null,
         });
-        var w = window;
-        if (w["HTMLInspector"]) {
-            setInterval(function () {
-                w["HTMLInspector"].inspect({
-                    excludeRules: ["unused-classes", "script-placement"],
-                });
-            }, 3000);
-        }
     }
     game.init = init;
     function getTranslations() {
@@ -94,6 +86,7 @@ var game;
             game.animationEndedTimeout = $timeout(animationEndedCallback, 500);
         }
     }
+    game.updateUI = updateUI;
     function animationEndedCallback() {
         log.info("Animation ended");
         maybeSendComputerMove();
