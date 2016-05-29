@@ -5,17 +5,17 @@
   <title>TicTacToe</title>
   <meta name="description" content="TicTacToe game">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
+  <link rel="stylesheet" type="text/css" href="https://yoav-zibin.github.io/emulator/main.css">
   <link rel="stylesheet" type="text/css" href="css/game.css">
 
   <!--
     Loading code to resize gameArea according to some chosen width-to-height ratio.
     In TicTacToe, the ratio is 1 (i.e., width/height = 1)
   -->
-  <script crossorigin="anonymous" src="http://yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.js"></script>
-  <script crossorigin="anonymous" src="http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.js"></script>
+  <script crossorigin="anonymous" src="https://yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.js"></script>
+  <script crossorigin="anonymous" src="https://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.js"></script>
   <script>
-    angular.module('myApp', []).run(function () { resizeGameAreaService.setWidthToHeight(1); });
+    angular.module('myApp', ['gameServices']).run(function () { resizeGameAreaService.setWidthToHeight(1); });
   </script>
 </head>
 <body>
