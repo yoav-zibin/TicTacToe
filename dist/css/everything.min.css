@@ -1,2 +1,2 @@
-.r{border-right:4pt solid #000}.b{border-bottom:4pt solid #000}.slowlyAppear{-webkit-animation:slowlyAppear .5s linear;animation:slowlyAppear .5s linear}@-webkit-keyframes slowlyAppear{0%{opacity:.1}to{opacity:1}}@keyframes slowlyAppear{0%{opacity:.1}to{opacity:1}}td{padding:0 5px}
+body{background-color:#fafafa}.r{border-right:4pt solid #000}.b{border-bottom:4pt solid #000}.slowlyAppear{-webkit-animation:slowlyAppear .5s linear;animation:slowlyAppear .5s linear}@-webkit-keyframes slowlyAppear{0%{opacity:.1}to{opacity:1}}@keyframes slowlyAppear{0%{opacity:.1}to{opacity:1}}td{padding:0 5px}
 /*# sourceMappingURL=maps/everything.min.css.map */
