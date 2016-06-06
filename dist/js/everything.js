@@ -163,6 +163,7 @@ var game;
     game.state = null;
     game.isHelpModalShown = false;
     function init() {
+        registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
         log.log("Translation of 'TICTACTOE_RULES_TITLE' is " + translate('TICTACTOE_RULES_TITLE'));
