@@ -182,6 +182,10 @@ module.exports = function(grunt) {
           basePath: '.',
           cache: [
             // Use the same list in service-worker.js !
+            'js/everything.min.js',
+            'css/everything.min.css',
+            'imgs/HelpSlide1.png',
+            'imgs/HelpSlide2.png',
             '//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.min.js',
             '//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular-touch.min.js',
             '//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js',
@@ -191,10 +195,6 @@ module.exports = function(grunt) {
             '//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/glyphicons-halflings-regular.ttf',
             '//yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js',
             '//yoav-zibin.github.io/emulator/main.css',
-            'js/everything.min.js',
-            'css/everything.min.css',
-            'imgs/HelpSlide1.png',
-            'imgs/HelpSlide2.png',
           ],
           network: [
             'js/everything.min.js.map',

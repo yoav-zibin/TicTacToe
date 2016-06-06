@@ -1,8 +1,15 @@
-// Mon Jun 06 2016 17:42:07 GMT-0400 (EDT)
+// Mon Jun 06 2016 17:57:52 GMT-0400 (EDT)
 'use strict';
 
 // The files we want to cache
 var urlsToCache = [
+  '//yoav-zibin.github.io/TicTacToe/dist/index.min.html',
+
+  // Same list as in Gruntfile.js (for AppCache)
+  '//yoav-zibin.github.io/TicTacToe/dist/js/everything.min.js',
+  '//yoav-zibin.github.io/TicTacToe/dist/css/everything.min.css',
+  '//yoav-zibin.github.io/TicTacToe/dist/imgs/HelpSlide1.png',
+  '//yoav-zibin.github.io/TicTacToe/dist/imgs/HelpSlide2.png',
   '//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.min.js',
   '//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular-touch.min.js',
   '//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js',
@@ -12,10 +19,6 @@ var urlsToCache = [
   '//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/glyphicons-halflings-regular.ttf',
   '//yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js',
   '//yoav-zibin.github.io/emulator/main.css',
-  '//yoav-zibin.github.io/TicTacToe/dist/js/everything.min.js',
-  '//yoav-zibin.github.io/TicTacToe/dist/css/everything.min.css',
-  '//yoav-zibin.github.io/TicTacToe/dist/imgs/HelpSlide1.png',
-  '//yoav-zibin.github.io/TicTacToe/dist/imgs/HelpSlide2.png',
 ];
 var CACHE_NAME = 'cache-v1';
 
@@ -39,7 +42,7 @@ self.addEventListener('fetch', function(event) {
           return response;
         }
         //return fetch(event.request);
-        
+
         // Cache miss - fetch from the internet and put in cache (for things like avatars from FB).
 
         // IMPORTANT: Clone the request. A request is a stream and
