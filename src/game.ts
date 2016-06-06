@@ -4,7 +4,7 @@ interface SupportedLanguages {
   el: string, fr: string,
   hi: string, es: string,
 };
-        
+
 interface Translations {
   [index: string]: SupportedLanguages;
 }
@@ -32,6 +32,18 @@ module game {
       updateUI: updateUI,
       gotMessageFromPlatform: null,
     });
+  }
+
+  function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+      let n: any = navigator;
+      log.log('Calling serviceWorker.register');
+      n.serviceWorker.register('service-worker.js').then(function(registration: any) {
+        log.log('ServiceWorker registration successful with scope: ',    registration.scope);
+      }).catch(function(err: any) {
+        log.log('ServiceWorker registration failed: ', err);
+      });
+    }
   }
 
   function getTranslations(): Translations {
@@ -95,26 +107,26 @@ module game {
       animationEndedTimeout = $timeout(animationEndedCallback, 500);
     }
   }
-  
+
   function animationEndedCallback() {
     log.info("Animation ended");
     maybeSendComputerMove();
   }
-  
+
   function clearAnimationTimeout() {
     if (animationEndedTimeout) {
       $timeout.cancel(animationEndedTimeout);
       animationEndedTimeout = null;
     }
   }
-  
+
   function maybeSendComputerMove() {
     if (!isComputerTurn()) return;
     let move = aiService.findComputerMove(currentUpdateUI.move);
     log.info("Computer move: ", move);
     makeMove(move);
   }
-  
+
   function makeMove(move: IMove) {
     if (didMakeMove) { // Only one move per updateUI
       return;
@@ -122,27 +134,27 @@ module game {
     didMakeMove = true;
     moveService.makeMove(move);
   }
-  
+
   function isFirstMove() {
     return !currentUpdateUI.move.stateAfterMove;
   }
-  
+
   function yourPlayerIndex() {
     return currentUpdateUI.yourPlayerIndex;
   }
-  
+
   function isComputer() {
     return currentUpdateUI.playersInfo[currentUpdateUI.yourPlayerIndex].playerId === '';
   }
-  
+
   function isComputerTurn() {
     return isMyTurn() && isComputer();
   }
-  
+
   function isHumanTurn() {
     return isMyTurn() && !isComputer();
   }
-  
+
   function isMyTurn() {
     return !didMakeMove && // you can only make one move per updateUI.
       currentUpdateUI.move.turnIndexAfterMove >= 0 && // game is ongoing

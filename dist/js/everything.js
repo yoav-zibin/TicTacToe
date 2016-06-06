@@ -62,8 +62,8 @@ var gameLogic;
             'X...X...X',
             '..X.X.X..'
         ];
-        for (var _i = 0, win_patterns_1 = win_patterns; _i < win_patterns_1.length; _i++) {
-            var win_pattern = win_patterns_1[_i];
+        for (var _i = 0; _i < win_patterns.length; _i++) {
+            var win_pattern = win_patterns[_i];
             var x_regexp = new RegExp(win_pattern);
             var o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
             if (x_regexp.test(boardString)) {
@@ -176,6 +176,17 @@ var game;
         });
     }
     game.init = init;
+    function registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            var n = navigator;
+            log.log('Calling serviceWorker.register');
+            n.serviceWorker.register('service-worker.js').then(function (registration) {
+                log.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }).catch(function (err) {
+                log.log('ServiceWorker registration failed: ', err);
+            });
+        }
+    }
     function getTranslations() {
         return {
             "TICTACTOE_RULES_TITLE": {

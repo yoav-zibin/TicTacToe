@@ -120,6 +120,16 @@ module.exports = function(grunt) {
         src: 'imgs/*.*',
         dest: 'dist/'
       },
+      sw: {
+        src: 'service-worker.js',
+        dest: 'dist/service-worker.js',
+        options: {
+          process: function (content, srcpath) {
+            // Adding timestamp so whenever we run grunt, we will have a new service-worker, and precache everything.
+            return '// ' + (new Date()) + '\n' + content;
+          },
+        },
+      }
     },
     concat: {
       options: {
@@ -171,6 +181,7 @@ module.exports = function(grunt) {
         options: {
           basePath: '.',
           cache: [
+            // Use the same list in service-worker.js !
             '//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.min.js',
             '//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular-touch.min.js',
             '//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js',

@@ -24,6 +24,17 @@ var game;
         });
     }
     game.init = init;
+    function registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            var n = navigator;
+            log.log('Calling serviceWorker.register');
+            n.serviceWorker.register('service-worker.js').then(function (registration) {
+                log.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }).catch(function (err) {
+                log.log('ServiceWorker registration failed: ', err);
+            });
+        }
+    }
     function getTranslations() {
         return {
             "TICTACTOE_RULES_TITLE": {
