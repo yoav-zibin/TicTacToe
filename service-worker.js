@@ -36,12 +36,13 @@ self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request)
       .then(function(response) {
-        // Cache hit - return response
         if (response) {
+          console.log('Service-worker: Cache hit for request ', event.request);
           return response;
         }
         //return fetch(event.request);
 
+        console.log('Service-worker: Cache miss (fetching from internet) for request ', event.request);
         // Cache miss - fetch from the internet and put in cache (for things like avatars from FB).
 
         // IMPORTANT: Clone the request. A request is a stream and
@@ -65,6 +66,7 @@ self.addEventListener('fetch', function(event) {
 
             caches.open(CACHE_NAME)
               .then(function(cache) {
+                console.log('Service-worker: Storing in cache request ', event.request);
                 cache.put(event.request, responseToCache);
               });
 

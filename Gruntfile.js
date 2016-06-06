@@ -129,7 +129,7 @@ module.exports = function(grunt) {
             return '// ' + (new Date()) + '\n' + content;
           },
         },
-      }
+      },
     },
     concat: {
       options: {
