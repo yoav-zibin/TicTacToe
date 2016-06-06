@@ -199,6 +199,7 @@ module.exports = function(grunt) {
           network: [
             'js/everything.min.js.map',
             'js/everything.js',
+            'service-worker.js',
           ],
           timestamp: true
         },
