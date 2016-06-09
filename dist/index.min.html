@@ -11,69 +11,15 @@
   <link rel="stylesheet" type="text/css" href="css/everything.min.css">
   <link crossorigin="anonymous" rel="stylesheet" type="text/css" href="//yoav-zibin.github.io/emulator/main.css">
   
-  <link crossorigin="anonymous" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-
   <!-- The crossorigin attribute controls, for scripts that are obtained from other origins, whether error information will be exposed. -->
   <script crossorigin="anonymous" src="//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.min.js"></script>
-
-  <!-- For the game rules/instructions, I use carousel from Angular UI + Bootstrap + ngTouch for swiping the rules slides. -->
-  <script crossorigin="anonymous" src="//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular-touch.min.js"></script>
-  <script crossorigin="anonymous" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js"></script>
 
   <script crossorigin="anonymous" src="//yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js"></script>
 
   <script src="js/everything.min.js"></script>
 </head>
 <body ng-cloak>
-  <div class="overlayModal" ng-click="game.clickedOnModal($event)"
-      ng-class="{zeroOpacity: !game.isHelpModalShown, oneOpacity: game.isHelpModalShown}" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button id="e2e_test_close_help_screen" type="button" class="close" ng-click="game.isHelpModalShown = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 id="e2e_test_rules_title" class="modal-title">
-            {{ 'TICTACTOE_RULES_TITLE' | translate }}
-          </h4>
-        </div>
-        <div class="modal-body">
-          <carousel style="height: 150px">
-            <slide>
-              <table>
-                <tr>
-                  <td id="e2e_test_rules_slide1_text">
-                    {{ 'TICTACTOE_RULES_SLIDE1' | translate }}
-                  </td>
-                  <td>
-                    <img src="imgs/HelpSlide1.png" alt="Help slide 1" style="height:100px;">
-                  </td>
-                </tr>
-              </table>
-            </slide>
-            <slide>
-              <table>
-                <tr>
-                  <td id="e2e_test_rules_slide2_text">
-                  {{ 'TICTACTOE_RULES_SLIDE2' | translate }}
-                  </td>
-                  <td>
-                    <img src="imgs/HelpSlide2.png" alt="Help slide 2" style="height:100px;">
-                  </td>
-                </tr>
-              </table>
-            </slide>
-          </carousel>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" ng-click="game.isHelpModalShown = false">
-            {{ 'TICTACTOE_CLOSE' | translate }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
 <div id="gameArea">
-
   <div ng-repeat="row in [0, 1, 2]"
       style="position:absolute; top:{{row * 33}}%; left:0; width:100%; height:33%;">
     <div ng-repeat="col in [0, 1, 2]"

@@ -78,9 +78,6 @@ describe('TicTacToe', function() {
   
   function getPage(page: string) {
     browser.get('/dist/index.min.html?' + page);
-    // Help screen is shown by default.
-    element(by.id('e2e_test_close_help_screen')).click();
-    waitForElementToDisappear(element(by.id('e2e_test_close_help_screen')));
   }
 
   function expectPieceKindDisplayed(row: number, col: number, pieceKind: string, isDisplayed: boolean) {

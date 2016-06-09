@@ -1,4 +1,4 @@
-// Mon Jun 06 2016 18:18:26 GMT-0400 (EDT)
+// Wed Jun 08 2016 18:24:24 GMT-0400 (EDT)
 'use strict';
 
 // The files we want to cache
@@ -8,15 +8,7 @@ var urlsToCache = [
   // Same list as in Gruntfile.js (for AppCache)
   '//yoav-zibin.github.io/TicTacToe/dist/js/everything.min.js',
   '//yoav-zibin.github.io/TicTacToe/dist/css/everything.min.css',
-  '//yoav-zibin.github.io/TicTacToe/dist/imgs/HelpSlide1.png',
-  '//yoav-zibin.github.io/TicTacToe/dist/imgs/HelpSlide2.png',
   '//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.min.js',
-  '//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular-touch.min.js',
-  '//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js',
-  '//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css',
-  // glyphicons for the carousel
-  '//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/glyphicons-halflings-regular.woff',
-  '//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/glyphicons-halflings-regular.ttf',
   '//yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js',
   '//yoav-zibin.github.io/emulator/main.css',
 ];

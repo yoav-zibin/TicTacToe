@@ -2,8 +2,8 @@ function expectEmptyBrowserLogs() {
     browser.manage().logs().get('browser').then(function (browserLog) {
         // See if there are any errors (warnings are ok)
         var hasErrors = false;
-        for (var _i = 0; _i < browserLog.length; _i++) {
-            var log_1 = browserLog[_i];
+        for (var _i = 0, browserLog_1 = browserLog; _i < browserLog_1.length; _i++) {
+            var log_1 = browserLog_1[_i];
             var level = log_1.level.name;
             if (level === 'INFO' || level === 'WARNING')
                 continue; // (warnings are ok)
@@ -75,9 +75,6 @@ describe('TicTacToe', function () {
     }
     function getPage(page) {
         browser.get('/dist/index.min.html?' + page);
-        // Help screen is shown by default.
-        element(by.id('e2e_test_close_help_screen')).click();
-        waitForElementToDisappear(element(by.id('e2e_test_close_help_screen')));
     }
     function expectPieceKindDisplayed(row, col, pieceKind, isDisplayed) {
         var selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);
