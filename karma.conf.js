@@ -4,10 +4,10 @@ module.exports = function(config) {
     basePath : './',
 
     files : [
-      'https://yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.js',
+      'lib/angular.js',
       'ts_output_readonly_do_NOT_change_manually/src/gameLogic.js',
       'ts_output_readonly_do_NOT_change_manually/src/aiService.js',
-      'https://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.js',
+      'lib/turnBasedServices.3.js',
       'ts_output_readonly_do_NOT_change_manually/src/gameLogic_test.js',
       'ts_output_readonly_do_NOT_change_manually/src/aiService_test.js'
     ],
