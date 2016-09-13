@@ -1,4 +1,4 @@
-// Thu Sep 08 2016 17:25:08 GMT-0400 (EDT)
+// Tue Sep 13 2016 10:47:49 GMT-0400 (EDT)
 'use strict';
 
 // The files we want to cache
@@ -8,9 +8,8 @@ var urlsToCache = [
   // Same list as in Gruntfile.js (for AppCache)
   '//yoav-zibin.github.io/TicTacToe/dist/js/everything.min.js',
   '//yoav-zibin.github.io/TicTacToe/dist/css/everything.min.css',
-  '//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.min.js',
-  '//yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js',
-  '//yoav-zibin.github.io/emulator/main.css',
+  '//yoav-zibin.github.io/TicTacToe/dist/lib/angular.min.js',
+  '//yoav-zibin.github.io/TicTacToe/dist/lib/turnBasedServices.3.min.js',
 ];
 var CACHE_NAME = 'cache-v1';
 

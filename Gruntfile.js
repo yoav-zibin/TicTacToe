@@ -184,9 +184,8 @@ module.exports = function(grunt) {
             // Use the same list in service-worker.js !
             'js/everything.min.js',
             'css/everything.min.css',
-            '//yoav-zibin.github.io/angular-material-with-sourceMappingURL/angular.min.js',
-            '//yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js',
-            '//yoav-zibin.github.io/emulator/main.css',
+            'lib/angular.min.js',
+            'lib/turnBasedServices.3.min.js',
           ],
           network: [
             'js/everything.min.js.map',
