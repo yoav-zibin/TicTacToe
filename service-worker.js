@@ -7,8 +7,6 @@ var urlsToCache = [
   // Same list as in Gruntfile.js (for AppCache)
   '//yoav-zibin.github.io/TicTacToe/dist/js/everything.min.js',
   '//yoav-zibin.github.io/TicTacToe/dist/css/everything.min.css',
-  '//yoav-zibin.github.io/TicTacToe/dist/lib/angular.min.js',
-  '//yoav-zibin.github.io/TicTacToe/dist/lib/turnBasedServices.3.min.js',
 ];
 var CACHE_NAME = 'cache-v1';
 

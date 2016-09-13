@@ -137,6 +137,8 @@ module.exports = function(grunt) {
       },
       js: {
         src: [
+          'lib/angular.js',
+          'lib/turnBasedServices.3.js',
           'ts_output_readonly_do_NOT_change_manually/src/gameLogic.js',
           'ts_output_readonly_do_NOT_change_manually/src/game.js',
           'ts_output_readonly_do_NOT_change_manually/src/aiService.js'],
@@ -184,17 +186,11 @@ module.exports = function(grunt) {
             // Use the same list in service-worker.js !
             'js/everything.min.js',
             'css/everything.min.css',
-            'lib/angular.min.js',
-            'lib/turnBasedServices.3.min.js',
           ],
           network: [
             'service-worker.js',
             'js/everything.min.js.map',
             'js/everything.js',
-            'lib/angular.min.js.map',
-            'lib/angular.js',
-            'lib/turnBasedServices.3.min.js.map',
-            'lib/turnBasedServices.3.js',
           ],
           timestamp: true
         },
