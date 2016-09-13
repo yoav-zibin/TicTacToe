@@ -188,9 +188,13 @@ module.exports = function(grunt) {
             'lib/turnBasedServices.3.min.js',
           ],
           network: [
+            'service-worker.js',
             'js/everything.min.js.map',
             'js/everything.js',
-            'service-worker.js',
+            'lib/angular.min.js.map',
+            'lib/angular.js',
+            'lib/turnBasedServices.3.min.js.map',
+            'lib/turnBasedServices.3.js',
           ],
           timestamp: true
         },
