@@ -28,12 +28,15 @@ module.exports = function(grunt) {
     "ios/iphone6plus-5.5inch-1242x2208",
     "phonegap/icon-29",
     "phonegap/icon-40",
+    "phonegap/icon-50",
     "phonegap/icon-57",
     "phonegap/icon-58",
     "phonegap/icon-60",
     "phonegap/icon-72",
     "phonegap/icon-76",
     "phonegap/icon-80",
+    "phonegap/icon-87",
+    "phonegap/icon-100",
     "phonegap/icon-114",
     "phonegap/icon-120",
     "phonegap/icon-144",
@@ -122,7 +125,7 @@ module.exports = function(grunt) {
       },
       sw: {
         src: 'service-worker.js',
-        dest: 'dist/service-worker.js',
+        dest: 'dist/service-worker.js', // // I can also use uglify with a banner (to add a timestamp), but the file is so small it's not worth the complexity.
         options: {
           process: function (content, srcpath) {
             // Adding timestamp so whenever we run grunt, we will have a new service-worker, and precache everything.
