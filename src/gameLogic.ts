@@ -93,8 +93,7 @@ module gameLogic {
    */
   export function createMove(
       stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number): IMove {
-    // TODO: cleanup for next semester: remove this if (waiting for old versions to disappear).
-    if (!stateBeforeMove) { // stateBeforeMove is null in a new match.
+    if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
     let board: Board = stateBeforeMove.board;

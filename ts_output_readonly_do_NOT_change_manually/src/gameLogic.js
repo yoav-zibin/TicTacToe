@@ -80,7 +80,6 @@ var gameLogic;
      * with index turnIndexBeforeMove makes a move in cell row X col.
      */
     function createMove(stateBeforeMove, row, col, turnIndexBeforeMove) {
-        // TODO: cleanup for next semester: remove this if (waiting for old versions to disappear).
         if (!stateBeforeMove) {
             stateBeforeMove = getInitialState();
         }
