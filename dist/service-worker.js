@@ -1,4 +1,3 @@
-// Fri Sep 16 2016 10:39:10 GMT-0400 (EDT)
 'use strict';
 
 // The files we want to cache
@@ -9,7 +8,21 @@ var urlsToCache = [
   '//yoav-zibin.github.io/TicTacToe/dist/js/everything.min.js',
   '//yoav-zibin.github.io/TicTacToe/dist/css/everything.min.css',
 ];
-var CACHE_NAME = 'cache-v1';
+var CACHE_NAME = 'cache-v2016-09-18T14:46:42.310Z';
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+      caches.keys().then(function(cacheNames) {
+        return Promise.all(
+            cacheNames.map(function(cacheName) {
+              if (cacheName != CACHE_NAME) {
+                return caches.delete(cacheName);
+              }
+            })  
+        );
+      })
+  );
+});
 
 self.addEventListener('install', function(event) {
   // Perform install steps

@@ -8,7 +8,21 @@ var urlsToCache = [
   '//yoav-zibin.github.io/TicTacToe/dist/js/everything.min.js',
   '//yoav-zibin.github.io/TicTacToe/dist/css/everything.min.css',
 ];
-var CACHE_NAME = 'cache-v1';
+var CACHE_NAME = 'cache-v<REPLACE_WITH_DATE_IN_GRUNT>';
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+      caches.keys().then(function(cacheNames) {
+        return Promise.all(
+            cacheNames.map(function(cacheName) {
+              if (cacheName != CACHE_NAME) {
+                return caches.delete(cacheName);
+              }
+            })  
+        );
+      })
+  );
+});
 
 self.addEventListener('install', function(event) {
   // Perform install steps

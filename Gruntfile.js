@@ -128,8 +128,7 @@ module.exports = function(grunt) {
         dest: 'dist/service-worker.js', // // I can also use uglify with a banner (to add a timestamp), but the file is so small it's not worth the complexity.
         options: {
           process: function (content, srcpath) {
-            // Adding timestamp so whenever we run grunt, we will have a new service-worker, and precache everything.
-            return '// ' + (new Date()) + '\n' + content;
+            return content.replace('<REPLACE_WITH_DATE_IN_GRUNT>', new Date().toISOString());
           },
         },
       },
