@@ -142,7 +142,8 @@ var gameLogic;
             turnIndexBeforeMove: 0,
             stateBeforeMove: null,
             move: move,
-            numberOfPlayers: 2 };
+            numberOfPlayers: 2
+        };
         gameLogic.checkMoveOk(params);
     }
     gameLogic.forSimpleTestHtml = forSimpleTestHtml;
