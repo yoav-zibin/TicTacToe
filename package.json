@@ -1,8 +1,8 @@
 {
-  "name": "tictactoe",
+  "name": "Chess_2016",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yoav-zibin/TicTacToe.git"
+    "url": "https://github.com/qdm12/Chess_2016.git"
   },
   "version": "1.0.0",
   "devDependencies": {
@@ -37,5 +37,5 @@
     "start": "http-server -a localhost -p 9000 -c-1",
     "test": "grunt"
   },
-  "author": "Yoav Zibin"
+  "author": "NYU students"
 }
