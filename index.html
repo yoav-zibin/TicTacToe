@@ -1,15 +1,31 @@
 <!DOCTYPE html>
-<!-- build:[manifest] index.min.appcache -->
+<!-- build:[manifest] game.appcache -->
 <html lang="en" ng-app="myApp" ng-strict-di>
 <!-- /build -->
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{ 'CHESS_GAME' | translate }}</title>
+  <meta name="description" content="Chess game">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>TicTacToe</title>
-  <meta name="description" content="TicTacToe game">
-  <link rel="shortcut icon" type="image/x-icon" href="data:image/x-icon;,"><!-- Suppress browser request for favicon.ico -->
 
-  <!-- To ensure CSS files are downloaded in parallel, always include external CSS before external JavaScript. -->
+  <!-- build:js http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js -->
+  <script crossorigin="anonymous" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
+  <!-- /build -->
+
+  <!-- For the game rules/instructions, I use carousel from Angular UI + Bootstrap -->
+  <!-- build:css http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.css">
+  <!-- /build -->
+  <!-- build:js http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-touch.min.js -->
+  <script crossorigin="anonymous" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-touch.js"></script>
+  <!-- /build -->
+  <!-- build:js http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js -->
+  <script crossorigin="anonymous" src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.js"></script>
+  <!-- /build -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
   <!-- build:[href] css/everything.min.css -->
   <link rel="stylesheet" type="text/css" href="css/game.css">
   <!-- /build -->
@@ -21,37 +37,234 @@
   <script src="ts_output_readonly_do_NOT_change_manually/src/game.js"></script>
   <script src="ts_output_readonly_do_NOT_change_manually/src/aiService.js"></script>
   <!-- /build -->
+
+  <script>window.angularTranslationLanguages = ['en', 'zh'];</script>
+  <!-- build:js http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js -->
+  <script crossorigin="anonymous" src="http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.js"></script>
+  <!-- /build -->
 </head>
+
 <body ng-cloak>
+<div style="position:absolute; bottom:5px; left: 5px">
+  <span ng-click="isHelpModalShown = true"
+      class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+</div>
+
+<div class="overlayModal" ng-show="isHelpModalShown" aria-hidden="true">
+  <div class="modal-backdrop in"></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="isHelpModalShown = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+          {{ 'RULES_OF_CHESS' | translate }}
+        </h4>
+      </div>
+      <div class="modal-body">
+        <carousel style="height: 200px;">
+          <slide>
+            <table>
+              <tr>
+                <td>
+                  {{ 'RULES_SLIDE1' | translate }}
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide1.png" class="helperImg">
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                {{ 'RULES_SLIDE2' | translate }}
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide2.png" class="helperImg">
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                {{ 'RULES_SLIDE3' | translate }}
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide3.png" class="helperImg">
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                {{ 'RULES_SLIDE4' | translate }}
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide4.png" class="helperImg">
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                {{ 'RULES_SLIDE5' | translate }}
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide5.png" class="helperImg">
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                {{ 'RULES_SLIDE6' | translate }}
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide6.png" class="helperImg">
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                {{ 'RULES_SLIDE7' | translate }}
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide7.png" class="helperImg">
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                {{ 'RULES_SLIDE8' | translate }}
+                <img src="imgs/HelpSlide8-1.png" class="helperImg">
+                </td>
+                <td>
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                {{ 'RULES_SLIDE9' | translate }}
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide9.png" class="helperImg">
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                {{ 'RULES_SLIDE10' | translate }}
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide10.png" class="helperImg">
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                <p>{{ 'RULES_SLIDE11' | translate }}</p>
+                <p>{{ 'RULES_SLIDE11_2' | translate}}</p>
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide11.png" class="helperImg">
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                <p>{{ 'RULES_SLIDE12' | translate }}</p>
+                <p>{{ 'RULES_SLIDE12_2' | translate}}</p>
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide12.png" class="helperImg">
+                </td>
+              </tr>
+            </table>
+          </slide>
+        </carousel>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="isHelpModalShown = false">
+          {{ 'CLOSE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div id="gameArea">
-  <div ng-repeat="row in [0, 1, 2]"
-      style="position:absolute; top:{{row * 33}}%; left:0; width:100%; height:33%;">
-    <div ng-repeat="col in [0, 1, 2]"
-        style="position:absolute; top:0; left:{{col * 33}}%; width:33%; height:100%;"
-        ng-class="{r: col < 2, b: row < 2}"
-        ng-click="game.cellClicked(row, col)"
-        id="{{'e2e_test_div_' + row + 'x' + col}}">
-      <div style="width:100%; height: 100%"
-          ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
-          ng-if="game.shouldShowImage(row, col)">
-        <svg ng-if="game.isPieceO(row, col)"
-            id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <circle cx="50%" cy="50%" r="27%"
-            stroke="blue" stroke-width="5%" fill="white" />
+  <section id="board">
+    <div ng-repeat="row in game.rows"
+        style="position:absolute; top:{{row * 100 / game.rowsNum}}%; left:0; width:100%; height:{{100 / game.rowsNum}}%;">
+      <div ng-repeat="col in game.cols" class="square"
+          style="position:absolute; top:0; left:{{col * 100 / game.colsNum}}%; width:{{100 / game.colsNum}}%; height:100%;"
+          id="{{'e2e_test_div_' + row + 'x' + col}}">
+        <svg width="100%" height="100%"
+          style="position:absolute;"
+          ng-show="true">
+          <!-- background image -->
+          <rect width="100%" height="100%" ng-attr-fill="{{game.getBackgroundFill(row, col)}}" id="MyBackground{{row}}x{{col}}" />
+          <div class="img-wrap" id="MyPiece{{row}}x{{col}}">
+            <!--The image of the piece get wrapped upon background img-->
+            <img ng-class="{piece: true,
+                            canSelect: game.canSelect(row, col),
+                            isBlackPiece: game.isBlackPiece(row, col),
+                            isWhitePiece: game.isWhitePiece(row, col)}"
+              ng-show="game.shouldShowImage(row, col)"
+              ng-src="{{game.getImageSrc(row, col)}}"
+              id="{{'e2e_test_img_' + game.getPieceKindInId(row, col) + '_' + row + 'x' + col}}">
+          </div>
         </svg>
-        <svg ng-if="game.isPieceX(row, col)"
-            id="{{'e2e_test_pieceX_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <line x1="25%" y1="25%"
-                x2="75%" y2="75%"
-                stroke="red"
-                stroke-width="5%"/>
-          <line x1="25%" y1="75%"
-                x2="75%" y2="25%"
-                stroke="red"
-                stroke-width="5%"/>
-        </svg>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="overlayModal" ng-show="isModalShown('promotionModal')" aria-hidden="true">
+  <div class="modal-backdrop in"></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">{{ 'PROMOTION_MESSAGE' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div><label><img ng-src="imgs/Chess-{{player}}Queen.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}Q" checked>{{ 'PROMOTE_QUEEN' | translate }}</label></div>
+        <div><label><img ng-src="imgs/Chess-{{player}}Rook.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}R">{{ 'PROMOTE_ROOK' | translate }}</label></div>
+        <div><label><img ng-src="imgs/Chess-{{player}}Knight.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}N">{{ 'PROMOTE_KNIGHT' | translate }}</label></div>
+        <div><label><img ng-src="imgs/Chess-{{player}}Bishop.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}B">{{ 'PROMOTE_BISHOP' | translate }}</label></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="updatePromoteTo()">
+          {{ 'PROMOTE_ACTION' | translate }}!
+        </button>
       </div>
     </div>
   </div>

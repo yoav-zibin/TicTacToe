@@ -1,48 +1,140 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: fixed!important;
+.piece {
+  position: absolute;
+  width: 60%;
+  top: 20%;
+  left: 20%;
 }
-/* To prevent long-press that will bring up copy-paste dialog. */
-* {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
-  -moz-touch-callout: none;
-  -ms-touch-callout: none;
-  touch-callout: none;
-  outline: 0; /* To prevent blue-box outline after click: http://stackoverflow.com/questions/21719306/getting-rid-of-a-blue-box-around-button-when-pressed */
+.rb {
+  border-right: 2pt solid black;
+  border-bottom: 2pt solid black;
+
 }
-textarea, input {
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  user-select: text !important;
+.l {
+  border-left: 2pt solid black;
+
 }
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
-}
-body {
-  background-color: rgb(250,250,250);
+.t {
+  border-top: 2pt solid black;
 }
 
-.r {
-  border-right: 4pt solid black;
+.background_image {
+  max-width: 100%;
+  position: absolute;
+  z-index: 10;
+  left: 0;
 }
-.b {
-  border-bottom: 4pt solid black;
+
+.selectedPiece {
+  /*box-shadow: 0px 0px 5px 5px #5F04B4;*/
+  width: 80%;
+  height: 80%;
+  top: 10%;
+  left: 10%;
+  position: absolute;
+  border: 1px blue;
+ /* -webkit-transition: width 1s, height 1s;*/
+}
+
+img.isBlackPiece.canSelect {
+  animation: black-blink 2s infinite;
+  -webkit-animation: black-blink 2s infinite;
+}
+
+img.isWhitePiece.canSelect {
+  animation: white-blink 2s infinite;
+  -webkit-animation: white-blink 2s infinite;
+}
+
+svg .lightSquare {
+  fill: rgb(255, 204, 0);
+}
+
+svg .darkSquare {
+  fill: rgb(230, 138, 0);
+}
+
+.carousel-indicators li {
+  background-color: black;
+}
+.carousel-indicators .active {
+  background-color: green;
+}
+td {
+  margin: auto;
+  padding:0 5px 0 5px;
+}
+
+.modal-dialog {
+  z-index: 1001;
+}
+
+.overlayModal {
+  text-align:center;
+  z-index: 1000;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width:100%;
+  height:100%;
+}
+
+.modal-backdrop {
+  z-index: 1000;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width:100%;
+  height:100%;
+}
+
+.helperImg {
+  height: 45%;
 }
 
 .slowlyAppear {
-  animation: slowlyAppear 0.5s linear;
+  -webkit-animation: slowlyAppear 0.3s linear; /* Chrome, Safari, Opera */
+  animation: slowlyAppear 0.3s linear;
+}
+/* Chrome, Safari, Opera */
+@-webkit-keyframes slowlyAppear {
+  from {opacity: 0.1;}
+  to {opacity: 1;}
 }
 
+/* Standard syntax */
 @keyframes slowlyAppear {
   from {opacity: 0.1;}
   to {opacity: 1;}
+}
+
+/****************************************
+Blink key frames
+****************************************/
+@keyframes white-blink {
+  50% {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+    -webkit-box-shadow:0 0 18px #ffb515;
+  }
+}
+@-webkit-keyframes white-blink {
+  50% {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+    -webkit-box-shadow:0 0 18px #ffb515;
+  }
+}
+
+@keyframes black-blink {
+  50% {
+    filter: brightness(1.6);
+    -webkit-filter: brightness(1.6);
+    -webkit-box-shadow:0 0 18px #4C0000;
+  }
+}
+@-webkit-keyframes black-blink {
+  50% {
+    filter: brightness(1.6);
+    -webkit-filter: brightness(1.6);
+    -webkit-box-shadow:0 0 18px #4C0000;
 }

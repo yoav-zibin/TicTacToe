@@ -3,20 +3,52 @@ declare var $location: angular.ILocationService;
 declare var $timeout: angular.ITimeoutService;
 declare var $interval: angular.IIntervalService;
 
-// IState should be defined by the game, e.g., TicTacToe defines it as:
-// interface IState { board: Board; delta: BoardDelta; }
-// When the match ends, set turnIndexAfterMove -1 and endMatchScores to an array of scores.
-// When the match is ongoing, set turnIndexAfterMove to a valid index and endMatchScores to null.
-interface IMove {
-  endMatchScores: number[];
-  turnIndexAfterMove: number;
-  stateAfterMove: IState;
+interface ISet {
+  key: string;
+  value: any;
+  visibleToPlayerIndexes?: number[];
 }
-interface IStateTransition {
-  turnIndexBeforeMove : number;
-  stateBeforeMove: IState;
-  numberOfPlayers: number;
+interface ISetVisibility {
+  key: string;
+  visibleToPlayerIndexes?: number[];
+}
+interface ISetRandomInteger {
+  key: string;
+  from: number;
+  to: number;
+}
+interface IDelete {
+  key: string;
+}
+interface IShuffle {
+  keys: string[];
+}
+interface ISetTurn {
+  turnIndex: number;
+}
+interface IEndMatch {
+  endMatchScores: number[];
+}
+interface IOperation {
+  set?: ISet;
+  setVisibility?: ISetVisibility;
+  setRandomInteger?: ISetRandomInteger;
+  delete?: IDelete;
+  shuffle?: IShuffle;
+  setTurn?: ISetTurn;
+  endMatch?: IEndMatch;
+}
+declare type IMove = IOperation[];
+interface IState {
+  [index: string]: any;
+}
+interface IIsMoveOk {
   move: IMove;
+  turnIndexBeforeMove : number;
+  turnIndexAfterMove: number;
+  stateBeforeMove: IState;
+  stateAfterMove: IState;
+  numberOfPlayers: number;
 }
 interface IPlayerInfo {
   avatarImageUrl: string;
@@ -24,23 +56,26 @@ interface IPlayerInfo {
   playerId: string;
 }
 declare type PlayMode = string | number;
-interface IUpdateUI extends IStateTransition {
+interface IUpdateUI extends IIsMoveOk {
   playersInfo: IPlayerInfo[];
   yourPlayerIndex: number;
   playMode: PlayMode;
+  moveNumber: number;
+  randomSeed: string;
+  endMatchScores?: number[];
 }
 interface IGame {
+  isMoveOk(move: IIsMoveOk): boolean;
+  updateUI(update: IUpdateUI): void;
   minNumberOfPlayers: number;
   maxNumberOfPlayers: number;
-  checkMoveOk(stateTransition: IStateTransition): void;
-  updateUI(update: IUpdateUI): void;
   gotMessageFromPlatform(message: any): void;
 }
-interface IMoveService {
+interface IGameService {
   setGame(game: IGame): void;
   makeMove(move: IMove): void;
 }
-declare var moveService: IMoveService;
+declare var gameService: IGameService;
 
 interface IAlphaBetaLimits {
   millisecondsLimit? : number;
@@ -50,9 +85,9 @@ interface IAlphaBetaService {
   alphaBetaDecision(
     move: IMove,
     playerIndex: number,
-    getNextStates: (state: IMove, playerIndex: number) => IMove[],
+    getNextStates: (move: IMove, playerIndex: number) => IMove[],
     getStateScoreForIndex0: (move: IMove, playerIndex: number) => number,
-    // If you want to see debugging output in the console, then surf to index.html?debug
+    // If you want to see debugging output in the console, then surf to game.html?debug
     getDebugStateToString: (move: IMove) => string,
     alphaBetaLimits: IAlphaBetaLimits): IMove;
 }
@@ -64,14 +99,12 @@ interface StringDictionary {
 interface ITranslateService {
   (translationId: string, interpolateParams?: StringDictionary): string;
   getLanguage(): string;
-  setTranslations(idToLanguageToL10n: Translations): void;
-  setLanguage(language: string): void;
+  setLanguage(language: string, codeToL10N: StringDictionary): void;
 }
 declare var translate: ITranslateService;
 
 interface IResizeGameAreaService {
-  setWidthToHeight(widthToHeightRatio: number,
-    dimensionsChanged?: (gameAreaWidth: number, gameAreaHeight: number)=>void): void;
+  setWidthToHeight(widthToHeightRatio: number): void;
 }
 declare var resizeGameAreaService: IResizeGameAreaService;
 
@@ -81,7 +114,6 @@ interface ILog {
   warn(... args: any[]):void;
   error(... args: any[]):void;
   log(... args: any[]):void;
-  alwaysLog(... args: any[]):void;
 }
 declare var log:ILog;
 

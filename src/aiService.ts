@@ -1,45 +1,32 @@
 module aiService {
-  /** Returns the move that the computer player should do for the given state in move. */
-  export function findComputerMove(move: IMove): IMove {
-    return createComputerMove(move,
-        // at most 1 second for the AI to choose a move (but might be much quicker)
-        {millisecondsLimit: 1000});
-  }
 
   /**
-   * Returns all the possible moves for the given state and turnIndexBeforeMove.
-   * Returns an empty array if the game is over.
-   */
-  export function getPossibleMoves(state: IState, turnIndexBeforeMove: number): IMove[] {
-    let possibleMoves: IMove[] = [];
-    for (let i = 0; i < gameLogic.ROWS; i++) {
-      for (let j = 0; j < gameLogic.COLS; j++) {
-        try {
-          possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
-        } catch (e) {
-          // The cell in that position was full.
-        }
-      }
-    }
-    return possibleMoves;
-  }
-
-  /**
-   * Returns the move that the computer player should do for the given state.
+   * Returns the move that the computer player should do for the given board.
    * alphaBetaLimits is an object that sets a limit on the alpha-beta search,
    * and it has either a millisecondsLimit or maxDepth field:
    * millisecondsLimit is a time limit, and maxDepth is a depth limit.
    */
-  export function createComputerMove(
-      move: IMove, alphaBetaLimits: IAlphaBetaLimits): IMove {
+  export function createComputerMove(startingState:any, playerIndex:any, alphaBetaLimits:any) {
     // We use alpha-beta search, where the search states are TicTacToe moves.
+    // Recal that a TicTacToe move has 3 operations:
+    // 0) endMatch or setTurn
+    // 1) {set: {key: 'board', value: ...}}
+    // 2) {set: {key: 'delta', value: ...}}]
     return alphaBetaService.alphaBetaDecision(
-        move, move.turnIndexAfterMove, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
+        [null, {set: {key: 'board', value: startingState.board}},
+          {set: {key: 'isUnderCheck', value: startingState.isUnderCheck}},
+          {set: {key: 'canCastleKing', value: startingState.canCastleKing}},
+          {set: {key: 'canCastleQueen', value: startingState.canCastleQueen}},
+          {set: {key: 'enpassantPosition', value: startingState.enpassantPosition}}],    // startingState
+        playerIndex, getNextStates, getStateScoreForIndex0,
+        // If you want to see debugging output in the console, then surf to game.html?debug
+        window.location.search === '?debug' ? getDebugStateToString : null,
+        alphaBetaLimits);
   }
 
-  function getStateScoreForIndex0(move: IMove, playerIndex: number): number {
-    let endMatchScores = move.endMatchScores;
-    if (endMatchScores) {
+  function getStateScoreForIndex0(move:any) { // alphaBetaService also passes playerIndex, in case you need it: getStateScoreForIndex0(move, playerIndex)
+    if (move[0].endMatch) {
+      var endMatchScores = move[0].endMatch.endMatchScores;
       return endMatchScores[0] > endMatchScores[1] ? Number.POSITIVE_INFINITY
           : endMatchScores[0] < endMatchScores[1] ? Number.NEGATIVE_INFINITY
           : 0;
@@ -47,7 +34,36 @@ module aiService {
     return 0;
   }
 
-  function getNextStates(move: IMove, playerIndex: number): IMove[] {
-    return getPossibleMoves(move.stateAfterMove, playerIndex);
+  function getNextStates(move:any, playerIndex:any) {
+    var board = move[1].set.value,
+        isUnderCheck = move[2].set.value,
+        canCastleKing = move[3].set.value,
+        canCastleQueen = move[4].set.value,
+        enpassantPosition = move[5].set.value;
+    var possibleDeltas = gameLogic.getPossibleMoves(board, playerIndex, isUnderCheck,
+        canCastleKing, canCastleQueen, enpassantPosition);
+    var possibleMoves:any = [];
+    for (var i = 0; i < possibleDeltas.length; i++) {
+      var deltaFromAndTos = possibleDeltas[i];
+      var deltaFrom = deltaFromAndTos[0],
+          deltaTos = deltaFromAndTos[1];
+      for (var j = 0; j < deltaTos.length; j++) {
+        var deltaTo = deltaTos[j];
+        try {
+          console.log("going to create move: " + JSON.stringify(deltaFrom) + " --> " +
+            JSON.stringify(deltaTo));
+          possibleMoves.push(gameLogic.createMove(board, deltaFrom, deltaTo, playerIndex,
+            isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, null));
+        } catch (e) {
+          // cannot create move with this possible delta, should continue
+        }
+      }
+    }
+    return possibleMoves;
   }
+
+  function getDebugStateToString(move:any) {
+    return "\n" + move[1].set.value.join("\n") + "\n";
+  }
+
 }
