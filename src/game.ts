@@ -385,7 +385,7 @@ module game {
 
     export let getBackgroundFill = function(row:any, col:any) {
       var isLightSquare = isLight(row, col);
-      return isLightSquare ? 'rgb(243, 243, 255)' : 'rgb(208, 208, 230)';
+      return isLightSquare ? 'rgb(133, 87, 35)' : 'rgb(185, 156, 107)';
     };
 
     function isLight(row:any, col:any) {
