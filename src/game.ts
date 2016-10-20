@@ -352,18 +352,18 @@ module game {
 
     function getPieceKind(cell:any){
       switch(cell) {
-        case 'WK': return 'auto_resize_images/Chess-WKing.png';
-        case 'WQ': return 'auto_resize_images/Chess-WQueen.png';
-        case 'WR': return 'auto_resize_images/Chess-WRook.png';
-        case 'WB': return 'auto_resize_images/Chess-WBishop.png';
-        case 'WN': return 'auto_resize_images/Chess-WKnight.png';
-        case 'WP': return 'auto_resize_images/Chess-WPawn.png';
-        case 'BK': return 'auto_resize_images/Chess-BKing.png';
-        case 'BQ': return 'auto_resize_images/Chess-BQueen.png';
-        case 'BR': return 'auto_resize_images/Chess-BRook.png';
-        case 'BB': return 'auto_resize_images/Chess-BBishop.png';
-        case 'BN': return 'auto_resize_images/Chess-BKnight.png';
-        case 'BP': return 'auto_resize_images/Chess-BPawn.png';
+        case 'WK': return 'chess_graphics/chess_pieces/W_King.png';
+        case 'WQ': return 'chess_graphics/chess_pieces/W_Queen.png';
+        case 'WR': return 'chess_graphics/chess_pieces/W_Rook.png';
+        case 'WB': return 'chess_graphics/chess_pieces/W_Bishop.png';
+        case 'WN': return 'chess_graphics/chess_pieces/W_Knight.png';
+        case 'WP': return 'chess_graphics/chess_pieces/W_Pawn.png';
+        case 'BK': return 'chess_graphics/chess_pieces/B_King.png';
+        case 'BQ': return 'chess_graphics/chess_pieces/B_Queen.png';
+        case 'BR': return 'chess_graphics/chess_pieces/B_Rook.png';
+        case 'BB': return 'chess_graphics/chess_pieces/B_Bishop.png';
+        case 'BN': return 'chess_graphics/chess_pieces/B_Knight.png';
+        case 'BP': return 'chess_graphics/chess_pieces/B_Pawn.png';
         default: return '';
       }
     }

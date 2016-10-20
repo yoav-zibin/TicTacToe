@@ -1,8 +1,8 @@
 {
-  "name": "Chess_2016",
+  "name": "chess_2016",
   "repository": {
     "type": "git",
-    "url": "https://github.com/qdm12/Chess_2016.git"
+    "url": "git+https://github.com/qdm12/Chess_2016.git"
   },
   "version": "1.0.0",
   "devDependencies": {
@@ -37,5 +37,12 @@
     "start": "http-server -a localhost -p 9000 -c-1",
     "test": "grunt"
   },
-  "author": "NYU students"
+  "author": "NYU students",
+  "description": "Chess 2016, NYU",
+  "bugs": {
+    "url": "https://github.com/qdm12/Chess_2016/issues"
+  },
+  "homepage": "https://github.com/qdm12/Chess_2016#readme",
+  "main": "Gruntfile.js",
+  "license": "ISC"
 }

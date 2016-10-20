@@ -256,10 +256,10 @@
         <h4 class="modal-title" id="myModalLabel">{{ 'PROMOTION_MESSAGE' | translate }}</h4>
       </div>
       <div class="modal-body">
-        <div><label><img ng-src="imgs/Chess-{{player}}Queen.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}Q" checked>{{ 'PROMOTE_QUEEN' | translate }}</label></div>
-        <div><label><img ng-src="imgs/Chess-{{player}}Rook.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}R">{{ 'PROMOTE_ROOK' | translate }}</label></div>
-        <div><label><img ng-src="imgs/Chess-{{player}}Knight.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}N">{{ 'PROMOTE_KNIGHT' | translate }}</label></div>
-        <div><label><img ng-src="imgs/Chess-{{player}}Bishop.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}B">{{ 'PROMOTE_BISHOP' | translate }}</label></div>
+        <div><label><img ng-src="chess_graphics/chess_pieces/{{player}}_Queen.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}Q" checked>{{ 'PROMOTE_QUEEN' | translate }}</label></div>
+        <div><label><img ng-src="chess_graphics/chess_pieces/{{player}}_Rook.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}R">{{ 'PROMOTE_ROOK' | translate }}</label></div>
+        <div><label><img ng-src="chess_graphics/chess_pieces/{{player}}_Knight.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}N">{{ 'PROMOTE_KNIGHT' | translate }}</label></div>
+        <div><label><img ng-src="chess_graphics/chess_pieces/{{player}}_Bishop.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}B">{{ 'PROMOTE_BISHOP' | translate }}</label></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="updatePromoteTo()">
