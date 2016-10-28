@@ -30889,7 +30889,7 @@ $provide.value("$locale", {
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 ;
-"use strict"; var emulatorServicesCompilationDate = "Tue Jul 5 18:29:07 EDT 2016";
+"use strict"; var emulatorServicesCompilationDate = "Fri Oct 28 09:42:21 EDT 2016";
 
 ;
 var gamingPlatform;
@@ -31329,6 +31329,10 @@ var gamingPlatform;
             // We must have either SetTurn or EndMatch
             if (setTurnOrEndMatchCount !== 1) {
                 throwError("We must have either SetTurn or EndMatch, but not both: setTurnOrEndMatchCount=" + setTurnOrEndMatchCount);
+            }
+            if (moveNumber > 1 &&
+                turnIndex == turnIndexBeforeMove) {
+                throwError("turnIndex must be different from turnIndexBeforeMove, but both are equal to " + turnIndex);
             }
             if (!(turnIndex >= -1 && turnIndex < playersInfo.length)) {
                 throwError("turnIndex must be between -1 and " + playersInfo.length + ", but it was " + turnIndex + ".");
@@ -31955,7 +31959,11 @@ var gamingPlatform;
                 translation = "[" + translationId + "]";
                 gamingPlatform.log.error("Couldn't find translationId=" + translationId + " in language=" + languageCode);
             }
-            return gamingPlatform.$interpolate(translation)(interpolateParams || {});
+            var result = gamingPlatform.$interpolate(translation)(interpolateParams || {});
+            if (result.indexOf('{{') !== -1) {
+                gamingPlatform.log.error("You forgot to pass a translation parameter (interpolateParams) for translationId=" + translationId + " in language=" + languageCode + " which resulted in '" + result + "' (note that you forgot to pass some {{XXX}})");
+            }
+            return result;
         }
         var translateService;
         translateService = translate;

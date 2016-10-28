@@ -11,6 +11,7 @@ exports.config = {
     },
   }],
   baseUrl: 'http://localhost:9000/',
+  directConnect: true,
   framework: 'jasmine',
   jasmineNodeOpts: {
     defaultTimeoutInterval: 30000
