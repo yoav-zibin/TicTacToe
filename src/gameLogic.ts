@@ -508,26 +508,45 @@ enpassantPosition, promoteTo
   * Returns true if the rook can move from deltaFrom to deltaTo
   */
   function canRookMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any) {
-    var fromRow = deltaFrom.row,
-        fromCol = deltaFrom.col,
-        toRow = deltaTo.row,
-        toCol = deltaTo.col;
-    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) { return false; }
-    var endPiece = board[toRow][toCol];
-    var opponent = getOpponent(turnIndex);
-    if (endPiece !== '' && endPiece.charAt(0) !== opponent) { return false; }
-
-    if (fromRow === toRow) {
-      if (fromCol === toCol) { return false; }
-      for (var i = (fromCol < toCol ? fromCol + 1 : toCol + 1); i < (fromCol < toCol ? toCol : fromCol); i++) {
-        if (board[fromRow][i] !== '') { return false; }
+    if (isOutOfBound(deltaTo)) {
+      return false;
+    }
+    let endPieceEmpty = (board[deltaTo.row][deltaTo.col] === '');
+    let endPieceTeam = board[deltaTo.row][deltaTo.col].charAt(0);
+    if (!endPieceEmpty && endPieceTeam === getTurn(turnIndex)) {
+      return false;
+    }
+    if (deltaFrom.row === deltaTo.row) {
+      if (deltaFrom.col === deltaTo.col) { 
+        return false; 
+      }
+      let col1 = deltaTo.col + 1;
+      let col2 = deltaFrom.col;
+      if (deltaFrom.col < deltaTo.col){
+        col1 = deltaFrom.col + 1;
+        col2 = deltaTo.col;
+      }
+      for (let i = col1; i < col2; i++) {
+        if (board[deltaFrom.row][i] !== '') {
+          return false;
+        }
       }
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
     }
-    else if (fromCol === toCol) {
-      if (fromRow === toRow) { return false; }
-      for (var j = (fromRow < toRow ? fromRow + 1 : toRow + 1); j < (fromRow < toRow ? toRow : fromRow); j++) {
-        if (board[j][fromCol] !== '') { return false; }
+    else if (deltaFrom.col === deltaTo.col) {
+      if (deltaFrom.row === deltaTo.row) {
+        return false;
+      }
+      let row1 = deltaTo.row + 1;
+      let row2 = deltaFrom.row;
+      if (deltaFrom.row < deltaTo.row){
+        row1 = deltaFrom.row + 1;
+        row2 = deltaTo.row;
+      }
+      for (let i = row1; i < row2; i++) {
+        if (board[i][deltaFrom.col] !== '') {
+          return false;
+        }
       }
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
     } else {
@@ -539,21 +558,29 @@ enpassantPosition, promoteTo
   * Returns true if the rook has any place to move
   */
   function canRookMoveAnywhere(board:any, turnIndex:any, startPos:any) {
-    return getRookPossibleMoves(board, turnIndex, startPos).length !== 0;
+    for (let i = 1; i < 8; i++) {
+      let endPos1 = {row: startPos.row + i, col: startPos.col},
+          endPos2 = {row: startPos.row - i, col: startPos.col},
+          endPos3 = {row: startPos.row, col: startPos.col + i},
+          endPos4 = {row: startPos.row, col: startPos.col - i};
+      if (canRookMove(board, startPos, endPos1, turnIndex)) { return true; }
+      if (canRookMove(board, startPos, endPos2, turnIndex)) { return true; }
+      if (canRookMove(board, startPos, endPos3, turnIndex)) { return true; }
+      if (canRookMove(board, startPos, endPos4, turnIndex)) { return true; }
+    }
+    return false;
   }
 
   /**
   * Returns all available positions for rook to move
   */
   export function getRookPossibleMoves(board:any, turnIndex:any, startPos:any) {
-    var fromRow = startPos.row,
-        fromCol = startPos.col,
-        toPos:any = [];
-    for (var i = 1; i <=7; i++) {
-      var endPos1 = {row: fromRow + i, col: fromCol},
-          endPos2 = {row: fromRow - i, col: fromCol},
-          endPos3 = {row: fromRow, col: fromCol + i},
-          endPos4 = {row: fromRow, col: fromCol - i};
+    let toPos:any = [];
+    for (let i = 1; i < 8; i++) {
+      let endPos1 = {row: startPos.row + i, col: startPos.col},
+          endPos2 = {row: startPos.row - i, col: startPos.col},
+          endPos3 = {row: startPos.row, col: startPos.col + i},
+          endPos4 = {row: startPos.row, col: startPos.col - i};
       if (canRookMove(board, startPos, endPos1, turnIndex)) { toPos.push(endPos1); }
       if (canRookMove(board, startPos, endPos2, turnIndex)) { toPos.push(endPos2); }
       if (canRookMove(board, startPos, endPos3, turnIndex)) { toPos.push(endPos3); }
@@ -565,29 +592,35 @@ enpassantPosition, promoteTo
   /**
   * Returns true if the bishop can move from deltaFrom to deltaTo
   */
-  function canBishopMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any) {
-    var fromRow = deltaFrom.row,
-        fromCol = deltaFrom.col,
-        toRow = deltaTo.row,
-        toCol = deltaTo.col;
-    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) { return false; }
-    var endPiece = board[toRow][toCol];
-    var opponent = getOpponent(turnIndex);
-    if (endPiece !== '' && endPiece.charAt(0) !== opponent) { return false; }
-
-    if ((fromRow === toRow && fromCol === toCol) ||
-      (Math.abs(fromRow - toRow) !== Math.abs(fromCol - toCol))) {
+  function canBishopMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any):Boolean {
+    if (isOutOfBound(deltaTo)) {
+      return false;
+    }
+    let endPieceEmpty = (board[deltaTo.row][deltaTo.col] === '');
+    let endPieceTeam = board[deltaTo.row][deltaTo.col].charAt(0);
+    if (!endPieceEmpty && endPieceTeam === getTurn(turnIndex)) {
+      return false;
+    }
+    let diffRow = Math.abs(deltaFrom.row - deltaTo.row)
+    let diffCol = Math.abs(deltaFrom.col - deltaTo.col)
+    if ((!diffRow && !diffCol) || (diffRow !== diffCol)) {
       return false;
     }
     else {
-      for (var i = 1; i < Math.abs(fromRow - toRow); i++) {
-        var cell = '';
-        if (fromRow < toRow) {
-          cell = board[fromRow + i][fromCol < toCol ? fromCol + i : fromCol - i];
-        } else {
-          cell = board[fromRow - i][fromCol < toCol ? fromCol + i : fromCol - i];
+      for (let i = 1; i < diffRow; i++) {
+        let cell = '';
+        let col = deltaFrom.col - i;
+        if (deltaFrom.col < deltaTo.col){
+          col = deltaFrom.col + i;
         }
-        if (cell !== '') { return false; }
+        if (deltaFrom.row < deltaTo.row) {
+          cell = board[deltaFrom.row + i][col];
+        } else {
+          cell = board[deltaFrom.row - i][col];
+        }
+        if (cell !== '') {
+          return false;
+        }
       }
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
     }
@@ -596,22 +629,30 @@ enpassantPosition, promoteTo
   /**
   * Returns true if the rook has any place to move
   */
-  function canBishopMoveAnywhere(board:any, turnIndex:any, startPos:any) {
-    return getBishopPossibleMoves(board, turnIndex, startPos).length !== 0;
+  function canBishopMoveAnywhere(board:any, turnIndex:any, startPos:any):Boolean {
+    for (let i = 1; i < 8; i++) {
+      let endPos1 = {row: startPos.row - i, col: startPos.col - i},
+          endPos2 = {row: startPos.row - i, col: startPos.col + i},
+          endPos3 = {row: startPos.row + i, col: startPos.col - i},
+          endPos4 = {row: startPos.row + i, col: startPos.col + i};
+      if (canBishopMove(board, startPos, endPos1, turnIndex)) { return true; }
+      if (canBishopMove(board, startPos, endPos2, turnIndex)) { return true; }
+      if (canBishopMove(board, startPos, endPos3, turnIndex)) { return true; }
+      if (canBishopMove(board, startPos, endPos4, turnIndex)) { return true; }
+    }
+    return false;
   }
 
   /**
   * Returns the list of available positions for bishop to move
   */
   export function getBishopPossibleMoves(board:any, turnIndex:any, startPos:any) {
-    var fromRow = startPos.row,
-        fromCol = startPos.col,
-        toPos:any = [];
-    for (var i = 1; i <=7; i++) {
-      var endPos1 = {row: fromRow - i, col: fromCol - i},
-          endPos2 = {row: fromRow - i, col: fromCol + i},
-          endPos3 = {row: fromRow + i, col: fromCol - i},
-          endPos4 = {row: fromRow + i, col: fromCol + i};
+    let toPos:any = [];
+    for (let i = 1; i < 8; i++) {
+      let endPos1 = {row: startPos.row - i, col: startPos.col - i},
+          endPos2 = {row: startPos.row - i, col: startPos.col + i},
+          endPos3 = {row: startPos.row + i, col: startPos.col - i},
+          endPos4 = {row: startPos.row + i, col: startPos.col + i};
       if (canBishopMove(board, startPos, endPos1, turnIndex)) { toPos.push(endPos1); }
       if (canBishopMove(board, startPos, endPos2, turnIndex)) { toPos.push(endPos2); }
       if (canBishopMove(board, startPos, endPos3, turnIndex)) { toPos.push(endPos3); }
@@ -623,19 +664,21 @@ enpassantPosition, promoteTo
   /**
   * Returns true if the knight can move from deltaFrom to deltaTo
   */
-  function canKnightMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any) {
-    var fromRow = deltaFrom.row,
-        fromCol = deltaFrom.col,
-        toRow = deltaTo.row,
-        toCol = deltaTo.col;
-    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) { return false; }
-    var endPiece = board[toRow][toCol];
-    var opponent = getOpponent(turnIndex);
-    if (endPiece !== '' && endPiece.charAt(0) !== opponent) { return false; }
+  function canKnightMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any):Boolean {
+    if (isOutOfBound(deltaTo)) {
+      return false;
+    }
+    let endPieceEmpty = (board[deltaTo.row][deltaTo.col] === '');
+    let endPieceTeam = board[deltaTo.row][deltaTo.col].charAt(0);
+    if (!endPieceEmpty && endPieceTeam === getTurn(turnIndex)) {
+      return false;
+    }
 
-    if (Math.abs(fromRow - toRow) === 2 && Math.abs(fromCol - toCol) === 1) {
+    if (Math.abs(deltaFrom.row - deltaTo.row) === 2 && 
+        Math.abs(deltaFrom.col - deltaTo.col) === 1) {
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
-    } else if (Math.abs(fromRow - toRow) === 1 && Math.abs(fromCol - toCol) === 2) {
+    } else if (Math.abs(deltaFrom.row - deltaTo.row) === 1 && //XXX
+               Math.abs(deltaFrom.col - deltaTo.col) === 2) {
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
     }
     return false;
@@ -644,28 +687,41 @@ enpassantPosition, promoteTo
   /**
   * Returns true if the knight has any place available to move
   */
-  function canKnightMoveAnywhere(board:any, turnIndex:any, startPos:any) {
-    return getKnightPossibleMoves(board, turnIndex, startPos).length !== 0;
+  function canKnightMoveAnywhere(board:any, turnIndex:any, startPos:any):Boolean {
+    for (let i = startPos.row - 2; i < startPos.row + 3; i++) {
+      if (i === startPos.row) {
+        continue;
+      }
+      for (let j = startPos.col - 2; j < startPos.col + 3; j++) {
+        if (j === startPos.col) {
+          continue;
+        }
+        let endPos = {row: i, col: j};
+        if (canKnightMove(board, startPos, endPos, turnIndex)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
   * Returns the list of available positions for knight to move
   */
   export function getKnightPossibleMoves(board:any, turnIndex:any, startPos:any) {
-    var fromRow = startPos.row,
-        fromCol = startPos.col,
-        toPos:any = [];
-
-    for (var i = fromRow - 2; i <= fromRow + 2; i++) {
-      if (i !== fromRow) {
-        var endPos1 = {row: i, col: fromCol - 1};
-        var endPos2 = {row: i, col: fromCol - 2};
-        var endPos3 = {row: i, col: fromCol + 1};
-        var endPos4 = {row: i, col: fromCol + 2};
-        if (canKnightMove(board, startPos, endPos1, turnIndex)) { toPos.push(endPos1); }
-        if (canKnightMove(board, startPos, endPos2, turnIndex)) { toPos.push(endPos2); }
-        if (canKnightMove(board, startPos, endPos3, turnIndex)) { toPos.push(endPos3); }
-        if (canKnightMove(board, startPos, endPos4, turnIndex)) { toPos.push(endPos4); }
+    let toPos:any = [];
+    for (let i = startPos.row - 2; i < startPos.row + 3; i++) {
+      if (i === startPos.row) {
+        continue;
+      }
+      for (let j = startPos.col - 2; j < startPos.col + 3; j++) {
+        if (j === startPos.col) {
+          continue;
+        }
+        let endPos = {row: i, col: j};
+        if (canKnightMove(board, startPos, endPos, turnIndex)) {
+          toPos.push(endPos);
+        }
       }
     }
     return toPos;
@@ -675,65 +731,98 @@ enpassantPosition, promoteTo
   * Returns true if the pawn can move from deltaFrom to deltaTo
   */
   function canPawnMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any, enpassantPosition:any) {
-    var fromRow = deltaFrom.row,
-        fromCol = deltaFrom.col,
-        toRow = deltaTo.row,
-        toCol = deltaTo.col,
-        turn = getTurn(turnIndex);
-    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) { return false; }
-    var endPiece = board[toRow][toCol];
-    var opponent = getOpponent(turnIndex);
-    if (endPiece !== '' && endPiece.charAt(0) !== opponent) { return false; }
-
-    // check if is first move with two squares
-    if (Math.abs(fromRow - toRow) === 2 && toCol === fromCol &&
-      fromRow === (turn === "W" ? 6 : 1) &&
-      board[(fromRow > toRow ? fromRow : toRow) - 1][toCol] === '' &&
-        endPiece === '') {
-      return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
-    } else if (Math.abs(fromRow - toRow) === 1 && fromCol === toCol &&
-      endPiece === '') {
-      return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
-    } else if (Math.abs(fromRow - toRow) === 1 && Math.abs(fromCol - toCol) === 1 &&
-      (endPiece.charAt(0) === opponent ||
-        endPiece === '' && enpassantPosition &&
-        enpassantPosition.row && enpassantPosition.col &&
-        fromRow === enpassantPosition.row &&
-        Math.abs(fromCol - enpassantPosition.col) === 1)) {
-      return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
-    } else {
+    if (isOutOfBound(deltaTo)) {
       return false;
     }
+    let endPieceEmpty = (board[deltaTo.row][deltaTo.col] === '');
+    let endPieceTeam = board[deltaTo.row][deltaTo.col].charAt(0);
+    if (!endPieceEmpty && endPieceTeam === getTurn(turnIndex)) {
+      return false;
+    }
+    // check if is first move with two squares
+    let diffRow = Math.abs(deltaFrom.row - deltaTo.row);
+    let diffCol = Math.abs(deltaFrom.col - deltaTo.col)
+    if (
+        (diffRow === 2 &&
+         endPieceEmpty &&
+         deltaFrom.col === deltaTo.col &&
+         deltaFrom.row === (getTurn(turnIndex) === "W" ? 6 : 1) &&
+         board[(deltaFrom.row > deltaTo.row ? deltaFrom.row : deltaTo.row) - 1][deltaTo.col] === ''
+        ) || (
+         diffRow === 1 &&
+         endPieceEmpty &&
+         deltaFrom.col === deltaTo.col
+        ) || (
+         diffRow === 1 &&
+         diffCol === 1 &&
+         (endPieceTeam !== getTurn(turnIndex) || 
+          endPieceEmpty &&
+          enpassantPosition &&
+          enpassantPosition.row &&
+          enpassantPosition.col &&
+          deltaFrom.row === enpassantPosition.row &&
+          Math.abs(deltaFrom.col - enpassantPosition.col) === 1
+         )
+        )
+       ){
+      return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
+    }
+    return false;
   }
 
   /**
   * Returns true if the pawn has any place available to move
   */
   function canPawnMoveAnywhere(board:any, turnIndex:any, startPos:any, enpassantPosition:any) {
-    return getPawnPossibleMoves(board, turnIndex, startPos, enpassantPosition).length !== 0;
+    let endPos = {row: startPos.row, col: -1};
+    if (getTurn(turnIndex) === 'B'){
+      endPos.row++;
+    } else {
+      endPos.row--;
+    }
+    for (let j = startPos.col - 1; j <= startPos.col + 1; j++) {
+      endPos.col = j;
+      if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
+        return true;
+      }
+    }
+    endPos.col = startPos.col;
+    if (getTurn(turnIndex) === 'B'){
+      endPos.row++;
+    } else {
+      endPos.row--;
+    }
+    if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
+      return true;
+    }
+    return false;
   }
 
   /**
   * Returns the list of available positions for pawn to move
   */
   function getPawnPossibleMoves(board:any, turnIndex:any, startPos:any, enpassantPosition:any) {
-    var fromRow = startPos.row,
-        fromCol = startPos.col,
-        toPos:any = [],
-        turn = getTurn(turnIndex),
-        endRow:any;
-
-    for (var j = fromCol - 1; j <= fromCol + 1; j++) {
-      endRow = (turn === 'W' ? fromRow - 1 : fromRow + 1);
-      var endPos = {row: endRow, col: j};
+    let toPos:any = [];
+    let endPos = {row: startPos.row, col: -1};
+    if (getTurn(turnIndex) === 'B'){
+      endPos.row++;
+    } else {
+      endPos.row--;
+    }
+    for (let j = startPos.col - 1; j <= startPos.col + 1; j++) {
+      endPos.col = j;
       if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
         toPos.push(endPos);
       }
     }
-    endRow = (turn === 'W' ? fromRow - 2 : fromRow + 2);
-    var endPos2 = {row:endRow, col: fromCol};
-    if (canPawnMove(board, startPos, endPos2, turnIndex, enpassantPosition)) {
-      toPos.push(endPos2);
+    endPos.col = startPos.col;
+    if (getTurn(turnIndex) === 'B'){
+      endPos.row++;
+    } else {
+      endPos.row--;
+    }
+    if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
+      toPos.push(endPos);
     }
     return toPos;
   }
@@ -746,15 +835,10 @@ enpassantPosition, promoteTo
   * @endPos the end position of moving
   */
   function moveAndCheck(board:any, turnIndex:any, startPos:any, endPos:any) {
-    var fromRow = startPos.row,
-        fromCol = startPos.col,
-        toRow = endPos.row,
-        toCol = endPos.col,
-        opponent = getOpponent(turnIndex);
-    if (board[toRow][toCol] === opponent + 'K') { return true; }
+    if (board[endPos.row][endPos.col] === getOpponent(turnIndex) + 'K') { return true; }
     var boardAfterMove = angular.copy(board);
-    boardAfterMove[toRow][toCol] = boardAfterMove[fromRow][fromCol];
-    boardAfterMove[fromRow][fromCol] = '';
+    boardAfterMove[endPos.row][endPos.col] = boardAfterMove[startPos.row][startPos.col];
+    boardAfterMove[startPos.row][startPos.col] = '';
     if (isUnderCheckByPositions(boardAfterMove, turnIndex)) { return false; }
     return true;
   }
@@ -763,14 +847,27 @@ enpassantPosition, promoteTo
   * Returns opponent initial
   */
   function getOpponent(turnIndex:any) {
-    return (turnIndex === 0 ? 'B' : 'W');
+    if (turnIndex === 0){
+      return 'B';
+    }
+    return 'W';
   }
 
   /**
   * Returns turnIndex initial
   */
   function getTurn(turnIndex:any) {
-    return (turnIndex === 0 ? 'W' : 'B');
+    if (turnIndex === 0){
+      return 'W';
+    }
+    return 'B';
+  }
+
+  function isOutOfBound(pos:any):Boolean{
+    if (pos.row < 0 || pos.col < 0 || pos.row > 7 || pos.col > 7) {
+      return true;
+    }
+    return false;
   }
 
 
@@ -823,47 +920,69 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
   export function getPossibleMoves(board:any, turnIndex:any, isUnderCheck:any, canCastleKing:any, canCastleQueen:any, enpassantPosition:any) {
     // the list of possible moves of deltaFrom and deltaTo
     if (!board) { return []; }
-    var possibleMoves:any = [],
-        turn = (turnIndex === 0 ? 'W' : 'B');
-    for (var i = 0; i <= 7; i++) {
-      for (var j = 0; j <= 7; j++) {
-        var piece = board[i][j];
+    let possibleMoves:any = [];
+    let turn = getTurn(turnIndex);
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        let piece = board[i][j];
         if (piece !== '' && piece.charAt(0) === turn) {
-          var startPos = {row: i, col: j};
+          let startPos = {row: i, col: j};
           switch(piece.charAt(1)) {
             case 'K':
               possibleMoves.push([startPos,
-                getKingPossibleMoves(board, turnIndex, startPos, isUnderCheck, canCastleKing, canCastleQueen)]);
+                                  getKingPossibleMoves(board,
+                                                       turnIndex,
+                                                       startPos,
+                                                       isUnderCheck,
+                                                       canCastleKing,
+                                                       canCastleQueen)
+                                  ]);
               break;
             case 'Q':
               possibleMoves.push([startPos,
-                getQueenPossibleMoves(board, turnIndex, startPos)]);
+                                  getQueenPossibleMoves(board,
+                                                        turnIndex,
+                                                        startPos)
+                                  ]);
               break;
             case 'R':
               possibleMoves.push([startPos,
-                getRookPossibleMoves(board, turnIndex, startPos)]);
+                                  getRookPossibleMoves(board,
+                                                       turnIndex,
+                                                       startPos)
+                                  ]);
               break;
             case 'B':
               possibleMoves.push([startPos,
-                getBishopPossibleMoves(board, turnIndex, startPos)]);
+                                  getBishopPossibleMoves(board,
+                                                         turnIndex,
+                                                         startPos)
+                                  ]);
               break;
             case 'N':
               possibleMoves.push([startPos,
-                getKnightPossibleMoves(board, turnIndex, startPos)]);
+                                  getKnightPossibleMoves(board,
+                                                         turnIndex,
+                                                         startPos)
+                                  ]);
               break;
             case 'P':
               possibleMoves.push([startPos,
-                getPawnPossibleMoves(board, turnIndex, startPos, enpassantPosition)]);
+                                  getPawnPossibleMoves(board,
+                                                       turnIndex,
+                                                       startPos,
+                                                       enpassantPosition)
+                                  ]);
               break;
           }
         }
       }
     }
 
-    var realPossibleMoves:any = [];
-    for (var a = 0; a < possibleMoves.length; a++) {
-      if (possibleMoves[a] && possibleMoves[a][1].length) {
-        realPossibleMoves.push(possibleMoves[a]);
+    let realPossibleMoves:any = [];
+    for (let i = 0; i < possibleMoves.length; i++) {
+      if (possibleMoves[i] && possibleMoves[i][1].length) {
+        realPossibleMoves.push(possibleMoves[i]);
       }
     }
     return realPossibleMoves;
