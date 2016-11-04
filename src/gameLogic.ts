@@ -139,7 +139,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
                   isUnderCheck,
                   canCastleKing,
                   canCastleQueen,
-                  enpassantPosition) !== ''
+                  enpassantPosition) //there is a winner 'W' or 'B'
         ||
         isTie(board,
               turnIndexBeforeMove,
@@ -155,7 +155,6 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
         canCastleQueenAfterMove = angular.copy(canCastleQueen),
         enpassantPositionAfterMove = angular.copy(enpassantPosition),
         promoteToAfterMove = angular.copy(promoteTo);
-
     if (getTurn(turnIndexBeforeMove) !== board[deltaFrom.row][deltaFrom.col].charAt(0)) {
       throw new Error("Illegal to move this piece!");
     }
@@ -222,9 +221,10 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
         if(canPawnMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, enpassantPosition)) {
           boardAfterMove[deltaTo.row][deltaTo.col] = board[deltaFrom.row][deltaFrom.col];
           // capture the opponent pawn with enpassant
-          if (enpassantPosition.row && deltaFrom.row === enpassantPosition.row &&
-            deltaFrom.col !== deltaTo.col &&
-            (Math.abs(deltaFrom.col - enpassantPosition.col) === 1)) {
+          if (enpassantPosition.row &&
+              deltaFrom.row === enpassantPosition.row &&
+              deltaFrom.col !== deltaTo.col &&
+              (Math.abs(deltaFrom.col - enpassantPosition.col) === 1)) {
             boardAfterMove[enpassantPosition.row][enpassantPosition.col] = '';
           }
           boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
@@ -232,16 +232,18 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
           enpassantPositionAfterMove.col = null;
 
           // check for enpassant
-          if (getTurn(turnIndexBeforeMove) === "W" && deltaTo.row === 4) {
+          if (getTurn(turnIndexBeforeMove) === "W" &&
+              deltaTo.row === 4) {
             if (boardAfterMove[deltaTo.row][deltaTo.col - 1] === "BP" ||
-              boardAfterMove[deltaTo.row][deltaTo.col + 1] === "BP") {
+                boardAfterMove[deltaTo.row][deltaTo.col + 1] === "BP") {
               enpassantPositionAfterMove.row = deltaTo.row;
               enpassantPositionAfterMove.col = deltaTo.col;
             }
           }
-          if (getTurn(turnIndexBeforeMove) === "B" && deltaTo.row === 3) {
+          if (getTurn(turnIndexBeforeMove) === "B" &&
+              deltaTo.row === 3) {
             if (boardAfterMove[deltaTo.row][deltaTo.col - 1] === "WP" ||
-              boardAfterMove[deltaTo.row][deltaTo.col + 1] === "WP") {
+                boardAfterMove[deltaTo.row][deltaTo.col + 1] === "WP") {
               enpassantPositionAfterMove.row = deltaTo.row;
               enpassantPositionAfterMove.col = deltaTo.col;
             }
@@ -249,7 +251,10 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
 
           // check for promotion
           if (deltaTo.row === 0 || deltaTo.row === 7) {
-            boardAfterMove[deltaTo.row][deltaTo.col] = (promoteToAfterMove ? promoteToAfterMove : getTurn(turnIndexBeforeMove) + "Q");
+            if (!promoteToAfterMove){
+              promoteToAfterMove = getTurn(turnIndexBeforeMove) + "Q"
+            }
+            boardAfterMove[deltaTo.row][deltaTo.col] = promoteToAfterMove;
             // promoteToAfterMove = '';
           }
         } else {
@@ -259,24 +264,35 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
       default:
         throw new Error("Unknown piece type!");
     }
-    var turnIndexAfterMove = 1 - turnIndexBeforeMove;
+    let turnIndexAfterMove = 1 - turnIndexBeforeMove;
     if (isUnderCheckByPositions(boardAfterMove, turnIndexAfterMove)) {
       isUnderCheckAfterMove[turnIndexAfterMove] = true;
     }
-    var winner = getWinner(boardAfterMove, turnIndexAfterMove, isUnderCheckAfterMove,
-                  canCastleKingAfterMove, canCastleQueenAfterMove, enpassantPositionAfterMove);
-    // console.log("winner: " + winner);
-    var firstOperation:any;
-    if (winner !== '' || isTie(boardAfterMove, turnIndexAfterMove, isUnderCheckAfterMove,
-        canCastleKingAfterMove, canCastleQueenAfterMove, enpassantPositionAfterMove)) {
-      // Game over.
-      firstOperation = {endMatch: {endMatchScores:
-        (winner === 'W' ? [1, 0] : (winner === 'B' ? [0, 1] : [0, 0]))}};
-    } else {
-      // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
+    let winner = getWinner(boardAfterMove,
+                           turnIndexAfterMove,
+                           isUnderCheckAfterMove,
+                           canCastleKingAfterMove,
+                           canCastleQueenAfterMove,
+                           enpassantPositionAfterMove);
+    let scores:any;
+    if (winner === 'W'){
+      scores = [1,0];
+    } else if (winner == 'B'){
+      scores = [0,1];
+    } else if (isTie(boardAfterMove,
+                     turnIndexAfterMove,
+                     isUnderCheckAfterMove,
+                     canCastleKingAfterMove,
+                     canCastleQueenAfterMove,
+                     enpassantPositionAfterMove)) {
+      scores = [0,0];
+    }
+    let firstOperation:any;
+    if(scores != null){ //game is over
+      firstOperation = {endMatch: {endMatchScores: scores}};
+    } else { //games continues
       firstOperation = {setTurn: {turnIndex: turnIndexAfterMove}};
     }
-
     return [firstOperation,
             {set: {key: 'board', value: boardAfterMove}},
             {set: {key: 'deltaFrom', value: {row: deltaFrom.row, col: deltaFrom.col}}},
@@ -816,19 +832,17 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
     return toPos;
   }
 
-  /**
-  * Take the move from startPos to endPos and update the board acocrdingly,
-  * see if the current player's king is under check.
-  * Returns true if the move does not lead king to check
-  * @startPos the start position of moving
-  * @endPos the end position of moving
-  */
-  function moveAndCheck(board:any, turnIndex:any, startPos:any, endPos:any) {
-    if (board[endPos.row][endPos.col] === getOpponent(turnIndex) + 'K') { return true; }
-    var boardAfterMove = angular.copy(board);
+  // Returns true if you can actually move the piece (check condition)
+  function moveAndCheck(board:any, turnIndex:any, startPos:any, endPos:any):Boolean {
+    if (board[endPos.row][endPos.col] === getOpponent(turnIndex) + 'K') {
+      return true;
+    }
+    let boardAfterMove = angular.copy(board);
     boardAfterMove[endPos.row][endPos.col] = boardAfterMove[startPos.row][startPos.col];
     boardAfterMove[startPos.row][startPos.col] = '';
-    if (isUnderCheckByPositions(boardAfterMove, turnIndex)) { return false; }
+    if (isUnderCheckByPositions(boardAfterMove, turnIndex)) {
+      return false;
+    }
     return true;
   }
 
@@ -856,63 +870,50 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
 
- /**
-  * Check if the move is OK.
-  *
-  * @param params the match info which contains stateBeforeMove, turnIndexBeforeMove and move.
-  * @returns return true if the move is ok, otherwise false.
-  */
+  // Returns true if move is ok
+  // params contains move, stateBeforeMove and turnIndexBeforeMove
   export function isMoveOk(params:any) {
-    var move = params.move;
-    var turnIndexBeforeMove = params.turnIndexBeforeMove;
-    var stateBeforeMove = params.stateBeforeMove;
-
-    /* We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
-     * to verify that move is legal. */
     try {
-      var deltaFrom = move[2].set.value;
-      var deltaTo = move[3].set.value;
-      var isUnderCheck = stateBeforeMove.isUnderCheck;
-      var canCastleKing = stateBeforeMove.canCastleKing;
-      var canCastleQueen = stateBeforeMove.canCastleQueen;
-      var enpassantPosition = stateBeforeMove.enpassantPosition;
-      var board = stateBeforeMove.board;
-      var promoteTo = move[8].set.value;
-
-console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, turnIndexBeforeMove,
-                          isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, promoteTo]));
-      var expectedMove = createMove(board, deltaFrom, deltaTo, turnIndexBeforeMove,
-                          isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition,
-                          promoteTo);
-// console.log("jane!!!!");
-// console.log("move:    " + JSON.stringify(move));
-// console.log("expmove: " + JSON.stringify(expectedMove));
-      if (!angular.equals(move, expectedMove)) {
+      let deltaFrom = params.move[2].set.value;
+      let deltaTo = params.move[3].set.value;
+      let isUnderCheck = params.stateBeforeMove.isUnderCheck;
+      let canCastleKing = params.stateBeforeMove.canCastleKing;
+      let canCastleQueen = params.stateBeforeMove.canCastleQueen;
+      let enpassantPosition = params.stateBeforeMove.enpassantPosition;
+      let board = params.stateBeforeMove.board;
+      let promoteTo = params.move[8].set.value;
+      let expectedMove = createMove(board,
+                                    deltaFrom,
+                                    deltaTo,
+                                    params.turnIndexBeforeMove,
+                                    isUnderCheck,
+                                    canCastleKing,
+                                    canCastleQueen,
+                                    enpassantPosition,
+                                    promoteTo);
+      if (!angular.equals(params.move, expectedMove)) {
         return false;
       }
     } catch (e) {
-      // if there are any exceptions then the move is illegal
       return false;
     }
     return true;
   }
 
-  /**
-   * Returns all the possible moves for the given state and turnIndex.
-   * Returns an empty array if the game is over.
-   * @params is the state
-   */
+  /* Returns all the possible moves for the given state and turnIndex.
+   * Returns an empty array if the game is over. */
   export function getPossibleMoves(board:any, turnIndex:any, isUnderCheck:any, canCastleKing:any, canCastleQueen:any, enpassantPosition:any) {
-    // the list of possible moves of deltaFrom and deltaTo
-    if (!board) { return []; }
+    if (!board) {
+      return [];
+    }
     let possibleMoves:any = [];
-    let turn = getTurn(turnIndex);
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
-        let piece = board[i][j];
-        if (piece !== '' && piece.charAt(0) === turn) {
+        let PieceEmpty = (board[i][j] === '');
+        let PieceTeam = board[i][j].charAt(0);
+        if (!PieceEmpty && PieceTeam === getTurn(turnIndex)) {
           let startPos = {row: i, col: j};
-          switch(piece.charAt(1)) {
+          switch(board[i][j].charAt(1)) {
             case 'K':
               possibleMoves.push([startPos,
                                   getKingPossibleMoves(board,
@@ -963,13 +964,12 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
         }
       }
     }
-
-    let realPossibleMoves:any = [];
+    let nonEmptyPossibleMoves:any = [];
     for (let i = 0; i < possibleMoves.length; i++) {
-      if (possibleMoves[i] && possibleMoves[i][1].length) {
-        realPossibleMoves.push(possibleMoves[i]);
+      if (possibleMoves[i][1].length) {
+        nonEmptyPossibleMoves.push(possibleMoves[i]);
       }
     }
-    return realPossibleMoves;
+    return nonEmptyPossibleMoves;
   }
 }
