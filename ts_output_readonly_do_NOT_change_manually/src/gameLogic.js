@@ -15,114 +15,103 @@ var gameLogic;
     gameLogic.getInitialBoard = getInitialBoard;
     // Returns true if the game ended in a tie because there are no available moves for any pieces
     function isTie(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) {
+        if (isUnderCheck[turnIndex]) {
+            return false;
+        }
+        for (var i = 0; i < 8; i++) {
+            for (var j = 0; j < 8; j++) {
+                if (board[i][j] !== '' && board[i][j].charAt(0) === getTurn(turnIndex)) {
+                    var curPos = { row: i, col: j };
+                    switch (board[i][j].charAt(1)) {
+                        case 'K':
+                            if (canKingMoveAnywhere(board, turnIndex, curPos, isUnderCheck, canCastleKing, canCastleQueen)) {
+                                return false;
+                            }
+                            break;
+                        case 'Q':
+                            if (canQueenMoveAnywhere(board, turnIndex, curPos)) {
+                                return false;
+                            }
+                            break;
+                        case 'R':
+                            if (canRookMoveAnywhere(board, turnIndex, curPos)) {
+                                return false;
+                            }
+                            break;
+                        case 'B':
+                            if (canBishopMoveAnywhere(board, turnIndex, curPos)) {
+                                return false;
+                            }
+                            break;
+                        case 'N':
+                            if (canKnightMoveAnywhere(board, turnIndex, curPos)) {
+                                return false;
+                            }
+                            break;
+                        case 'P':
+                            if (canPawnMoveAnywhere(board, turnIndex, curPos, enpassantPosition)) {
+                                return false;
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    // Returns the winner (either 'W' or 'B') or '' if there is no winner
+    function getWinner(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) {
         if (!isUnderCheck[turnIndex]) {
-            var curPlayer = getTurn(turnIndex);
+            return '';
+        }
+        var kingsPosition = findKingsPosition(board, turnIndex);
+        // if there is no available moves for king
+        if (!canKingMoveAnywhere(board, turnIndex, kingsPosition, isUnderCheck, canCastleKing, canCastleQueen)) {
             for (var i = 0; i < 8; i++) {
                 for (var j = 0; j < 8; j++) {
-                    if (board[i][j] !== '' && board[i][j].charAt(0) === curPlayer) {
-                        var curPiece = board[i][j];
-                        var curPos = { row: i, col: j };
-                        switch (curPiece.charAt(1)) {
-                            case 'K':
-                                if (canKingMoveAnywhere(board, turnIndex, curPos, isUnderCheck, canCastleKing, canCastleQueen)) {
-                                    return false;
-                                }
-                                break;
+                    var PieceEmpty = (board[i][j] === '');
+                    var PieceTeam = board[i][j].charAt(0);
+                    if (!PieceEmpty && PieceTeam === getTurn(turnIndex)) {
+                        switch (board[i][j].charAt(1)) {
                             case 'Q':
-                                if (canQueenMoveAnywhere(board, turnIndex, curPos)) {
-                                    return false;
+                                if (canQueenMoveAnywhere(board, turnIndex, { row: i, col: j })) {
+                                    return '';
                                 }
                                 break;
                             case 'R':
-                                if (canRookMoveAnywhere(board, turnIndex, curPos)) {
-                                    return false;
+                                if (canRookMoveAnywhere(board, turnIndex, { row: i, col: j })) {
+                                    return '';
                                 }
                                 break;
                             case 'B':
-                                if (canBishopMoveAnywhere(board, turnIndex, curPos)) {
-                                    return false;
+                                if (canBishopMoveAnywhere(board, turnIndex, { row: i, col: j })) {
+                                    return '';
                                 }
                                 break;
                             case 'N':
-                                if (canKnightMoveAnywhere(board, turnIndex, curPos)) {
-                                    return false;
+                                if (canKnightMoveAnywhere(board, turnIndex, { row: i, col: j })) {
+                                    return '';
                                 }
                                 break;
                             case 'P':
-                                if (canPawnMoveAnywhere(board, turnIndex, curPos, enpassantPosition)) {
-                                    return false;
+                                if (canPawnMoveAnywhere(board, turnIndex, { row: i, col: j }, enpassantPosition)) {
+                                    return '';
                                 }
                                 break;
                         }
                     }
                 }
             }
-            return true;
+            // if we reached here then there is no piece to save the king
+            return getOpponent(turnIndex);
         }
-        else {
-            return false;
-        }
-    }
-    // Return the winner (either 'W' or 'B') or '' if there is no winner
-    function getWinner(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) {
-        if (isUnderCheck[turnIndex]) {
-            var curPlayer = getTurn(turnIndex);
-            var kingsPosition = findKingsPosition(board, turnIndex);
-            // if there is no available moves for king
-            if (!canKingMoveAnywhere(board, turnIndex, kingsPosition, isUnderCheck, canCastleKing, canCastleQueen)) {
-                for (var i = 0; i < 8; i++) {
-                    for (var j = 0; j < 8; j++) {
-                        if (board[i][j] !== '' && board[i][j].charAt(0) === curPlayer) {
-                            var curPiece = board[i][j];
-                            var curPos = { row: i, col: j };
-                            switch (curPiece.charAt(1)) {
-                                case 'Q':
-                                    //                  if (canQueenMoveAnywhere(board, turnIndex, curPos, canCastleKing, canCastleQueen)) {
-                                    if (canQueenMoveAnywhere(board, turnIndex, curPos)) {
-                                        return '';
-                                    }
-                                    break;
-                                case 'R':
-                                    if (canRookMoveAnywhere(board, turnIndex, curPos)) {
-                                        return '';
-                                    }
-                                    break;
-                                case 'B':
-                                    if (canBishopMoveAnywhere(board, turnIndex, curPos)) {
-                                        return '';
-                                    }
-                                    break;
-                                case 'N':
-                                    if (canKnightMoveAnywhere(board, turnIndex, curPos)) {
-                                        return '';
-                                    }
-                                    break;
-                                case 'P':
-                                    if (canPawnMoveAnywhere(board, turnIndex, curPos, enpassantPosition)) {
-                                        return '';
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                }
-                // if we reached here then there is no piece to save the king
-                return getOpponent(turnIndex);
-            }
-        }
-        return '';
     }
     // Returns the move that should be performed when player givin a state
     function createMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, promoteTo) {
-        console.log("CreateMove arguments: " + angular.toJson([
-            board, deltaFrom, deltaTo, turnIndexBeforeMove, isUnderCheck, canCastleKing, canCastleQueen,
-            enpassantPosition, promoteTo
-        ]));
+        // initialize all variables
         if (!board) {
-            // Initially (at the beginning of the match), the board in state is undefined.
             board = getInitialBoard();
         }
-        // initialize all variables
         if (!isUnderCheck) {
             isUnderCheck = [false, false];
         }
@@ -138,44 +127,45 @@ var gameLogic;
         if (!promoteTo) {
             promoteTo = '';
         }
-        var destination = board[deltaTo.row][deltaTo.col];
-        if (destination !== '' && destination.charAt(0) === (turnIndexBeforeMove === 0 ? 'W' : 'B')) {
+        if (deltaFrom.row === deltaTo.row && deltaFrom.col === deltaTo.col) {
+            throw new Error("Cannot move to the same position.");
+        }
+        var PieceEmpty = (board[deltaTo.row][deltaTo.col] === '');
+        var PieceTeam = board[deltaTo.row][deltaTo.col].charAt(0);
+        if (!PieceEmpty && PieceTeam === getTurn(turnIndexBeforeMove)) {
+            //if (!PieceEmpty && PieceTeam === (turnIndexBeforeMove === 0 ? 'W' : 'B')) { XXX check
             throw new Error("One can only make a move in an empty position or capture opponent's piece!");
         }
-        if (deltaFrom.row === deltaTo.row && deltaFrom.col === deltaTo.col) {
-            throw new Error("Cannot move to same position.");
-        }
-        if (getWinner(board, turnIndexBeforeMove, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) !== '' ||
-            isTie(board, turnIndexBeforeMove, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition)) {
+        if (getWinner(board, turnIndexBeforeMove, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) !== ''
+            ||
+                isTie(board, turnIndexBeforeMove, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition)) {
             throw new Error("Can only make a move if the game is not over!");
         }
         var boardAfterMove = angular.copy(board), isUnderCheckAfterMove = angular.copy(isUnderCheck), canCastleKingAfterMove = angular.copy(canCastleKing), canCastleQueenAfterMove = angular.copy(canCastleQueen), enpassantPositionAfterMove = angular.copy(enpassantPosition), promoteToAfterMove = angular.copy(promoteTo);
-        var piece = board[deltaFrom.row][deltaFrom.col];
-        var turn = getTurn(turnIndexBeforeMove);
-        if (turn !== piece.charAt(0)) {
+        if (getTurn(turnIndexBeforeMove) !== board[deltaFrom.row][deltaFrom.col].charAt(0)) {
             throw new Error("Illegal to move this piece!");
         }
         // update the board according to the moving piece
-        switch (piece.charAt(1)) {
+        switch (board[deltaFrom.row][deltaFrom.col].charAt(1)) {
             case 'K':
                 if (isCastlingKing(board, deltaFrom, deltaTo, turnIndexBeforeMove, canCastleKing)) {
-                    boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+                    boardAfterMove[deltaTo.row][deltaTo.col] = board[deltaFrom.row][deltaFrom.col];
                     boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
-                    boardAfterMove[deltaTo.row][deltaTo.col - 1] = turn + 'R';
+                    boardAfterMove[deltaTo.row][deltaTo.col - 1] = getTurn(turnIndexBeforeMove) + 'R';
                     boardAfterMove[deltaTo.row][7] = '';
                     canCastleKingAfterMove[turnIndexBeforeMove] = false;
                     canCastleQueenAfterMove[turnIndexBeforeMove] = false;
                 }
                 else if (isCastlingQueen(board, deltaFrom, deltaTo, turnIndexBeforeMove, canCastleQueen)) {
-                    boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+                    boardAfterMove[deltaTo.row][deltaTo.col] = board[deltaFrom.row][deltaFrom.col];
                     boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
-                    boardAfterMove[deltaTo.row][deltaTo.col + 1] = turn + 'R';
+                    boardAfterMove[deltaTo.row][deltaTo.col + 1] = getTurn(turnIndexBeforeMove) + 'R';
                     boardAfterMove[deltaTo.row][0] = '';
                     canCastleKingAfterMove[turnIndexBeforeMove] = false;
                     canCastleQueenAfterMove[turnIndexBeforeMove] = false;
                 }
                 else if (canKingMove(board, deltaFrom, deltaTo, turnIndexBeforeMove)) {
-                    boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+                    boardAfterMove[deltaTo.row][deltaTo.col] = board[deltaFrom.row][deltaFrom.col];
                     boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
                 }
                 else {
@@ -184,7 +174,7 @@ var gameLogic;
                 break;
             case 'Q':
                 if (canQueenMove(board, deltaFrom, deltaTo, turnIndexBeforeMove)) {
-                    boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+                    boardAfterMove[deltaTo.row][deltaTo.col] = board[deltaFrom.row][deltaFrom.col];
                     boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
                 }
                 else {
@@ -193,7 +183,7 @@ var gameLogic;
                 break;
             case 'R':
                 if (canRookMove(board, deltaFrom, deltaTo, turnIndexBeforeMove)) {
-                    boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+                    boardAfterMove[deltaTo.row][deltaTo.col] = board[deltaFrom.row][deltaFrom.col];
                     boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
                 }
                 else {
@@ -202,7 +192,7 @@ var gameLogic;
                 break;
             case 'B':
                 if (canBishopMove(board, deltaFrom, deltaTo, turnIndexBeforeMove)) {
-                    boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+                    boardAfterMove[deltaTo.row][deltaTo.col] = board[deltaFrom.row][deltaFrom.col];
                     boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
                 }
                 else {
@@ -211,7 +201,7 @@ var gameLogic;
                 break;
             case 'N':
                 if (canKnightMove(board, deltaFrom, deltaTo, turnIndexBeforeMove)) {
-                    boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+                    boardAfterMove[deltaTo.row][deltaTo.col] = board[deltaFrom.row][deltaFrom.col];
                     boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
                 }
                 else {
@@ -220,7 +210,7 @@ var gameLogic;
                 break;
             case 'P':
                 if (canPawnMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, enpassantPosition)) {
-                    boardAfterMove[deltaTo.row][deltaTo.col] = piece;
+                    boardAfterMove[deltaTo.row][deltaTo.col] = board[deltaFrom.row][deltaFrom.col];
                     // capture the opponent pawn with enpassant
                     if (enpassantPosition.row && deltaFrom.row === enpassantPosition.row &&
                         deltaFrom.col !== deltaTo.col &&
@@ -231,14 +221,14 @@ var gameLogic;
                     enpassantPositionAfterMove.row = null;
                     enpassantPositionAfterMove.col = null;
                     // check for enpassant
-                    if (turn === "W" && deltaTo.row === 4) {
+                    if (getTurn(turnIndexBeforeMove) === "W" && deltaTo.row === 4) {
                         if (boardAfterMove[deltaTo.row][deltaTo.col - 1] === "BP" ||
                             boardAfterMove[deltaTo.row][deltaTo.col + 1] === "BP") {
                             enpassantPositionAfterMove.row = deltaTo.row;
                             enpassantPositionAfterMove.col = deltaTo.col;
                         }
                     }
-                    if (turn === "B" && deltaTo.row === 3) {
+                    if (getTurn(turnIndexBeforeMove) === "B" && deltaTo.row === 3) {
                         if (boardAfterMove[deltaTo.row][deltaTo.col - 1] === "WP" ||
                             boardAfterMove[deltaTo.row][deltaTo.col + 1] === "WP") {
                             enpassantPositionAfterMove.row = deltaTo.row;
@@ -247,7 +237,7 @@ var gameLogic;
                     }
                     // check for promotion
                     if (deltaTo.row === 0 || deltaTo.row === 7) {
-                        boardAfterMove[deltaTo.row][deltaTo.col] = (promoteToAfterMove ? promoteToAfterMove : turn + "Q");
+                        boardAfterMove[deltaTo.row][deltaTo.col] = (promoteToAfterMove ? promoteToAfterMove : getTurn(turnIndexBeforeMove) + "Q");
                     }
                 }
                 else {
@@ -284,177 +274,185 @@ var gameLogic;
         ];
     }
     gameLogic.createMove = createMove;
-    /**
-    * Returns true if the conditions of castle to king side satisfied
-    */
+    // Returns true if the conditions of castle to king side satisfied
     function isCastlingKing(board, deltaFrom, deltaTo, turnIndex, canCastleKing) {
-        var fromRow = deltaFrom.row, fromCol = deltaFrom.col, toCol = deltaTo.col, caslingRow = (turnIndex === 0 ? 7 : 0), turn = getTurn(turnIndex);
+        var caslingRow = (turnIndex === 0 ? 7 : 0);
         if (isPositionUnderAttack(board, turnIndex, deltaFrom)) {
             return false;
         }
-        if (canCastleKing[turnIndex] && fromRow === caslingRow &&
-            fromCol === 4 && toCol - fromCol === 2) {
+        if (canCastleKing[turnIndex] &&
+            deltaFrom.row === caslingRow &&
+            deltaFrom.col === 4 &&
+            deltaTo.col - deltaFrom.col === 2) {
             for (var j = 5; j <= 6; j++) {
-                if (board[fromRow][j] !== '') {
+                if (board[deltaFrom.row][j] !== '') {
                     return false;
                 }
-                if (isPositionUnderAttack(board, turnIndex, { row: fromRow, col: j })) {
+                if (isPositionUnderAttack(board, turnIndex, { row: deltaFrom.row, col: j })) {
                     return false;
                 }
             }
-            return board[caslingRow][7] === turn + 'R';
+            return board[caslingRow][7] === getTurn(turnIndex) + 'R';
         }
         return false;
     }
-    /**
-    * Returns true if the conditions of castle to queen side satisfied
-    */
+    // Returns true if the conditions of castle to queen side satisfied
     function isCastlingQueen(board, deltaFrom, deltaTo, turnIndex, canCastleQueen) {
-        var fromRow = deltaFrom.row, fromCol = deltaFrom.col, toCol = deltaTo.col, caslingRow = (turnIndex === 0 ? 7 : 0), turn = getTurn(turnIndex);
+        var caslingRow = (turnIndex === 0 ? 7 : 0);
         if (isPositionUnderAttack(board, turnIndex, deltaFrom)) {
             return false;
         }
-        if (canCastleQueen[turnIndex] && fromRow === caslingRow &&
-            fromCol === 4 && fromCol - toCol === 2) {
-            for (var j = 1; j <= 3; j++) {
-                if (board[fromRow][j] !== '') {
+        if (canCastleQueen[turnIndex] &&
+            deltaFrom.row === caslingRow &&
+            deltaFrom.col === 4 &&
+            deltaFrom.col - deltaTo.col === 2) {
+            for (var j = 1; j < 4; j++) {
+                if (board[deltaFrom.row][j] !== '') {
                     return false;
                 }
-                if (isPositionUnderAttack(board, turnIndex, { row: fromRow, col: j })) {
+                if (isPositionUnderAttack(board, turnIndex, { row: deltaFrom.row, col: j })) {
                     return false;
                 }
             }
-            return board[caslingRow][0] === turn + 'R';
+            return board[caslingRow][0] === getTurn(turnIndex) + 'R';
         }
         return false;
     }
-    /**
-    * Returns true if the deltaTo is available for king to move
-    */
+    // Returns true if the deltaTo is available for king to move
     function canKingMove(board, deltaFrom, deltaTo, turnIndex) {
-        var fromRow = deltaFrom.row, fromCol = deltaFrom.col, toRow = deltaTo.row, toCol = deltaTo.col;
-        if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) {
+        if (isOutOfBound(deltaTo)) {
             return false;
         }
-        var endPiece = board[toRow][toCol];
-        var opponent = getOpponent(turnIndex);
-        if (endPiece !== '' && endPiece.charAt(0) !== opponent) {
+        var PieceEmpty = (board[deltaTo.row][deltaTo.col] === '');
+        var PieceTeam = board[deltaTo.row][deltaTo.col].charAt(0);
+        if (!PieceEmpty && PieceTeam !== getTurn(turnIndex)) {
             return false;
         }
-        for (var i = fromRow - 1; i <= fromRow + 1; i++) {
-            for (var j = fromCol - 1; j <= fromCol + 1; j++) {
-                if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
-                    if (i === toRow && j === toCol) {
-                        return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
-                    }
+        for (var i = deltaFrom.row - 1; i < deltaFrom.row + 2; i++) {
+            for (var j = deltaFrom.col - 1; j < deltaFrom.col + 2; j++) {
+                if (isOutOfBound({ row: i, col: j })) {
+                    continue;
+                }
+                if (i === deltaTo.row && j === deltaTo.col) {
+                    return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
                 }
             }
         }
         return false;
     }
-    /**
-    * Returns true if the king has any place to move
-    * @startPos is the king's current position
-    */
+    // Returns true if the king has any place to move
     function canKingMoveAnywhere(board, turnIndex, startPos, isUnderCheck, canCastleKing, canCastleQueen) {
-        return getKingPossibleMoves(board, turnIndex, startPos, isUnderCheck, canCastleKing, canCastleQueen).length !== 0;
-    }
-    /**
-    * Returns a list of positions available for king to move
-    */
-    function getKingPossibleMoves(board, turnIndex, startPos, isUnderCheck, canCastleKing, canCastleQueen) {
-        var fromRow = startPos.row, fromCol = startPos.col, destinations = [], opponent = getOpponent(turnIndex);
         // standard moves
-        for (var i = fromRow - 1; i <= fromRow + 1; i++) {
-            for (var j = fromCol - 1; j <= fromCol + 1; j++) {
-                if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
-                    if (board[i][j] === '' || board[i][j].charAt(0) === opponent) {
-                        var curPos = { row: i, col: j };
-                        if (moveAndCheck(board, turnIndex, startPos, curPos)) {
-                            destinations.push(curPos);
-                        }
+        for (var i = startPos.row - 1; i < startPos.row + 2; i++) {
+            for (var j = startPos.col - 1; j < startPos.col + 2; j++) {
+                var curPos = { row: i, col: j };
+                if (isOutOfBound(curPos)) {
+                    continue;
+                }
+                var PieceEmpty = (board[i][j] === '');
+                var PieceTeam = board[i][j].charAt(0);
+                if (!PieceEmpty && PieceTeam !== getTurn(turnIndex)) {
+                    if (moveAndCheck(board, turnIndex, startPos, curPos)) {
+                        return true;
                     }
                 }
             }
         }
         // casling moves
-        if (!isUnderCheck[turnIndex] &&
-            isCastlingKing(board, startPos, { row: fromRow, col: fromCol + 2 }, turnIndex, canCastleKing)) {
-            destinations.push({ row: fromRow, col: fromCol + 2 });
+        if (!isUnderCheck[turnIndex]) {
+            if (isCastlingKing(board, startPos, { row: startPos.row, col: startPos.col + 2 }, turnIndex, canCastleKing)) {
+                return true;
+            }
+            if (isCastlingQueen(board, startPos, { row: startPos.row, col: startPos.col - 2 }, turnIndex, canCastleQueen)) {
+                return true;
+            }
         }
-        if (!isUnderCheck[turnIndex] &&
-            isCastlingQueen(board, startPos, { row: fromRow, col: fromCol - 2 }, turnIndex, canCastleQueen)) {
-            destinations.push({ row: fromRow, col: fromCol - 2 });
+        return false;
+    }
+    // Returns a list of positions available for king to move
+    function getKingPossibleMoves(board, turnIndex, startPos, isUnderCheck, canCastleKing, canCastleQueen) {
+        var destinations = [];
+        // standard moves
+        for (var i = startPos.row - 1; i < startPos.row + 2; i++) {
+            for (var j = startPos.col - 1; j < startPos.col + 2; j++) {
+                var curPos = { row: i, col: j };
+                if (isOutOfBound(curPos)) {
+                    continue;
+                }
+                var PieceEmpty = (board[i][j] === '');
+                var PieceTeam = board[i][j].charAt(0);
+                if (!PieceEmpty && PieceTeam !== getTurn(turnIndex)) {
+                    if (moveAndCheck(board, turnIndex, startPos, curPos)) {
+                        destinations.push(curPos);
+                    }
+                }
+            }
+        }
+        // casling moves
+        if (!isUnderCheck[turnIndex]) {
+            if (isCastlingKing(board, startPos, { row: startPos.row, col: startPos.col + 2 }, turnIndex, canCastleKing)) {
+                destinations.push({ row: startPos.row, col: startPos.col + 2 });
+            }
+            if (isCastlingQueen(board, startPos, { row: startPos.row, col: startPos.col - 2 }, turnIndex, canCastleQueen)) {
+                destinations.push({ row: startPos.row, col: startPos.col - 2 });
+            }
         }
         return destinations;
     }
     gameLogic.getKingPossibleMoves = getKingPossibleMoves;
-    /**
-    * Returns true the current player's king is under check for given board
-    */
+    // Returns true if the current player's king is under check
     function isUnderCheckByPositions(board, turnIndex) {
         var kingsPosition = findKingsPosition(board, turnIndex);
-        if (kingsPosition) {
-            return isPositionUnderAttack(board, turnIndex, kingsPosition);
-        }
-        else {
-            throw new Error("Your king is missing and the game should end!");
-        }
+        return isPositionUnderAttack(board, turnIndex, kingsPosition);
     }
-    /**
-    * Returns true if the position is under attack by any opponent pieces
-    * @position is the coordinate of the position
-    */
+    // Returns true if the position is under attack by any opponent pieces
     function isPositionUnderAttack(board, turnIndex, position) {
-        var opponent = getOpponent(turnIndex);
         var attPositions = [];
         for (var i = 0; i < 8; i++) {
             for (var j = 0; j < 8; j++) {
-                if (board[i][j] !== '' && board[i][j].charAt(0) === opponent) {
-                    var opponentPiece = board[i][j];
+                var PieceEmpty = (board[i][j] === '');
+                var PieceTeam = board[i][j].charAt(0);
+                if (!PieceEmpty && PieceTeam !== getTurn(turnIndex)) {
                     var curPos = { row: i, col: j };
-                    switch (opponentPiece.charAt(1)) {
+                    switch (board[i][j].charAt(1)) {
                         case 'K':
                             if (canKingMove(board, curPos, position, 1 - turnIndex)) {
-                                attPositions.push(curPos);
+                                return true;
                             }
                             break;
                         case 'Q':
                             if (canQueenMove(board, curPos, position, 1 - turnIndex)) {
-                                attPositions.push(curPos);
+                                return true;
                             }
                             break;
                         case 'R':
                             if (canRookMove(board, curPos, position, 1 - turnIndex)) {
-                                attPositions.push(curPos);
+                                return true;
                             }
                             break;
                         case 'B':
                             if (canBishopMove(board, curPos, position, 1 - turnIndex)) {
-                                attPositions.push(curPos);
+                                return true;
                             }
                             break;
                         case 'N':
                             if (canKnightMove(board, curPos, position, 1 - turnIndex)) {
-                                attPositions.push(curPos);
+                                return true;
                             }
                             break;
                         case 'P':
                             if (canPawnMove(board, curPos, position, 1 - turnIndex, null)) {
-                                attPositions.push(curPos);
+                                return true;
                             }
                             break;
                     }
                 }
             }
         }
-        return attPositions.length !== 0;
     }
-    /**
-    * Returns the position of the current player's king
-    */
+    // Returns the position of the current player's king
     function findKingsPosition(board, turnIndex) {
-        var kingPiece = (turnIndex === 0 ? "WK" : "BK");
+        var kingPiece = getTurn(turnIndex) + "K";
         for (var i = 0; i < 8; i++) {
             for (var j = 0; j < 8; j++) {
                 if (board[i][j] === kingPiece) {
@@ -462,32 +460,24 @@ var gameLogic;
                 }
             }
         }
-        return;
+        throw new Error("Your king is missing and the game should end!");
     }
-    /**
-    * Returns true if queen can move from deltaFrom to deltaTo
-    */
+    // Returns true if queen can move from deltaFrom to deltaTo
     function canQueenMove(board, deltaFrom, deltaTo, turnIndex) {
         return canRookMove(board, deltaFrom, deltaTo, turnIndex) ||
             canBishopMove(board, deltaFrom, deltaTo, turnIndex);
     }
-    /**
-    * Returns true if the queen has any place to move
-    */
+    // Returns true if the queen has any place to move
     function canQueenMoveAnywhere(board, turnIndex, startPos) {
         return canRookMoveAnywhere(board, turnIndex, startPos) ||
             canBishopMoveAnywhere(board, turnIndex, startPos);
     }
-    /**
-    * Returns all available positions for queen to move
-    */
+    // Returns all available positions for queen to move
     function getQueenPossibleMoves(board, turnIndex, startPos) {
         return getRookPossibleMoves(board, turnIndex, startPos).concat(getBishopPossibleMoves(board, turnIndex, startPos));
     }
     gameLogic.getQueenPossibleMoves = getQueenPossibleMoves;
-    /**
-    * Returns true if the rook can move from deltaFrom to deltaTo
-    */
+    // Returns true if the rook can move from deltaFrom to deltaTo
     function canRookMove(board, deltaFrom, deltaTo, turnIndex) {
         if (isOutOfBound(deltaTo)) {
             return false;
@@ -535,9 +525,7 @@ var gameLogic;
             return false;
         }
     }
-    /**
-    * Returns true if the rook has any place to move
-    */
+    // Returns true if the rook has any place to move
     function canRookMoveAnywhere(board, turnIndex, startPos) {
         for (var i = 1; i < 8; i++) {
             var endPos1 = { row: startPos.row + i, col: startPos.col }, endPos2 = { row: startPos.row - i, col: startPos.col }, endPos3 = { row: startPos.row, col: startPos.col + i }, endPos4 = { row: startPos.row, col: startPos.col - i };
@@ -556,9 +544,7 @@ var gameLogic;
         }
         return false;
     }
-    /**
-    * Returns all available positions for rook to move
-    */
+    // Returns all available positions for rook to move
     function getRookPossibleMoves(board, turnIndex, startPos) {
         var toPos = [];
         for (var i = 1; i < 8; i++) {
@@ -579,9 +565,7 @@ var gameLogic;
         return toPos;
     }
     gameLogic.getRookPossibleMoves = getRookPossibleMoves;
-    /**
-    * Returns true if the bishop can move from deltaFrom to deltaTo
-    */
+    // Returns true if the bishop can move from deltaFrom to deltaTo
     function canBishopMove(board, deltaFrom, deltaTo, turnIndex) {
         if (isOutOfBound(deltaTo)) {
             return false;
@@ -616,9 +600,7 @@ var gameLogic;
             return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
         }
     }
-    /**
-    * Returns true if the rook has any place to move
-    */
+    // Returns true if the rook has any place to move
     function canBishopMoveAnywhere(board, turnIndex, startPos) {
         for (var i = 1; i < 8; i++) {
             var endPos1 = { row: startPos.row - i, col: startPos.col - i }, endPos2 = { row: startPos.row - i, col: startPos.col + i }, endPos3 = { row: startPos.row + i, col: startPos.col - i }, endPos4 = { row: startPos.row + i, col: startPos.col + i };
@@ -637,9 +619,7 @@ var gameLogic;
         }
         return false;
     }
-    /**
-    * Returns the list of available positions for bishop to move
-    */
+    // Returns the list of available positions for bishop to move
     function getBishopPossibleMoves(board, turnIndex, startPos) {
         var toPos = [];
         for (var i = 1; i < 8; i++) {
@@ -660,9 +640,7 @@ var gameLogic;
         return toPos;
     }
     gameLogic.getBishopPossibleMoves = getBishopPossibleMoves;
-    /**
-    * Returns true if the knight can move from deltaFrom to deltaTo
-    */
+    // Returns true if the knight can move from deltaFrom to deltaTo
     function canKnightMove(board, deltaFrom, deltaTo, turnIndex) {
         if (isOutOfBound(deltaTo)) {
             return false;
@@ -672,19 +650,17 @@ var gameLogic;
         if (!endPieceEmpty && endPieceTeam === getTurn(turnIndex)) {
             return false;
         }
-        if (Math.abs(deltaFrom.row - deltaTo.row) === 2 &&
-            Math.abs(deltaFrom.col - deltaTo.col) === 1) {
+        var diffRow = Math.abs(deltaFrom.row - deltaTo.row);
+        var diffCol = Math.abs(deltaFrom.col - deltaTo.col);
+        if (diffRow === 2 && diffCol === 1) {
             return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
         }
-        else if (Math.abs(deltaFrom.row - deltaTo.row) === 1 &&
-            Math.abs(deltaFrom.col - deltaTo.col) === 2) {
+        else if (diffRow === 1 && diffCol === 2) {
             return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
         }
         return false;
     }
-    /**
-    * Returns true if the knight has any place available to move
-    */
+    // Returns true if the knight has any place available to move
     function canKnightMoveAnywhere(board, turnIndex, startPos) {
         for (var i = startPos.row - 2; i < startPos.row + 3; i++) {
             if (i === startPos.row) {
@@ -702,9 +678,7 @@ var gameLogic;
         }
         return false;
     }
-    /**
-    * Returns the list of available positions for knight to move
-    */
+    // Returns the list of available positions for knight to move
     function getKnightPossibleMoves(board, turnIndex, startPos) {
         var toPos = [];
         for (var i = startPos.row - 2; i < startPos.row + 3; i++) {
@@ -724,9 +698,7 @@ var gameLogic;
         return toPos;
     }
     gameLogic.getKnightPossibleMoves = getKnightPossibleMoves;
-    /**
-    * Returns true if the pawn can move from deltaFrom to deltaTo
-    */
+    // Returns true if the pawn can move from deltaFrom to deltaTo
     function canPawnMove(board, deltaFrom, deltaTo, turnIndex, enpassantPosition) {
         if (isOutOfBound(deltaTo)) {
             return false;
@@ -758,9 +730,7 @@ var gameLogic;
         }
         return false;
     }
-    /**
-    * Returns true if the pawn has any place available to move
-    */
+    // Returns true if the pawn has any place available to move
     function canPawnMoveAnywhere(board, turnIndex, startPos, enpassantPosition) {
         var endPos = { row: startPos.row, col: -1 };
         if (getTurn(turnIndex) === 'B') {
@@ -787,9 +757,7 @@ var gameLogic;
         }
         return false;
     }
-    /**
-    * Returns the list of available positions for pawn to move
-    */
+    // Returns the list of available positions for pawn to move
     function getPawnPossibleMoves(board, turnIndex, startPos, enpassantPosition) {
         var toPos = [];
         var endPos = { row: startPos.row, col: -1 };
@@ -836,18 +804,14 @@ var gameLogic;
         }
         return true;
     }
-    /**
-    * Returns opponent initial
-    */
+    // Returns opponent initial
     function getOpponent(turnIndex) {
         if (turnIndex === 0) {
             return 'B';
         }
         return 'W';
     }
-    /**
-    * Returns turnIndex initial
-    */
+    // Returns turnIndex initial
     function getTurn(turnIndex) {
         if (turnIndex === 0) {
             return 'W';
