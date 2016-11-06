@@ -1,10 +1,10 @@
 ;
 var game;
 (function (game) {
-    var selectedCells = []; // record the clicked cells
-    var gameArea = document.getElementById("gameArea");
     game.rowsNum = 8;
     game.colsNum = 8;
+    var selectedCells = []; // record the clicked cells
+    var gameArea = document.getElementById("gameArea");
     var draggingStartedRowCol = null; // The {row: YY, col: XX} where dragging started.
     var draggingPiece = null;
     var draggingPieceAvailableMoves = null;
@@ -22,7 +22,7 @@ var game;
     var deltaFrom = null;
     var deltaTo = null;
     var promoteTo = null;
-    var isYourTurn = null;
+    var isYourTurn = false;
     var rotate = null;
     var player = null;
     function init() {
@@ -46,9 +46,7 @@ var game;
     }
     game.init = init;
     function registerServiceWorker() {
-        // I prefer to use appCache over serviceWorker
-        // (because iOS doesn't support serviceWorker, so we have to use appCache)
-        // I've added this code for a future where all browsers support serviceWorker (so we can deprecate appCache!)
+        // I prefer to use appCache over serviceWorker (because iOS doesn't support serviceWorker, so we have to use appCache) I've added this code for a future where all browsers support serviceWorker (so we can deprecate appCache!)
         if (!window.applicationCache && 'serviceWorker' in navigator) {
             var n = navigator;
             log.log('Calling serviceWorker.register');
@@ -71,35 +69,32 @@ var game;
         canCastleQueen = params.stateAfterMove.canCastleQueen;
         enpassantPosition = params.stateAfterMove.enpassantPosition;
         promoteTo = params.stateAfterMove.promoteTo;
-        if (board === undefined) {
+        if (!board) {
             board = gameLogic.getInitialBoard();
         }
-        isYourTurn = params.turnIndexAfterMove >= 0 &&
-            params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
         turnIndex = params.turnIndexAfterMove;
+        isYourTurn = turnIndex === params.yourPlayerIndex &&
+            turnIndex >= 0; // game is ongoing
         // Is it the computer's turn?
-        if (isYourTurn &&
-            params.playersInfo[params.yourPlayerIndex].playerId === '') {
+        if (isYourTurn && params.playersInfo[params.yourPlayerIndex].playerId === '') {
             isYourTurn = false; // to make sure the UI won't send another move.
-            // Waiting 0.5 seconds to let the move animation finish; if we call aiService
-            // then the animation is paused until the javascript finishes.
+            /* Waiting 0.5 seconds to let the move animation finish; if we call aiService
+               then the animation is paused until the javascript finishes. */
             $timeout(sendComputerMove, 500);
         }
-        // If the play mode is not pass and play then "rotate" the board
-        // for the player. Therefore the board will always look from the
-        // point of view of the player in single player mode...
+        /* If the play mode is not pass and play then "rotate" the board
+           for the player. Therefore the board will always look from the
+           point of view of the player in single player mode... */
         if (params.playMode === "playBlack") {
             rotate = true;
         }
         else {
             rotate = false;
         }
-        // clear up the selectedCells and waiting for next valid move
-        selectedCells = [];
+        selectedCells = []; // clear up the selectedCells and waiting for next valid move
     }
     function animationEndedCallback() {
         $rootScope.$apply(function () {
-            log.info("Animation ended");
             animationEnded = true;
             if (isComputerTurn) {
                 sendComputerMove();
@@ -107,6 +102,7 @@ var game;
         });
     }
     function sendComputerMove() {
+        //XXX is this necessary ?
         var possibleMoves = gameLogic.getPossibleMoves(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition);
         if (possibleMoves.length) {
             var index1 = Math.floor(Math.random() * possibleMoves.length);
@@ -117,7 +113,7 @@ var game;
             gameService.makeMove(gameLogic.createMove(board, deltaFrom, deltaTo, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, promoteTo));
         }
         else {
-            console.log("no there are no possible moves!");
+            console.log("There is no possible move");
         }
     }
     //window.e2e_test_stateService = stateService;
@@ -125,13 +121,12 @@ var game;
         // Center point in gameArea
         var x = clientX - gameArea.offsetLeft;
         var y = clientY - gameArea.offsetTop;
-        var row, col;
-        // Is outside gameArea?
         if (x < 0 || y < 0 || x >= gameArea.clientWidth || y >= gameArea.clientHeight) {
             if (draggingPiece) {
                 // Drag the piece where the touch is (without snapping to a square).
-                var size = getSquareWidthHeight();
-                setDraggingPieceTopLeft({ top: y - size.height / 2, left: x - size.width / 2 });
+                var height = getSquareWidthHeight().height;
+                var width = getSquareWidthHeight().width;
+                setDraggingPieceTopLeft({ top: y - height / 2, left: x - width / 2 });
             }
             else {
                 return;
@@ -149,17 +144,21 @@ var game;
             }
             if (type === "touchstart" && !draggingStartedRowCol) {
                 // drag started
-                var curPiece = board[r_row][r_col];
-                if (curPiece && curPiece.charAt(0) === getTurn(turnIndex)) {
+                var PieceEmpty = (board[r_row][r_col] === '');
+                var PieceTeam = board[r_row][r_col].charAt(0);
+                if (!PieceEmpty && PieceTeam === getTurn(turnIndex)) {
                     draggingStartedRowCol = { row: row, col: col };
                     draggingPiece = document.getElementById("e2e_test_img_" +
-                        game.getPieceKindInId(row, col) + '_' +
-                        draggingStartedRowCol.row + "x" + draggingStartedRowCol.col);
+                        game.getPieceKindInId(row, col) +
+                        '_' +
+                        draggingStartedRowCol.row +
+                        "x" +
+                        draggingStartedRowCol.col);
                     if (draggingPiece) {
                         draggingPiece.style['z-index'] = ++nextZIndex;
                         draggingPiece.style['width'] = '80%';
                         draggingPiece.style['height'] = '80%';
-                        draggingPiece.style['top'] = '10%';
+                        draggingPiece.style['top'] = '10%'; //XXX UI stuff
                         draggingPiece.style['left'] = '10%';
                         draggingPiece.style['position'] = 'absolute';
                     }
@@ -176,14 +175,10 @@ var game;
                 return;
             }
             if (type === "touchend") {
-                var from = draggingStartedRowCol;
-                var to = { row: row, col: col };
-                dragDone(from, to);
+                dragDone(draggingStartedRowCol, { row: row, col: col });
             }
             else {
-                // Drag continue
                 setDraggingPieceTopLeft(getSquareTopLeft(row, col));
-                var centerXY = getSquareCenterXY(row, col);
             }
         }
         if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
@@ -219,7 +214,10 @@ var game;
     }
     function getSquareTopLeft(row, col) {
         var size = getSquareWidthHeight();
-        return { top: row * size.height, left: col * size.width };
+        return {
+            top: row * size.height,
+            left: col * size.width
+        };
     }
     function getSquareCenterXY(row, col) {
         var size = getSquareWidthHeight();
@@ -234,9 +232,6 @@ var game;
         });
     }
     function dragDoneHandler(from, to) {
-        var msg = "Dragged piece " + from.row + "x" + from.col + " to square " + to.row + "x" + to.col;
-        console.log(msg);
-        // Update piece in board and make the move
         if (window.location.search === '?throwException') {
             throw new Error("Throwing the error because URL has '?throwException'");
         }
@@ -252,7 +247,12 @@ var game;
         }
         deltaFrom = from;
         deltaTo = to;
-        if (shouldPromote(board, from, to, turnIndex)) {
+        var myPawn = 'BP';
+        if (turnIndex === 0) {
+            myPawn = 'WP';
+        }
+        if (myPawn === board[deltaFrom.row][deltaFrom.col] &&
+            (deltaTo.row === 0 || deltaTo.row === 7)) {
             player = getTurn(turnIndex);
             isPromotionModalShowing[modalName] = true;
             return;
@@ -262,7 +262,7 @@ var game;
     function actuallyMakeMove() {
         try {
             var move = gameLogic.createMove(board, deltaFrom, deltaTo, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, promoteTo);
-            isYourTurn = false; // to prevent making another move
+            isYourTurn = false; // to prevent making another move, acts as a kicj
             gameService.makeMove(move);
         }
         catch (e) {
@@ -438,22 +438,11 @@ var game;
                 break;
             }
         }
-        // alert($scope.promoteTo);
-        dismissModal(modalName);
+        delete isPromotionModalShowing[modalName]; //dismissModal
         actuallyMakeMove();
     };
-    function dismissModal(modalName) {
-        delete isPromotionModalShowing[modalName];
-    }
-    function getIntegersTill(number) {
-        var res = [];
-        for (var i = 0; i < number; i++) {
-            res.push(i);
-        }
-        return res;
-    }
-    game.rows = getIntegersTill(game.rowsNum);
-    game.cols = getIntegersTill(game.colsNum);
+    game.rows = [0, 1, 2, 3, 4, 5, 6, 7];
+    game.cols = [0, 1, 2, 3, 4, 5, 6, 7];
 })(game || (game = {}));
 angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
     .run(function () {
