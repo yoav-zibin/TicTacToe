@@ -843,12 +843,12 @@ var gameLogic;
         try {
             var deltaFrom = params.move[2].set.value;
             var deltaTo = params.move[3].set.value;
+            var promoteTo = params.move[8].set.value;
+            var board = params.stateBeforeMove.board;
             var isUnderCheck = params.stateBeforeMove.isUnderCheck;
             var canCastleKing = params.stateBeforeMove.canCastleKing;
             var canCastleQueen = params.stateBeforeMove.canCastleQueen;
             var enpassantPosition = params.stateBeforeMove.enpassantPosition;
-            var board = params.stateBeforeMove.board;
-            var promoteTo = params.move[8].set.value;
             var expectedMove = createMove(board, deltaFrom, deltaTo, params.turnIndexBeforeMove, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, promoteTo);
             if (!angular.equals(params.move, expectedMove)) {
                 return false;

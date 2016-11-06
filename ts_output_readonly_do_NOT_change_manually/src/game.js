@@ -61,7 +61,11 @@ var game;
         return {}; //XXX to fill in
     }
     function updateUI(params) {
+        turnIndex = params.turnIndexAfterMove;
         board = params.stateAfterMove.board;
+        if (!board) {
+            board = gameLogic.getInitialBoard();
+        }
         deltaFrom = params.stateAfterMove.deltaFrom;
         deltaTo = params.stateAfterMove.deltaTo;
         isUnderCheck = params.stateAfterMove.isUnderCheck;
@@ -69,10 +73,6 @@ var game;
         canCastleQueen = params.stateAfterMove.canCastleQueen;
         enpassantPosition = params.stateAfterMove.enpassantPosition;
         promoteTo = params.stateAfterMove.promoteTo;
-        if (!board) {
-            board = gameLogic.getInitialBoard();
-        }
-        turnIndex = params.turnIndexAfterMove;
         isYourTurn = turnIndex === params.yourPlayerIndex &&
             turnIndex >= 0; // game is ongoing
         // Is it the computer's turn?

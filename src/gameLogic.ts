@@ -1,5 +1,22 @@
+type Board = string[][];
+type Pos = {row:number, col:number};
+
+interface IState {  //this has to be used for ismoveok()
+  board:Board;
+  isUnderCheck: Boolean;
+  canCastleKing: Boolean;
+  canCastleQueen: Boolean;
+  enpassantPosition:any;
+}
+
+interface IMove2{ //this has to be used for ismoveok()
+  deltaFrom:Pos;
+  deltaTo:Pos;
+  promoteTo:string;
+}
+
 module gameLogic {
-  export function getInitialBoard() {
+  export function getInitialBoard():Board {
     return [
       ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'],
       ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'],
@@ -13,7 +30,7 @@ module gameLogic {
   }
 
   // Returns true if the game ended in a tie because there are no available moves for any pieces
-  function isTie(board:any, turnIndex:any, isUnderCheck:any, canCastleKing:any, canCastleQueen:any, enpassantPosition:any) {
+  function isTie(board:Board, turnIndex:number, isUnderCheck:[Boolean,Boolean], canCastleKing:[Boolean,Boolean], canCastleQueen:[Boolean,Boolean], enpassantPosition:Pos) {
     if (isUnderCheck[turnIndex]) {
       return false;
     }
@@ -61,7 +78,7 @@ module gameLogic {
   }
 
   // Returns the winner (either 'W' or 'B') or '' if there is no winner
-  function getWinner(board:any, turnIndex:any, isUnderCheck:any, canCastleKing:any, canCastleQueen:any, enpassantPosition:any) {
+  function getWinner(board:Board, turnIndex:number, isUnderCheck:[Boolean,Boolean], canCastleKing:[Boolean,Boolean], canCastleQueen:[Boolean,Boolean], enpassantPosition:Pos):string {
     if (!isUnderCheck[turnIndex]) {
       return '';
     }
@@ -114,9 +131,9 @@ module gameLogic {
  }
 
  // Returns the move that should be performed when player givin a state
-export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBeforeMove:any,
-                           isUnderCheck:any, canCastleKing:any, canCastleQueen:any, 
-                           enpassantPosition:any, promoteTo:any) {    
+export function createMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndexBeforeMove:number,
+                           isUnderCheck:[Boolean,Boolean], canCastleKing:[Boolean,Boolean], canCastleQueen:[Boolean,Boolean], 
+                           enpassantPosition:Pos, promoteTo:string) {    
     // initialize all variables
     if (!board) { board = getInitialBoard(); }
     if (!isUnderCheck) { isUnderCheck = [false, false]; }
@@ -305,7 +322,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the conditions of castle to king side satisfied
-  function isCastlingKing(board:any, deltaFrom:any, deltaTo:any, turnIndex:any, canCastleKing:any) {
+  function isCastlingKing(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndex:number, canCastleKing:[Boolean,Boolean]) {
     let caslingRow = 0;
     if (getTurn(turnIndex) === 'W'){
       caslingRow = 7;
@@ -331,7 +348,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the conditions of castle to queen side satisfied
-  function isCastlingQueen(board:any, deltaFrom:any, deltaTo:any, turnIndex:any, canCastleQueen:any) {
+  function isCastlingQueen(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndex:number, canCastleQueen:[Boolean,Boolean]) {
     let caslingRow = 0;
     if (getTurn(turnIndex) === 'W'){
       caslingRow = 7;
@@ -357,7 +374,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the deltaTo is available for king to move
-  function canKingMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any) {
+  function canKingMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndex:number) {
     if (isOutOfBound(deltaTo)) {
       return false;
     }
@@ -380,7 +397,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the king has any place to move
-  function canKingMoveAnywhere(board:any, turnIndex:any, startPos:any, isUnderCheck:any, canCastleKing:any, canCastleQueen:any) {
+  function canKingMoveAnywhere(board:Board, turnIndex:number, startPos:any, isUnderCheck:[Boolean,Boolean], canCastleKing:[Boolean,Boolean], canCastleQueen:[Boolean,Boolean]) {
     // standard moves
     for (let i = startPos.row - 1; i < startPos.row + 2; i++) {
       for (let j = startPos.col - 1; j < startPos.col + 2; j++) {
@@ -418,7 +435,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns a list of positions available for king to move
-  export function getKingPossibleMoves(board:any, turnIndex:any, startPos:any, isUnderCheck:any, canCastleKing:any, canCastleQueen:any) {
+  export function getKingPossibleMoves(board:Board, turnIndex:number, startPos:any, isUnderCheck:[Boolean,Boolean], canCastleKing:[Boolean,Boolean], canCastleQueen:[Boolean,Boolean]) {
     let destinations:any = [];
     // standard moves
     for (let i = startPos.row - 1; i < startPos.row + 2; i++) {
@@ -457,13 +474,13 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the current player's king is under check
-  function isUnderCheckByPositions(board:any, turnIndex:any) {
+  function isUnderCheckByPositions(board:Board, turnIndex:number) {
     let kingsPosition = findKingsPosition(board, turnIndex);
     return isPositionUnderAttack(board, turnIndex, kingsPosition);
   }
 
   // Returns true if the position is under attack by any opponent pieces
-  function isPositionUnderAttack(board:any, turnIndex:any, position:any):Boolean {
+  function isPositionUnderAttack(board:Board, turnIndex:number, position:Pos):Boolean {
     let attPositions:any = [];
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
@@ -509,7 +526,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns the position of the current player's king
-  function findKingsPosition(board:any, turnIndex:any) {
+  function findKingsPosition(board:Board, turnIndex:number) {
     let kingPiece = getTurn(turnIndex) + "K";
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
@@ -522,25 +539,25 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if queen can move from deltaFrom to deltaTo
-  function canQueenMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any) {
+  function canQueenMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndex:number) {
     return canRookMove(board, deltaFrom, deltaTo, turnIndex) ||
            canBishopMove(board, deltaFrom, deltaTo, turnIndex);
   }
 
   // Returns true if the queen has any place to move
-  function canQueenMoveAnywhere(board:any, turnIndex:any, startPos:any) {
+  function canQueenMoveAnywhere(board:Board, turnIndex:number, startPos:Pos) {
     return canRookMoveAnywhere(board, turnIndex, startPos) ||
            canBishopMoveAnywhere(board, turnIndex, startPos);
   }
 
   // Returns all available positions for queen to move
-  export function getQueenPossibleMoves(board:any, turnIndex:any, startPos:any) {
+  export function getQueenPossibleMoves(board:Board, turnIndex:number, startPos:Pos) {
     return getRookPossibleMoves(board, turnIndex, startPos).concat(
            getBishopPossibleMoves(board, turnIndex, startPos));
   }
 
   // Returns true if the rook can move from deltaFrom to deltaTo
-  function canRookMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any) {
+  function canRookMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndex:number) {
     if (isOutOfBound(deltaTo)) {
       return false;
     }
@@ -588,12 +605,12 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the rook has any place to move
-  function canRookMoveAnywhere(board:any, turnIndex:any, startPos:any) {
+  function canRookMoveAnywhere(board:Board, turnIndex:number, startPos:Pos) {
     for (let i = 1; i < 8; i++) {
-      let endPos1 = {row: startPos.row + i, col: startPos.col},
-          endPos2 = {row: startPos.row - i, col: startPos.col},
-          endPos3 = {row: startPos.row, col: startPos.col + i},
-          endPos4 = {row: startPos.row, col: startPos.col - i};
+      let endPos1:Pos = {row: startPos.row + i, col: startPos.col},
+          endPos2:Pos = {row: startPos.row - i, col: startPos.col},
+          endPos3:Pos = {row: startPos.row, col: startPos.col + i},
+          endPos4:Pos = {row: startPos.row, col: startPos.col - i};
       if (canRookMove(board, startPos, endPos1, turnIndex)) { return true; }
       if (canRookMove(board, startPos, endPos2, turnIndex)) { return true; }
       if (canRookMove(board, startPos, endPos3, turnIndex)) { return true; }
@@ -603,13 +620,13 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns all available positions for rook to move
-  export function getRookPossibleMoves(board:any, turnIndex:any, startPos:any) {
+  export function getRookPossibleMoves(board:Board, turnIndex:number, startPos:Pos) {
     let toPos:any = [];
     for (let i = 1; i < 8; i++) {
-      let endPos1 = {row: startPos.row + i, col: startPos.col},
-          endPos2 = {row: startPos.row - i, col: startPos.col},
-          endPos3 = {row: startPos.row, col: startPos.col + i},
-          endPos4 = {row: startPos.row, col: startPos.col - i};
+      let endPos1:Pos = {row: startPos.row + i, col: startPos.col},
+          endPos2:Pos = {row: startPos.row - i, col: startPos.col},
+          endPos3:Pos = {row: startPos.row, col: startPos.col + i},
+          endPos4:Pos = {row: startPos.row, col: startPos.col - i};
       if (canRookMove(board, startPos, endPos1, turnIndex)) { toPos.push(endPos1); }
       if (canRookMove(board, startPos, endPos2, turnIndex)) { toPos.push(endPos2); }
       if (canRookMove(board, startPos, endPos3, turnIndex)) { toPos.push(endPos3); }
@@ -619,7 +636,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the bishop can move from deltaFrom to deltaTo
-  function canBishopMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any):Boolean {
+  function canBishopMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndex:number):Boolean {
     if (isOutOfBound(deltaTo)) {
       return false;
     }
@@ -654,12 +671,12 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the rook has any place to move
-  function canBishopMoveAnywhere(board:any, turnIndex:any, startPos:any):Boolean {
+  function canBishopMoveAnywhere(board:Board, turnIndex:number, startPos:any):Boolean {
     for (let i = 1; i < 8; i++) {
-      let endPos1 = {row: startPos.row - i, col: startPos.col - i},
-          endPos2 = {row: startPos.row - i, col: startPos.col + i},
-          endPos3 = {row: startPos.row + i, col: startPos.col - i},
-          endPos4 = {row: startPos.row + i, col: startPos.col + i};
+      let endPos1:Pos = {row: startPos.row - i, col: startPos.col - i},
+          endPos2:Pos = {row: startPos.row - i, col: startPos.col + i},
+          endPos3:Pos = {row: startPos.row + i, col: startPos.col - i},
+          endPos4:Pos = {row: startPos.row + i, col: startPos.col + i};
       if (canBishopMove(board, startPos, endPos1, turnIndex)) { return true; }
       if (canBishopMove(board, startPos, endPos2, turnIndex)) { return true; }
       if (canBishopMove(board, startPos, endPos3, turnIndex)) { return true; }
@@ -669,13 +686,13 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns the list of available positions for bishop to move
-  export function getBishopPossibleMoves(board:any, turnIndex:any, startPos:any) {
+  export function getBishopPossibleMoves(board:Board, turnIndex:number, startPos:any) {
     let toPos:any = [];
     for (let i = 1; i < 8; i++) {
-      let endPos1 = {row: startPos.row - i, col: startPos.col - i},
-          endPos2 = {row: startPos.row - i, col: startPos.col + i},
-          endPos3 = {row: startPos.row + i, col: startPos.col - i},
-          endPos4 = {row: startPos.row + i, col: startPos.col + i};
+      let endPos1:Pos = {row: startPos.row - i, col: startPos.col - i},
+          endPos2:Pos = {row: startPos.row - i, col: startPos.col + i},
+          endPos3:Pos = {row: startPos.row + i, col: startPos.col - i},
+          endPos4:Pos = {row: startPos.row + i, col: startPos.col + i};
       if (canBishopMove(board, startPos, endPos1, turnIndex)) { toPos.push(endPos1); }
       if (canBishopMove(board, startPos, endPos2, turnIndex)) { toPos.push(endPos2); }
       if (canBishopMove(board, startPos, endPos3, turnIndex)) { toPos.push(endPos3); }
@@ -685,7 +702,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the knight can move from deltaFrom to deltaTo
-  function canKnightMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any):Boolean {
+  function canKnightMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndex:number):Boolean {
     if (isOutOfBound(deltaTo)) {
       return false;
     }
@@ -705,7 +722,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the knight has any place available to move
-  function canKnightMoveAnywhere(board:any, turnIndex:any, startPos:any):Boolean {
+  function canKnightMoveAnywhere(board:Board, turnIndex:number, startPos:any):Boolean {
     for (let i = startPos.row - 2; i < startPos.row + 3; i++) {
       if (i === startPos.row) {
         continue;
@@ -724,7 +741,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns the list of available positions for knight to move
-  export function getKnightPossibleMoves(board:any, turnIndex:any, startPos:any) {
+  export function getKnightPossibleMoves(board:Board, turnIndex:number, startPos:any) {
     let toPos:any = [];
     for (let i = startPos.row - 2; i < startPos.row + 3; i++) {
       if (i === startPos.row) {
@@ -734,7 +751,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
         if (j === startPos.col) {
           continue;
         }
-        let endPos = {row: i, col: j};
+        let endPos:Pos = {row: i, col: j};
         if (canKnightMove(board, startPos, endPos, turnIndex)) {
           toPos.push(endPos);
         }
@@ -744,7 +761,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the pawn can move from deltaFrom to deltaTo
-  function canPawnMove(board:any, deltaFrom:any, deltaTo:any, turnIndex:any, enpassantPosition:any) {
+  function canPawnMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndex:number, enpassantPosition:any) {
     if (isOutOfBound(deltaTo)) {
       return false;
     }
@@ -783,8 +800,8 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if the pawn has any place available to move
-  function canPawnMoveAnywhere(board:any, turnIndex:any, startPos:any, enpassantPosition:any) {
-    let endPos = {row: startPos.row, col: -1};
+  function canPawnMoveAnywhere(board:Board, turnIndex:number, startPos:any, enpassantPosition:any) {
+    let endPos:Pos = {row: startPos.row, col: -1};
     if (getTurn(turnIndex) === 'B'){
       endPos.row++;
     } else {
@@ -809,9 +826,9 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns the list of available positions for pawn to move
-  function getPawnPossibleMoves(board:any, turnIndex:any, startPos:any, enpassantPosition:any) {
+  function getPawnPossibleMoves(board:Board, turnIndex:number, startPos:any, enpassantPosition:any) {
     let toPos:any = [];
-    let endPos = {row: startPos.row, col: startPos.col};
+    let endPos:Pos = {row: startPos.row, col: startPos.col};
     if (getTurn(turnIndex) === 'B'){
       endPos.row++;
     } else {
@@ -838,7 +855,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns true if you can actually move the piece (check condition)
-  function moveAndCheck(board:any, turnIndex:any, startPos:any, endPos:any):Boolean {
+  function moveAndCheck(board:Board, turnIndex:number, startPos:any, endPos:any):Boolean {
     if (board[endPos.row][endPos.col] === getOpponent(turnIndex) + 'K') {
       return true;
     }
@@ -852,7 +869,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns opponent initial
-  function getOpponent(turnIndex:any) {
+  function getOpponent(turnIndex:number) {
     if (turnIndex === 0){
       return 'B';
     }
@@ -860,14 +877,14 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   }
 
   // Returns turnIndex initial
-  function getTurn(turnIndex:any) {
+  function getTurn(turnIndex:number) {
     if (turnIndex === 0){
       return 'W';
     }
     return 'B';
   }
 
-  function isOutOfBound(pos:any):Boolean{
+  function isOutOfBound(pos:Pos):Boolean{
     if (pos.row < 0 || pos.col < 0 || pos.row > 7 || pos.col > 7) {
       return true;
     }
@@ -881,12 +898,12 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
     try {
       let deltaFrom = params.move[2].set.value;
       let deltaTo = params.move[3].set.value;
+      let promoteTo = params.move[8].set.value;
+      let board = params.stateBeforeMove.board;
       let isUnderCheck = params.stateBeforeMove.isUnderCheck;
       let canCastleKing = params.stateBeforeMove.canCastleKing;
       let canCastleQueen = params.stateBeforeMove.canCastleQueen;
       let enpassantPosition = params.stateBeforeMove.enpassantPosition;
-      let board = params.stateBeforeMove.board;
-      let promoteTo = params.move[8].set.value;
       let expectedMove = createMove(board,
                                     deltaFrom,
                                     deltaTo,
@@ -907,7 +924,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
 
   /* Returns all the possible moves for the given state and turnIndex.
    * Returns an empty array if the game is over. */
-  export function getPossibleMoves(board:any, turnIndex:any, isUnderCheck:any, canCastleKing:any, canCastleQueen:any, enpassantPosition:any) {
+  export function getPossibleMoves(board:Board, turnIndex:number, isUnderCheck:[Boolean,Boolean], canCastleKing:[Boolean,Boolean], canCastleQueen:[Boolean,Boolean], enpassantPosition:Pos) {
     if (!board) {
       return [];
     }
@@ -917,7 +934,7 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
         let PieceEmpty = (board[i][j] === '');
         let PieceTeam = board[i][j].charAt(0);
         if (!PieceEmpty && PieceTeam === getTurn(turnIndex)) {
-          let startPos = {row: i, col: j};
+          let startPos:Pos = {row: i, col: j};
           switch(board[i][j].charAt(1)) {
             case 'K':
               possibleMoves.push([startPos,

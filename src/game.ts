@@ -74,7 +74,11 @@ module game {
   }
 
 	function updateUI(params:any) {
+    turnIndex = params.turnIndexAfterMove;
 	  board = params.stateAfterMove.board;
+    if (!board) {
+      board = gameLogic.getInitialBoard();
+    }
 	  deltaFrom = params.stateAfterMove.deltaFrom;
 	  deltaTo = params.stateAfterMove.deltaTo;
 	  isUnderCheck = params.stateAfterMove.isUnderCheck;
@@ -82,10 +86,6 @@ module game {
 	  canCastleQueen = params.stateAfterMove.canCastleQueen;
 	  enpassantPosition = params.stateAfterMove.enpassantPosition
 	  promoteTo = params.stateAfterMove.promoteTo;
-	  if (!board) {
-		  board = gameLogic.getInitialBoard();
-	  }
-	  turnIndex = params.turnIndexAfterMove;
     isYourTurn = turnIndex === params.yourPlayerIndex && // it's my turn
                  turnIndex >= 0; // game is ongoing
 	  // Is it the computer's turn?
