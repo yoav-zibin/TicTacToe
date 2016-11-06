@@ -133,7 +133,6 @@ var gameLogic;
         var PieceEmpty = (board[deltaTo.row][deltaTo.col] === '');
         var PieceTeam = board[deltaTo.row][deltaTo.col].charAt(0);
         if (!PieceEmpty && PieceTeam === getTurn(turnIndexBeforeMove)) {
-            //if (!PieceEmpty && PieceTeam === (turnIndexBeforeMove === 0 ? 'W' : 'B')) { XXX check
             throw new Error("One can only make a move in an empty position or capture opponent's piece!");
         }
         if (getWinner(board, turnIndexBeforeMove, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) //there is a winner 'W' or 'B'
@@ -289,7 +288,10 @@ var gameLogic;
     gameLogic.createMove = createMove;
     // Returns true if the conditions of castle to king side satisfied
     function isCastlingKing(board, deltaFrom, deltaTo, turnIndex, canCastleKing) {
-        var caslingRow = (turnIndex === 0 ? 7 : 0);
+        var caslingRow = 0;
+        if (getTurn(turnIndex) === 'W') {
+            caslingRow = 7;
+        }
         if (isPositionUnderAttack(board, turnIndex, deltaFrom)) {
             return false;
         }
@@ -311,7 +313,10 @@ var gameLogic;
     }
     // Returns true if the conditions of castle to queen side satisfied
     function isCastlingQueen(board, deltaFrom, deltaTo, turnIndex, canCastleQueen) {
-        var caslingRow = (turnIndex === 0 ? 7 : 0);
+        var caslingRow = 0;
+        if (getTurn(turnIndex) === 'W') {
+            caslingRow = 7;
+        }
         if (isPositionUnderAttack(board, turnIndex, deltaFrom)) {
             return false;
         }
@@ -732,13 +737,12 @@ var gameLogic;
             endPieceEmpty &&
             deltaFrom.col === deltaTo.col) || (diffRow === 1 &&
             diffCol === 1 &&
-            (endPieceTeam !== getTurn(turnIndex) ||
-                endPieceEmpty &&
-                    enpassantPosition &&
-                    enpassantPosition.row &&
-                    enpassantPosition.col &&
-                    deltaFrom.row === enpassantPosition.row &&
-                    Math.abs(deltaFrom.col - enpassantPosition.col) === 1))) {
+            endPieceTeam !== getTurn(turnIndex) &&
+            enpassantPosition &&
+            enpassantPosition.row &&
+            enpassantPosition.col &&
+            deltaFrom.row === enpassantPosition.row &&
+            Math.abs(deltaFrom.col - enpassantPosition.col) === 1)) {
             return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
         }
         return false;
@@ -773,28 +777,30 @@ var gameLogic;
     // Returns the list of available positions for pawn to move
     function getPawnPossibleMoves(board, turnIndex, startPos, enpassantPosition) {
         var toPos = [];
-        var endPos = { row: startPos.row, col: -1 };
+        var endPos = { row: startPos.row, col: startPos.col };
         if (getTurn(turnIndex) === 'B') {
             endPos.row++;
         }
         else {
             endPos.row--;
         }
-        for (var j = startPos.col - 1; j <= startPos.col + 1; j++) {
-            endPos.col = j;
+        for (var i = startPos.col - 1; i <= startPos.col + 1; i++) {
+            endPos.col = i;
+            if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
+                toPos.push(endPos); //enpassant move and regular
+            }
+        }
+        if (startPos.row === (getTurn(turnIndex) === "W" ? 6 : 1)) {
+            endPos.col = startPos.col;
+            if (getTurn(turnIndex) === 'B') {
+                endPos.row++;
+            }
+            else {
+                endPos.row--;
+            }
             if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
                 toPos.push(endPos);
             }
-        }
-        endPos.col = startPos.col;
-        if (getTurn(turnIndex) === 'B') {
-            endPos.row++;
-        }
-        else {
-            endPos.row--;
-        }
-        if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
-            toPos.push(endPos);
         }
         return toPos;
     }

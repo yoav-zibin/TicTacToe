@@ -1,8 +1,10 @@
 .piece {
   position: absolute;
   width: 40%;
-  top: 30%;
-  left: 30%;
+  top: 50%;
+  left: 50%;
+  transition: all 0.6s ease;
+  transform: translate(-50%, -50%);
 }
 .rb {
   border-right: 2pt solid black;
@@ -23,17 +25,17 @@
   z-index: 10;
   left: 0;
 }
-
+/*
 .selectedPiece {
   /*box-shadow: 0px 0px 5px 5px #5F04B4;*/
-  width: 60%;
+  /*width: 60%;
   height: 60%;
   top: 10%;
   left: 10%;
   position: absolute;
-  border: 1px blue;
+  border: 1px blue;*/
  /* -webkit-transition: width 1s, height 1s;*/
-}
+/*}*/
 
 img.isBlackPiece.canSelect {
   animation: black-blink 2s infinite;
@@ -92,19 +94,19 @@ td {
 }
 
 .slowlyAppear {
-  -webkit-animation: slowlyAppear 0.3s linear; /* Chrome, Safari, Opera */
-  animation: slowlyAppear 0.3s linear;
+  -webkit-animation: slowlyAppear 0.6s linear; /* Chrome, Safari, Opera */
+  animation: slowlyAppear 0.6s linear;
 }
 /* Chrome, Safari, Opera */
 @-webkit-keyframes slowlyAppear {
   from {opacity: 0.1;}
-  to {opacity: 1;}
+  to {opacity: 0.7;}
 }
 
 /* Standard syntax */
 @keyframes slowlyAppear {
   from {opacity: 0.1;}
-  to {opacity: 1;}
+  to {opacity: 0.7;}
 }
 
 /****************************************
@@ -112,29 +114,31 @@ Blink key frames
 ****************************************/
 @keyframes white-blink {
   50% {
-    filter: brightness(0.8);
-    -webkit-filter: brightness(0.8);
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
     -webkit-box-shadow:0 0 18px #ffb515;
+    padding: 0%;
   }
 }
 @-webkit-keyframes white-blink {
   50% {
-    filter: brightness(0.8);
-    -webkit-filter: brightness(0.8);
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
     -webkit-box-shadow:0 0 18px #ffb515;
+    padding: 0%;
   }
 }
 
 @keyframes black-blink {
   50% {
-    filter: brightness(1.6);
-    -webkit-filter: brightness(1.6);
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
     -webkit-box-shadow:0 0 18px #4C0000;
   }
 }
 @-webkit-keyframes black-blink {
   50% {
-    filter: brightness(1.6);
-    -webkit-filter: brightness(1.6);
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
     -webkit-box-shadow:0 0 18px #4C0000;
 }

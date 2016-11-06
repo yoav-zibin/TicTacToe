@@ -85,11 +85,9 @@ var game;
         /* If the play mode is not pass and play then "rotate" the board
            for the player. Therefore the board will always look from the
            point of view of the player in single player mode... */
+        rotate = false;
         if (params.playMode === "playBlack") {
             rotate = true;
-        }
-        else {
-            rotate = false;
         }
         selectedCells = []; // clear up the selectedCells and waiting for next valid move
     }
@@ -156,18 +154,14 @@ var game;
                         draggingStartedRowCol.col);
                     if (draggingPiece) {
                         draggingPiece.style['z-index'] = ++nextZIndex;
-                        draggingPiece.style['width'] = '80%';
-                        draggingPiece.style['height'] = '80%';
-                        draggingPiece.style['top'] = '10%'; //XXX UI stuff
-                        draggingPiece.style['left'] = '10%';
-                        draggingPiece.style['position'] = 'absolute';
+                        draggingPiece.style['width'] = '60%';
                     }
                     draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(r_row, r_col);
                     for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
-                        draggingPieceAvailableMoves[i].style['stroke-width'] = '1';
-                        draggingPieceAvailableMoves[i].style['stroke'] = 'purple';
-                        draggingPieceAvailableMoves[i].setAttribute("rx", "10");
-                        draggingPieceAvailableMoves[i].setAttribute("ry", "10");
+                        draggingPieceAvailableMoves[i].style['stroke-width'] = '10';
+                        draggingPieceAvailableMoves[i].style['stroke'] = 'rgba(255, 128, 0, 1)';
+                        draggingPieceAvailableMoves[i].setAttribute("rx", "5");
+                        draggingPieceAvailableMoves[i].setAttribute("ry", "5");
                     }
                 }
             }
@@ -184,11 +178,10 @@ var game;
         if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
             // drag ended
             // return the piece to it's original style (then angular will take care to hide it).
-            setDraggingPieceTopLeft(getSquareTopLeft(draggingStartedRowCol.row, draggingStartedRowCol.col));
-            draggingPiece.style['width'] = '60%';
-            draggingPiece.style['height'] = '60%';
-            draggingPiece.style['top'] = '20%';
-            draggingPiece.style['left'] = '20%';
+            //setDraggingPieceTopLeft({getSquareTopLeft(draggingStartedRowCol.row, draggingStartedRowCol.col)});
+            draggingPiece.style['width'] = '40%';
+            draggingPiece.style['top'] = '50%';
+            draggingPiece.style['left'] = '50%';
             draggingPiece.style['position'] = 'absolute';
             for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
                 draggingPieceAvailableMoves[i].style['stroke-width'] = '';
@@ -203,21 +196,17 @@ var game;
     }
     function setDraggingPieceTopLeft(topLeft) {
         var originalSize = getSquareTopLeft(draggingStartedRowCol.row, draggingStartedRowCol.col);
-        draggingPiece.style.left = (topLeft.left - originalSize.left) + "px";
-        draggingPiece.style.top = (topLeft.top - originalSize.top) + "px";
+        draggingPiece.style.left = (topLeft.left - originalSize.left + 0) + "px";
+        draggingPiece.style.top = (topLeft.top - originalSize.top + 0) + "px";
     }
     function getSquareWidthHeight() {
-        return {
-            width: gameArea.clientWidth / game.colsNum,
-            height: gameArea.clientHeight / game.rowsNum
-        };
+        return { width: gameArea.clientWidth / game.colsNum,
+            height: gameArea.clientHeight / game.rowsNum };
     }
     function getSquareTopLeft(row, col) {
         var size = getSquareWidthHeight();
-        return {
-            top: row * size.height,
-            left: col * size.width
-        };
+        return { top: row * size.height,
+            left: col * size.width };
     }
     function getSquareCenterXY(row, col) {
         var size = getSquareWidthHeight();
@@ -274,7 +263,7 @@ var game;
         var possibleMoves = gameLogic.getPossibleMoves(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition);
         var draggingPieceAvailableMoves = [];
         var index = cellInPossibleMoves(row, col, possibleMoves);
-        if (index !== false) {
+        if (index) {
             var availableMoves = possibleMoves[index][1];
             for (var i = 0; i < availableMoves.length; i++) {
                 var availablePos = availableMoves[i];
@@ -283,40 +272,36 @@ var game;
                     availablePos.col = 7 - availablePos.col;
                 }
                 draggingPieceAvailableMoves.push(document.getElementById("MyBackground" +
-                    availablePos.row + "x" + availablePos.col));
+                    availablePos.row +
+                    "x" +
+                    availablePos.col));
             }
         }
         return draggingPieceAvailableMoves;
-    }
-    function isValidToCell(turnIndex, row, col) {
-        var opponent = getOpponent(turnIndex);
-        return board[row][col] === '' ||
-            board[row][col].charAt(0) === opponent;
     }
     game.isSelected = function (row, col) {
         if (rotate) {
             row = 7 - row;
             col = 7 - col;
         }
-        var turn = getTurn(turnIndex);
-        return draggingStartedRowCol && draggingStartedRowCol.row === row &&
-            draggingStartedRowCol.col === col && board[row][col].charAt(0) === turn;
+        return draggingStartedRowCol &&
+            draggingStartedRowCol.row === row &&
+            draggingStartedRowCol.col === col &&
+            board[row][col].charAt(0) === getTurn(turnIndex);
     };
     game.shouldShowImage = function (row, col) {
         if (rotate) {
             row = 7 - row;
             col = 7 - col;
         }
-        var cell = board[row][col];
-        return cell !== "";
+        return board[row][col] !== "";
     };
     game.getImageSrc = function (row, col) {
         if (rotate) {
             row = 7 - row;
             col = 7 - col;
         }
-        var cell = board[row][col];
-        return getPieceKind(cell);
+        return getPieceKind(board[row][col]);
     };
     function getPieceKind(cell) {
         switch (cell) {
@@ -348,19 +333,18 @@ var game;
         if (isLight(row, col)) {
             return 'auto_resize_images/Chess-lightCell.svg';
         }
-        else {
-            return 'auto_resize_images/Chess-darkCell.svg';
-        }
+        return 'auto_resize_images/Chess-darkCell.svg';
     };
     game.getBackgroundFill = function (row, col) {
-        var isLightSquare = isLight(row, col);
-        return isLightSquare ? 'rgb(133, 87, 35)' : 'rgb(185, 156, 107)';
+        if (isLight(row, col)) {
+            return 'rgb(133, 87, 35)';
+        }
+        return 'rgb(185, 156, 107)';
     };
     function isLight(row, col) {
-        var isEvenRow = false, isEvenCol = false;
-        isEvenRow = row % 2 === 0;
-        isEvenCol = col % 2 === 0;
-        return isEvenRow && isEvenCol || !isEvenRow && !isEvenCol;
+        var rowIsEven = row % 2 === 0;
+        var colIsEven = col % 2 === 0;
+        return rowIsEven && colIsEven || !rowIsEven && !colIsEven;
     }
     game.canSelect = function (row, col) {
         if (!board) {
@@ -371,8 +355,7 @@ var game;
                 row = 7 - row;
                 col = 7 - col;
             }
-            var turn = getTurn(turnIndex);
-            if (board[row][col].charAt(0) === turn) {
+            if (board[row][col].charAt(0) === getTurn(turnIndex)) {
                 if (!isUnderCheck) {
                     isUnderCheck = [false, false];
                 }
@@ -386,7 +369,7 @@ var game;
                     enpassantPosition = { row: null, col: null };
                 }
                 var possibleMoves = gameLogic.getPossibleMoves(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition);
-                return cellInPossibleMoves(row, col, possibleMoves) !== false;
+                return cellInPossibleMoves(row, col, possibleMoves);
             }
             else {
                 return false;
@@ -394,36 +377,40 @@ var game;
         }
     };
     function getTurn(turnIndex) {
-        return turnIndex === 0 ? 'W' : 'B';
-    }
-    function getOpponent(turnIndex) {
-        return turnIndex === 0 ? 'B' : 'W';
+        if (turnIndex === 0) {
+            return 'W';
+        }
+        return 'B';
     }
     function cellInPossibleMoves(row, col, possibleMoves) {
-        var cell = { row: row, col: col };
         for (var i = 0; i < possibleMoves.length; i++) {
-            if (angular.equals(cell, possibleMoves[i][0])) {
+            if (angular.equals({ row: row, col: col }, possibleMoves[i][0])) {
                 return i;
             }
         }
-        return false;
+        return false; //XXX should be an error ?
     }
     game.isBlackPiece = function (row, col) {
         if (rotate) {
             row = 7 - row;
             col = 7 - col;
         }
-        return board[row][col].charAt(0) === 'B';
+        var pieceTeam = board[row][col].charAt(0);
+        return pieceTeam === 'B';
     };
     game.isWhitePiece = function (row, col) {
         if (rotate) {
             row = 7 - row;
             col = 7 - col;
         }
-        return board[row][col].charAt(0) === 'W';
+        var pieceTeam = board[row][col].charAt(0);
+        return pieceTeam === 'W';
     };
     function shouldPromote(board, deltaFrom, deltaTo, turnIndex) {
-        var myPawn = (turnIndex === 0 ? 'WP' : 'BP');
+        var myPawn = 'BP';
+        if (turnIndex === 0) {
+            myPawn = 'WP';
+        }
         return myPawn === board[deltaFrom.row][deltaFrom.col] &&
             (deltaTo.row === 0 || deltaTo.row === 7);
     }

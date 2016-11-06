@@ -131,7 +131,6 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
     let PieceEmpty = (board[deltaTo.row][deltaTo.col] === '');
     let PieceTeam = board[deltaTo.row][deltaTo.col].charAt(0);
     if (!PieceEmpty && PieceTeam === getTurn(turnIndexBeforeMove)) {
-    //if (!PieceEmpty && PieceTeam === (turnIndexBeforeMove === 0 ? 'W' : 'B')) { XXX check
       throw new Error("One can only make a move in an empty position or capture opponent's piece!");
     }
     if (getWinner(board,
@@ -307,7 +306,10 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
 
   // Returns true if the conditions of castle to king side satisfied
   function isCastlingKing(board:any, deltaFrom:any, deltaTo:any, turnIndex:any, canCastleKing:any) {
-    let caslingRow = (turnIndex === 0 ? 7 : 0);
+    let caslingRow = 0;
+    if (getTurn(turnIndex) === 'W'){
+      caslingRow = 7;
+    }
     if (isPositionUnderAttack(board, turnIndex, deltaFrom)) {
       return false;
     }
@@ -330,7 +332,10 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
 
   // Returns true if the conditions of castle to queen side satisfied
   function isCastlingQueen(board:any, deltaFrom:any, deltaTo:any, turnIndex:any, canCastleQueen:any) {
-    let caslingRow = (turnIndex === 0 ? 7 : 0);
+    let caslingRow = 0;
+    if (getTurn(turnIndex) === 'W'){
+      caslingRow = 7;
+    }
     if (isPositionUnderAttack(board, turnIndex, deltaFrom)) {
       return false;
     }
@@ -764,14 +769,12 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
         ) || (
          diffRow === 1 &&
          diffCol === 1 &&
-         (endPieceTeam !== getTurn(turnIndex) || 
-          endPieceEmpty &&
-          enpassantPosition &&
-          enpassantPosition.row &&
-          enpassantPosition.col &&
-          deltaFrom.row === enpassantPosition.row &&
-          Math.abs(deltaFrom.col - enpassantPosition.col) === 1
-         )
+         endPieceTeam !== getTurn(turnIndex) &&
+         enpassantPosition &&
+         enpassantPosition.row &&
+         enpassantPosition.col &&
+         deltaFrom.row === enpassantPosition.row &&
+         Math.abs(deltaFrom.col - enpassantPosition.col) === 1
         )
        ){
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
@@ -808,26 +811,28 @@ export function createMove(board:any, deltaFrom:any, deltaTo:any, turnIndexBefor
   // Returns the list of available positions for pawn to move
   function getPawnPossibleMoves(board:any, turnIndex:any, startPos:any, enpassantPosition:any) {
     let toPos:any = [];
-    let endPos = {row: startPos.row, col: -1};
+    let endPos = {row: startPos.row, col: startPos.col};
     if (getTurn(turnIndex) === 'B'){
       endPos.row++;
     } else {
       endPos.row--;
     }
-    for (let j = startPos.col - 1; j <= startPos.col + 1; j++) {
-      endPos.col = j;
+    for (let i = startPos.col - 1; i <= startPos.col + 1; i++) {
+      endPos.col = i;
+      if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
+        toPos.push(endPos); //enpassant move and regular
+      }
+    }
+    if (startPos.row === (getTurn(turnIndex) === "W" ? 6 : 1)){
+      endPos.col = startPos.col;
+      if (getTurn(turnIndex) === 'B'){
+        endPos.row++;
+      } else {
+        endPos.row--;
+      }
       if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
         toPos.push(endPos);
       }
-    }
-    endPos.col = startPos.col;
-    if (getTurn(turnIndex) === 'B'){
-      endPos.row++;
-    } else {
-      endPos.row--;
-    }
-    if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
-      toPos.push(endPos);
     }
     return toPos;
   }
