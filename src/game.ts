@@ -424,7 +424,7 @@ module game {
                                                        canCastleKing,
                                                        canCastleQueen,
                                                        enpassantPosition);
-        return cellInPossibleMoves(row, col, possibleMoves);
+        return cellInPossibleMoves(row, col, possibleMoves); //XXX bad design ! ?
       } else {
         return false;
       }
