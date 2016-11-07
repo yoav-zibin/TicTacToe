@@ -749,50 +749,65 @@ var gameLogic;
     }
     // Returns true if the pawn has any place available to move
     function canPawnMoveAnywhere(board, turnIndex, startPos, enpassantPosition) {
-        var endPos = { row: startPos.row, col: -1 };
-        if (getTurn(turnIndex) === 'B') {
-            endPos.row++;
+        var endPos = { row: 0, col: 0 };
+        var blackTurn = (getTurn(turnIndex) === 'B');
+        //standard move
+        if (blackTurn) {
+            endPos.row = startPos.row + 1;
         }
         else {
-            endPos.row--;
+            endPos.row = startPos.row - 1;
         }
-        for (var j = startPos.col - 1; j <= startPos.col + 1; j++) {
-            endPos.col = j;
+        for (var i = startPos.col - 1; i <= startPos.col + 1; i++) {
+            if (i < 0 || i > 7) {
+                continue;
+            }
+            endPos.col = i;
             if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
                 return true;
             }
         }
-        endPos.col = startPos.col;
-        if (getTurn(turnIndex) === 'B') {
-            endPos.row++;
-        }
-        else {
-            endPos.row--;
-        }
-        if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
-            return true;
+        //Starting move of 2 cells
+        if (startPos.row === (blackTurn ? 1 : 6)) {
+            endPos.col = startPos.col;
+            if (blackTurn) {
+                endPos.row++;
+            }
+            else {
+                endPos.row--;
+            }
+            if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
+                return true;
+            }
         }
         return false;
     }
     // Returns the list of available positions for pawn to move
     function getPawnPossibleMoves(board, turnIndex, startPos, enpassantPosition) {
         var toPos = [];
-        var endPos = { row: startPos.row, col: startPos.col };
-        if (getTurn(turnIndex) === 'B') {
-            endPos.row++;
+        var endPos = { row: 0, col: 0 };
+        var blackTurn = (getTurn(turnIndex) === 'B');
+        //standard move
+        if (blackTurn) {
+            endPos.row = startPos.row + 1;
         }
         else {
-            endPos.row--;
+            endPos.row = startPos.row - 1;
         }
         for (var i = startPos.col - 1; i <= startPos.col + 1; i++) {
+            if (i < 0 || i > 7) {
+                continue;
+            }
             endPos.col = i;
             if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
-                toPos.push(endPos); //enpassant move and regular
+                console.log("found one: from " + startPos.row + "," + startPos.col + " to " + endPos.row + "," + endPos.col);
+                toPos.push({ row: endPos.row, col: endPos.col }); //enpassant move and regular
             }
         }
-        if (startPos.row === (getTurn(turnIndex) === "W" ? 6 : 1)) {
+        //Starting move of 2 cells
+        if (startPos.row === (blackTurn ? 1 : 6)) {
             endPos.col = startPos.col;
-            if (getTurn(turnIndex) === 'B') {
+            if (blackTurn) {
                 endPos.row++;
             }
             else {

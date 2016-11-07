@@ -761,7 +761,7 @@ export function createMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndexBef
   }
 
   // Returns true if the pawn can move from deltaFrom to deltaTo
-  function canPawnMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndex:number, enpassantPosition:any) {
+  function canPawnMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndex:number, enpassantPosition:Pos) {
     if (isOutOfBound(deltaTo)) {
       return false;
     }
@@ -788,7 +788,7 @@ export function createMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndexBef
          diffCol === 1 &&
          endPieceTeam !== getTurn(turnIndex) &&
          enpassantPosition &&
-         enpassantPosition.row &&
+         enpassantPosition.row && //XXX issue here
          enpassantPosition.col &&
          deltaFrom.row === enpassantPosition.row &&
          Math.abs(deltaFrom.col - enpassantPosition.col) === 1
@@ -800,49 +800,66 @@ export function createMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndexBef
   }
 
   // Returns true if the pawn has any place available to move
-  function canPawnMoveAnywhere(board:Board, turnIndex:number, startPos:any, enpassantPosition:any) {
-    let endPos:Pos = {row: startPos.row, col: -1};
-    if (getTurn(turnIndex) === 'B'){
-      endPos.row++;
+  function canPawnMoveAnywhere(board:Board, turnIndex:number, startPos:any, enpassantPosition:Pos) {
+    let endPos:Pos = {row:0, col:0};
+    let blackTurn:Boolean = (getTurn(turnIndex) === 'B');
+
+    //standard move
+    if (blackTurn){
+      endPos.row = startPos.row + 1;
     } else {
-      endPos.row--;
+      endPos.row = startPos.row - 1;
     }
-    for (let j = startPos.col - 1; j <= startPos.col + 1; j++) {
-      endPos.col = j;
+    for (let i = startPos.col-1; i <= startPos.col+1; i++) {
+      if (i < 0 || i > 7){
+        continue;
+      }
+      endPos.col = i;
       if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
         return true;
       }
     }
-    endPos.col = startPos.col;
-    if (getTurn(turnIndex) === 'B'){
-      endPos.row++;
-    } else {
-      endPos.row--;
-    }
-    if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
-      return true;
+    //Starting move of 2 cells
+    if (startPos.row === (blackTurn ? 1 : 6)){
+      endPos.col = startPos.col;
+      if (blackTurn){
+        endPos.row++;
+      } else {
+        endPos.row--;
+      }
+      if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
+        return true;
+      }
     }
     return false;
   }
 
   // Returns the list of available positions for pawn to move
-  function getPawnPossibleMoves(board:Board, turnIndex:number, startPos:any, enpassantPosition:any) {
+  function getPawnPossibleMoves(board:Board, turnIndex:number, startPos:any, enpassantPosition:Pos) {
     let toPos:any = [];
-    let endPos:Pos = {row: startPos.row, col: startPos.col};
-    if (getTurn(turnIndex) === 'B'){
-      endPos.row++;
+    let endPos:Pos = {row:0, col:0};
+    let blackTurn:Boolean = (getTurn(turnIndex) === 'B');
+
+    //standard move
+    if (blackTurn){
+      endPos.row = startPos.row + 1;
     } else {
-      endPos.row--;
+      endPos.row = startPos.row - 1;
     }
-    for (let i = startPos.col - 1; i <= startPos.col + 1; i++) {
+    for (let i = startPos.col-1; i <= startPos.col+1; i++) {
+      if (i < 0 || i > 7){
+        continue;
+      }
       endPos.col = i;
       if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
-        toPos.push(endPos); //enpassant move and regular
+        console.log("found one: from "+startPos.row+","+startPos.col+" to "+endPos.row+","+endPos.col);
+        toPos.push({row: endPos.row, col: endPos.col}); //enpassant move and regular
       }
     }
-    if (startPos.row === (getTurn(turnIndex) === "W" ? 6 : 1)){
+    //Starting move of 2 cells
+    if (startPos.row === (blackTurn ? 1 : 6)){
       endPos.col = startPos.col;
-      if (getTurn(turnIndex) === 'B'){
+      if (blackTurn){
         endPos.row++;
       } else {
         endPos.row--;
@@ -855,7 +872,7 @@ export function createMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndexBef
   }
 
   // Returns true if you can actually move the piece (check condition)
-  function moveAndCheck(board:Board, turnIndex:number, startPos:any, endPos:any):Boolean {
+  function moveAndCheck(board:Board, turnIndex:number, startPos:Pos, endPos:Pos):Boolean {
     if (board[endPos.row][endPos.col] === getOpponent(turnIndex) + 'K') {
       return true;
     }
