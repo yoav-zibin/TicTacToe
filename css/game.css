@@ -1,3 +1,9 @@
+
+#gameArea{
+  background-color:#B99C6B;
+
+}
+
 .piece {
   position: absolute;
   width: 40%;

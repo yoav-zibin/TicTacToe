@@ -369,7 +369,7 @@ var game;
                     enpassantPosition = { row: null, col: null };
                 }
                 var possibleMoves = gameLogic.getPossibleMoves(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition);
-                return cellInPossibleMoves(row, col, possibleMoves);
+                return cellInPossibleMoves(row, col, possibleMoves); //XXX bad design ! ?
             }
             else {
                 return false;
