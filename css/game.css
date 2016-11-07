@@ -1,6 +1,10 @@
 
 #gameArea{
   background-color:#B99C6B;
+  border-top: 5px solid #000;
+  border-bottom: 5px solid #000;
+  border-left: 5px solid #000;
+   border-right: 5px solid #000;
 
 }
 
