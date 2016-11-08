@@ -197,6 +197,8 @@ module game {
         return;
       }
       if (type === "touchend") {
+        var audio = new Audio('sounds/piece_drop.wav');
+        audio.play();
         dragDone(draggingStartedRowCol, {row: row, col: col});
       } else { // Drag continue
         setDraggingPieceTopLeft(getSquareTopLeft(row, col));
