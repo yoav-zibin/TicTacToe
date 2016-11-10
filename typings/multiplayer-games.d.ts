@@ -3,6 +3,8 @@ declare var $location: angular.ILocationService;
 declare var $timeout: angular.ITimeoutService;
 declare var $interval: angular.IIntervalService;
 
+
+// OLD CODE:
 interface ISet {
   key: string;
   value: any;
@@ -38,17 +40,36 @@ interface IOperation {
   setTurn?: ISetTurn;
   endMatch?: IEndMatch;
 }
+// END OF OLD CODE
+
+
+
+
+
+
+
+
+
 declare type IMove = IOperation[];
+//NEW:
+//interface IMove {
+//  endMatchScores: number[];
+//  turnIndexAfterMove: number;
+//  stateAfterMove: IState;
+//}
 interface IState {
   [index: string]: any;
-}
+ }
+
+
+
 interface IIsMoveOk {
-  move: IMove;
   turnIndexBeforeMove : number;
-  turnIndexAfterMove: number;
+  turnIndexAfterMove: number; //NEW: removed
   stateBeforeMove: IState;
-  stateAfterMove: IState;
+  stateAfterMove: IState; //NEW: removed
   numberOfPlayers: number;
+  move: IMove;
 }
 interface IPlayerInfo {
   avatarImageUrl: string;
@@ -56,19 +77,20 @@ interface IPlayerInfo {
   playerId: string;
 }
 declare type PlayMode = string | number;
-interface IUpdateUI extends IIsMoveOk {
+interface IUpdateUI extends IIsMoveOk { //NEW: extens IStateTransition
   playersInfo: IPlayerInfo[];
   yourPlayerIndex: number;
   playMode: PlayMode;
-  moveNumber: number;
-  randomSeed: string;
-  endMatchScores?: number[];
+  moveNumber: number; //NEW: removed
+  randomSeed: string; //NEW: removed
+  endMatchScores?: number[]; //NEW: removed
 }
 interface IGame {
-  isMoveOk(move: IIsMoveOk): boolean;
-  updateUI(update: IUpdateUI): void;
   minNumberOfPlayers: number;
   maxNumberOfPlayers: number;
+  isMoveOk(move: IIsMoveOk): boolean; 
+  //NEW: checkMoveOk(stateTransition: IStateTransition): void; 
+  updateUI(update: IUpdateUI): void;
   gotMessageFromPlatform(message: any): void;
 }
 interface IGameService {
@@ -76,6 +98,7 @@ interface IGameService {
   makeMove(move: IMove): void;
 }
 declare var gameService: IGameService;
+//NEW: declare var moveService: IMoveService;
 
 interface IAlphaBetaLimits {
   millisecondsLimit? : number;
@@ -100,11 +123,18 @@ interface ITranslateService {
   (translationId: string, interpolateParams?: StringDictionary): string;
   getLanguage(): string;
   setLanguage(language: string, codeToL10N: StringDictionary): void;
+//NEW:
+//  setTranslations(idToLanguageToL10n: Translations): void;
+//  setLanguage(language: string): void;
+
 }
 declare var translate: ITranslateService;
 
 interface IResizeGameAreaService {
   setWidthToHeight(widthToHeightRatio: number): void;
+//NEW:
+//  setWidthToHeight(widthToHeightRatio: number,
+//    dimensionsChanged?: (gameAreaWidth: number, gameAreaHeight: number)=>void
 }
 declare var resizeGameAreaService: IResizeGameAreaService;
 

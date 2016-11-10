@@ -114,8 +114,7 @@ module game {
     });
 	}
 
-  function sendComputerMove() {
-    //XXX is this necessary ?
+  function sendComputerMove() { //AI
     let possibleMoves = gameLogic.getPossibleMoves(board,
                                                    turnIndex,
                                                    isUnderCheck,
@@ -128,15 +127,16 @@ module game {
       let index2 = Math.floor(Math.random() * pm[1].length);
       deltaFrom = pm[0];
       deltaTo = pm[1][index2];
-      gameService.makeMove(gameLogic.createMove(board,
-                                                deltaFrom,
-                                                deltaTo,
-                                                turnIndex,
-                                                isUnderCheck,
-                                                canCastleKing,
-                                                canCastleQueen,
-                                                enpassantPosition,
-                                                promoteTo));
+      let move = gameLogic.createMove(board,
+                                      deltaFrom,
+                                      deltaTo,
+                                      turnIndex,
+                                      isUnderCheck,
+                                      canCastleKing,
+                                      canCastleQueen,
+                                      enpassantPosition,
+                                      promoteTo);
+      gameService.makeMove(move);
     } else {
       console.log("There is no possible move");
     }

@@ -3,10 +3,10 @@ type Pos = {row:number, col:number};
 
 interface IState {  //this has to be used for ismoveok()
   board:Board;
-  isUnderCheck: Boolean;
-  canCastleKing: Boolean;
-  canCastleQueen: Boolean;
-  enpassantPosition:any;
+  isUnderCheck: [Boolean, Boolean];
+  canCastleKing: [Boolean, Boolean];
+  canCastleQueen: [Boolean, Boolean];
+  enpassantPosition:Pos;
 }
 
 interface IMove2{ //this has to be used for ismoveok()
@@ -911,7 +911,7 @@ export function createMove(board:Board, deltaFrom:Pos, deltaTo:Pos, turnIndexBef
 
   // Returns true if move is ok
   // params contains move, stateBeforeMove and turnIndexBeforeMove
-  export function isMoveOk(params:any) {
+  export function isMoveOk(params:IIsMoveOk) {
     try {
       let deltaFrom = params.move[2].set.value;
       let deltaTo = params.move[3].set.value;
