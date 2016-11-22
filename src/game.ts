@@ -18,6 +18,9 @@ module game {
   export let didMakeMove: boolean = false; // You can only make one move per updateUI
   export let animationEndedTimeout: ng.IPromise<any> = null;
   export let state: IState = null;
+  // For community games.
+  export let proposals: number[][] = null;
+  export let yourPlayerInfo: IPlayerInfo = null;
 
   export function init() {
     registerServiceWorker();
@@ -29,7 +32,8 @@ module game {
       maxNumberOfPlayers: 2,
       checkMoveOk: gameLogic.checkMoveOk,
       updateUI: updateUI,
-      gotMessageFromPlatform: null,
+      communityUI: communityUI,
+      getStateForOgImage: null,
     });
   }
 
@@ -52,6 +56,52 @@ module game {
     return {};
   }
 
+  export function communityUI(communityUI: ICommunityUI) {
+    log.info("Game got communityUI:", communityUI);
+    // If only proposals changed, then do NOT call updateUI. Then update proposals.
+    let nextUpdateUI: IUpdateUI = {
+        playersInfo: [],
+        playMode: communityUI.yourPlayerIndex,
+        move: communityUI.move,
+        numberOfPlayers: communityUI.numberOfPlayers,
+        stateBeforeMove: communityUI.stateBeforeMove,
+        turnIndexBeforeMove: communityUI.turnIndexBeforeMove,
+        yourPlayerIndex: communityUI.yourPlayerIndex,
+      };
+    if (angular.equals(yourPlayerInfo, communityUI.yourPlayerInfo) &&
+        currentUpdateUI && angular.equals(currentUpdateUI, nextUpdateUI)) {
+      // We're not calling updateUI to avoid disrupting the player if he's in the middle of a move.
+    } else {
+      // Things changed, so call updateUI.
+      updateUI(nextUpdateUI);
+    }
+    // This must be after calling updateUI, because we nullify things there (like playerIdToProposal&proposals&etc)
+    yourPlayerInfo = communityUI.yourPlayerInfo;
+    let playerIdToProposal = communityUI.playerIdToProposal; 
+    didMakeMove = !!playerIdToProposal[communityUI.yourPlayerInfo.playerId];
+    proposals = [];
+    for (let i = 0; i < gameLogic.ROWS; i++) {
+      proposals[i] = [];
+      for (let j = 0; j < gameLogic.COLS; j++) {
+        proposals[i][j] = 0;
+      }
+    }
+    for (let playerId in playerIdToProposal) {
+      let proposal = playerIdToProposal[playerId];
+      let delta = proposal.data;
+      proposals[delta.row][delta.col]++;
+    }
+  }
+  export function isProposal(row: number, col: number) {
+    return proposals && proposals[row][col] > 0;
+  } 
+  export function isProposal1(row: number, col: number) {
+    return proposals && proposals[row][col] == 1;
+  } 
+  export function isProposal2(row: number, col: number) {
+    return proposals && proposals[row][col] == 2;
+  }
+  
   export function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
     didMakeMove = false; // Only one move per updateUI
@@ -60,13 +110,11 @@ module game {
     state = params.move.stateAfterMove;
     if (isFirstMove()) {
       state = gameLogic.getInitialState();
-      if (isMyTurn()) makeMove(gameLogic.createInitialMove());
-    } else {
-      // We calculate the AI move only after the animation finishes,
-      // because if we call aiService now
-      // then the animation will be paused until the javascript finishes.
-      animationEndedTimeout = $timeout(animationEndedCallback, 500);
     }
+    // We calculate the AI move only after the animation finishes,
+    // because if we call aiService now
+    // then the animation will be paused until the javascript finishes.
+    animationEndedTimeout = $timeout(animationEndedCallback, 500);
   }
 
   function animationEndedCallback() {
@@ -93,7 +141,22 @@ module game {
       return;
     }
     didMakeMove = true;
-    moveService.makeMove(move);
+    
+    if (!proposals) {
+      moveService.makeMove(move);
+    } else {
+      let delta = move.stateAfterMove.delta;
+      let myProposal:IProposal = {
+        data: delta,
+        chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
+        playerInfo: yourPlayerInfo,
+      };
+      // Decide whether we make a move or not (if we have 2 other proposals supporting the same thing).
+      if (proposals[delta.row][delta.col] < 2) {
+        move = null;
+      }
+      moveService.communityMove(myProposal, move);
+    }
   }
 
   function isFirstMove() {
@@ -105,7 +168,9 @@ module game {
   }
 
   function isComputer() {
-    return currentUpdateUI.playersInfo[currentUpdateUI.yourPlayerIndex].playerId === '';
+    let playerInfo = currentUpdateUI.playersInfo[currentUpdateUI.yourPlayerIndex];
+    // In community games, playersInfo is [].
+    return playerInfo && playerInfo.playerId === '';
   }
 
   function isComputerTurn() {
@@ -141,16 +206,19 @@ module game {
   }
 
   export function shouldShowImage(row: number, col: number): boolean {
-    let cell = state.board[row][col];
-    return cell !== "";
+    return state.board[row][col] !== "" || isProposal(row, col);
   }
 
+  function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
+    return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.move.turnIndexAfterMove == turnIndex);
+  }
+  
   export function isPieceX(row: number, col: number): boolean {
-    return state.board[row][col] === 'X';
+    return isPiece(row, col, 0, 'X');
   }
 
   export function isPieceO(row: number, col: number): boolean {
-    return state.board[row][col] === 'O';
+    return isPiece(row, col, 1, 'O');
   }
 
   export function shouldSlowlyAppear(row: number, col: number): boolean {

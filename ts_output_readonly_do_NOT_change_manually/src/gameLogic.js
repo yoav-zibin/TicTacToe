@@ -13,6 +13,7 @@ var gameLogic;
         }
         return board;
     }
+    gameLogic.getInitialBoard = getInitialBoard;
     function getInitialState() {
         return { board: getInitialBoard(), delta: null };
     }

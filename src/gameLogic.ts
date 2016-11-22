@@ -3,6 +3,7 @@ interface BoardDelta {
   row: number;
   col: number;
 }
+type IProposalData = BoardDelta;
 interface IState {
   board: Board;
   delta: BoardDelta;
@@ -13,7 +14,7 @@ module gameLogic {
   export const COLS = 3;
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
-  function getInitialBoard(): Board {
+  export function getInitialBoard(): Board {
     let board: Board = [];
     for (let i = 0; i < ROWS; i++) {
       board[i] = [];

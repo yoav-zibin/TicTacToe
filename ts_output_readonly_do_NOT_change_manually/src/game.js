@@ -9,6 +9,9 @@ var game;
     game.didMakeMove = false; // You can only make one move per updateUI
     game.animationEndedTimeout = null;
     game.state = null;
+    // For community games.
+    game.proposals = null;
+    game.yourPlayerInfo = null;
     function init() {
         registerServiceWorker();
         translate.setTranslations(getTranslations());
@@ -19,7 +22,8 @@ var game;
             maxNumberOfPlayers: 2,
             checkMoveOk: gameLogic.checkMoveOk,
             updateUI: updateUI,
-            gotMessageFromPlatform: null,
+            communityUI: communityUI,
+            getStateForOgImage: null,
         });
     }
     game.init = init;
@@ -40,6 +44,55 @@ var game;
     function getTranslations() {
         return {};
     }
+    function communityUI(communityUI) {
+        log.info("Game got communityUI:", communityUI);
+        // If only proposals changed, then do NOT call updateUI. Then update proposals.
+        var nextUpdateUI = {
+            playersInfo: [],
+            playMode: communityUI.yourPlayerIndex,
+            move: communityUI.move,
+            numberOfPlayers: communityUI.numberOfPlayers,
+            stateBeforeMove: communityUI.stateBeforeMove,
+            turnIndexBeforeMove: communityUI.turnIndexBeforeMove,
+            yourPlayerIndex: communityUI.yourPlayerIndex,
+        };
+        if (angular.equals(game.yourPlayerInfo, communityUI.yourPlayerInfo) &&
+            game.currentUpdateUI && angular.equals(game.currentUpdateUI, nextUpdateUI)) {
+        }
+        else {
+            // Things changed, so call updateUI.
+            updateUI(nextUpdateUI);
+        }
+        // This must be after calling updateUI, because we nullify things there (like playerIdToProposal&proposals&etc)
+        game.yourPlayerInfo = communityUI.yourPlayerInfo;
+        var playerIdToProposal = communityUI.playerIdToProposal;
+        game.didMakeMove = !!playerIdToProposal[communityUI.yourPlayerInfo.playerId];
+        game.proposals = [];
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            game.proposals[i] = [];
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                game.proposals[i][j] = 0;
+            }
+        }
+        for (var playerId in playerIdToProposal) {
+            var proposal = playerIdToProposal[playerId];
+            var delta = proposal.data;
+            game.proposals[delta.row][delta.col]++;
+        }
+    }
+    game.communityUI = communityUI;
+    function isProposal(row, col) {
+        return game.proposals && game.proposals[row][col] > 0;
+    }
+    game.isProposal = isProposal;
+    function isProposal1(row, col) {
+        return game.proposals && game.proposals[row][col] == 1;
+    }
+    game.isProposal1 = isProposal1;
+    function isProposal2(row, col) {
+        return game.proposals && game.proposals[row][col] == 2;
+    }
+    game.isProposal2 = isProposal2;
     function updateUI(params) {
         log.info("Game got updateUI:", params);
         game.didMakeMove = false; // Only one move per updateUI
@@ -48,15 +101,11 @@ var game;
         game.state = params.move.stateAfterMove;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
-            if (isMyTurn())
-                makeMove(gameLogic.createInitialMove());
         }
-        else {
-            // We calculate the AI move only after the animation finishes,
-            // because if we call aiService now
-            // then the animation will be paused until the javascript finishes.
-            game.animationEndedTimeout = $timeout(animationEndedCallback, 500);
-        }
+        // We calculate the AI move only after the animation finishes,
+        // because if we call aiService now
+        // then the animation will be paused until the javascript finishes.
+        game.animationEndedTimeout = $timeout(animationEndedCallback, 500);
     }
     game.updateUI = updateUI;
     function animationEndedCallback() {
@@ -81,7 +130,22 @@ var game;
             return;
         }
         game.didMakeMove = true;
-        moveService.makeMove(move);
+        if (!game.proposals) {
+            moveService.makeMove(move);
+        }
+        else {
+            var delta = move.stateAfterMove.delta;
+            var myProposal = {
+                data: delta,
+                chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
+                playerInfo: game.yourPlayerInfo,
+            };
+            // Decide whether we make a move or not (if we have 2 other proposals supporting the same thing).
+            if (game.proposals[delta.row][delta.col] < 2) {
+                move = null;
+            }
+            moveService.communityMove(myProposal, move);
+        }
     }
     function isFirstMove() {
         return !game.currentUpdateUI.move.stateAfterMove;
@@ -90,7 +154,9 @@ var game;
         return game.currentUpdateUI.yourPlayerIndex;
     }
     function isComputer() {
-        return game.currentUpdateUI.playersInfo[game.currentUpdateUI.yourPlayerIndex].playerId === '';
+        var playerInfo = game.currentUpdateUI.playersInfo[game.currentUpdateUI.yourPlayerIndex];
+        // In community games, playersInfo is [].
+        return playerInfo && playerInfo.playerId === '';
     }
     function isComputerTurn() {
         return isMyTurn() && isComputer();
@@ -123,16 +189,18 @@ var game;
     }
     game.cellClicked = cellClicked;
     function shouldShowImage(row, col) {
-        var cell = game.state.board[row][col];
-        return cell !== "";
+        return game.state.board[row][col] !== "" || isProposal(row, col);
     }
     game.shouldShowImage = shouldShowImage;
+    function isPiece(row, col, turnIndex, pieceKind) {
+        return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.move.turnIndexAfterMove == turnIndex);
+    }
     function isPieceX(row, col) {
-        return game.state.board[row][col] === 'X';
+        return isPiece(row, col, 0, 'X');
     }
     game.isPieceX = isPieceX;
     function isPieceO(row, col) {
-        return game.state.board[row][col] === 'O';
+        return isPiece(row, col, 1, 'O');
     }
     game.isPieceO = isPieceO;
     function shouldSlowlyAppear(row, col) {
