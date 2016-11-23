@@ -30889,7 +30889,7 @@ $provide.value("$locale", {
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 ;
-"use strict"; var emulatorServicesCompilationDate = "Wed Nov 16 17:43:17 EST 2016";
+"use strict"; var emulatorServicesCompilationDate = "Wed Nov 23 09:50:44 EST 2016";
 
 ;
 var gamingPlatform;
@@ -31216,6 +31216,7 @@ var gamingPlatform;
                 playMode === "playBlack" ? 1 :
                     playMode === "playViewer" ? -2 :
                         playMode === "playAgainstTheComputer" || playMode === "onlyAIs" ||
+                            playMode === "multiplayer" ||
                             playMode === "passAndPlay" ? turnIndex :
                             Number(playMode);
         }
@@ -31268,7 +31269,7 @@ var gamingPlatform;
                 numberOfPlayers: playersInfo.length,
                 playersInfo: playersInfo,
                 yourPlayerIndex: yourPlayerIndex,
-                playMode: playMode,
+                playMode: playMode === "multiplayer" ? yourPlayerIndex : playMode,
                 moveNumber: moveNumber,
                 randomSeed: randomSeed,
                 endMatchScores: endMatchScores
@@ -31395,8 +31396,9 @@ var gamingPlatform;
         var isLocalTestCommunity = location.search.indexOf("community") !== -1;
         gameService.playMode = location.search.indexOf("onlyAIs") !== -1 ? "onlyAIs"
             : location.search.indexOf("playAgainstTheComputer") !== -1 ? "playAgainstTheComputer"
-                : location.search.indexOf("?playMode=") === 0 ? location.search.substr("?playMode=".length)
-                    : "passAndPlay"; // Default play mode
+                : location.search.indexOf("multiplayer") !== -1 ? "multiplayer"
+                    : location.search.indexOf("?playMode=") === 0 ? location.search.substr("?playMode=".length)
+                        : "passAndPlay"; // Default play mode
         // We verify that you call makeMove at most once for every updateUI (and only when it's your turn)
         var lastUpdateUI = null;
         var game;
