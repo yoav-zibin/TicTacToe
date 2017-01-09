@@ -1,32 +1,28 @@
-declare var $rootScope: angular.IScope;
-declare var $location: angular.ILocationService;
-declare var $timeout: angular.ITimeoutService;
-declare var $interval: angular.IIntervalService;
-
-// IState should be defined by the game, e.g., TicTacToe defines it as:
-// interface IState { board: Board; delta: BoardDelta; }
-// When the match ends, set turnIndexAfterMove -1 and endMatchScores to an array of scores.
-// When the match is ongoing, set turnIndexAfterMove to a valid index and endMatchScores to null.
+// IState must be defined by the game.
 interface IMove {
+  // When the match ends: turnIndex  is-1 and endMatchScores is an array of scores.
+  // When the match is ongoing: turnIndex is a valid index and endMatchScores to null.
   endMatchScores: number[];
-  turnIndexAfterMove: number;
-  stateAfterMove: IState;
-}
-interface IStateTransition {
-  turnIndexBeforeMove : number;
-  stateBeforeMove: IState;
-  numberOfPlayers: number;
-  move: IMove;
+  turnIndex: number;
+  // The state after making the move
+  state: IState;
 }
 interface IPlayerInfo {
   avatarImageUrl: string;
   displayName: string;
   playerId: string;
 }
-interface ICommonUI extends IStateTransition {
+interface ICommonUI extends IMove {
+  numberOfPlayers: number;
   // -2 is a viewer; otherwise it's the player index (0/1).
   yourPlayerIndex: number;
 }
+type PlayMode = string | number; // 'passAndPlay', 'playAgainstTheComputer', or a number (0/1).
+interface IUpdateUI extends ICommonUI {
+  playersInfo: IPlayerInfo[];
+  playMode: PlayMode; 
+}
+
 // Proposals are used in community games: each player may submit a proposal, and the game will eventual selected
 // the winning proposal and convert it to a move.
 interface ICommunityUI extends ICommonUI {
@@ -44,20 +40,13 @@ interface IProposal {
 interface IProposals {
   [playerId: string]: IProposal;
 }
-declare type PlayMode = string | number; // 'passAndPlay', 'playAgainstTheComputer', or a number (0/1).
-interface IUpdateUI extends ICommonUI {
-  playersInfo: IPlayerInfo[];
-  playMode: PlayMode; 
-}
+
 interface IGame {
-  minNumberOfPlayers: number;
-  maxNumberOfPlayers: number;
-  checkMoveOk(stateTransition: IStateTransition): void;
-  updateUI(update: IUpdateUI): void;
+  updateUI(updateUI: IUpdateUI): void;
   communityUI(communityUI: ICommunityUI): void;
   getStateForOgImage(): string;
 }
-interface IMoveService {
+interface IGameService {
   setGame(game: IGame): void;
   makeMove(move: IMove): void;
 
@@ -69,7 +58,6 @@ interface IMoveService {
   // you can submit at most one proposal.
   communityMove(proposal: IProposal, move: IMove): void;
 }
-declare var moveService: IMoveService;
 
 interface IAlphaBetaLimits {
   millisecondsLimit? : number;
@@ -85,7 +73,6 @@ interface IAlphaBetaService {
     getDebugStateToString: (move: IMove) => string,
     alphaBetaLimits: IAlphaBetaLimits): IMove;
 }
-declare var alphaBetaService: IAlphaBetaService;
 
 interface StringDictionary {
   [index: string]: string;
@@ -96,13 +83,11 @@ interface ITranslateService {
   setTranslations(idToLanguageToL10n: Translations): void;
   setLanguage(language: string): void;
 }
-declare var translate: ITranslateService;
 
 interface IResizeGameAreaService {
   setWidthToHeight(widthToHeightRatio: number,
     dimensionsChanged?: (gameAreaWidth: number, gameAreaHeight: number)=>void): void;
 }
-declare var resizeGameAreaService: IResizeGameAreaService;
 
 interface ILog {
   info(... args: any[]):void;
@@ -112,18 +97,17 @@ interface ILog {
   log(... args: any[]):void;
   alwaysLog(... args: any[]):void;
 }
-declare var log:ILog;
 
 interface IDragAndDropService {
   addDragListener(touchElementId: string,
       handleDragEvent: (type: string, clientX: number, clientY: number, event: TouchEvent|MouseEvent) => void): void;
 }
-declare var dragAndDropService: IDragAndDropService;
 
-interface ResizeMapAreaParams {
-  imageId: string;
-  mapId: string;
-  originalWidth: number;
-  originalHeight: number;
+declare namespace gamingPlatform {
+  var gameService: IGameService;
+  var alphaBetaService: IAlphaBetaService;
+  var translate: ITranslateService;
+  var resizeGameAreaService: IResizeGameAreaService;
+  var log:ILog;
+  var dragAndDropService: IDragAndDropService;
 }
-declare function resizeMapArea(params: ResizeMapAreaParams): void;

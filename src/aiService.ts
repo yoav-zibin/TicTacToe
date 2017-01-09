@@ -34,7 +34,7 @@ module aiService {
       move: IMove, alphaBetaLimits: IAlphaBetaLimits): IMove {
     // We use alpha-beta search, where the search states are TicTacToe moves.
     return alphaBetaService.alphaBetaDecision(
-        move, move.turnIndexAfterMove, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
+        move, move.turnIndex, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
   }
 
   function getStateScoreForIndex0(move: IMove, playerIndex: number): number {
@@ -48,6 +48,6 @@ module aiService {
   }
 
   function getNextStates(move: IMove, playerIndex: number): IMove[] {
-    return getPossibleMoves(move.stateAfterMove, playerIndex);
+    return getPossibleMoves(move.state, playerIndex);
   }
 }

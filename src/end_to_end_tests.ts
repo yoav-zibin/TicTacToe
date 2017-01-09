@@ -56,15 +56,51 @@ describe('TicTacToe', function() {
   beforeEach(()=>{
     console.log('\n\n\nRunning test: ', lastTest.fullName);
     checkNoErrorInLogsIntervalId = setInterval(expectEmptyBrowserLogs, 100);
-    getPage('');
+    getPage();
+    waitForElement(element(by.id('game_iframe_0')));
+    browser.driver.switchTo().frame('game_iframe_0');
+    // It takes time for the game_iframe to load.
+    waitForElement(element(by.id('e2e_test_div_0x0')));
   });
   afterEach(()=>{
     expectEmptyBrowserLogs();
     clearInterval(checkNoErrorInLogsIntervalId);
   });
   
-  function getPage(page: string) {
-    browser.get('/dist/index.min.html?' + page);
+  let startedExecutionTime = new Date().getTime();
+  function log(msg: string) {
+    let now = new Date().getTime();
+    console.log("After " + (now - startedExecutionTime) + " milliseconds: " + msg);
+  }
+  function error(msg: string) {
+    log(Array.prototype.slice.call(arguments).join(", "));
+    browser.pause();
+  }
+  function safePromise<T>(p: webdriver.promise.Promise<T>): webdriver.promise.Promise<T> {
+    if (!p) error("safePromise p = " + p);
+    return p.then((x:any)=>x, ()=>false);
+  }
+  function waitUntil(fn: ()=>any) {
+    browser.driver.wait(
+      fn, 10000).thenCatch(error);
+  }
+  function waitForElement(elem: protractor.ElementFinder) {
+    waitUntil(
+      ()=>safePromise(elem.isPresent()).then(
+        (isPresent)=>isPresent &&
+          safePromise(elem.isDisplayed()).then((isDisplayed)=>
+            isDisplayed && safePromise(elem.isEnabled()))));
+    expect(elem.isDisplayed()).toBe(true);
+  }
+  function waitForElementToDisappear(elem: protractor.ElementFinder) {
+    waitUntil(()=>safePromise(elem.isPresent()).then(
+        (isPresent)=>!isPresent ||
+          safePromise(elem.isDisplayed()).then((isDisplayed)=>!isDisplayed)));
+    // Element is either not present or not displayed.
+  }
+
+  function getPage() {
+    browser.get('/dist/index.min.html');
   }
 
   function expectPieceKindDisplayed(row: number, col: number, pieceKind: string, isDisplayed: boolean) {
@@ -74,9 +110,9 @@ describe('TicTacToe', function() {
     // And then the image wasn't displayed.
     // I changed it to start from {opacity: 0.1;}
     if (isDisplayed) {
-      expect(element(selector).isDisplayed()).toEqual(true);
+      waitForElement(element(selector));
     } else {
-      expect(element(selector).isPresent()).toEqual(false);
+      waitForElementToDisappear(element(selector));
     }
   }
 
@@ -155,18 +191,5 @@ describe('TicTacToe', function() {
         [['X', 'X', 'O'],
          ['O', 'O', 'X'],
          ['X', 'O', 'X']]);
-  });
-
-  it('with playAgainstTheComputer should work', function () {
-    getPage('playAgainstTheComputer');
-    clickDivAndExpectPiece(1, 0, "X");
-    browser.sleep(2000); // wait for AI to make at least one move
-    expectPiece(0, 0, 'O');
-  });
-
-  it('with onlyAIs should work', function () {
-    getPage('onlyAIs');
-    browser.sleep(2000); // wait for AI to make at least one move
-    expectPiece(0, 0, 'X');
   });
 });

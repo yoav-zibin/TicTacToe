@@ -140,7 +140,7 @@ module.exports = function(grunt) {
       js: {
         src: [
           'lib/angular.js',
-          'lib/turnBasedServices.3.js',
+          'lib/turnBasedServices.4.js',
           'ts_output_readonly_do_NOT_change_manually/src/gameLogic.js',
           'ts_output_readonly_do_NOT_change_manually/src/game.js',
           'ts_output_readonly_do_NOT_change_manually/src/aiService.js'],

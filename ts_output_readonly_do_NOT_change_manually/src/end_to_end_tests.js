@@ -57,14 +57,47 @@ describe('TicTacToe', function () {
     beforeEach(function () {
         console.log('\n\n\nRunning test: ', lastTest.fullName);
         checkNoErrorInLogsIntervalId = setInterval(expectEmptyBrowserLogs, 100);
-        getPage('');
+        getPage();
+        waitForElement(element(by.id('game_iframe_0')));
+        browser.driver.switchTo().frame('game_iframe_0');
+        // It takes time for the game_iframe to load.
+        waitForElement(element(by.id('e2e_test_div_0x0')));
     });
     afterEach(function () {
         expectEmptyBrowserLogs();
         clearInterval(checkNoErrorInLogsIntervalId);
     });
-    function getPage(page) {
-        browser.get('/dist/index.min.html?' + page);
+    var startedExecutionTime = new Date().getTime();
+    function log(msg) {
+        var now = new Date().getTime();
+        console.log("After " + (now - startedExecutionTime) + " milliseconds: " + msg);
+    }
+    function error(msg) {
+        log(Array.prototype.slice.call(arguments).join(", "));
+        browser.pause();
+    }
+    function safePromise(p) {
+        if (!p)
+            error("safePromise p = " + p);
+        return p.then(function (x) { return x; }, function () { return false; });
+    }
+    function waitUntil(fn) {
+        browser.driver.wait(fn, 10000).thenCatch(error);
+    }
+    function waitForElement(elem) {
+        waitUntil(function () { return safePromise(elem.isPresent()).then(function (isPresent) { return isPresent &&
+            safePromise(elem.isDisplayed()).then(function (isDisplayed) {
+                return isDisplayed && safePromise(elem.isEnabled());
+            }); }); });
+        expect(elem.isDisplayed()).toBe(true);
+    }
+    function waitForElementToDisappear(elem) {
+        waitUntil(function () { return safePromise(elem.isPresent()).then(function (isPresent) { return !isPresent ||
+            safePromise(elem.isDisplayed()).then(function (isDisplayed) { return !isDisplayed; }); }); });
+        // Element is either not present or not displayed.
+    }
+    function getPage() {
+        browser.get('/dist/index.min.html');
     }
     function expectPieceKindDisplayed(row, col, pieceKind, isDisplayed) {
         var selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);
@@ -73,10 +106,10 @@ describe('TicTacToe', function () {
         // And then the image wasn't displayed.
         // I changed it to start from {opacity: 0.1;}
         if (isDisplayed) {
-            expect(element(selector).isDisplayed()).toEqual(true);
+            waitForElement(element(selector));
         }
         else {
-            expect(element(selector).isPresent()).toEqual(false);
+            waitForElementToDisappear(element(selector));
         }
     }
     function expectPiece(row, col, expectedPieceKind) {
@@ -141,17 +174,6 @@ describe('TicTacToe', function () {
         expectBoard([['X', 'X', 'O'],
             ['O', 'O', 'X'],
             ['X', 'O', 'X']]);
-    });
-    it('with playAgainstTheComputer should work', function () {
-        getPage('playAgainstTheComputer');
-        clickDivAndExpectPiece(1, 0, "X");
-        browser.sleep(2000); // wait for AI to make at least one move
-        expectPiece(0, 0, 'O');
-    });
-    it('with onlyAIs should work', function () {
-        getPage('onlyAIs');
-        browser.sleep(2000); // wait for AI to make at least one move
-        expectPiece(0, 0, 'X');
     });
 });
 //# sourceMappingURL=end_to_end_tests.js.map

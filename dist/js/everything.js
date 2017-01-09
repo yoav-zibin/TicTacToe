@@ -30889,7 +30889,7 @@ $provide.value("$locale", {
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 ;
-"use strict"; var emulatorServicesCompilationDate = "Wed Nov 23 09:50:44 EST 2016";
+"use strict"; var emulatorServicesCompilationDate = "Mon Jan 9 10:24:23 EST 2017";
 
 ;
 var gamingPlatform;
@@ -30911,7 +30911,7 @@ var gamingPlatform;
         var lastLogs = [];
         var startTime = getCurrentTime();
         function getCurrentTime() {
-            return window.performance ? window.performance.now() : new Date().getTime();
+            return new Date().getTime();
         }
         log_1.getCurrentTime = getCurrentTime;
         function getLogEntry(args, logLevel, consoleFunc) {
@@ -30921,7 +30921,7 @@ var gamingPlatform;
             // https://developer.mozilla.org/en-US/docs/Web/API/Console/log
             // However, the output looks better on chrome if I pass a string as the first argument,
             // and I hope then it doesn't break anything anywhere else...
-            var secondsFromStart = Math.round(millisecondsFromStart) / 1000;
+            var secondsFromStart = millisecondsFromStart / 1000;
             var consoleArgs = ['', secondsFromStart, ' seconds:'].concat(args);
             consoleFunc.apply(console, consoleArgs);
             return { millisecondsFromStart: millisecondsFromStart, args: args, logLevel: logLevel };
@@ -30984,377 +30984,12 @@ var gamingPlatform;
             storeLog(args, ILogLevel.LOG, console.log);
         }
         log_1.log = log;
+        window.addEventListener("error", function (e) {
+            error("Had an error! Message=", e.error ? e.error.message : '', " stacktrace=", e.error ? e.error.stack : '');
+        });
     })(log = gamingPlatform.log || (gamingPlatform.log = {}));
 })(gamingPlatform || (gamingPlatform = {}));
 //# sourceMappingURL=log.js.map
-;
-var gamingPlatform;
-(function (gamingPlatform) {
-    var stateService;
-    (function (stateService) {
-        var game;
-        var currentState;
-        var lastState;
-        var currentVisibleTo;
-        var lastVisibleTo;
-        var lastMove;
-        var turnIndexBeforeMove;
-        var turnIndex = 0; // turn after the move (-1 when the game ends)
-        var endMatchScores = null;
-        var setTurnOrEndMatchCount = 0;
-        var playersInfo;
-        var playMode = "passAndPlay"; // Default play mode
-        var randomSeed;
-        var moveNumber;
-        var simulateServerDelayMilliseconds = 10;
-        function setSimulateServerDelayMilliseconds(_simulateServerDelayMilliseconds) {
-            simulateServerDelayMilliseconds = _simulateServerDelayMilliseconds;
-        }
-        stateService.setSimulateServerDelayMilliseconds = setSimulateServerDelayMilliseconds;
-        function setPlayMode(_playMode) {
-            playMode = _playMode;
-        }
-        stateService.setPlayMode = setPlayMode;
-        function setRandomSeed(_randomSeed) {
-            randomSeed = _randomSeed;
-        }
-        stateService.setRandomSeed = setRandomSeed;
-        function setPlayers(_playersInfo) {
-            playersInfo = _playersInfo;
-        }
-        stateService.setPlayers = setPlayers;
-        function initNewMatch() {
-            if (!game) {
-                throwError("You must call setGame before any other method.");
-            }
-            currentState = {};
-            lastState = null;
-            currentVisibleTo = {};
-            lastVisibleTo = null;
-            lastMove = [];
-            turnIndexBeforeMove = 0;
-            turnIndex = 0; // can be -1 in the last updateUI after the game ended.
-            endMatchScores = null;
-            moveNumber = 0;
-        }
-        stateService.initNewMatch = initNewMatch;
-        //Function to get the keys from a JSON object
-        function getKeys(object) {
-            if (Object && Object.keys) {
-                return Object.keys(object);
-            }
-            var keys = [];
-            for (var key in object) {
-                keys.push(key);
-            }
-            return keys;
-        }
-        function clone(obj) {
-            return angular.copy(obj);
-        }
-        function isNull(obj) {
-            return obj === undefined || obj === null;
-        }
-        function throwError() {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
-            }
-            gamingPlatform.log.error("Throwing an error with these arguments=", args);
-            var msg = args.join(", ");
-            throw new Error(msg);
-        }
-        function getMoveForPlayerIndex(playerIndex, move) {
-            var moveForPlayer = [];
-            for (var _i = 0; _i < move.length; _i++) {
-                var operation = move[_i];
-                if (!isNull(operation.set) &&
-                    !isNull(operation.set.visibleToPlayerIndexes) &&
-                    operation.set.visibleToPlayerIndexes.indexOf(playerIndex) === -1) {
-                    moveForPlayer.push({
-                        set: {
-                            key: operation.set.key,
-                            value: null,
-                            visibleToPlayerIndexes: operation.set.visibleToPlayerIndexes
-                        }
-                    });
-                }
-                else {
-                    moveForPlayer.push(operation);
-                }
-            }
-            return moveForPlayer;
-        }
-        function getStateForPlayerIndex(playerIndex, gameState, visibleTo) {
-            if (gameState === null) {
-                return null;
-            }
-            var result = {};
-            var keys = getKeys(gameState);
-            for (var _i = 0; _i < keys.length; _i++) {
-                var key = keys[_i];
-                var visibleToPlayerIndexes = visibleTo[key];
-                var value = null;
-                if (isNull(visibleToPlayerIndexes) || visibleToPlayerIndexes.indexOf(playerIndex) > -1) {
-                    value = gameState[key];
-                }
-                result[key] = value;
-            }
-            return result;
-        }
-        function shuffle(keys) {
-            var keysCopy = keys.slice(0);
-            var result = [];
-            while (keysCopy.length >= 1) {
-                var index = randomFromTo(0, keysCopy.length);
-                var removed = keysCopy.splice(index, 1)[0];
-                result.push(removed);
-            }
-            return result;
-        }
-        function randomFromTo(from, to) {
-            if (isNull(from) || isNull(to) || from >= to) {
-                throw new Error("In randomFromTo(from,to), you must have from<to, but from=" + from + " to=" + to);
-            }
-            return Math.floor(Math.random() * (to - from) + from);
-        }
-        stateService.randomFromTo = randomFromTo;
-        function processApiOperation(operation) {
-            //Check for all types of Operations
-            var key;
-            var visibleToPlayerIndexes;
-            if (!isNull(operation.set)) {
-                var opSet = operation.set;
-                key = opSet.key;
-                visibleToPlayerIndexes = opSet.visibleToPlayerIndexes;
-                var value = opSet.value;
-                if (isNull(key) || isNull(value)) {
-                    throwError("Fields key and value in Set operation must be non null. operation=" + angular.toJson(operation, true));
-                }
-                currentState[key] = value;
-                if (visibleToPlayerIndexes) {
-                    currentVisibleTo[key] = visibleToPlayerIndexes;
-                }
-                else {
-                    delete currentVisibleTo[key];
-                }
-            }
-            else if (!isNull(operation.setTurn)) {
-                var setTurn = operation.setTurn;
-                turnIndex = setTurn.turnIndex;
-                setTurnOrEndMatchCount++;
-            }
-            else if (!isNull(operation.setRandomInteger)) {
-                var setRandomInteger = operation.setRandomInteger;
-                key = setRandomInteger.key;
-                var from = setRandomInteger.from;
-                var to = setRandomInteger.to;
-                if (isNull(key) || isNull(from) || isNull(to)) {
-                    throwError("Fields key, from, and to, in SetRandomInteger operation must be non null. operation=" + angular.toJson(operation, true));
-                }
-                var randomValue = randomFromTo(from, to);
-                currentState[key] = randomValue;
-                delete currentVisibleTo[key];
-            }
-            else if (!isNull(operation.setVisibility)) {
-                var setVisibility = operation.setVisibility;
-                key = setVisibility.key;
-                visibleToPlayerIndexes = setVisibility.visibleToPlayerIndexes;
-                if (isNull(key)) {
-                    throwError("Fields key in SetVisibility operation must be non null. operation=" + angular.toJson(operation, true));
-                }
-                if (visibleToPlayerIndexes) {
-                    currentVisibleTo[key] = visibleToPlayerIndexes;
-                }
-                else {
-                    delete currentVisibleTo[key];
-                }
-            }
-            else if (!isNull(operation['delete'])) {
-                var opDelete = operation['delete'];
-                key = opDelete.key;
-                if (isNull(key)) {
-                    throwError("Field key in Delete operation must be non null. operation=" + angular.toJson(operation, true));
-                }
-                delete currentState[key];
-                delete currentVisibleTo[key];
-            }
-            else if (!isNull(operation.shuffle)) {
-                var opShuffle = operation.shuffle;
-                var keys = opShuffle.keys;
-                if (isNull(keys) || keys.length === 0) {
-                    throwError("Field keys in Shuffle operation must be a non empty array. operation=" + angular.toJson(operation, true));
-                }
-                var shuffledKeys = shuffle(keys);
-                var oldGameState = clone(currentState);
-                var oldVisibleTo = clone(currentVisibleTo);
-                for (var j = 0; j < shuffledKeys.length; j++) {
-                    var fromKey = keys[j];
-                    var toKey = shuffledKeys[j];
-                    currentState[toKey] = oldGameState[fromKey];
-                    currentVisibleTo[toKey] = oldVisibleTo[fromKey];
-                }
-            }
-            else if (!isNull(operation.endMatch)) {
-                var endMatch = operation.endMatch;
-                setTurnOrEndMatchCount++;
-                var scores = endMatch.endMatchScores;
-                if (isNull(scores) || scores.length !== playersInfo.length) {
-                    throwError("Field scores in EndMatch operation must be an array of the same length as the number of players. operation=" + angular.toJson(operation, true));
-                }
-                endMatchScores = scores;
-                if (playMode === "onlyAIs") {
-                    gamingPlatform.$timeout(function () { initNewMatch(); }, 1000); // start a new match in 1 second.
-                }
-            }
-            else {
-                throwError("Illegal operation, it must contain either set, setRandomInteger, setVisibility, delete, shuffle, or endMatch: " + angular.toJson(operation, true));
-            }
-        }
-        function getYourPlayerIndex() {
-            return playMode === "playWhite" ? 0 :
-                playMode === "playBlack" ? 1 :
-                    playMode === "playViewer" ? -2 :
-                        playMode === "playAgainstTheComputer" || playMode === "onlyAIs" ||
-                            playMode === "multiplayer" ||
-                            playMode === "passAndPlay" ? turnIndex :
-                            Number(playMode);
-        }
-        function getMatchState() {
-            return {
-                turnIndexBeforeMove: turnIndexBeforeMove,
-                turnIndex: turnIndex,
-                endMatchScores: endMatchScores,
-                moveNumber: moveNumber,
-                randomSeed: randomSeed,
-                lastMove: lastMove,
-                lastState: lastState,
-                currentState: currentState,
-                lastVisibleTo: lastVisibleTo,
-                currentVisibleTo: currentVisibleTo
-            };
-        }
-        stateService.getMatchState = getMatchState;
-        // endMatchScores can be null or undefined (and in the first move in auto-match, it's first null and then undefined, 
-        // so we used to send the same updateUI twice).
-        // Now, if anything is undefined, then I set it to null.
-        function getNullIfUndefined(obj) {
-            return obj === undefined ? null : obj;
-        }
-        function setMatchState(data) {
-            turnIndexBeforeMove = getNullIfUndefined(data.turnIndexBeforeMove);
-            turnIndex = getNullIfUndefined(data.turnIndex);
-            endMatchScores = getNullIfUndefined(data.endMatchScores);
-            moveNumber = data.moveNumber ? data.moveNumber : 0;
-            randomSeed = getNullIfUndefined(data.randomSeed);
-            lastMove = getNullIfUndefined(data.lastMove);
-            lastState = getNullIfUndefined(data.lastState);
-            currentState = getNullIfUndefined(data.currentState);
-            lastVisibleTo = getNullIfUndefined(data.lastVisibleTo);
-            currentVisibleTo = getNullIfUndefined(data.currentVisibleTo);
-        }
-        stateService.setMatchState = setMatchState;
-        var lastSentUpdateUI = null; // to prevent sending the same updateUI twice.
-        function delayedSendUpdateUi() {
-            var yourPlayerIndex = getYourPlayerIndex();
-            var moveForIndex = getMoveForPlayerIndex(yourPlayerIndex, lastMove);
-            var stateBeforeMove = getStateForPlayerIndex(yourPlayerIndex, lastState, lastVisibleTo);
-            var stateAfterMove = getStateForPlayerIndex(yourPlayerIndex, currentState, currentVisibleTo);
-            var nextUpdateUI = {
-                move: moveForIndex,
-                turnIndexBeforeMove: turnIndexBeforeMove,
-                turnIndexAfterMove: turnIndex,
-                stateBeforeMove: stateBeforeMove,
-                stateAfterMove: stateAfterMove,
-                numberOfPlayers: playersInfo.length,
-                playersInfo: playersInfo,
-                yourPlayerIndex: yourPlayerIndex,
-                playMode: playMode === "multiplayer" ? yourPlayerIndex : playMode,
-                moveNumber: moveNumber,
-                randomSeed: randomSeed,
-                endMatchScores: endMatchScores
-            };
-            // Not sending the same updateUI twice.
-            if (angular.equals(lastSentUpdateUI, nextUpdateUI))
-                return;
-            lastSentUpdateUI = nextUpdateUI;
-            if (lastMove.length > 0 && game.isMoveOk({
-                move: moveForIndex,
-                turnIndexBeforeMove: turnIndexBeforeMove,
-                turnIndexAfterMove: turnIndex,
-                stateBeforeMove: stateBeforeMove,
-                stateAfterMove: stateAfterMove,
-                numberOfPlayers: playersInfo.length
-            }) !== true) {
-                throwError("You declared a hacker for a legal move! move=" + moveForIndex);
-            }
-            game.updateUI(nextUpdateUI);
-        }
-        function sendUpdateUi() {
-            if (simulateServerDelayMilliseconds === 0) {
-                delayedSendUpdateUi();
-            }
-            else {
-                gamingPlatform.$timeout(function () { delayedSendUpdateUi(); }, simulateServerDelayMilliseconds);
-            }
-        }
-        stateService.sendUpdateUi = sendUpdateUi;
-        function makeMove(operations) {
-            if (!game) {
-                throwError("You must call setGame before any other method.");
-            }
-            if (!operations) {
-                throwError("operations must be an array");
-            }
-            // Making sure only turnIndex can make the move
-            if (turnIndex === -1) {
-                throwError("You cannot send a move after the game ended!");
-            }
-            if (getYourPlayerIndex() !== turnIndex) {
-                throwError("Expected a move from turnIndex=" + turnIndex + " but got the move from index=" + getYourPlayerIndex());
-            }
-            lastState = clone(currentState);
-            lastVisibleTo = clone(currentVisibleTo);
-            turnIndexBeforeMove = turnIndex;
-            turnIndex = -1;
-            lastMove = operations;
-            moveNumber++;
-            if (randomSeed && Math.seedrandom) {
-                Math.seedrandom(randomSeed + moveNumber); // Math.random is used only in processApiOperation
-            }
-            setTurnOrEndMatchCount = 0;
-            for (var _i = 0; _i < operations.length; _i++) {
-                var operation = operations[_i];
-                processApiOperation(operation);
-            }
-            // We must have either SetTurn or EndMatch
-            if (setTurnOrEndMatchCount !== 1) {
-                throwError("We must have either SetTurn or EndMatch, but not both: setTurnOrEndMatchCount=" + setTurnOrEndMatchCount);
-            }
-            if (moveNumber > 1 &&
-                turnIndex == turnIndexBeforeMove) {
-                throwError("turnIndex must be different from turnIndexBeforeMove, but both are equal to " + turnIndex);
-            }
-            if (!(turnIndex >= -1 && turnIndex < playersInfo.length)) {
-                throwError("turnIndex must be between -1 and " + playersInfo.length + ", but it was " + turnIndex + ".");
-            }
-            sendUpdateUi();
-        }
-        stateService.makeMove = makeMove;
-        function setGame(_game) {
-            if (game !== undefined) {
-                throwError("You can call setGame only once");
-            }
-            game = _game;
-        }
-        stateService.setGame = setGame;
-        function getEndMatchScores() {
-            return endMatchScores;
-        }
-        stateService.getEndMatchScores = getEndMatchScores;
-    })(stateService = gamingPlatform.stateService || (gamingPlatform.stateService = {}));
-})(gamingPlatform || (gamingPlatform = {}));
-//# sourceMappingURL=stateService.js.map
 ;
 var gamingPlatform;
 (function (gamingPlatform) {
@@ -31391,274 +31026,139 @@ var gamingPlatform;
 (function (gamingPlatform) {
     var gameService;
     (function (gameService) {
-        var isLocalTesting = window.parent === window ||
-            window.location.search === "?test";
-        var isLocalTestCommunity = location.search.indexOf("community") !== -1;
-        gameService.playMode = location.search.indexOf("onlyAIs") !== -1 ? "onlyAIs"
-            : location.search.indexOf("playAgainstTheComputer") !== -1 ? "playAgainstTheComputer"
-                : location.search.indexOf("multiplayer") !== -1 ? "multiplayer"
-                    : location.search.indexOf("?playMode=") === 0 ? location.search.substr("?playMode=".length)
-                        : "passAndPlay"; // Default play mode
-        // We verify that you call makeMove at most once for every updateUI (and only when it's your turn)
-        var lastUpdateUI = null;
+        var isLocalTesting = window.parent === window;
+        // UI for local testing
+        var playersInCommunity = 5;
+        gameService.playModes = ["passAndPlay", "playAgainstTheComputer", "onlyAIs", "multiplayer", "community"];
+        gameService.playMode = "passAndPlay";
+        gameService.supportedLanguages = [{ name: "English", code: "en" },
+            { name: "עברית", code: "iw" },
+            { name: "português", code: "pt" },
+            { name: "中文", code: "zh" },
+            { name: "ελληνικά", code: "el" },
+            { name: "French", code: "fr" },
+            { name: "हिन्दी", code: "hi" },
+            { name: "español", code: "es" },
+        ];
+        gameService.currentLanguage = gameService.supportedLanguages[0];
+        gameService.languageCode = "en";
+        gameService.ogImageMaker = "https://dotted-guru-139914.appspot.com/";
+        gameService.numberOfPlayers = 2;
+        gameService.iframeRows = 1;
+        gameService.iframeCols = 1;
+        gameService.locationTrustedStr = null;
         var game;
-        var lastCommunityUI = null;
-        function communityUI(communityUI) {
-            lastCommunityUI = angular.copy(communityUI);
-            game.communityUI(communityUI);
+        var playersInfo;
+        gameService.history = [];
+        gameService.historyIndex = 0;
+        var playerIdToProposal = null;
+        gameService.savedStates = [];
+        gameService.selectedSavedStateToLoad = null;
+        // test ogImage, getLogs, etc
+        var testingHtml = "\n    <div style=\"position:absolute; width:100%; height:10%; overflow: scroll;\">\n      <select\n        ng-options=\"playMode for playMode in gameService.playModes track by playMode\"\n        ng-model=\"gameService.playMode\"\n        ng-change=\"gameService.reloadIframes()\"></select>\n      <button ng-click=\"gameService.startNewMatch()\">Start new match</button>\n      <select ng-change=\"gameService.historyIndexChanged()\" ng-model=\"gameService.historyIndex\" ng-options=\"index for index in gameService.getIntegersTill(gameService.history.length)\">\n        <option value=\"\">-- current move --</option>\n      </select>\n      <select ng-change=\"gameService.currentLanguageChanged()\" ng-model=\"gameService.currentLanguage\" ng-options=\"language.name for language in gameService.supportedLanguages\">\n        <option value=\"\">-- current game language --</option>\n      </select>\n      <button ng-click=\"gameService.saveState()\">Save match</button>\n      <select ng-change=\"gameService.loadMatch()\" ng-model=\"gameService.selectedSavedStateToLoad\" ng-options=\"savedState.name for savedState in gameService.savedStates\">\n        <option value=\"\">-- load match --</option>\n      </select>\n      <input ng-model=\"gameService.ogImageMaker\">\n      <button ng-click=\"gameService.getOgImageState()\">Open AppEngine image</button>\n    </div>\n    <div style=\"position:absolute; width:100%; height:90%; top: 10%;\">\n      <div ng-repeat=\"row in gameService.getIntegersTill(gameService.iframeRows)\"\n          style=\"position:absolute; top:{{row * 100 / gameService.iframeRows}}%; left:0; width:100%; height:{{100 / gameService.iframeRows}}%;\">\n        <div ng-repeat=\"col in gameService.getIntegersTill(gameService.iframeCols)\"\n            style=\"position:absolute; top:0; left:{{col * 100 / gameService.iframeCols}}%; width:{{100 / gameService.iframeCols}}%; height:100%;\">\n          <iframe id=\"game_iframe_{{col + row*gameService.iframeCols}}\"\n            ng-src=\"{{gameService.locationTrustedStr}}\"\n            seamless=\"seamless\" style=\"position:absolute; width:100%; height:100%;\">\n          </iframe>\n        </div>\n      </div>\n    </div>\n  ";
+        var cacheIntegersTill = [];
+        function getIntegersTill(number) {
+            if (cacheIntegersTill[number])
+                return cacheIntegersTill[number];
+            var res = [];
+            for (var i = 0; i < number; i++) {
+                res.push(i);
+            }
+            cacheIntegersTill[number] = res;
+            return res;
         }
-        gameService.communityUI = communityUI;
-        function communityMove(proposal, move) {
-            if (!lastCommunityUI) {
-                throw new Error("Don't call communityMove before getting communityUI.");
-            }
-            if (move) {
-                gamingPlatform.moveService.checkMove(move);
-            }
-            var wasYourTurn = lastCommunityUI.move.turnIndexAfterMove >= 0 &&
-                lastCommunityUI.yourPlayerIndex === lastCommunityUI.move.turnIndexAfterMove; // it's my turn
-            if (!wasYourTurn) {
-                throw new Error("Called communityMove when it wasn't your turn: yourPlayerIndex=" + lastCommunityUI.yourPlayerIndex + " turnIndexAfterMove=" + lastCommunityUI.move.turnIndexAfterMove);
-            }
-            var oldProposal = lastCommunityUI.playerIdToProposal[lastCommunityUI.yourPlayerInfo.playerId];
-            if (oldProposal) {
-                throw new Error("Called communityMove when yourPlayerId already made a proposal, see: " + angular.toJson(oldProposal, true));
-            }
-            if (isLocalTesting) {
-                // I'm using $timeout so it will be more like production (where we use postMessage),
-                // so the communityUI response is not sent immediately).
-                var nextCommunityUI = lastCommunityUI;
-                if (move) {
-                    nextCommunityUI.turnIndexBeforeMove = nextCommunityUI.move.turnIndexAfterMove;
-                    nextCommunityUI.stateBeforeMove = nextCommunityUI.move.stateAfterMove;
-                    nextCommunityUI.playerIdToProposal = {};
-                    nextCommunityUI.yourPlayerIndex = move.turnIndexAfterMove;
-                    nextCommunityUI.move = move;
-                }
-                else {
-                    nextCommunityUI.playerIdToProposal[nextCommunityUI.yourPlayerInfo.playerId] = proposal;
-                }
-                nextCommunityUI.yourPlayerInfo.playerId = 'playerId' + Math.random();
-                gamingPlatform.$timeout(function () {
-                    communityUI(nextCommunityUI);
-                }, 10);
-            }
-            else {
-                gamingPlatform.messageService.sendMessage({ communityMove: { proposal: proposal, move: move, lastCommunityUI: lastCommunityUI } });
-            }
-            lastCommunityUI = null;
-        }
-        gameService.communityMove = communityMove;
-        function updateUI(params) {
-            lastUpdateUI = angular.copy(params);
-            game.updateUI(params);
-        }
-        gameService.updateUI = updateUI;
-        function makeMove(move) {
-            if (!lastUpdateUI) {
-                throw new Error("Game called makeMove before getting updateUI or it called makeMove more than once for a single updateUI.");
-            }
-            var wasYourTurn = lastUpdateUI.turnIndexAfterMove >= 0 &&
-                lastUpdateUI.yourPlayerIndex === lastUpdateUI.turnIndexAfterMove; // it's my turn
-            if (!wasYourTurn) {
-                throw new Error("Game called makeMove when it wasn't your turn: yourPlayerIndex=" + lastUpdateUI.yourPlayerIndex + " turnIndexAfterMove=" + lastUpdateUI.turnIndexAfterMove);
-            }
-            if (!move || !move.length) {
-                throw new Error("Game called makeMove with an empty move=" + move);
-            }
-            if (isLocalTesting) {
-                // I'm using $timeout so it will be more like production (where we use postMessage),
-                // so the updateUI response is not sent immediately).
-                gamingPlatform.$timeout(function () {
-                    gamingPlatform.stateService.makeMove(move);
-                }, 10);
-            }
-            else {
-                gamingPlatform.messageService.sendMessage({ makeMove: move, lastUpdateUI: lastUpdateUI });
-            }
-            lastUpdateUI = null; // to make sure you don't call makeMove until you get the next updateUI.
-        }
-        gameService.makeMove = makeMove;
-        function getNumberOfPlayers() {
-            return gamingPlatform.stateService.randomFromTo(game.minNumberOfPlayers, game.maxNumberOfPlayers + 1);
-            ;
-        }
-        function getPlayers() {
-            var playersInfo = [];
-            var actualNumberOfPlayers = getNumberOfPlayers();
-            for (var i = 0; i < actualNumberOfPlayers; i++) {
-                var playerId = gameService.playMode === "onlyAIs" ||
-                    i !== 0 && gameService.playMode === "playAgainstTheComputer" ?
-                    "" :
-                    "" + (i + 42);
-                playersInfo.push({ playerId: playerId, avatarImageUrl: null, displayName: null });
-            }
-            return playersInfo;
-        }
-        var didCallSetGame = false;
-        var w = window;
-        function setGame(_game) {
-            game = _game;
-            if (didCallSetGame) {
-                throw new Error("You can call setGame exactly once!");
-            }
-            didCallSetGame = true;
-            var playersInfo = getPlayers();
-            if (isLocalTesting) {
-                if (w.game) {
-                    w.game.isHelpModalShown = true;
-                }
-                if (isLocalTestCommunity) {
-                    gamingPlatform.$timeout(function () { return communityUI({
-                        yourPlayerIndex: 0,
-                        yourPlayerInfo: {
-                            avatarImageUrl: "",
-                            displayName: "",
-                            playerId: "playerId" + Math.random(),
-                        },
-                        playerIdToProposal: {},
-                        numberOfPlayers: getNumberOfPlayers(),
-                        stateBeforeMove: null,
-                        turnIndexBeforeMove: 0,
-                        move: {
-                            endMatchScores: null,
-                            turnIndexAfterMove: 0,
-                            stateAfterMove: null,
-                        }
-                    }); }, 200);
-                }
-                else {
-                    gamingPlatform.stateService.setGame({ updateUI: updateUI, isMoveOk: game.isMoveOk });
-                    gamingPlatform.stateService.initNewMatch();
-                    gamingPlatform.stateService.setPlayMode(gameService.playMode);
-                    gamingPlatform.stateService.setPlayers(playersInfo);
-                    gamingPlatform.stateService.sendUpdateUi();
-                }
-            }
-            else {
-                gamingPlatform.messageService.addMessageListener(function (message) {
-                    if (message.isMoveOk) {
-                        var isMoveOkResult = game.isMoveOk(message.isMoveOk);
-                        if (isMoveOkResult !== true) {
-                            isMoveOkResult = { result: isMoveOkResult, isMoveOk: message.isMoveOk };
-                        }
-                        gamingPlatform.messageService.sendMessage({ isMoveOkResult: isMoveOkResult });
-                    }
-                    else if (message.communityUI) {
-                        communityUI(message.communityUI);
-                    }
-                    else if (message.updateUI) {
-                        updateUI(message.updateUI);
-                    }
-                    else if (message.setLanguage) {
-                        gamingPlatform.translate.setLanguage(message.setLanguage.language, message.setLanguage.codeToL10N);
-                        // we need to ack this message to the platform so the platform will make the game-iframe visible
-                        // (The platform waited until the game got the l10n.)
-                        // Using setTimeout to give time for angular to refresh it's UI (the default was in English)
-                        setTimeout(function () {
-                            gamingPlatform.messageService.sendMessage({ setLanguageResult: true });
-                        });
-                    }
-                    else if (message.getGameLogs) {
-                        // To make sure students don't get:
-                        // Error: Uncaught DataCloneError: Failed to execute 'postMessage' on 'Window': An object could not be cloned.
-                        // I serialize to string and back.
-                        var plainPojoLogs = angular.fromJson(angular.toJson(gamingPlatform.log.getLogs()));
-                        setTimeout(function () {
-                            gamingPlatform.messageService.sendMessage({ getGameLogsResult: plainPojoLogs });
-                        });
-                    }
-                    else if (message.getStateForOgImage) {
-                        gamingPlatform.messageService.sendMessage({ sendStateForOgImage: game.getStateForOgImage() });
-                    }
-                    else if (message.passMessageToGame) {
-                        var msgFromPlatform = message.passMessageToGame;
-                        if (msgFromPlatform.SHOW_GAME_INSTRUCTIONS && w.game) {
-                            w.game.isHelpModalShown = !w.game.isHelpModalShown;
-                        }
-                        if (game.gotMessageFromPlatform)
-                            game.gotMessageFromPlatform(msgFromPlatform);
-                    }
-                });
-                // I wanted to delay sending gameReady until window.innerWidth and height are not 0,
-                // but they will stay 0 (on ios) until we send gameReady (because platform will hide the iframe)
-                gamingPlatform.messageService.sendMessage({ gameReady: {} });
-            }
-            // Show an empty board to a viewer (so you can't perform moves).
-            gamingPlatform.log.info("Passing a 'fake' updateUI message in order to show an empty board to a viewer (so you can NOT perform moves)");
-            updateUI({
-                move: [],
-                turnIndexBeforeMove: 0,
-                turnIndexAfterMove: 0,
-                stateBeforeMove: null,
-                stateAfterMove: {},
-                yourPlayerIndex: -2,
-                playersInfo: playersInfo,
-                playMode: "passAndPlay",
+        gameService.getIntegersTill = getIntegersTill;
+        function clearState() {
+            var state = {
+                turnIndex: 0,
                 endMatchScores: null,
-                moveNumber: 0, randomSeed: "",
-                numberOfPlayers: playersInfo.length
+                state: null,
+            };
+            gameService.history = [state];
+            gameService.historyIndex = 0;
+            playerIdToProposal = {};
+        }
+        gameService.clearState = clearState;
+        function historyIndexChanged() {
+            // angular makes historyIndex a string!
+            gameService.historyIndex = Number(gameService.historyIndex);
+            playerIdToProposal = {};
+            reloadIframes();
+        }
+        gameService.historyIndexChanged = historyIndexChanged;
+        function startNewMatch() {
+            clearState();
+            reloadIframes();
+        }
+        gameService.startNewMatch = startNewMatch;
+        function sendSetLanguage(id) {
+            passMessage({ setLanguage: { language: gameService.currentLanguage.code } }, id);
+        }
+        function currentLanguageChanged() {
+            for (var r = 0; r < gameService.iframeRows; r++) {
+                for (var c = 0; c < gameService.iframeCols; c++) {
+                    var id = c + r * gameService.iframeCols;
+                    sendSetLanguage(id);
+                }
+            }
+        }
+        gameService.currentLanguageChanged = currentLanguageChanged;
+        function saveState() {
+            var defaultStateName = "Saved state " + gameService.savedStates.length;
+            var stateName = prompt("Please enter the state name", defaultStateName);
+            if (!stateName)
+                stateName = defaultStateName;
+            gameService.savedStates.push({ name: stateName, playerIdToProposal: playerIdToProposal, history: gameService.history });
+            localStorage.setItem("savedStates", angular.toJson(gameService.savedStates, true));
+        }
+        gameService.saveState = saveState;
+        function loadMatch() {
+            if (!gameService.selectedSavedStateToLoad)
+                return;
+            gameService.history = angular.copy(gameService.selectedSavedStateToLoad.history);
+            gameService.historyIndex = gameService.history.length - 1;
+            playerIdToProposal = angular.copy(gameService.selectedSavedStateToLoad.playerIdToProposal);
+            gameService.selectedSavedStateToLoad = null;
+            reloadIframes();
+        }
+        gameService.loadMatch = loadMatch;
+        function loadSavedStates() {
+            var savedStatesJson = localStorage.getItem("savedStates");
+            if (savedStatesJson)
+                gameService.savedStates = angular.fromJson(savedStatesJson);
+        }
+        function getOgImageState() {
+            passMessage({ getStateForOgImage: true }, 0);
+        }
+        gameService.getOgImageState = getOgImageState;
+        function reloadIframes() {
+            gamingPlatform.log.log("reloadIframes: playMode=", gameService.playMode);
+            setPlayersInfo();
+            // Setting to 0 to force the game to send gameReady and then it will get the correct changeUI.
+            gameService.iframeRows = 0;
+            gameService.iframeCols = 0;
+            gamingPlatform.$timeout(function () {
+                if (gameService.playMode == "community") {
+                    gameService.iframeRows = gameService.numberOfPlayers;
+                    gameService.iframeCols = playersInCommunity;
+                }
+                else if (gameService.playMode == "multiplayer") {
+                    gameService.iframeRows = 1;
+                    gameService.iframeCols = gameService.numberOfPlayers + 1;
+                }
+                else {
+                    gameService.iframeRows = 1;
+                    gameService.iframeCols = 1;
+                }
             });
         }
-        gameService.setGame = setGame;
-    })(gameService = gamingPlatform.gameService || (gamingPlatform.gameService = {}));
-})(gamingPlatform || (gamingPlatform = {}));
-//# sourceMappingURL=gameService.js.map
-;
-var gamingPlatform;
-(function (gamingPlatform) {
-    var moveService;
-    (function (moveService) {
-        var STATE_KEY = "state";
-        function convertOldState(state) {
-            return state ? state[STATE_KEY] : null;
-        }
-        function convertIsMoveOk(params) {
-            return {
-                turnIndexBeforeMove: params.turnIndexBeforeMove,
-                numberOfPlayers: params.numberOfPlayers,
-                stateBeforeMove: convertOldState(params.stateBeforeMove),
-                move: convertOldMove(params.move)
-            };
-        }
-        function convertUpdate(params) {
-            return {
-                playersInfo: params.playersInfo,
-                yourPlayerIndex: params.yourPlayerIndex,
-                playMode: params.playMode,
-                turnIndexBeforeMove: params.turnIndexBeforeMove,
-                numberOfPlayers: params.numberOfPlayers,
-                stateBeforeMove: convertOldState(params.stateBeforeMove),
-                // Not using convertOldMove, because one of the players might have
-                // dismissed the match, so turnIndexAfterMove might be -1 (even though the move sets to another player index)
-                move: {
-                    endMatchScores: params.endMatchScores,
-                    turnIndexAfterMove: params.turnIndexAfterMove,
-                    stateAfterMove: convertOldState(params.stateAfterMove),
-                },
-            };
-        }
-        function convertOldMove(move) {
-            if (!move || move.length === 0) {
-                return {
-                    endMatchScores: null,
-                    turnIndexAfterMove: 0,
-                    stateAfterMove: null,
-                };
-            }
-            if (move.length !== 2 || !(move[0].setTurn || move[0].endMatch) || !move[1].set) {
-                throw new Error("Internal error: old move should be an array with 2 operations! old move=" +
-                    angular.toJson(move, true));
-            }
-            return {
-                endMatchScores: move[0].endMatch ? move[0].endMatch.endMatchScores : null,
-                turnIndexAfterMove: move[0].setTurn ? move[0].setTurn.turnIndex : -1,
-                stateAfterMove: move[1].set.value,
-            };
-        }
+        gameService.reloadIframes = reloadIframes;
         function checkMove(move) {
+            if (!move) {
+                throw new Error("Game called makeMove with a null move=" + move);
+            }
             // Do some checks: turnIndexAfterMove is -1 iff endMatchScores is not null.
-            var noTurnIndexAfterMove = move.turnIndexAfterMove === -1;
+            var noTurnIndexAfterMove = move.turnIndex === -1;
             var hasEndMatchScores = !!move.endMatchScores;
             if (noTurnIndexAfterMove && !hasEndMatchScores) {
                 throw new Error("Illegal move: turnIndexAfterMove was -1 but you forgot to set endMatchScores. Move=" +
@@ -31669,92 +31169,290 @@ var gamingPlatform;
                     angular.toJson(move, true));
             }
         }
-        moveService.checkMove = checkMove;
-        function convertNewMove(move) {
+        gameService.checkMove = checkMove;
+        function checkMakeMove(lastUpdateUI, move) {
+            if (!lastUpdateUI) {
+                throw new Error("Game called makeMove before getting updateUI or it called makeMove more than once for a single updateUI.");
+            }
+            var wasYourTurn = lastUpdateUI.turnIndex >= 0 &&
+                lastUpdateUI.yourPlayerIndex === lastUpdateUI.turnIndex; // it's my turn
+            if (!wasYourTurn) {
+                throw new Error("Game called makeMove when it wasn't your turn: yourPlayerIndex=" + lastUpdateUI.yourPlayerIndex + " turnIndexAfterMove=" + lastUpdateUI.turnIndex);
+            }
             checkMove(move);
-            return [
-                move.endMatchScores ? { endMatch: { endMatchScores: move.endMatchScores } } : { setTurn: { turnIndex: move.turnIndexAfterMove } },
-                { set: { key: STATE_KEY, value: move.stateAfterMove } }
-            ];
         }
-        function setGame(game) {
-            var oldGame = {
-                minNumberOfPlayers: game.minNumberOfPlayers,
-                maxNumberOfPlayers: game.maxNumberOfPlayers,
-                isMoveOk: function (params) {
-                    var move = convertIsMoveOk(params);
-                    gamingPlatform.log.info("Calling game.checkMoveOk:", move);
-                    game.checkMoveOk(move);
-                    return true;
-                },
-                updateUI: function (params) {
-                    var newParams = convertUpdate(params);
-                    gamingPlatform.log.info("Calling game.updateUI:", newParams);
-                    game.updateUI(newParams);
-                },
-                communityUI: game.communityUI,
-                gotMessageFromPlatform: game.gotMessageFromPlatform,
-                getStateForOgImage: game.getStateForOgImage,
-            };
-            gamingPlatform.gameService.setGame(oldGame);
-        }
-        moveService.setGame = setGame;
-        function makeMove(move) {
-            gamingPlatform.log.info("Making move:", move);
-            gamingPlatform.gameService.makeMove(convertNewMove(move));
-        }
-        moveService.makeMove = makeMove;
-        function communityMove(proposal, move) {
-            gamingPlatform.log.info("Making communityMove: proposal=", proposal, " move=", move);
-            gamingPlatform.gameService.communityMove(proposal, move);
-        }
-        moveService.communityMove = communityMove;
-    })(moveService = gamingPlatform.moveService || (gamingPlatform.moveService = {}));
-})(gamingPlatform || (gamingPlatform = {}));
-//# sourceMappingURL=moveService.js.map
-;
-var gamingPlatform;
-(function (gamingPlatform) {
-    function resizeMapArea(params) {
-        var imageId = params.imageId;
-        var mapId = params.mapId;
-        var originalWidth = params.originalWidth;
-        var originalHeight = params.originalHeight;
-        function rescale() {
-            var image = document.getElementById(imageId);
-            var map = document.getElementById(mapId);
-            var widthScale = image.width / originalWidth;
-            var heightScale = image.height / originalHeight;
-            //console.log("widthScale=", widthScale, "heightScale=", heightScale);
-            var areaElements = map.getElementsByTagName("area");
-            for (var areaIndex = 0; areaIndex < areaElements.length; areaIndex++) {
-                var areaElement = areaElements[areaIndex];
-                var originalCoords = areaElement.getAttribute("data-original-coords");
-                if (!originalCoords) {
-                    areaElement.setAttribute("data-original-coords", areaElement.getAttribute("coords"));
-                }
-                var coords = areaElement.getAttribute("data-original-coords").split(',');
-                var coordsPercent = [];
-                for (var i = 0; i < coords.length; ++i) {
-                    var coordNum = Number(coords[i]);
-                    if (i % 2 === 0) {
-                        coordsPercent[i] = Math.round(coordNum * widthScale);
-                    }
-                    else {
-                        coordsPercent[i] = Math.round(coordNum * heightScale);
-                    }
-                }
-                //console.log("before=", coords, "after=", coordsPercent);
-                areaElement.setAttribute("coords", coordsPercent.toString());
+        function checkCommunityMove(lastCommunityUI, proposal, move) {
+            if (!lastCommunityUI) {
+                throw new Error("Don't call communityMove before getting communityUI.");
+            }
+            if (move) {
+                checkMove(move);
+            }
+            var wasYourTurn = lastCommunityUI.turnIndex >= 0 &&
+                lastCommunityUI.yourPlayerIndex === lastCommunityUI.turnIndex; // it's my turn
+            if (!wasYourTurn) {
+                throw new Error("Called communityMove when it wasn't your turn: yourPlayerIndex=" + lastCommunityUI.yourPlayerIndex + " turnIndexAfterMove=" + lastCommunityUI.turnIndex);
+            }
+            var oldProposal = lastCommunityUI.playerIdToProposal[lastCommunityUI.yourPlayerInfo.playerId];
+            if (oldProposal) {
+                throw new Error("Called communityMove when yourPlayerId already made a proposal, see: " + angular.toJson(oldProposal, true));
             }
         }
-        document.addEventListener("onresize", rescale);
-        document.addEventListener("orientationchange", rescale);
-        setInterval(rescale, 1000);
-    }
-    gamingPlatform.resizeMapArea = resizeMapArea;
+        function sendMessage(msg) {
+            gamingPlatform.messageService.sendMessage(msg);
+        }
+        function setPlayersInfo() {
+            playersInfo = [];
+            for (var i = 0; i < gameService.numberOfPlayers; i++) {
+                var playerId = gameService.playMode === "onlyAIs" ||
+                    i !== 0 && gameService.playMode === "playAgainstTheComputer" ?
+                    "" :
+                    "" + (i + 42);
+                playersInfo.push({ playerId: playerId, avatarImageUrl: null, displayName: null });
+            }
+        }
+        function passMessage(msg, toIndex) {
+            var iframe = window.document.getElementById("game_iframe_" + toIndex);
+            iframe.contentWindow.postMessage(msg, "*");
+        }
+        function getIndexOfSource(src) {
+            var i = 0;
+            while (true) {
+                var iframe = window.document.getElementById("game_iframe_" + i);
+                if (!iframe) {
+                    console.error("Can't find src=", src);
+                    return -1;
+                }
+                if (iframe.contentWindow === src)
+                    return i;
+                i++;
+            }
+        }
+        function overrideInnerHtml() {
+            gamingPlatform.log.info("Overriding body's html");
+            gameService.locationTrustedStr = gamingPlatform.$sce.trustAsResourceUrl(location.toString());
+            var el = angular.element(testingHtml);
+            window.document.body.innerHTML = '';
+            angular.element(window.document.body).append(gamingPlatform.$compile(el)(gamingPlatform.$rootScope));
+            window.addEventListener("message", function (event) {
+                gamingPlatform.$rootScope.$apply(function () { return gotMessageFromGame(event); });
+            });
+        }
+        function getState() {
+            return gameService.history[gameService.historyIndex];
+        }
+        function getPlayerIndex(id) {
+            if (gameService.playMode == "community") {
+                // id = col + row*gameService.iframeCols;
+                // iframeCols = playersInCommunity
+                return Math.floor(id / gameService.iframeCols);
+            }
+            if (gameService.playMode == "multiplayer") {
+                return id == gameService.numberOfPlayers ? -2 : id; // -2 is viewer
+            }
+            return getState().turnIndex;
+        }
+        function getChangeUI(id) {
+            var index = getPlayerIndex(id);
+            var state = getState();
+            if (gameService.playMode == "community") {
+                var communityUI = {
+                    yourPlayerIndex: index,
+                    yourPlayerInfo: {
+                        avatarImageUrl: "",
+                        displayName: "",
+                        playerId: "playerId" + id,
+                    },
+                    playerIdToProposal: playerIdToProposal,
+                    numberOfPlayers: gameService.numberOfPlayers,
+                    state: state.state,
+                    turnIndex: state.turnIndex,
+                    endMatchScores: state.endMatchScores,
+                };
+                return { communityUI: communityUI };
+            }
+            var updateUI = {
+                yourPlayerIndex: index,
+                playersInfo: playersInfo,
+                numberOfPlayers: gameService.numberOfPlayers,
+                state: state.state,
+                turnIndex: state.turnIndex,
+                endMatchScores: state.endMatchScores,
+                playMode: gameService.playMode == "multiplayer" ? index : gameService.playMode,
+            };
+            return { updateUI: updateUI };
+        }
+        function sendChangeUI(id) {
+            passMessage(getChangeUI(id), id);
+        }
+        function getQueryString(params) {
+            var res = [];
+            for (var key in params) {
+                var value = params[key];
+                res.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+            }
+            return res.join("&");
+        }
+        function getImageMakerUrl(stateStr) {
+            var params = {};
+            params["fbId0"] = "10153589934097337";
+            params["fbId1"] = "10153693068502449";
+            var state = getState();
+            if (state.endMatchScores) {
+                params["winner"] = state.endMatchScores[0] > state.endMatchScores[1] ? '0' : '1';
+                ;
+            }
+            params["myIndex"] = '0';
+            params["state"] = stateStr;
+            return gameService.ogImageMaker + "?" + getQueryString(params);
+        }
+        function gotMessageFromGame(event) {
+            var source = event.source;
+            var id = getIndexOfSource(source);
+            if (id == -1)
+                return;
+            var index = getPlayerIndex(id);
+            var message = event.data;
+            gamingPlatform.log.info("Platform got message", message);
+            if (message.gameReady) {
+                sendSetLanguage(id);
+                sendChangeUI(id);
+            }
+            else if (message.sendStateForOgImage) {
+                var imageMakerUrl = getImageMakerUrl(message.sendStateForOgImage);
+                gamingPlatform.log.info(imageMakerUrl);
+                window.open(imageMakerUrl, "_blank");
+            }
+            else {
+                // Check last message
+                var lastMessage = message.lastMessage;
+                if (!angular.equals(lastMessage, getChangeUI(id))) {
+                    console.warn("Ignoring message because message.lastMessage is wrong! This can happen if you play and immediately changed something like playMode. lastMessage=", lastMessage, " expected lastMessage=", getChangeUI(id));
+                    return;
+                }
+                // Check move&prposal
+                var move = message.move;
+                var proposal = message.proposal;
+                if (lastMessage.communityUI) {
+                    checkCommunityMove(lastMessage.communityUI, proposal, move);
+                }
+                else {
+                    checkMakeMove(lastMessage.updateUI, move);
+                }
+                if (index !== getState().turnIndex) {
+                    throw new Error("Not your turn! yourPlayerIndex=" + index + " and the turn is of playerIndex=" + getState().turnIndex);
+                }
+                // Update state&proposals
+                if (gameService.historyIndex != gameService.history.length - 1) {
+                    // cut the future
+                    gameService.history.splice(gameService.historyIndex + 1);
+                    playerIdToProposal = {};
+                }
+                if (gameService.historyIndex != gameService.history.length - 1)
+                    throw new Error("Internal err! historyIndex=" + gameService.historyIndex + " history.length=" + gameService.history.length);
+                if (move) {
+                    gameService.history.push(move);
+                    gameService.historyIndex++;
+                    playerIdToProposal = {};
+                }
+                else {
+                    playerIdToProposal['playerId' + id] = proposal;
+                }
+                setTimeout(function () {
+                    for (var r = 0; r < gameService.iframeRows; r++) {
+                        for (var c = 0; c < gameService.iframeCols; c++) {
+                            var id_1 = c + r * gameService.iframeCols;
+                            sendChangeUI(id_1);
+                        }
+                    }
+                }, 100);
+            }
+        }
+        var lastChangeUiMessage = null;
+        function communityMove(proposal, move) {
+            checkCommunityMove(lastChangeUiMessage.communityUI, proposal, move);
+            // I'm sending the move even in local testing to make sure it's simple json (or postMessage will fail).
+            sendMessage({ proposal: proposal, move: move, lastMessage: lastChangeUiMessage });
+            lastChangeUiMessage = null;
+        }
+        gameService.communityMove = communityMove;
+        function makeMove(move) {
+            checkMakeMove(lastChangeUiMessage.updateUI, move);
+            // I'm sending the move even in local testing to make sure it's simple json (or postMessage will fail).
+            sendMessage({ move: move, lastMessage: lastChangeUiMessage });
+            lastChangeUiMessage = null; // to make sure you don't call makeMove until you get the next updateUI.
+        }
+        gameService.makeMove = makeMove;
+        function callUpdateUI(updateUI) {
+            lastChangeUiMessage = angular.copy({ updateUI: updateUI });
+            game.updateUI(updateUI);
+        }
+        gameService.callUpdateUI = callUpdateUI;
+        function callCommunityUI(communityUI) {
+            lastChangeUiMessage = angular.copy({ communityUI: communityUI });
+            game.communityUI(communityUI);
+        }
+        gameService.callCommunityUI = callCommunityUI;
+        function gotMessageFromPlatform(message) {
+            if (message.communityUI) {
+                callCommunityUI(message.communityUI);
+            }
+            else if (message.updateUI) {
+                callUpdateUI(message.updateUI);
+            }
+            else if (message.setLanguage) {
+                gamingPlatform.translate.setLanguage(message.setLanguage.language);
+            }
+            else if (message.getGameLogs) {
+                // To make sure students don't get:
+                // Error: Uncaught DataCloneError: Failed to execute 'postMessage' on 'Window': An object could not be cloned.
+                // I serialize to string and back.
+                var plainPojoLogs = angular.fromJson(angular.toJson(gamingPlatform.log.getLogs()));
+                setTimeout(function () {
+                    sendMessage({ getGameLogsResult: plainPojoLogs });
+                });
+            }
+            else if (message.getStateForOgImage) {
+                sendMessage({ sendStateForOgImage: game.getStateForOgImage() });
+            }
+        }
+        var didCallSetGame = false;
+        function setGame(_game) {
+            game = _game;
+            setPlayersInfo();
+            loadSavedStates();
+            clearState();
+            if (didCallSetGame) {
+                throw new Error("You can call setGame exactly once!");
+            }
+            didCallSetGame = true;
+            gamingPlatform.log.info("Called setGame");
+            if (isLocalTesting) {
+                gamingPlatform.$rootScope['gameService'] = gameService;
+                gamingPlatform.$timeout(overrideInnerHtml, 50); // waiting a bit because the game might access the html (like boardArea) to listen to TouchEvents
+            }
+            else {
+                gamingPlatform.messageService.addMessageListener(gotMessageFromPlatform);
+            }
+            // I wanted to delay sending gameReady until window.innerWidth and height are not 0,
+            // but they will stay 0 (on ios) until we send gameReady (because platform will hide the iframe)
+            sendMessage({ gameReady: "v4" });
+            gamingPlatform.log.info("Calling 'fake' updateUI with yourPlayerIndex=-2 , meaning you're a viewer so you can't make a move");
+            callUpdateUI({
+                yourPlayerIndex: -2,
+                playersInfo: playersInfo,
+                numberOfPlayers: gameService.numberOfPlayers,
+                state: null,
+                turnIndex: 0,
+                endMatchScores: null,
+                playMode: "passAndPlay",
+            });
+        }
+        gameService.setGame = setGame;
+    })(gameService = gamingPlatform.gameService || (gamingPlatform.gameService = {}));
+    var typeCheck_gameService = gameService;
 })(gamingPlatform || (gamingPlatform = {}));
-//# sourceMappingURL=resizeMapArea.js.map
+//# sourceMappingURL=gameService.js.map
 ;
 var gamingPlatform;
 (function (gamingPlatform) {
@@ -31929,6 +31627,7 @@ var gamingPlatform;
             return { bestScore: bestScore, bestState: bestState };
         }
     })(alphaBetaService = gamingPlatform.alphaBetaService || (gamingPlatform.alphaBetaService = {}));
+    var typeCheck_alphaBetaService = alphaBetaService;
 })(gamingPlatform || (gamingPlatform = {}));
 //# sourceMappingURL=alphaBetaService.js.map
 ;
@@ -32018,6 +31717,7 @@ var gamingPlatform;
             window.matchMedia('(orientation: portrait)').addListener(rescale);
         setInterval(rescale, 300);
     })(resizeGameAreaService = gamingPlatform.resizeGameAreaService || (gamingPlatform.resizeGameAreaService = {}));
+    var typeCheck_resizeGameAreaService = resizeGameAreaService;
 })(gamingPlatform || (gamingPlatform = {}));
 //# sourceMappingURL=resizeGameAreaService.js.map
 ;
@@ -32026,9 +31726,6 @@ var gamingPlatform;
     // This can't be a module, because we use it like:  translate(...) and not like translate.foobar(...)
     function createTranslateService() {
         var language;
-        // codeToL10N is deprecated (I keep it for older games that used the platform for i18n)
-        // New games should use setTranslations (which sets idToLanguageToL10n).
-        var codeToL10N = null;
         var idToLanguageToL10n = null;
         function translate(translationId, interpolateParams, languageCode) {
             if (!languageCode)
@@ -32039,9 +31736,6 @@ var gamingPlatform;
                 translation = languageToL10n[languageCode];
                 if (!translation)
                     translation = languageToL10n['en'];
-            }
-            else if (codeToL10N) {
-                translation = codeToL10N[translationId];
             }
             if (!translation) {
                 translation = "[" + translationId + "]";
@@ -32059,9 +31753,8 @@ var gamingPlatform;
         translateService.setTranslations = function (_idToLanguageToL10n) {
             idToLanguageToL10n = _idToLanguageToL10n;
         };
-        translateService.setLanguage = function (_language, _codeToL10N) {
+        translateService.setLanguage = function (_language) {
             language = _language;
-            codeToL10N = _codeToL10N;
         };
         return translateService;
     }
@@ -32142,22 +31835,12 @@ var gamingPlatform;
         }
         dragAndDropService.addDragListener = addDragListener;
     })(dragAndDropService = gamingPlatform.dragAndDropService || (gamingPlatform.dragAndDropService = {}));
+    var typeCheck_dragAndDropService = dragAndDropService;
 })(gamingPlatform || (gamingPlatform = {}));
 //# sourceMappingURL=dragAndDropService.js.map
 ;
 var gamingPlatform;
 (function (gamingPlatform) {
-    // Copy everything on gamingPlatform to window,
-    // for backward compatability with games that don't use the gamingPlatform namespace.
-    function copyNamespaceToWindow() {
-        var w = window;
-        var g = gamingPlatform;
-        for (var key in g) {
-            w[key] = g[key];
-        }
-    }
-    copyNamespaceToWindow();
-    setTimeout(copyNamespaceToWindow, 0);
     // Preventing context menu on long taps: http://stackoverflow.com/questions/3413683/disabling-the-context-menu-on-long-taps-on-android
     window.oncontextmenu = function (event) {
         event.preventDefault();
@@ -32189,17 +31872,22 @@ var gamingPlatform;
                 }
             ]);
         }])
-        .run(['$location', '$rootScope', '$timeout', '$interval', '$interpolate',
-        function (_location, _rootScope, _timeout, _interval, _interpolate) {
+        .run(['$location', '$rootScope', '$timeout', '$interval', '$interpolate', '$compile', '$sce',
+        function (_location, _rootScope, _timeout, _interval, _interpolate, _compile, _sce) {
             gamingPlatform.$location = _location;
             gamingPlatform.$rootScope = _rootScope;
             gamingPlatform.$timeout = _timeout;
             gamingPlatform.$interval = _interval;
             gamingPlatform.$interpolate = _interpolate;
-            copyNamespaceToWindow();
+            gamingPlatform.$compile = _compile;
+            gamingPlatform.$sce = _sce;
             gamingPlatform.log.alwaysLog("Finished init of gameServices module; emulatorServicesCompilationDate=", emulatorServicesCompilationDate);
         }])
         .factory('$exceptionHandler', function () {
+        var didSendBugReport = false;
+        function isLocalHost() {
+            return location.hostname === "localhost" || location.protocol === "file:";
+        }
         function angularErrorHandler(exception, cause) {
             var errMsg = {
                 gameUrl: '' + window.location,
@@ -32209,7 +31897,11 @@ var gamingPlatform;
                 gameLogs: gamingPlatform.log.getLogs()
             };
             console.error("Game had an exception:\n", exception, " Full error message with logs: ", errMsg);
-            window.alert("Game had an unexpected error. If you know JavaScript, you can look at the console and try to debug it :)");
+            if (didSendBugReport)
+                return;
+            didSendBugReport = true;
+            if (isLocalHost())
+                window.alert("Game had an unexpected error. If you know JavaScript, you can look at the console and try to debug it :)");
             // To make sure students don't get:
             // Error: Uncaught DataCloneError: Failed to execute 'postMessage' on 'Window': An object could not be cloned.
             // I serialize to string and back.
@@ -32225,6 +31917,12 @@ var gamingPlatform;
 })(gamingPlatform || (gamingPlatform = {}));
 //# sourceMappingURL=angularExceptionHandler.js.map
 ;
+var gameService = gamingPlatform.gameService;
+var alphaBetaService = gamingPlatform.alphaBetaService;
+var translate = gamingPlatform.translate;
+var resizeGameAreaService = gamingPlatform.resizeGameAreaService;
+var log = gamingPlatform.log;
+var dragAndDropService = gamingPlatform.dragAndDropService;
 var gameLogic;
 (function (gameLogic) {
     gameLogic.ROWS = 3;
@@ -32322,56 +32020,30 @@ var gameLogic;
         boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
         var winner = getWinner(boardAfterMove);
         var endMatchScores;
-        var turnIndexAfterMove;
+        var turnIndex;
         if (winner !== '' || isTie(boardAfterMove)) {
             // Game over.
-            turnIndexAfterMove = -1;
+            turnIndex = -1;
             endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
         }
         else {
             // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
-            turnIndexAfterMove = 1 - turnIndexBeforeMove;
+            turnIndex = 1 - turnIndexBeforeMove;
             endMatchScores = null;
         }
         var delta = { row: row, col: col };
-        var stateAfterMove = { delta: delta, board: boardAfterMove };
-        return { endMatchScores: endMatchScores, turnIndexAfterMove: turnIndexAfterMove, stateAfterMove: stateAfterMove };
+        var state = { delta: delta, board: boardAfterMove };
+        return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
     }
     gameLogic.createMove = createMove;
     function createInitialMove() {
-        return { endMatchScores: null, turnIndexAfterMove: 0,
-            stateAfterMove: getInitialState() };
+        return { endMatchScores: null, turnIndex: 0,
+            state: getInitialState() };
     }
     gameLogic.createInitialMove = createInitialMove;
-    function checkMoveOk(stateTransition) {
-        // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
-        // to verify that the move is OK.
-        var turnIndexBeforeMove = stateTransition.turnIndexBeforeMove;
-        var stateBeforeMove = stateTransition.stateBeforeMove;
-        var move = stateTransition.move;
-        if (!stateBeforeMove && turnIndexBeforeMove === 0 &&
-            angular.equals(createInitialMove(), move)) {
-            return;
-        }
-        var deltaValue = move.stateAfterMove.delta;
-        var row = deltaValue.row;
-        var col = deltaValue.col;
-        var expectedMove = createMove(stateBeforeMove, row, col, turnIndexBeforeMove);
-        if (!angular.equals(move, expectedMove)) {
-            throw new Error("Expected move=" + angular.toJson(expectedMove, true) +
-                ", but got stateTransition=" + angular.toJson(stateTransition, true));
-        }
-    }
-    gameLogic.checkMoveOk = checkMoveOk;
     function forSimpleTestHtml() {
         var move = gameLogic.createMove(null, 0, 0, 0);
         log.log("move=", move);
-        var params = {
-            turnIndexBeforeMove: 0,
-            stateBeforeMove: null,
-            move: move,
-            numberOfPlayers: 2 };
-        gameLogic.checkMoveOk(params);
     }
     gameLogic.forSimpleTestHtml = forSimpleTestHtml;
 })(gameLogic || (gameLogic = {}));
@@ -32380,6 +32052,8 @@ var gameLogic;
 ;
 var game;
 (function (game) {
+    game.$rootScope = null;
+    game.$timeout = null;
     // Global variables are cleared when getting updateUI.
     // I export all variables to make it easy to debug in the browser by
     // simply typing in the console, e.g.,
@@ -32391,15 +32065,14 @@ var game;
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
-    function init() {
+    function init($rootScope_, $timeout_) {
+        game.$rootScope = $rootScope_;
+        game.$timeout = $timeout_;
         registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
         resizeGameAreaService.setWidthToHeight(1);
-        moveService.setGame({
-            minNumberOfPlayers: 2,
-            maxNumberOfPlayers: 2,
-            checkMoveOk: gameLogic.checkMoveOk,
+        gameService.setGame({
             updateUI: updateUI,
             communityUI: communityUI,
             getStateForOgImage: null,
@@ -32429,10 +32102,10 @@ var game;
         var nextUpdateUI = {
             playersInfo: [],
             playMode: communityUI.yourPlayerIndex,
-            move: communityUI.move,
             numberOfPlayers: communityUI.numberOfPlayers,
-            stateBeforeMove: communityUI.stateBeforeMove,
-            turnIndexBeforeMove: communityUI.turnIndexBeforeMove,
+            state: communityUI.state,
+            turnIndex: communityUI.turnIndex,
+            endMatchScores: communityUI.endMatchScores,
             yourPlayerIndex: communityUI.yourPlayerIndex,
         };
         if (angular.equals(game.yourPlayerInfo, communityUI.yourPlayerInfo) &&
@@ -32477,14 +32150,14 @@ var game;
         game.didMakeMove = false; // Only one move per updateUI
         game.currentUpdateUI = params;
         clearAnimationTimeout();
-        game.state = params.move.stateAfterMove;
+        game.state = params.state;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
         }
         // We calculate the AI move only after the animation finishes,
         // because if we call aiService now
         // then the animation will be paused until the javascript finishes.
-        game.animationEndedTimeout = $timeout(animationEndedCallback, 500);
+        game.animationEndedTimeout = game.$timeout(animationEndedCallback, 500);
     }
     game.updateUI = updateUI;
     function animationEndedCallback() {
@@ -32493,14 +32166,19 @@ var game;
     }
     function clearAnimationTimeout() {
         if (game.animationEndedTimeout) {
-            $timeout.cancel(game.animationEndedTimeout);
+            game.$timeout.cancel(game.animationEndedTimeout);
             game.animationEndedTimeout = null;
         }
     }
     function maybeSendComputerMove() {
         if (!isComputerTurn())
             return;
-        var move = aiService.findComputerMove(game.currentUpdateUI.move);
+        var currentMove = {
+            endMatchScores: game.currentUpdateUI.endMatchScores,
+            state: game.currentUpdateUI.state,
+            turnIndex: game.currentUpdateUI.turnIndex,
+        };
+        var move = aiService.findComputerMove(currentMove);
         log.info("Computer move: ", move);
         makeMove(move);
     }
@@ -32510,10 +32188,10 @@ var game;
         }
         game.didMakeMove = true;
         if (!game.proposals) {
-            moveService.makeMove(move);
+            gameService.makeMove(move);
         }
         else {
-            var delta = move.stateAfterMove.delta;
+            var delta = game.state.delta;
             var myProposal = {
                 data: delta,
                 chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
@@ -32523,11 +32201,11 @@ var game;
             if (game.proposals[delta.row][delta.col] < 2) {
                 move = null;
             }
-            moveService.communityMove(myProposal, move);
+            gameService.communityMove(myProposal, move);
         }
     }
     function isFirstMove() {
-        return !game.currentUpdateUI.move.stateAfterMove;
+        return !game.currentUpdateUI.state;
     }
     function yourPlayerIndex() {
         return game.currentUpdateUI.yourPlayerIndex;
@@ -32545,8 +32223,8 @@ var game;
     }
     function isMyTurn() {
         return !game.didMakeMove &&
-            game.currentUpdateUI.move.turnIndexAfterMove >= 0 &&
-            game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.move.turnIndexAfterMove; // it's my turn
+            game.currentUpdateUI.turnIndex >= 0 &&
+            game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
     function cellClicked(row, col) {
         log.info("Clicked on cell:", row, col);
@@ -32557,7 +32235,7 @@ var game;
         }
         var nextMove = null;
         try {
-            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.move.turnIndexAfterMove);
+            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
         }
         catch (e) {
             log.info(["Cell is already full in position:", row, col]);
@@ -32572,7 +32250,7 @@ var game;
     }
     game.shouldShowImage = shouldShowImage;
     function isPiece(row, col, turnIndex, pieceKind) {
-        return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.move.turnIndexAfterMove == turnIndex);
+        return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
     }
     function isPieceX(row, col) {
         return isPiece(row, col, 0, 'X');
@@ -32589,10 +32267,11 @@ var game;
     game.shouldSlowlyAppear = shouldSlowlyAppear;
 })(game || (game = {}));
 angular.module('myApp', ['gameServices'])
-    .run(function () {
-    $rootScope['game'] = game;
-    game.init();
-});
+    .run(['$rootScope', '$timeout',
+    function ($rootScope, $timeout) {
+        $rootScope['game'] = game;
+        game.init($rootScope, $timeout);
+    }]);
 //# sourceMappingURL=game.js.map
 ;
 var aiService;
@@ -32630,7 +32309,7 @@ var aiService;
      */
     function createComputerMove(move, alphaBetaLimits) {
         // We use alpha-beta search, where the search states are TicTacToe moves.
-        return alphaBetaService.alphaBetaDecision(move, move.turnIndexAfterMove, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
+        return alphaBetaService.alphaBetaDecision(move, move.turnIndex, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
     }
     aiService.createComputerMove = createComputerMove;
     function getStateScoreForIndex0(move, playerIndex) {
@@ -32643,7 +32322,7 @@ var aiService;
         return 0;
     }
     function getNextStates(move, playerIndex) {
-        return getPossibleMoves(move.stateAfterMove, playerIndex);
+        return getPossibleMoves(move.state, playerIndex);
     }
 })(aiService || (aiService = {}));
 //# sourceMappingURL=aiService.js.map

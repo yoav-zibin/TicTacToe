@@ -10,6 +10,9 @@ interface Translations {
 }
 
 module game {
+  export let $rootScope: angular.IScope = null;
+  export let $timeout: angular.ITimeoutService = null;
+
   // Global variables are cleared when getting updateUI.
   // I export all variables to make it easy to debug in the browser by
   // simply typing in the console, e.g.,
@@ -22,15 +25,14 @@ module game {
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
 
-  export function init() {
+  export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
+    $rootScope = $rootScope_;
+    $timeout = $timeout_;
     registerServiceWorker();
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
     resizeGameAreaService.setWidthToHeight(1);
-    moveService.setGame({
-      minNumberOfPlayers: 2,
-      maxNumberOfPlayers: 2,
-      checkMoveOk: gameLogic.checkMoveOk,
+    gameService.setGame({
       updateUI: updateUI,
       communityUI: communityUI,
       getStateForOgImage: null,
@@ -62,10 +64,10 @@ module game {
     let nextUpdateUI: IUpdateUI = {
         playersInfo: [],
         playMode: communityUI.yourPlayerIndex,
-        move: communityUI.move,
         numberOfPlayers: communityUI.numberOfPlayers,
-        stateBeforeMove: communityUI.stateBeforeMove,
-        turnIndexBeforeMove: communityUI.turnIndexBeforeMove,
+        state: communityUI.state,
+        turnIndex: communityUI.turnIndex,
+        endMatchScores: communityUI.endMatchScores,
         yourPlayerIndex: communityUI.yourPlayerIndex,
       };
     if (angular.equals(yourPlayerInfo, communityUI.yourPlayerInfo) &&
@@ -107,7 +109,7 @@ module game {
     didMakeMove = false; // Only one move per updateUI
     currentUpdateUI = params;
     clearAnimationTimeout();
-    state = params.move.stateAfterMove;
+    state = params.state;
     if (isFirstMove()) {
       state = gameLogic.getInitialState();
     }
@@ -131,7 +133,12 @@ module game {
 
   function maybeSendComputerMove() {
     if (!isComputerTurn()) return;
-    let move = aiService.findComputerMove(currentUpdateUI.move);
+    let currentMove:IMove = {
+      endMatchScores: currentUpdateUI.endMatchScores,
+      state: currentUpdateUI.state,
+      turnIndex: currentUpdateUI.turnIndex,
+    }
+    let move = aiService.findComputerMove(currentMove);
     log.info("Computer move: ", move);
     makeMove(move);
   }
@@ -143,9 +150,9 @@ module game {
     didMakeMove = true;
     
     if (!proposals) {
-      moveService.makeMove(move);
+      gameService.makeMove(move);
     } else {
-      let delta = move.stateAfterMove.delta;
+      let delta = state.delta;
       let myProposal:IProposal = {
         data: delta,
         chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
@@ -155,12 +162,12 @@ module game {
       if (proposals[delta.row][delta.col] < 2) {
         move = null;
       }
-      moveService.communityMove(myProposal, move);
+      gameService.communityMove(myProposal, move);
     }
   }
 
   function isFirstMove() {
-    return !currentUpdateUI.move.stateAfterMove;
+    return !currentUpdateUI.state;
   }
 
   function yourPlayerIndex() {
@@ -183,8 +190,8 @@ module game {
 
   function isMyTurn() {
     return !didMakeMove && // you can only make one move per updateUI.
-      currentUpdateUI.move.turnIndexAfterMove >= 0 && // game is ongoing
-      currentUpdateUI.yourPlayerIndex === currentUpdateUI.move.turnIndexAfterMove; // it's my turn
+      currentUpdateUI.turnIndex >= 0 && // game is ongoing
+      currentUpdateUI.yourPlayerIndex === currentUpdateUI.turnIndex; // it's my turn
   }
 
   export function cellClicked(row: number, col: number): void {
@@ -196,7 +203,7 @@ module game {
     let nextMove: IMove = null;
     try {
       nextMove = gameLogic.createMove(
-          state, row, col, currentUpdateUI.move.turnIndexAfterMove);
+          state, row, col, currentUpdateUI.turnIndex);
     } catch (e) {
       log.info(["Cell is already full in position:", row, col]);
       return;
@@ -210,7 +217,7 @@ module game {
   }
 
   function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
-    return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.move.turnIndexAfterMove == turnIndex);
+    return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
   }
   
   export function isPieceX(row: number, col: number): boolean {
@@ -228,7 +235,8 @@ module game {
 }
 
 angular.module('myApp', ['gameServices'])
-  .run(function () {
-    $rootScope['game'] = game;
-    game.init();
-  });
+  .run(['$rootScope', '$timeout',
+    function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
+      $rootScope['game'] = game;
+      game.init($rootScope, $timeout);
+    }]);

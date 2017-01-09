@@ -9,6 +9,13 @@ interface IState {
   delta: BoardDelta;
 }
 
+import gameService = gamingPlatform.gameService;
+import alphaBetaService = gamingPlatform.alphaBetaService;
+import translate = gamingPlatform.translate;
+import resizeGameAreaService = gamingPlatform.resizeGameAreaService;
+import log = gamingPlatform.log;
+import dragAndDropService = gamingPlatform.dragAndDropService;
+
 module gameLogic {
   export const ROWS = 3;
   export const COLS = 3;
@@ -108,54 +115,28 @@ module gameLogic {
     boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
-    let turnIndexAfterMove: number;
+    let turnIndex: number;
     if (winner !== '' || isTie(boardAfterMove)) {
       // Game over.
-      turnIndexAfterMove = -1;
+      turnIndex = -1;
       endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
-      turnIndexAfterMove = 1 - turnIndexBeforeMove;
+      turnIndex = 1 - turnIndexBeforeMove;
       endMatchScores = null;
     }
     let delta: BoardDelta = {row: row, col: col};
-    let stateAfterMove: IState = {delta: delta, board: boardAfterMove};
-    return {endMatchScores: endMatchScores, turnIndexAfterMove: turnIndexAfterMove, stateAfterMove: stateAfterMove};
+    let state: IState = {delta: delta, board: boardAfterMove};
+    return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
   }
   
   export function createInitialMove(): IMove {
-    return {endMatchScores: null, turnIndexAfterMove: 0, 
-        stateAfterMove: getInitialState()};  
-  }
-
-  export function checkMoveOk(stateTransition: IStateTransition): void {
-    // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
-    // to verify that the move is OK.
-    let turnIndexBeforeMove = stateTransition.turnIndexBeforeMove;
-    let stateBeforeMove: IState = stateTransition.stateBeforeMove;
-    let move: IMove = stateTransition.move;
-    if (!stateBeforeMove && turnIndexBeforeMove === 0 &&
-        angular.equals(createInitialMove(), move)) {
-      return;
-    }
-    let deltaValue: BoardDelta = move.stateAfterMove.delta;
-    let row = deltaValue.row;
-    let col = deltaValue.col;
-    let expectedMove = createMove(stateBeforeMove, row, col, turnIndexBeforeMove);
-    if (!angular.equals(move, expectedMove)) {
-      throw new Error("Expected move=" + angular.toJson(expectedMove, true) +
-          ", but got stateTransition=" + angular.toJson(stateTransition, true))
-    }
+    return {endMatchScores: null, turnIndex: 0, 
+        state: getInitialState()};  
   }
 
   export function forSimpleTestHtml() {
     var move = gameLogic.createMove(null, 0, 0, 0);
     log.log("move=", move);
-    var params: IStateTransition = {
-      turnIndexBeforeMove: 0,
-      stateBeforeMove: null,
-      move: move,
-      numberOfPlayers: 2};
-    gameLogic.checkMoveOk(params);
   }
 }
