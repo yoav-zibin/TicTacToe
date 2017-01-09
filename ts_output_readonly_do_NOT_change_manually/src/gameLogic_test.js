@@ -17,7 +17,7 @@ describe("In TicTacToe", function () {
             didThrowException = true;
         }
         if (!didThrowException) {
-            throw new Error("We expect an illegal move, but checkMoveOk didn't throw any exception!");
+            throw new Error("We expect an illegal move, but createMove didn't throw any exception!");
         }
     }
     function expectMove(turnIndexBeforeMove, boardBeforeMove, row, col, boardAfterMove, turnIndexAfterMove, endMatchScores) {

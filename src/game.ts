@@ -152,7 +152,7 @@ module game {
     if (!proposals) {
       gameService.makeMove(move);
     } else {
-      let delta = state.delta;
+      let delta = move.state.delta;
       let myProposal:IProposal = {
         data: delta,
         chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),

@@ -140,7 +140,7 @@ var game;
             gameService.makeMove(move);
         }
         else {
-            var delta = game.state.delta;
+            var delta = move.state.delta;
             var myProposal = {
                 data: delta,
                 chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
