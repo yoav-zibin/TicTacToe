@@ -5,10 +5,6 @@ interface SupportedLanguages {
   hi: string, es: string,
 };
 
-interface Translations {
-  [index: string]: SupportedLanguages;
-}
-
 module game {
   export let $rootScope: angular.IScope = null;
   export let $timeout: angular.ITimeoutService = null;

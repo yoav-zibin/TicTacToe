@@ -30889,7 +30889,7 @@ $provide.value("$locale", {
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 ;
-"use strict"; var emulatorServicesCompilationDate = "Mon Jan 9 10:24:23 EST 2017";
+"use strict"; var emulatorServicesCompilationDate = "Mon Jan 16 13:14:42 EST 2017";
 
 ;
 var gamingPlatform;
@@ -30988,6 +30988,7 @@ var gamingPlatform;
             error("Had an error! Message=", e.error ? e.error.message : '', " stacktrace=", e.error ? e.error.stack : '');
         });
     })(log = gamingPlatform.log || (gamingPlatform.log = {}));
+    var typeCheck_logService = log;
 })(gamingPlatform || (gamingPlatform = {}));
 //# sourceMappingURL=log.js.map
 ;
