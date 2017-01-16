@@ -193,9 +193,6 @@ module game {
   export function cellClicked(row: number, col: number): void {
     log.info("Clicked on cell:", row, col);
     if (!isHumanTurn()) return;
-    if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
-      throw new Error("Throwing the error because URL has '?throwException'");
-    }
     let nextMove: IMove = null;
     try {
       nextMove = gameLogic.createMove(

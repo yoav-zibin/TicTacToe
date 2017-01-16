@@ -179,9 +179,6 @@ var game;
         log.info("Clicked on cell:", row, col);
         if (!isHumanTurn())
             return;
-        if (window.location.search === '?throwException') {
-            throw new Error("Throwing the error because URL has '?throwException'");
-        }
         var nextMove = null;
         try {
             nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);

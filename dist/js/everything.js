@@ -30889,7 +30889,7 @@ $provide.value("$locale", {
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 ;
-"use strict"; var emulatorServicesCompilationDate = "Mon Jan 16 13:14:42 EST 2017";
+"use strict"; var emulatorServicesCompilationDate = "Mon Jan 16 13:51:36 EST 2017";
 
 ;
 var gamingPlatform;
@@ -31145,7 +31145,7 @@ var gamingPlatform;
                 }
                 else if (gameService.playMode == "multiplayer") {
                     gameService.iframeRows = 1;
-                    gameService.iframeCols = gameService.numberOfPlayers + 1;
+                    gameService.iframeCols = gameService.numberOfPlayers; // if I want to support a viewer, then add +1.
                 }
                 else {
                     gameService.iframeRows = 1;
@@ -32231,9 +32231,6 @@ var game;
         log.info("Clicked on cell:", row, col);
         if (!isHumanTurn())
             return;
-        if (window.location.search === '?throwException') {
-            throw new Error("Throwing the error because URL has '?throwException'");
-        }
         var nextMove = null;
         try {
             nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
