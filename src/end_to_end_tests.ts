@@ -84,7 +84,17 @@ describe('TicTacToe', function() {
     browser.driver.wait(
       fn, 10000).thenCatch(error);
   }
+  function getElementName(elem: protractor.ElementFinder) {
+    return elem.locator();
+  }
+  function willDoLog(msg: string) {
+    log("Will do: " + msg);
+    browser.call(()=>{
+      log("Doing: " + msg);
+    });
+  }
   function waitForElement(elem: protractor.ElementFinder) {
+    willDoLog("waitForElement " + getElementName(elem));
     waitUntil(
       ()=>safePromise(elem.isPresent()).then(
         (isPresent)=>isPresent &&
@@ -93,6 +103,7 @@ describe('TicTacToe', function() {
     expect(elem.isDisplayed()).toBe(true);
   }
   function waitForElementToDisappear(elem: protractor.ElementFinder) {
+    willDoLog("waitForElementToDisappear " + getElementName(elem));
     waitUntil(()=>safePromise(elem.isPresent()).then(
         (isPresent)=>!isPresent ||
           safePromise(elem.isDisplayed()).then((isDisplayed)=>!isDisplayed)));
@@ -155,16 +166,6 @@ describe('TicTacToe', function() {
          ['', '', '']]);
   });
 
-  it('should ignore clicking on a non-empty cell', function () {
-    clickDivAndExpectPiece(0, 0, "X");
-    clickDivAndExpectPiece(0, 0, "X"); // clicking on a non-empty cell doesn't do anything.
-    clickDivAndExpectPiece(1, 1, "O");
-    expectBoard(
-        [['X', '', ''],
-         ['', 'O', ''],
-         ['', '', '']]);
-  });
-
   it('should end game if X wins', function () {
     for (let col = 0; col < 3; col++) {
       clickDivAndExpectPiece(1, col, "X");
@@ -175,6 +176,16 @@ describe('TicTacToe', function() {
         [['', '', ''],
          ['X', 'X', 'X'],
          ['O', 'O', '']]);
+  });
+
+  it('should ignore clicking on a non-empty cell', function () {
+    clickDivAndExpectPiece(0, 0, "X");
+    clickDivAndExpectPiece(0, 0, "X"); // clicking on a non-empty cell doesn't do anything.
+    clickDivAndExpectPiece(1, 1, "O");
+    expectBoard(
+        [['X', '', ''],
+         ['', 'O', ''],
+         ['', '', '']]);
   });
 
   it('should end the game in tie', function () {
