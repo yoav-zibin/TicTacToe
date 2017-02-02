@@ -32229,6 +32229,7 @@ var game;
     }
     function cellClicked(row, col) {
         log.info("Clicked on cell:", row, col);
+        log.info("Game got:", row);
         if (!isHumanTurn())
             return;
         var nextMove = null;

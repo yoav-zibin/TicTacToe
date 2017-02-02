@@ -192,6 +192,7 @@ module game {
 
   export function cellClicked(row: number, col: number): void {
     log.info("Clicked on cell:", row, col);
+    log.info("Game got:", row);
     if (!isHumanTurn()) return;
     let nextMove: IMove = null;
     try {
