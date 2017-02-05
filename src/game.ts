@@ -18,6 +18,7 @@ module game {
   export let animationEndedTimeout: ng.IPromise<any> = null;
   export let state: IState = null;
   // For community games.
+  export let currentCommunityUI: ICommunityUI = null;
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
 
@@ -55,6 +56,7 @@ module game {
   }
 
   export function communityUI(communityUI: ICommunityUI) {
+    currentCommunityUI = communityUI;
     log.info("Game got communityUI:", communityUI);
     // If only proposals changed, then do NOT call updateUI. Then update proposals.
     let nextUpdateUI: IUpdateUI = {
@@ -93,11 +95,20 @@ module game {
   export function isProposal(row: number, col: number) {
     return proposals && proposals[row][col] > 0;
   } 
-  export function isProposal1(row: number, col: number) {
-    return proposals && proposals[row][col] == 1;
-  } 
-  export function isProposal2(row: number, col: number) {
-    return proposals && proposals[row][col] == 2;
+  export function getCellStyle(row: number, col: number) {
+    if (!isProposal(row, col)) return {};
+    // proposals[row][col] is > 0
+    let countZeroBased = proposals[row][col] - 1;
+    let maxCount = currentCommunityUI.numberOfPlayersRequiredToMove - 2;
+    let ratio = maxCount == 0 ? 1 : countZeroBased / maxCount; // a number between 0 and 1 (inclusive).
+    // scale will be between 0.6 and 0.8.
+    let scale = 0.6 + 0.2 * ratio;
+    // opacity between 0.5 and 0.7
+    let opacity = 0.5 + 0.2 * ratio;
+    return {
+      transform: `scale(${scale}, ${scale})`,
+      opacity: "" + opacity,
+    };
   }
   
   export function updateUI(params: IUpdateUI): void {
@@ -154,8 +165,8 @@ module game {
         chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
         playerInfo: yourPlayerInfo,
       };
-      // Decide whether we make a move or not (if we have 2 other proposals supporting the same thing).
-      if (proposals[delta.row][delta.col] < 2) {
+      // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
+      if (proposals[delta.row][delta.col] < currentCommunityUI.numberOfPlayersRequiredToMove - 1) {
         move = null;
       }
       gameService.communityMove(myProposal, move);

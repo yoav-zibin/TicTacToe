@@ -198,8 +198,14 @@ interface ICommunityUI extends ICommonUI {
   // You need to know your playerId to make sure you only make one proposal,
   // i.e., if (playerIdToProposal[yourPlayerId]) then you can't make another proposal.
   yourPlayerInfo: IPlayerInfo; 
+  
   // Mapping playerId to his proposal.
-  playerIdToProposal: IProposals; 
+  playerIdToProposal: IProposals;
+  
+  // A move is chosen after a proposal was selected that number of times.
+  // If a community match has a small number of players, this number will be small (e.g., 1),
+  // and when the match has more players this number will be increased by the platform (e.g., 3 or more).
+  numberOfPlayersRequiredToMove: number;
 }
 
 // A mapping of playerId to proposal.
