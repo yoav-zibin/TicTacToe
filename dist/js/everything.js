@@ -32155,7 +32155,7 @@ var game;
     }
     game.getCellStyle = getCellStyle;
     function updateUI(params) {
-        log.info("Game got updateUI:", params);
+        log.info("Hey Nikita!! Game got updateUI:", params);
         game.didMakeMove = false; // Only one move per updateUI
         game.currentUpdateUI = params;
         clearAnimationTimeout();

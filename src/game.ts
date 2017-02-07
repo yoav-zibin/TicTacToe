@@ -112,7 +112,7 @@ module game {
   }
   
   export function updateUI(params: IUpdateUI): void {
-    log.info("Game got updateUI:", params);
+    log.info("Hey Nikita!! Game got updateUI:", params);
     didMakeMove = false; // Only one move per updateUI
     currentUpdateUI = params;
     clearAnimationTimeout();
