@@ -26,7 +26,7 @@ var JasmineOverrides;
     jasmineSpec.prototype.execute = function () {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
+            args[_i - 0] = arguments[_i];
         }
         lastTest = this.result;
         executeMock.apply(this, args);
@@ -53,10 +53,8 @@ var JasmineOverrides;
 describe('TicTacToe', function () {
     browser.driver.manage().window().setSize(400, 600);
     browser.driver.manage().window().setPosition(10, 10);
-    var checkNoErrorInLogsIntervalId = null;
     beforeEach(function () {
         console.log('\n\n\nRunning test: ', lastTest.fullName);
-        checkNoErrorInLogsIntervalId = setInterval(expectEmptyBrowserLogs, 100);
         getPage();
         waitForElement(element(by.id('game_iframe_0')));
         browser.driver.switchTo().frame('game_iframe_0');
@@ -65,7 +63,6 @@ describe('TicTacToe', function () {
     });
     afterEach(function () {
         expectEmptyBrowserLogs();
-        clearInterval(checkNoErrorInLogsIntervalId);
     });
     var startedExecutionTime = new Date().getTime();
     function log(msg) {

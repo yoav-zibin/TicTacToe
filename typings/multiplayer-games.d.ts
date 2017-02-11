@@ -45,35 +45,24 @@
 // The most important object is gameService: IGameService, which allows the game to
 // communicate with the platform.
 // (See all the global objects below, inside the namespace gamingPlatform).
-// IGameService allows the game to make a move (makeMove)
-// or make a proposal in a community game (communityMove).
+// IGameService allows the game to make a move (makeMove).
 // The platform will call game.updateUI when the game 
 // should change it's UI according to some state.
-// (Similarly, the platform will call game.communityUI in community games.)
-// So, in summary, in non-community matches (like passAndPlay, playAgainstTheComputer, multiplayer, etc)
-// the platform calls game.updateUI and the game then calls makeMove.
-// In community matches, the platform calls game.communityUI and then the game calls communityMove.
-// The game may call makeMove/communityMove at most once after getting an updateUI/communityUI,
+// So, in summary, the platform calls game.updateUI and the game then calls makeMove.
+// The game may call makeMove at most once after getting an updateUI,
 // and only if it's your player's turn (yourPlayerIndex == turnIndex).
 interface IGameService {
-  // Call this method exactly once when the game is ready to get
-  // updateUI/communityUI (see IGame).
+  // Call this method exactly once when the game is ready to get updateUI (see IGame).
   // E.g., if your game needs to load any assets, then call setGame after
   // all assets have loaded.
   setGame(game: IGame): void;
 
   // After the platform calls game.updateUI, you can call makeMove at most once,
   // and only if it's your player's turn (updateUI.yourPlayerIndex == updateUI.turnIndex).
-  makeMove(move: IMove): void;
-
-  // After the platform calls game.communityUI, you can call communityMove at most once,
-  // and only if it's your player's turn (updateUI.yourPlayerIndex == updateUI.turnIndex).
-  // You must pass a proposal, but move may be null.
-  // I recommend to pass a move when the same proposal was selected by 3 players.
-  // Do not call communityMove if the player already sent his Proposals
-  // (communityUI.playerIdToProposal[communityUI.yourPlayerInfo.playerId] != undefined), i.e.,
-  // a player can submit at most one proposal.
-  communityMove(proposal: IProposal, move?: IMove): void;
+  // If a community match, you can only send a proposal once, so call makeMove only if
+  // (updateUI.playerIdToProposal[updateUI.yourPlayerInfo.playerId] == undefined)
+  // You must pass either move or proposal.
+  makeMove(move: IMove, proposal: IProposal): void;
 }
 
 // Your game must support the updateUI method.
@@ -83,14 +72,9 @@ interface IGame {
   // loaded an existing match, if an opponent made a move, etc.
   // The game should update its UI according to the game state (updateUI.state).
   // If it's your player's turn (updateUI.yourPlayerIndex == updateUI.turnIndex),
+  // and your player didn't submit a proposal already (updateUI.playerIdToProposal[updateUI.yourPlayerInfo.playerId] == undefined),
   // then the UI should allow the player to make a move (and the game should call gameService.makeMove).
   updateUI(updateUI: IUpdateUI): void;
-
-  // This method is called when the state of a community match changes or when some player submits a proposal.
-  // If it's your player's turn (updateUI.yourPlayerIndex == updateUI.turnIndex),
-  // and your player didn't submit a proposal already (communityUI.playerIdToProposal[communityUI.yourPlayerInfo.playerId] == undefined),
-  // then the UI should allow making a proposal (and the game should call gameService.communityMove).
-  communityUI(communityUI: ICommunityUI): void;
 
   // The platform supports players sharing a match on facebook, and therefore the platform
   // needs a way to convert the match state into an image.
@@ -161,45 +145,35 @@ interface IPlayerInfo {
   playerId: string;
 }
 
-// A common interface to both IUpdateUI and ICommunityUI.
 // To update the UI in both cases you need:
 // - all the info in a move: state, turnIndex, endMatchScores
 // - numberOfPlayers (usually 2 players).
 // - yourPlayerIndex
 // In a new match, state and endMatchScores are null, and turnIndex is 0
 // (so the first to play is always turnIndex=0).
-interface ICommonUI extends IMove {
+interface IUpdateUI extends IMove {
   numberOfPlayers: number;
 
   // <yourPlayerIndex> is -2 if you're a viewer; otherwise it's your player index,
   // e.g., yourPlayerIndex=0 if you're the first player.
   // If yourPlayerIndex == turnIndex, then it's your turn to make a move!
   yourPlayerIndex: number;
-}
 
-// PlayMode is either 'passAndPlay', 'playAgainstTheComputer', or 
-// (if it's a multiplayer match) yourPlayerIndex (e.g., 0 or 1).
-declare type PlayMode = string | number;
-
-// The game receives an updateUI in non-community games.
-// In addition to all the info in ICommonUI, you also get:
-// - the array of all players (your player info is in playersInfo[yourPlayerIndex] , unless you're a viewer).
-// - playMode is either 'passAndPlay', 'playAgainstTheComputer', or 
-// (if it's a multiplayer match) yourPlayerIndex (e.g., 0 or 1).
-interface IUpdateUI extends ICommonUI {
-  playersInfo: IPlayerInfo[];
-  playMode: PlayMode; 
-}
-
-// In a community match, your game get ICommunityUI and calls communityMove.
-// The big difference from updateUI is that you get the current proposals in the form of
-// a mapping from playerId to proposal.
-interface ICommunityUI extends ICommonUI {
   // You need to know your playerId to make sure you only make one proposal,
   // i.e., if (playerIdToProposal[yourPlayerId]) then you can't make another proposal.
   yourPlayerInfo: IPlayerInfo; 
-  
-  // Mapping playerId to his proposal.
+
+  // The array of all players.
+  // If it's a community match, then playersInfo will contain some representation of the
+  // two communities (e.g., if it's a match between US and UK, avatarImageUrl will be a country flag).
+  playersInfo: IPlayerInfo[];
+
+  // playMode is either 'passAndPlay', 'playAgainstTheComputer', or 
+  // (if it's a multiplayer/community match) yourPlayerIndex (e.g., 0 or 1).
+  playMode: PlayMode; 
+
+  // Below are fields set only in community matches.
+  // Mapping playerId to their proposal.
   playerIdToProposal: IProposals;
   
   // A move is chosen after a proposal was selected that number of times.
@@ -207,6 +181,10 @@ interface ICommunityUI extends ICommonUI {
   // and when the match has more players this number will be increased by the platform (e.g., 3 or more).
   numberOfPlayersRequiredToMove: number;
 }
+
+// PlayMode is either 'passAndPlay', 'playAgainstTheComputer', or 
+// (if it's a multiplayer match) yourPlayerIndex (e.g., 0 or 1).
+declare type PlayMode = string | number;
 
 // A mapping of playerId to proposal.
 interface IProposals {

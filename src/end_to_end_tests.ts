@@ -52,10 +52,8 @@ describe('TicTacToe', function() {
   browser.driver.manage().window().setSize(400, 600);
   browser.driver.manage().window().setPosition(10, 10);
   
-  let checkNoErrorInLogsIntervalId: number = null;
   beforeEach(()=>{
     console.log('\n\n\nRunning test: ', lastTest.fullName);
-    checkNoErrorInLogsIntervalId = setInterval(expectEmptyBrowserLogs, 100);
     getPage();
     waitForElement(element(by.id('game_iframe_0')));
     browser.driver.switchTo().frame('game_iframe_0');
@@ -64,7 +62,6 @@ describe('TicTacToe', function() {
   });
   afterEach(()=>{
     expectEmptyBrowserLogs();
-    clearInterval(checkNoErrorInLogsIntervalId);
   });
   
   let startedExecutionTime = new Date().getTime();
