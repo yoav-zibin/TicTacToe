@@ -30889,7 +30889,7 @@ $provide.value("$locale", {
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 ;
-"use strict"; var emulatorServicesCompilationDate = "Tue Feb 7 12:52:15 EST 2017";
+"use strict"; var emulatorServicesCompilationDate = "Sat Feb 11 15:50:04 EST 2017";
 
 ;
 var gamingPlatform;
@@ -31057,7 +31057,7 @@ var gamingPlatform;
         gameService.savedStates = [];
         gameService.selectedSavedStateToLoad = null;
         // test ogImage, getLogs, etc
-        var testingHtml = "\n    <div style=\"position:absolute; width:100%; height:10%; overflow: scroll;\">\n      <select\n        ng-options=\"playMode for playMode in gameService.playModes track by playMode\"\n        ng-model=\"gameService.playMode\"\n        ng-change=\"gameService.reloadIframes()\"></select>\n      <button ng-click=\"gameService.startNewMatch()\">Start new match</button>\n      <select ng-change=\"gameService.historyIndexChanged()\" ng-model=\"gameService.historyIndex\" ng-options=\"index for index in gameService.getIntegersTill(gameService.history.length)\">\n        <option value=\"\">-- current move --</option>\n      </select>\n      <select ng-change=\"gameService.currentLanguageChanged()\" ng-model=\"gameService.currentLanguage\" ng-options=\"language.name for language in gameService.supportedLanguages\">\n        <option value=\"\">-- current game language --</option>\n      </select>\n      <button ng-click=\"gameService.saveState()\">Save match</button>\n      <select ng-change=\"gameService.loadMatch()\" ng-model=\"gameService.selectedSavedStateToLoad\" ng-options=\"savedState.name for savedState in gameService.savedStates\">\n        <option value=\"\">-- load match --</option>\n      </select>\n      <input ng-model=\"gameService.ogImageMaker\">\n      <button ng-click=\"gameService.getOgImageState()\">Open AppEngine image</button>\n      Number of players required to move in a community match: \n      <input ng-model=\"gameService.numberOfPlayersRequiredToMove\" \n        ng-change=\"gameService.reloadIframes()\">\n    </div>\n    <div style=\"position:absolute; width:100%; height:90%; top: 10%;\">\n      <div ng-repeat=\"row in gameService.getIntegersTill(gameService.iframeRows)\"\n          style=\"position:absolute; top:{{row * 100 / gameService.iframeRows}}%; left:0; width:100%; height:{{100 / gameService.iframeRows}}%;\">\n        <div ng-repeat=\"col in gameService.getIntegersTill(gameService.iframeCols)\"\n            style=\"position:absolute; top:0; left:{{col * 100 / gameService.iframeCols}}%; width:{{100 / gameService.iframeCols}}%; height:100%;\">\n          <iframe id=\"game_iframe_{{col + row*gameService.iframeCols}}\"\n            ng-src=\"{{gameService.locationTrustedStr}}\"\n            seamless=\"seamless\" style=\"position:absolute; width:100%; height:100%;\">\n          </iframe>\n        </div>\n      </div>\n    </div>\n  ";
+        var testingHtml = "\n    <div style=\"position:absolute; width:100%; height:10%; overflow: scroll;\">\n      <h4 ng-if=\"gameService.getState().endMatchScores\">endMatchScores={{gameService.getState().endMatchScores}}</h4>\n      <select\n        ng-options=\"playMode for playMode in gameService.playModes track by playMode\"\n        ng-model=\"gameService.playMode\"\n        ng-change=\"gameService.reloadIframes()\"></select>\n      <button ng-click=\"gameService.startNewMatch()\">Start new match</button>\n      <select ng-change=\"gameService.historyIndexChanged()\" ng-model=\"gameService.historyIndex\" ng-options=\"index for index in gameService.getIntegersTill(gameService.history.length)\">\n        <option value=\"\">-- current move --</option>\n      </select>\n      <select ng-change=\"gameService.currentLanguageChanged()\" ng-model=\"gameService.currentLanguage\" ng-options=\"language.name for language in gameService.supportedLanguages\">\n        <option value=\"\">-- current game language --</option>\n      </select>\n      <button ng-click=\"gameService.saveState()\">Save match</button>\n      <select ng-change=\"gameService.loadMatch()\" ng-model=\"gameService.selectedSavedStateToLoad\" ng-options=\"savedState.name for savedState in gameService.savedStates\">\n        <option value=\"\">-- load match --</option>\n      </select>\n      <input ng-model=\"gameService.ogImageMaker\">\n      <button ng-click=\"gameService.getOgImageState()\">Open AppEngine image</button>\n      Number of players required to move in a community match: \n      <input ng-model=\"gameService.numberOfPlayersRequiredToMove\" \n        ng-change=\"gameService.reloadIframes()\">\n    </div>\n    <div style=\"position:absolute; width:100%; height:90%; top: 10%;\">\n      <div ng-repeat=\"row in gameService.getIntegersTill(gameService.iframeRows)\"\n          style=\"position:absolute; top:{{row * 100 / gameService.iframeRows}}%; left:0; width:100%; height:{{100 / gameService.iframeRows}}%;\">\n        <div ng-repeat=\"col in gameService.getIntegersTill(gameService.iframeCols)\"\n            style=\"position:absolute; top:0; left:{{col * 100 / gameService.iframeCols}}%; width:{{100 / gameService.iframeCols}}%; height:100%;\">\n          <iframe id=\"game_iframe_{{col + row*gameService.iframeCols}}\"\n            ng-src=\"{{gameService.locationTrustedStr}}\"\n            seamless=\"seamless\" style=\"position:absolute; width:100%; height:100%;\">\n          </iframe>\n        </div>\n      </div>\n    </div>\n  ";
         var cacheIntegersTill = [];
         function getIntegersTill(number) {
             if (cacheIntegersTill[number])
@@ -31237,6 +31237,7 @@ var gamingPlatform;
         function getState() {
             return gameService.history[gameService.historyIndex];
         }
+        gameService.getState = getState;
         function getPlayerIndex(id) {
             if (gameService.playMode == "community") {
                 // id = col + row*gameService.iframeCols;
@@ -32083,31 +32084,33 @@ var game;
         };
     }
     game.getCellStyle = getCellStyle;
-    function updateProposals(playerIdToProposal) {
-        game.didMakeMove = !!playerIdToProposal[game.yourPlayerInfo.playerId];
-        game.proposals = [];
+    function getProposalsBoard(playerIdToProposal) {
+        var proposals = [];
         for (var i = 0; i < gameLogic.ROWS; i++) {
-            game.proposals[i] = [];
+            proposals[i] = [];
             for (var j = 0; j < gameLogic.COLS; j++) {
-                game.proposals[i][j] = 0;
+                proposals[i][j] = 0;
             }
         }
         for (var playerId in playerIdToProposal) {
             var proposal = playerIdToProposal[playerId];
             var delta = proposal.data;
-            game.proposals[delta.row][delta.col]++;
+            proposals[delta.row][delta.col]++;
         }
+        return proposals;
     }
     function updateUI(params) {
         log.info("Game got updateUI:", params);
-        game.didMakeMove = false; // Only one move per updateUI
-        game.yourPlayerInfo = params.yourPlayerInfo;
         var playerIdToProposal = params.playerIdToProposal;
-        game.proposals = null;
+        // Only one move/proposal per updateUI
+        game.didMakeMove = playerIdToProposal && playerIdToProposal[game.yourPlayerInfo.playerId] != undefined;
+        game.yourPlayerInfo = params.yourPlayerInfo;
+        game.proposals = playerIdToProposal ? getProposalsBoard(playerIdToProposal) : null;
         if (playerIdToProposal) {
-            updateProposals(playerIdToProposal);
             // If only proposals changed, then return.
             // I don't want to disrupt the player if he's in the middle of a move.
+            // I delete playerIdToProposal field from params (and so it's also not in currentUpdateUI),
+            // and compare whether the objects are now deep-equal.
             params.playerIdToProposal = null;
             if (game.currentUpdateUI && angular.equals(game.currentUpdateUI, params))
                 return;
