@@ -66,7 +66,7 @@ interface IGameService {
 }
 
 // Your game must support the updateUI method.
-// The other methods (communityUI and getStateForOgImage) are optional.
+// The other methods are optional.
 interface IGame {
   // This method is called when the game state changes, e.g., if the player started a new match,
   // loaded an existing match, if an opponent made a move, etc.
@@ -81,7 +81,7 @@ interface IGame {
   // That image is also used in the platform HTML in <meta property="og:image" ...>,
   // which is why I called the mechanism to conver a state to an image 'ogImageMaker'.
   // (In the future, the platform may also send push notifications that includes an image of the state.)
-  // Like communityUI, this method is optional: if your game doesn't support it, then 
+  // This method is optional: if your game doesn't support it, then 
   // you won't be able to share images on Facebook.
   // In the game developer site you can enter a URL (called 'ogImageMaker')
   // that converts a state string to an image.
