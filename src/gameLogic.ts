@@ -1,3 +1,64 @@
+enum BallType {
+  Cue,
+  Stripe,
+  Solid,
+  Eight,
+}
+
+interface GameSetting {
+  readonly BallRadius : number;
+  readonly TableSize : Size2D;
+  readonly PocketRadius : number;
+
+  // XXX: For now assign player ball colors
+  readonly PlayerOneColor: BallType;
+  readonly PlayerTwoColor: BallType;
+}
+
+interface Size2D {
+  Width : number;
+  Height : number
+}
+
+interface Point2D {
+  X : number;
+  Y : number;
+}
+
+interface Ball {
+  Position : Point2D;
+  Pocketed : boolean;
+
+  readonly Radius : number;
+  readonly BallType : BallType;
+  readonly Number : number;
+}
+
+interface IGameState {
+  Balls : Ball[];
+  //PlayerOneColor : BallType;
+  //PlayerTwoColor : BallType;
+
+  // modified by physics engine after each turn
+  // recv IGS (FirstTouchedBall == opponent's touched ball)
+  // run game logic
+  // run matterjs
+  // modify & send IGS in IMove (set FirstTouchedBall = player's touched ball)
+  FirstTouchedBall: number;
+}
+
+
+
+
+
+/* ******************************************************************* */
+
+
+
+
+
+
+
 type Board = string[][];
 interface BoardDelta {
   row: number;
