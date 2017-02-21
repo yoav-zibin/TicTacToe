@@ -2,6 +2,7 @@ type Board = string[][];
 interface BoardDelta {
   row: number;
   col: number;
+  shapeId: number;
 }
 type IProposalData = BoardDelta;
 interface IState {
@@ -17,8 +18,8 @@ import log = gamingPlatform.log;
 import dragAndDropService = gamingPlatform.dragAndDropService;
 
 module gameLogic {
-  export const ROWS = 3;
-  export const COLS = 3;
+  export const ROWS = 20;
+  export const COLS = 20;
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   export function getInitialBoard(): Board {
@@ -97,35 +98,52 @@ module gameLogic {
 
   /**
    * Returns the move that should be performed when player
-   * with index turnIndexBeforeMove makes a move in cell row X col.
+   * with index turnIndexBeforeMove makes a move in cell row X col with shapeId.
+   * row and col is the bottom-left corner of the shape.
+   * shapdId is a mix of different shape and the rotation of the shape, starts from 1, 0 is a initial
    */
   export function createMove(
-      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number): IMove {
+      stateBeforeMove: IState, row: number, col: number, shapeId: number, turnIndexBeforeMove: number): IMove {
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
     let board: Board = stateBeforeMove.board;
-    if (board[row][col] !== '') {
+    
+    // TODO change to checkLegalMove function checkLegalMove(board, row, col, shapeId, turnIndexBeforeMove)
+    if (board[row][col] !== '') { 
       throw new Error("One can only make a move in an empty position!");
     }
+    //~
+
+    // TODO change to IsGameOver function IsGameOver(board)
     if (getWinner(board) !== '' || isTie(board)) {
       throw new Error("Can only make a move if the game is not over!");
     }
+    //~
+
     let boardAfterMove = angular.copy(board);
+    // TODO change to shapePlacement function, shapePlacement(boardAfterMove, row, col, shapeID, turnIndexBeforeMove)
     boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+    //~
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
     if (winner !== '' || isTie(boardAfterMove)) {
       // Game over.
       turnIndex = -1;
+      
+      // TODO add endScore Function, the score is measured by the blocks unused.
       endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
+      //~
+
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
       turnIndex = 1 - turnIndexBeforeMove;
       endMatchScores = null;
     }
-    let delta: BoardDelta = {row: row, col: col};
+    // Here delta should be all the blocks covered by the new move
+    let delta: BoardDelta = {row: row, col: col, shapeId: shapeId};
+    //~
     let state: IState = {delta: delta, board: boardAfterMove};
     return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
   }
@@ -136,7 +154,7 @@ module gameLogic {
   }
 
   export function forSimpleTestHtml() {
-    var move = gameLogic.createMove(null, 0, 0, 0);
+    var move = gameLogic.createMove(null, 0, 0, 0, 0);
     log.log("move=", move);
   }
 }
