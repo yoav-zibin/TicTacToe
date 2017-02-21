@@ -31,18 +31,18 @@
         "placeOpenBraceOnNewLineForControlBlocks": false
     },
     "files": [
-        "src/aiService_test.ts",
-        "src/aiService.ts",
-        "src/end_to_end_tests.ts",
-        "src/game.ts",
-        "src/gameLogic_test.ts",
-        "src/gameLogic.ts",
-        "typings/angular-protractor/angular-protractor.d.ts",
-        "typings/angularjs/angular.d.ts",
-        "typings/jasmine/jasmine.d.ts",
-        "typings/jquery/jquery.d.ts",
-        "typings/multiplayer-games.d.ts",
-        "typings/selenium-webdriver/selenium-webdriver.d.ts"
+        "./src/aiService_test.ts",
+        "./src/aiService.ts",
+        "./src/end_to_end_tests.ts",
+        "./src/game.ts",
+        "./src/gameLogic_test.ts",
+        "./src/gameLogic.ts",
+        "./typings/angular-protractor/angular-protractor.d.ts",
+        "./typings/angularjs/angular.d.ts",
+        "./typings/jasmine/jasmine.d.ts",
+        "./typings/jquery/jquery.d.ts",
+        "./typings/multiplayer-games.d.ts",
+        "./typings/selenium-webdriver/selenium-webdriver.d.ts"
     ],
     "exclude": [
         "node_modules"

@@ -29,8 +29,15 @@ module gameLogic {
         board[i][j] = '';
       }
     }
+    board[0][0] = 'O';
+
+    board[0][1] = 'O';
+
+    board[0][2] = 'O';
+
     return board;
   }
+
 
   export function getInitialState(): IState {
     return {board: getInitialBoard(), delta: null};
@@ -65,32 +72,15 @@ module gameLogic {
    *      ['X', '', '']]
    */
   function getWinner(board: Board): string {
-    let boardString = '';
+    let sinkBoat = 0;
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
-        let cell = board[i][j];
-        boardString += cell === '' ? ' ' : cell;
+        if(board[i][j]=='X')
+            sinkBoat += 1;
       }
     }
-    let win_patterns = [
-      'XXX......',
-      '...XXX...',
-      '......XXX',
-      'X..X..X..',
-      '.X..X..X.',
-      '..X..X..X',
-      'X...X...X',
-      '..X.X.X..'
-    ];
-    for (let win_pattern of win_patterns) {
-      let x_regexp = new RegExp(win_pattern);
-      let o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
-      if (x_regexp.test(boardString)) {
-        return 'X';
-      }
-      if (o_regexp.test(boardString)) {
-        return 'O';
-      }
+    if(sinkBoat==3) {
+        return "I lose!";
     }
     return '';
   }
@@ -105,14 +95,19 @@ module gameLogic {
       stateBeforeMove = getInitialState();
     }
     let board: Board = stateBeforeMove.board;
-    if (board[row][col] !== '') {
-      throw new Error("One can only make a move in an empty position!");
+    if (board[row][col] === 'X') {
+      throw new Error("already shoot!");
     }
-    if (getWinner(board) !== '' || isTie(board)) {
+    if (getWinner(board) !== '') {
       throw new Error("Can only make a move if the game is not over!");
     }
     let boardAfterMove = angular.copy(board);
-    boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+    //boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+    if(board[row][col]==='')
+        boardAfterMove[row][col] = 'M';
+    else
+        boardAfterMove[row][col] = 'X';
+
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
@@ -129,10 +124,10 @@ module gameLogic {
     let state: IState = {delta: delta, board: boardAfterMove};
     return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
   }
-  
+
   export function createInitialMove(): IMove {
-    return {endMatchScores: null, turnIndex: 0, 
-        state: getInitialState()};  
+    return {endMatchScores: null, turnIndex: 0,
+        state: getInitialState()};
   }
 
   export function forSimpleTestHtml() {

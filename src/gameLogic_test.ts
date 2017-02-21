@@ -7,7 +7,7 @@ describe("In TicTacToe", function() {
   let O_WIN_SCORES = [0, 1];
   let TIE_SCORES = [0, 0];
 
-    
+
   function expectException(
       turnIndexBeforeMove: number,
       boardBeforeMove: Board,
@@ -44,19 +44,29 @@ describe("In TicTacToe", function() {
     expect(angular.equals(move, expectedMove)).toBe(true);
   }
 
+  it("shoot O in 0x0 after placed O in 0x0", function() {
+    expectMove(O_TURN,
+      [['O', '', ''],
+       ['', '', ''],
+       ['', '', '']], 0, 0,
+      [['X', '', ''],
+       ['', '', ''],
+       ['', '', '']], X_TURN, NO_ONE_WINS);
+  });
+/*
   it("Initial move", function() {
     let move: IMove = gameLogic.createInitialMove();
     let expectedMove:IMove = {
         turnIndex: X_TURN,
         endMatchScores: NO_ONE_WINS,
-        state: {board: 
+        state: {board:
           [['', '', ''],
           ['', '', ''],
           ['', '', '']], delta: null}
       };
     expect(angular.equals(move, expectedMove)).toBe(true);
   });
-  
+
   it("placing X in 0x0 from initial state", function() {
     expectMove(X_TURN, null, 0, 0,
       [['X', '', ''],
@@ -134,4 +144,5 @@ describe("In TicTacToe", function() {
        ['', '', ''],
        ['', '', '']], 0, 3);
   });
+  */
 });
