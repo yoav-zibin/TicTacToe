@@ -46,14 +46,13 @@ describe("In TicTacToe", function() {
 
   it("shoot O in 0x0 after placed O in 0x0", function() {
     expectMove(O_TURN,
-      [['O', '', ''],
+      [['O', 'O', 'O'],
        ['', '', ''],
        ['', '', '']], 0, 0,
-      [['X', '', ''],
+      [['X', 'O', 'O'],
        ['', '', ''],
        ['', '', '']], X_TURN, NO_ONE_WINS);
   });
-/*
   it("Initial move", function() {
     let move: IMove = gameLogic.createInitialMove();
     let expectedMove:IMove = {
@@ -144,5 +143,5 @@ describe("In TicTacToe", function() {
        ['', '', ''],
        ['', '', '']], 0, 3);
   });
-  */
+  
 });

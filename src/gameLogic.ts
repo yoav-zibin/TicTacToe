@@ -29,12 +29,6 @@ module gameLogic {
         board[i][j] = '';
       }
     }
-    board[0][0] = 'O';
-
-    board[0][1] = 'O';
-
-    board[0][2] = 'O';
-
     return board;
   }
 
@@ -77,9 +71,11 @@ module gameLogic {
       for (let j = 0; j < COLS; j++) {
         if(board[i][j]=='X')
             sinkBoat += 1;
+            console.log("sinkBoat: " + sinkBoat);
       }
     }
     if(sinkBoat==3) {
+        console.log("Game Ends ");
         return "I lose!";
     }
     return '';

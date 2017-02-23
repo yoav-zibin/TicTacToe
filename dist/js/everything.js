@@ -31972,33 +31972,17 @@ var gameLogic;
      *      ['X', '', '']]
      */
     function getWinner(board) {
-        var boardString = '';
+        var sinkBoat = 0;
         for (var i = 0; i < gameLogic.ROWS; i++) {
             for (var j = 0; j < gameLogic.COLS; j++) {
-                var cell = board[i][j];
-                boardString += cell === '' ? ' ' : cell;
+                if (board[i][j] == 'X')
+                    sinkBoat += 1;
+                console.log("sinkBoat: " + sinkBoat);
             }
         }
-        var win_patterns = [
-            'XXX......',
-            '...XXX...',
-            '......XXX',
-            'X..X..X..',
-            '.X..X..X.',
-            '..X..X..X',
-            'X...X...X',
-            '..X.X.X..'
-        ];
-        for (var _i = 0, win_patterns_1 = win_patterns; _i < win_patterns_1.length; _i++) {
-            var win_pattern = win_patterns_1[_i];
-            var x_regexp = new RegExp(win_pattern);
-            var o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
-            if (x_regexp.test(boardString)) {
-                return 'X';
-            }
-            if (o_regexp.test(boardString)) {
-                return 'O';
-            }
+        if (sinkBoat == 3) {
+            console.log("Game Ends ");
+            return "I lose!";
         }
         return '';
     }
@@ -32011,14 +31995,18 @@ var gameLogic;
             stateBeforeMove = getInitialState();
         }
         var board = stateBeforeMove.board;
-        if (board[row][col] !== '') {
-            throw new Error("One can only make a move in an empty position!");
+        if (board[row][col] === 'X') {
+            throw new Error("already shoot!");
         }
-        if (getWinner(board) !== '' || isTie(board)) {
+        if (getWinner(board) !== '') {
             throw new Error("Can only make a move if the game is not over!");
         }
         var boardAfterMove = angular.copy(board);
-        boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+        //boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+        if (board[row][col] === '')
+            boardAfterMove[row][col] = 'M';
+        else
+            boardAfterMove[row][col] = 'X';
         var winner = getWinner(boardAfterMove);
         var endMatchScores;
         var turnIndex;

@@ -17,9 +17,6 @@ var gameLogic;
                 board[i][j] = '';
             }
         }
-        board[0][0] = 'O';
-        board[0][1] = 'O';
-        board[0][2] = 'O';
         return board;
     }
     gameLogic.getInitialBoard = getInitialBoard;
@@ -60,9 +57,11 @@ var gameLogic;
             for (var j = 0; j < gameLogic.COLS; j++) {
                 if (board[i][j] == 'X')
                     sinkBoat += 1;
+                console.log("sinkBoat: " + sinkBoat);
             }
         }
         if (sinkBoat == 3) {
+            console.log("Game Ends ");
             return "I lose!";
         }
         return '';
