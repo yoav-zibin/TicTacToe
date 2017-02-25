@@ -79,7 +79,7 @@ module gameLogic {
     return {board: getInitialBoard(), delta: null};
   }
 
-  export function getBoardAction(shapeId: number) : Board {
+  export function getBoardAction(row:number, col:number, shapeId: number) : Board {
     let board:Board = [];
     let shpae:Shape = getShapeFromShapeID(shapeId);
 
@@ -158,16 +158,16 @@ module gameLogic {
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
-    let boardAction: Board = getBoardAction(shapeId);
+    let boardAction: Board = getBoardAction(row, col, shapeId);
     let board: Board = stateBeforeMove.board;
     
-    // TODO change to checkLegalMove function checkLegalMove(board, row, col, shapeId, turnIndexBeforeMove)
+    // TODO change to checkLegalMove function checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)
     if (board[row][col] !== '') { 
       throw new Error("One can only make a move in an empty position!");
     }
     //~
 
-    // TODO change to IsGameOver function IsGameOver(board)
+    // TODO change to IsGameOver function IsGameOver(board, boardAction, turnIndexBeforeMove)
     if (getWinner(board) !== '' || isTie(board)) {
       throw new Error("Can only make a move if the game is not over!");
     }
