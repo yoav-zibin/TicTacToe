@@ -37,5 +37,8 @@
     "start": "http-server -a localhost -p 9000 -c-1",
     "test": "grunt"
   },
-  "author": "Yoav Zibin"
+  "author": "Yoav Zibin",
+  "dependencies": {
+    "matter-js": "^0.12.0"
+  }
 }
