@@ -145,7 +145,11 @@ module gameLogic {
     let delta: BoardDelta = {row: row, col: col, shapeId: shapeId};
     //~
     let state: IState = {delta: delta, board: boardAfterMove};
-    return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
+    return {
+      endMatchScores: endMatchScores,
+      turnIndex: turnIndex,
+      state: state
+    };
   }
   
   export function createInitialMove(): IMove {

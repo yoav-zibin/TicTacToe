@@ -190,9 +190,7 @@ module.exports = function(grunt) {
             'css/everything.min.css',
           ],
           network: [
-            'service-worker.js',
-            'js/everything.min.js.map',
-            'js/everything.js',
+            '*',
           ],
           timestamp: true
         },
