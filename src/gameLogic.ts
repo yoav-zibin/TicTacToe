@@ -106,7 +106,7 @@ module gameLogic {
   /**
    * Returns the move that should be performed when player
    * with index turnIndexBeforeMove makes a move in cell row X col with shapeId.
-   * row and col is the bottom-left corner of the shape.
+   * row and col is the center point of the shape.
    * shapdId is a mix of different shape and the rotation of the shape, starts from 1, 0 is a initial
    */
   export function createMove(
