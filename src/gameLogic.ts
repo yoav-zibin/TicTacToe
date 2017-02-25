@@ -10,6 +10,13 @@ interface IState {
   delta: BoardDelta;
 }
 
+interface Shape {
+  id: number;
+  row: number;
+  column: number;
+  frame: string[][];
+}
+
 import gameService = gamingPlatform.gameService;
 import alphaBetaService = gamingPlatform.alphaBetaService;
 import translate = gamingPlatform.translate;
@@ -145,11 +152,7 @@ module gameLogic {
     let delta: BoardDelta = {row: row, col: col, shapeId: shapeId};
     //~
     let state: IState = {delta: delta, board: boardAfterMove};
-    return {
-      endMatchScores: endMatchScores,
-      turnIndex: turnIndex,
-      state: state
-    };
+    return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
   }
   
   export function createInitialMove(): IMove {
