@@ -17,6 +17,9 @@ interface Shape {
   frame: string[][];
 }
 
+// TODO add array to store all the Shape
+type AllShape = Shape[];
+
 import gameService = gamingPlatform.gameService;
 import alphaBetaService = gamingPlatform.alphaBetaService;
 import translate = gamingPlatform.translate;
@@ -27,6 +30,9 @@ import dragAndDropService = gamingPlatform.dragAndDropService;
 module gameLogic {
   export const ROWS = 20;
   export const COLS = 20;
+  export const OPERATIONS = 8;
+  export const SHAPECOUNT = 20;
+  let allShapes:AllShape = getInitShapes();
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   export function getInitialBoard(): Board {
@@ -40,8 +46,46 @@ module gameLogic {
     return board;
   }
 
+  // TODO
+  export function getInitShapes(): AllShape {
+    let shapes: AllShape = [];
+    // init all shapes 
+    // TODO
+    return shapes;
+  }
+  
+  export function getShapeByTypeAndOperation(shapeType: number, operationType: number) : Shape {
+    let shape:Shape = allShapes[shapeType];
+    let roation:number = operationType % 4;
+    // only vertical flip. Horizontal flip <=> vertical flip + 180 rotation.
+    let flip:number = operationType / 4;
+
+    let retShape:Shape = angular.copy(shape);
+    // TODO, modify matrix
+    
+    return retShape;
+  }
+
+  export function getShapeFromShapeID(shapeId: number) : Shape {
+    let operationType = shapeId % OPERATIONS;
+    let shapeType = shapeId / OPERATIONS;
+
+    let retShape:Shape = getShapeByTypeAndOperation(shapeType, operationType);
+
+    return retShape;
+  }
+
   export function getInitialState(): IState {
     return {board: getInitialBoard(), delta: null};
+  }
+
+  export function getBoardAction(shapeId: number) : Board {
+    let board:Board = [];
+    let shpae:Shape = getShapeFromShapeID(shapeId);
+
+    // TODO fill the shape matrix into the board;
+
+    return board;
   }
 
   /**
@@ -114,6 +158,7 @@ module gameLogic {
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
+    let boardAction: Board = getBoardAction(shapeId);
     let board: Board = stateBeforeMove.board;
     
     // TODO change to checkLegalMove function checkLegalMove(board, row, col, shapeId, turnIndexBeforeMove)
@@ -128,10 +173,14 @@ module gameLogic {
     }
     //~
 
+    
     let boardAfterMove = angular.copy(board);
+
     // TODO change to shapePlacement function, shapePlacement(boardAfterMove, row, col, shapeID, turnIndexBeforeMove)
+    // TODO draw the actionBoard + turnIndexBeforeMove on the board;  
     boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
     //~
+    
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
