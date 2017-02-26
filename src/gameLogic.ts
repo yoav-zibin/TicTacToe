@@ -51,12 +51,9 @@ module gameLogic {
     return board;
   }
 
-  // TODO
   export function getInitShapes(): AllShape {
     let shapes: AllShape = [];
     // init all shapes 
-    // TODO
-
     shapes = [{id: -1, row: -1, column: -1, 
                   frame: [['0', '0', '0', '0', '0'],
                           ['0', '0', '1', '1', '0'],
