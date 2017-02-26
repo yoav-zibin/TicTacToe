@@ -112,11 +112,56 @@ module gameLogic {
     return { board: getInitialBoard(), delta: null };
   }
 
-  export function checkValidShapePlacement(shape: Shape): boolean {
-    let ret:boolean = true;
-    for (let i = shape.column; i >= 0; i--) {
-      //TODO
+  export function getAllMargin(shape: Shape): number[] {
+    // top, left, bottom, right
+    let ret: number[] = [0, 0, 0, 0];
+
+    // sum of all the columns
+    let colSum: number[] = [0, 0, 0, 0, 0];
+
+    // sum of all the rows
+    let rowSum: number[] = [0, 0, 0, 0, 0];
+
+    for (let i = 0; i < SHAPEWIDTH; i++) {
+      for (let j = 0; j < SHAPEHEIGHT; j++) {
+        if (shape.frame[i][j] == '1') {
+          colSum[i] += 1;
+          rowSum[j] += 1;
+        }
+      }
     }
+
+    let marginVal = 1;
+    // top, left margin
+    for (let i = 1; i >= 0; i--) {
+      if (colSum[i] > 0) {
+        ret[1] = marginVal;
+      }
+      if (rowSum[i] > 0) {
+        ret[0] = marginVal;
+      }
+      marginVal++;
+    }
+
+    // right, bottom margin
+    marginVal = 0;
+    for (let i = 3; i < SHAPEWIDTH; i++) {
+      if (colSum[i] > 0) {
+        ret[3] = marginVal;
+      }
+      if (rowSum[i] > 0) {
+        ret[2] = marginVal;
+      }
+      marginVal++;
+    }
+
+    return ret;
+  }
+  export function checkValidShapePlacement(row: number, col: number, shape: Shape): boolean {
+    let ret: boolean = true;
+    let margins: number[] = getAllMargin(shape);
+
+    // TODO check valid with board, center and margin
     return ret;
   }
 
@@ -186,6 +231,14 @@ module gameLogic {
     return '';
   }
 
+  export function checkLegalMove(board: Board, row: number, col: number,
+    boardAction: Board, turnIndexBeforeMove: number): boolean {
+
+    let ret: boolean = false;
+
+    return ret;
+  }
+
   /**
    * Returns the move that should be performed when player
    * with index turnIndexBeforeMove makes a move in cell row X col with shapeId.
@@ -201,7 +254,7 @@ module gameLogic {
     let shape: Shape = getShapeFromShapeID(shapeId);
 
     // if the shape placement is not on the board
-    if (!checkValidShapePlacement(shape)) {
+    if (!checkValidShapePlacement(row, col, shape)) {
 
     }
 
@@ -259,7 +312,14 @@ module gameLogic {
   }
 
   export function forSimpleTestHtml() {
+    /*
     var move = gameLogic.createMove(null, 0, 0, 0, 0);
     log.log("move=", move);
+    */
+    let shapeId: number = 5;
+    let shape: Shape = getShapeFromShapeID(shapeId);
+    log.log("frame:", shape.frame)
+    let margins: number[] = getAllMargin(shape);
+    log.log("margin=", margins)
   }
 }
