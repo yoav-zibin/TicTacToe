@@ -14,6 +14,7 @@ interface Shape {
   id: number;
   row: number;
   column: number;
+  // the centroid of frame is 2,2. The height and width of frame is 5.
   frame: string[][];
 }
 
@@ -32,7 +33,10 @@ module gameLogic {
   export const COLS = 20;
   export const OPERATIONS = 8;
   export const SHAPECOUNT = 20;
-  let allShapes:AllShape = getInitShapes();
+  export const SHAPEHEIGHT = 5;
+  export const SHAPEWIDTH = 5;
+
+  let allShapes: AllShape = getInitShapes();
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   export function getInitialBoard(): Board {
@@ -53,36 +57,71 @@ module gameLogic {
     // TODO
     return shapes;
   }
-  
-  export function getShapeByTypeAndOperation(shapeType: number, operationType: number) : Shape {
-    let shape:Shape = allShapes[shapeType];
-    let roation:number = operationType % 4;
-    // only vertical flip. Horizontal flip <=> vertical flip + 180 rotation.
-    let flip:number = operationType / 4;
 
-    let retShape:Shape = angular.copy(shape);
-    // TODO, modify matrix
-    
+  export function getShapeByTypeAndOperation(shapeType: number, operationType: number): Shape {
+    let shape: Shape = allShapes[shapeType];
+    let rotation: number = operationType % 4;
+    // only vertical flip. Horizontal flip <=> vertical flip + 180 rotation.
+    let flip: number = operationType / 4;
+
+    let retShape: Shape = angular.copy(shape);
+
+    // vertical flip
+    if (flip == 1) {
+      for (let i = 0; i < SHAPEHEIGHT; i++) {
+        for (let j = 0; j < SHAPEWIDTH / 2; j++) {
+          let tmp: string = retShape.frame[i][j];
+          retShape.frame[i][j] = retShape.frame[i][SHAPEWIDTH - j - 1];
+          retShape.frame[i][SHAPEWIDTH - j - 1] = tmp;
+        }
+      }
+    }
+
+    // rotation
+    let rotateAny = function (input: string[][], rotation: number): string[][] {
+      let rotate90 = function (input: string[][]): string[][] {
+        let tmpFrame: string[][] = [];
+        for (let i = 0; i < SHAPEHEIGHT; i++) {
+          tmpFrame[i] = [];
+          for (let j = 0; j < SHAPEWIDTH; j++) {
+            tmpFrame[i][j] = input[j][i];
+          }
+        }
+        return tmpFrame;
+      }
+
+      for (let i = 0; i < rotation; i++) {
+        retShape.frame = rotate90(retShape.frame);
+      }
+      return retShape.frame;
+    }
+
+    retShape.frame = rotateAny(retShape.frame, rotation)
+
     return retShape;
   }
 
-  export function getShapeFromShapeID(shapeId: number) : Shape {
+  export function getShapeFromShapeID(shapeId: number): Shape {
     let operationType = shapeId % OPERATIONS;
     let shapeType = shapeId / OPERATIONS;
 
-    let retShape:Shape = getShapeByTypeAndOperation(shapeType, operationType);
-
-    return retShape;
+    return getShapeByTypeAndOperation(shapeType, operationType);
   }
 
   export function getInitialState(): IState {
-    return {board: getInitialBoard(), delta: null};
+    return { board: getInitialBoard(), delta: null };
   }
 
-  export function getBoardAction(row:number, col:number, shapeId: number) : Board {
-    let board:Board = [];
-    let shpae:Shape = getShapeFromShapeID(shapeId);
+  export function checkValidShapePlacement(shape: Shape): boolean {
+    let ret:boolean = true;
+    for (let i = shape.column; i >= 0; i--) {
+      //TODO
+    }
+    return ret;
+  }
 
+  export function getBoardAction(row: number, col: number, shape: Shape): Board {
+    let board: Board = [];
     // TODO fill the shape matrix into the board;
 
     return board;
@@ -154,15 +193,23 @@ module gameLogic {
    * shapdId is a mix of different shape and the rotation of the shape, starts from 1, 0 is a initial
    */
   export function createMove(
-      stateBeforeMove: IState, row: number, col: number, shapeId: number, turnIndexBeforeMove: number): IMove {
+    stateBeforeMove: IState, row: number, col: number, shapeId: number, turnIndexBeforeMove: number): IMove {
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
-    let boardAction: Board = getBoardAction(row, col, shapeId);
+
+    let shape: Shape = getShapeFromShapeID(shapeId);
+
+    // if the shape placement is not on the board
+    if (!checkValidShapePlacement(shape)) {
+
+    }
+
+    let boardAction: Board = getBoardAction(row, col, shape);
     let board: Board = stateBeforeMove.board;
-    
+
     // TODO change to checkLegalMove function checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)
-    if (board[row][col] !== '') { 
+    if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
       throw new Error("One can only make a move in an empty position!");
     }
     //~
@@ -173,21 +220,21 @@ module gameLogic {
     }
     //~
 
-    
+
     let boardAfterMove = angular.copy(board);
 
     // TODO change to shapePlacement function, shapePlacement(boardAfterMove, row, col, shapeID, turnIndexBeforeMove)
     // TODO draw the actionBoard + turnIndexBeforeMove on the board;  
     boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
     //~
-    
+
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
     if (winner !== '' || isTie(boardAfterMove)) {
       // Game over.
       turnIndex = -1;
-      
+
       // TODO add endScore Function, the score is measured by the blocks unused.
       endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
       //~
@@ -198,15 +245,17 @@ module gameLogic {
       endMatchScores = null;
     }
     // Here delta should be all the blocks covered by the new move
-    let delta: BoardDelta = {row: row, col: col, shapeId: shapeId};
+    let delta: BoardDelta = { row: row, col: col, shapeId: shapeId };
     //~
-    let state: IState = {delta: delta, board: boardAfterMove};
-    return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
+    let state: IState = { delta: delta, board: boardAfterMove };
+    return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
   }
-  
+
   export function createInitialMove(): IMove {
-    return {endMatchScores: null, turnIndex: 0, 
-        state: getInitialState()};  
+    return {
+      endMatchScores: null, turnIndex: 0,
+      state: getInitialState()
+    };
   }
 
   export function forSimpleTestHtml() {
