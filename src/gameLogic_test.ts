@@ -1,3 +1,4 @@
+/*
 describe("In TicTacToe", function() {
   let X_TURN = 0;
   let O_TURN = 1;
@@ -17,7 +18,8 @@ describe("In TicTacToe", function() {
     // We expect an exception to be thrown :)
     let didThrowException = false;
     try {
-      gameLogic.createMove(stateBeforeMove, row, col, turnIndexBeforeMove);
+      let shapeId:number = -1;
+      gameLogic.createMove(stateBeforeMove, row, col, shapeId, turnIndexBeforeMove);
     } catch (e) {
       didThrowException = true;
     }
@@ -31,6 +33,7 @@ describe("In TicTacToe", function() {
       boardBeforeMove: Board,
       row: number,
       col: number,
+      shapeId:number,
       boardAfterMove: Board,
       turnIndexAfterMove: number,
       endMatchScores: number[]): void {
@@ -40,7 +43,7 @@ describe("In TicTacToe", function() {
         state: {board: boardAfterMove, delta: {row: row, col: col}}
       };
     let stateBeforeMove: IState = boardBeforeMove ? {board: boardBeforeMove, delta: null} : null;
-    let move: IMove = gameLogic.createMove(stateBeforeMove, row, col, turnIndexBeforeMove);
+    let move: IMove = gameLogic.createMove(stateBeforeMove, row, col, shapeId, turnIndexBeforeMove);
     expect(angular.equals(move, expectedMove)).toBe(true);
   }
 
@@ -135,3 +138,4 @@ describe("In TicTacToe", function() {
        ['', '', '']], 0, 3);
   });
 });
+*/

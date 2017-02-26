@@ -374,6 +374,10 @@ module gameLogic {
    */
   export function createMove(
     stateBeforeMove: IState, row: number, col: number, shapeId: number, turnIndexBeforeMove: number): IMove {
+    
+    if (shapeId < 0) {
+      throw new Error("Wrong shapeid");
+    }
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
