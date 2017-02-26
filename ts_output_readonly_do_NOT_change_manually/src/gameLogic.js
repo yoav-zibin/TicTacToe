@@ -12,7 +12,6 @@ var gameLogic;
     gameLogic.SHAPECOUNT = 20;
     gameLogic.SHAPEHEIGHT = 5;
     gameLogic.SHAPEWIDTH = 5;
-    var allShapes = getInitShapes();
     /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
     function getInitialBoard() {
         var board = [];
@@ -28,142 +27,199 @@ var gameLogic;
     function getInitShapes() {
         var shapes = [];
         // init all shapes 
-        shapes = [{ id: -1, row: -1, column: -1,
+        shapes = [{
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0'],
                     ['0', '1', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0'],
                     ['0', '1', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '1', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '1', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '1', '0', '0', '0'],
                     ['0', '1', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '1'],
                     ['0', '1', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '1', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '1', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '1', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '1', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '1', '1', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '1', '1', '0', '0'],
                     ['0', '1', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '1', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '1', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']] },
-            { id: -1, row: -1, column: -1,
+                    ['0', '0', '0', '0', '0']]
+            },
+            {
+                id: -1, row: -1, column: -1,
                 frame: [['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']] }
+                    ['0', '0', '0', '0', '0']]
+            }
         ];
         return shapes;
     }
     gameLogic.getInitShapes = getInitShapes;
+    function tmp_printFrame(frame) {
+        var ret = "";
+        for (var i = 0; i < gameLogic.SHAPEHEIGHT; i++) {
+            ret += frame[i].toString() + "\n\r";
+        }
+        return ret;
+    }
+    gameLogic.tmp_printFrame = tmp_printFrame;
     function getShapeByTypeAndOperation(shapeType, operationType) {
+        var allShapes = getInitShapes();
+        log.log("shapeType:", shapeType);
         var shape = allShapes[shapeType];
         var rotation = operationType % 4;
         // only vertical flip. Horizontal flip <=> vertical flip + 180 rotation.
-        var flip = operationType / 4;
+        var flip = Math.floor(operationType / 4);
         var retShape = angular.copy(shape);
+        log.log("shapeId=", shapeType);
+        log.log("rotation=", rotation);
+        log.log("flip=", flip);
+        log.log("origin shape");
+        console.log(tmp_printFrame(shape.frame));
         // vertical flip
         if (flip == 1) {
             for (var i = 0; i < gameLogic.SHAPEHEIGHT; i++) {
@@ -174,30 +230,39 @@ var gameLogic;
                 }
             }
         }
+        log.log("After flipping Allshape:");
+        console.log(tmp_printFrame(retShape.frame));
         // rotation
-        var rotateAny = function (input, rotation) {
+        var rotateAny = function (retShape, rotation) {
             var rotate90 = function (input) {
-                var tmpFrame = [];
+                var tmpFrame = angular.copy(input);
                 for (var i = 0; i < gameLogic.SHAPEHEIGHT; i++) {
-                    tmpFrame[i] = [];
                     for (var j = 0; j < gameLogic.SHAPEWIDTH; j++) {
-                        tmpFrame[i][j] = input[j][i];
+                        tmpFrame[i][j] = input[gameLogic.SHAPEHEIGHT - j - 1][i];
                     }
                 }
                 return tmpFrame;
             };
+            var ret = angular.copy(retShape.frame);
+            console.log("Before rotation:");
+            console.log(tmp_printFrame(ret));
             for (var i = 0; i < rotation; i++) {
-                retShape.frame = rotate90(retShape.frame);
+                console.log("Roate=", i);
+                ret = rotate90(ret);
+                console.log("After rotation:");
+                console.log(tmp_printFrame(ret));
             }
-            return retShape.frame;
+            return ret;
         };
-        retShape.frame = rotateAny(retShape.frame, rotation);
+        retShape.frame = rotateAny(retShape, rotation);
+        log.log("After rotation Allshape:");
+        console.log(tmp_printFrame(retShape.frame));
         return retShape;
     }
     gameLogic.getShapeByTypeAndOperation = getShapeByTypeAndOperation;
     function getShapeFromShapeID(shapeId) {
         var operationType = shapeId % gameLogic.OPERATIONS;
-        var shapeType = shapeId / gameLogic.OPERATIONS;
+        var shapeType = Math.floor(shapeId / gameLogic.OPERATIONS);
         return getShapeByTypeAndOperation(shapeType, operationType);
     }
     gameLogic.getShapeFromShapeID = getShapeFromShapeID;
@@ -215,11 +280,13 @@ var gameLogic;
         for (var i = 0; i < gameLogic.SHAPEWIDTH; i++) {
             for (var j = 0; j < gameLogic.SHAPEHEIGHT; j++) {
                 if (shape.frame[i][j] == '1') {
-                    colSum[i] += 1;
-                    rowSum[j] += 1;
+                    rowSum[i] += 1;
+                    colSum[j] += 1;
                 }
             }
         }
+        console.log("colSum=", colSum.toString());
+        console.log("rowSum=", rowSum.toString());
         var marginVal = 1;
         // top, left margin
         for (var i = 1; i >= 0; i--) {
@@ -232,7 +299,7 @@ var gameLogic;
             marginVal++;
         }
         // right, bottom margin
-        marginVal = 0;
+        marginVal = 1;
         for (var i = 3; i < gameLogic.SHAPEWIDTH; i++) {
             if (colSum[i] > 0) {
                 ret[3] = marginVal;
@@ -388,9 +455,15 @@ var gameLogic;
         var move = gameLogic.createMove(null, 0, 0, 0, 0);
         log.log("move=", move);
         */
-        var shapeId = 5;
+        var shapeId = 40;
+        log.log("Test input=", shapeId);
+        log.log("Expeced Type=", 0);
+        log.log("Expeced rotate=", 1);
+        log.log("Expeced flip=", 1);
         var shape = getShapeFromShapeID(shapeId);
-        log.log("frame:", shape.frame);
+        log.log("frame:", shape);
+        log.log("final shape:");
+        console.log(tmp_printFrame(shape.frame));
         var margins = getAllMargin(shape);
         log.log("margin=", margins);
     }

@@ -37,8 +37,6 @@ module gameLogic {
   export const SHAPEHEIGHT = 5;
   export const SHAPEWIDTH = 5;
 
-  let allShapes: AllShape = getInitShapes();
-
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   export function getInitialBoard(): Board {
     let board: Board = [];
@@ -54,144 +52,203 @@ module gameLogic {
   export function getInitShapes(): AllShape {
     let shapes: AllShape = [];
     // init all shapes 
-    shapes = [{id: -1, row: -1, column: -1, 
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '1', '0'],
-                          ['0', '0', '1', '1', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '1', '1', '1', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '1', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '1', '1', '1', '1'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '1', '1', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '1', '0'],
-                          ['0', '1', '1', '1', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '1', '1', '1', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '1', '0'],
-                          ['0', '1', '1', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '1', '0', '0', '0'],
-                          ['0', '1', '1', '1', '1'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '1', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '1', '1', '1', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '1', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '0', '1', '1', '1'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '1', '1'],
-                          ['0', '1', '1', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '1', '0'],
-                          ['0', '1', '1', '1', '0'],
-                          ['0', '1', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '1', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '0', '1', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '0', '1', '1', '0'],
-                          ['0', '0', '1', '1', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '1', '0'],
-                          ['0', '1', '1', '0', '0'],
-                          ['0', '1', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '1', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '0', '1', '1', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '1', '0'],
-                          ['0', '1', '1', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '1', '1', '1', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '0', '0', '0', '0']]},
-              {id: -1, row: -1, column: -1,
-                  frame: [['0', '0', '0', '0', '0'],
-                          ['0', '0', '1', '0', '0'],
-                          ['0', '1', '1', '1', '1'],
-                          ['0', '0', '0', '0', '0'],
-                          ['0', '0', '0', '0', '0']]}
-      ];
+    shapes = [{
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '1', '0'],
+      ['0', '0', '1', '1', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '1', '1', '1', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '1', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '1', '1', '1', '1'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '1', '1', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '1', '0'],
+      ['0', '1', '1', '1', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '1', '1', '1', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '1', '0'],
+      ['0', '1', '1', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '1', '0', '0', '0'],
+      ['0', '1', '1', '1', '1'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '1', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '1', '1', '1', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '1', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '0', '1', '1', '1'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '1', '1'],
+      ['0', '1', '1', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '1', '0'],
+      ['0', '1', '1', '1', '0'],
+      ['0', '1', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '1', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '0', '1', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '0', '1', '1', '0'],
+      ['0', '0', '1', '1', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '1', '0'],
+      ['0', '1', '1', '0', '0'],
+      ['0', '1', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '1', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '0', '1', '1', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '1', '0'],
+      ['0', '1', '1', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '1', '1', '1', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    },
+    {
+      id: -1, row: -1, column: -1,
+      frame: [['0', '0', '0', '0', '0'],
+      ['0', '0', '1', '0', '0'],
+      ['0', '1', '1', '1', '1'],
+      ['0', '0', '0', '0', '0'],
+      ['0', '0', '0', '0', '0']]
+    }
+    ];
 
     return shapes;
   }
 
+  export function tmp_printFrame(frame: string[][]): string {
+    let ret: string = "";
+    for (let i = 0; i < SHAPEHEIGHT; i++) {
+      ret += frame[i].toString() + "\n\r";
+    }
+    return ret;
+  }
+
   export function getShapeByTypeAndOperation(shapeType: number, operationType: number): Shape {
+    let allShapes: AllShape = getInitShapes();
+    log.log("shapeType:", shapeType);
     let shape: Shape = allShapes[shapeType];
     let rotation: number = operationType % 4;
     // only vertical flip. Horizontal flip <=> vertical flip + 180 rotation.
-    let flip: number = operationType / 4;
+    let flip: number = Math.floor(operationType / 4);
 
     let retShape: Shape = angular.copy(shape);
+
+    log.log("shapeId=", shapeType);
+    log.log("rotation=", rotation);
+    log.log("flip=", flip);
+
+    log.log("origin shape")
+    console.log(tmp_printFrame(shape.frame));
 
     // vertical flip
     if (flip == 1) {
@@ -204,33 +261,44 @@ module gameLogic {
       }
     }
 
+    log.log("After flipping Allshape:")
+    console.log(tmp_printFrame(retShape.frame));
+
     // rotation
-    let rotateAny = function (input: string[][], rotation: number): string[][] {
+    let rotateAny = function (retShape: Shape, rotation: number): string[][] {
       let rotate90 = function (input: string[][]): string[][] {
-        let tmpFrame: string[][] = [];
+        let tmpFrame: string[][] = angular.copy(input);
         for (let i = 0; i < SHAPEHEIGHT; i++) {
-          tmpFrame[i] = [];
           for (let j = 0; j < SHAPEWIDTH; j++) {
-            tmpFrame[i][j] = input[j][i];
+            tmpFrame[i][j] = input[SHAPEHEIGHT - j - 1][i];
           }
         }
         return tmpFrame;
       }
 
+      let ret: string[][] = angular.copy(retShape.frame)
+      console.log("Before rotation:");
+      console.log(tmp_printFrame(ret));
       for (let i = 0; i < rotation; i++) {
-        retShape.frame = rotate90(retShape.frame);
+        console.log("Roate=",i);
+        ret = rotate90(ret);
+        console.log("After rotation:");
+        console.log(tmp_printFrame(ret));
       }
-      return retShape.frame;
+      return ret;
     }
 
-    retShape.frame = rotateAny(retShape.frame, rotation)
+    retShape.frame = rotateAny(retShape, rotation);
+
+    log.log("After rotation Allshape:")
+    console.log(tmp_printFrame(retShape.frame));
 
     return retShape;
   }
 
   export function getShapeFromShapeID(shapeId: number): Shape {
     let operationType = shapeId % OPERATIONS;
-    let shapeType = shapeId / OPERATIONS;
+    let shapeType = Math.floor(shapeId / OPERATIONS);
 
     return getShapeByTypeAndOperation(shapeType, operationType);
   }
@@ -252,11 +320,14 @@ module gameLogic {
     for (let i = 0; i < SHAPEWIDTH; i++) {
       for (let j = 0; j < SHAPEHEIGHT; j++) {
         if (shape.frame[i][j] == '1') {
-          colSum[i] += 1;
-          rowSum[j] += 1;
+          rowSum[i] += 1;
+          colSum[j] += 1;
         }
       }
     }
+
+    console.log("colSum=", colSum.toString());
+    console.log("rowSum=", rowSum.toString());
 
     let marginVal = 1;
     // top, left margin
@@ -271,7 +342,7 @@ module gameLogic {
     }
 
     // right, bottom margin
-    marginVal = 0;
+    marginVal = 1;
     for (let i = 3; i < SHAPEWIDTH; i++) {
       if (colSum[i] > 0) {
         ret[3] = marginVal;
@@ -374,7 +445,7 @@ module gameLogic {
    */
   export function createMove(
     stateBeforeMove: IState, row: number, col: number, shapeId: number, turnIndexBeforeMove: number): IMove {
-    
+
     if (shapeId < 0) {
       throw new Error("Wrong shapeid");
     }
@@ -447,9 +518,17 @@ module gameLogic {
     var move = gameLogic.createMove(null, 0, 0, 0, 0);
     log.log("move=", move);
     */
-    let shapeId: number = 5;
+    let shapeId: number = 40;
+    log.log("Test input=", shapeId);
+    log.log("Expeced Type=", 0);
+    log.log("Expeced rotate=", 1);
+    log.log("Expeced flip=", 1);
     let shape: Shape = getShapeFromShapeID(shapeId);
-    log.log("frame:", shape.frame)
+
+    log.log("frame:", shape);
+    log.log("final shape:");
+    console.log(tmp_printFrame(shape.frame));
+
     let margins: number[] = getAllMargin(shape);
     log.log("margin=", margins)
   }
