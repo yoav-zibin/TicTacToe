@@ -1,20 +1,13 @@
-function resizeCanvas(world, render) {
-    var width = document.body.clientWidth;
-    var height = document.body.clientHeight;
-    var size = width <= height ? width : height;
-    var boundsMax = world.bounds.max, renderOptions = render.options, canvas = render.canvas;
-    boundsMax.x = size;
-    boundsMax.y = size;
-    canvas.width = renderOptions.width = size;
-    canvas.height = renderOptions.height = size;
-}
 var Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner, Composites = Matter.Composites, MouseConstraint = Matter.MouseConstraint, Mouse = Matter.Mouse, World = Matter.World, Query = Matter.Query, Svg = Matter.Svg, Bodies = Matter.Bodies;
 var engine = Engine.create(), world = engine.world;
 var render = Render.create({
-    element: document.getElementById("gameArea"),
-    engine: engine
+    element: document.getElementById("canvas-container"),
+    engine: engine,
+    options: {
+        height: 600,
+        width: 420,
+    }
 });
-resizeCanvas(world, render);
 engine.world.gravity.y = 0;
 // create terrain
 World.add(world, [

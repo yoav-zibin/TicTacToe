@@ -1,0 +1,19 @@
+body { 
+    background: #222;
+}
+
+canvas {
+    margin: 0;
+    max-width: 100%;
+    border-radius: 3px;
+}
+
+canvas:active { 
+    cursor: pointer;
+    cursor: -webkit-grabbing;
+}
+
+#canvas-container {
+    margin: 0px 0;
+}
+

@@ -1,17 +1,4 @@
 
-function resizeCanvas(world : any, render : any) {
-    let width = document.body.clientWidth;
-    let height = document.body.clientHeight;
-    let size = width <= height ? width : height;
-    let boundsMax = world.bounds.max,
-        renderOptions = render.options,
-        canvas = render.canvas;
-    boundsMax.x = size;
-    boundsMax.y = size;
-    canvas.width = renderOptions.width = size;
-    canvas.height = renderOptions.height = size;
-}
-
 var Engine = Matter.Engine,
     Render = <any>Matter.Render,
     Runner = Matter.Runner,
@@ -27,13 +14,16 @@ var engine = Engine.create(),
     world = engine.world;
 
 var render = Render.create({
-    element: document.getElementById("gameArea"),
-    engine: engine
+    element: document.getElementById("canvas-container"),
+    engine: engine,
+    options: {
+        height: 600,
+        width: 420,
+    }
 });
 
-resizeCanvas(world, render);
-
 engine.world.gravity.y = 0;
+
 
 // create terrain
 World.add(world, [
