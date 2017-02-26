@@ -174,13 +174,13 @@ var game;
             game.currentUpdateUI.turnIndex >= 0 &&
             game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
-    function cellClicked(row, col) {
-        log.info("Clicked on cell:", row, col);
+    function cellClicked(row, col, shapeId) {
+        log.info("Clicked on cell:", row, col, shapeId);
         if (!isHumanTurn())
             return;
         var nextMove = null;
         try {
-            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
+            nextMove = gameLogic.createMove(game.state, row, col, shapeId, game.currentUpdateUI.turnIndex);
         }
         catch (e) {
             log.info(["Cell is already full in position:", row, col]);
