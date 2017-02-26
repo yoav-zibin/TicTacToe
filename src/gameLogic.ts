@@ -7,6 +7,8 @@ type IProposalData = BoardDelta;
 interface IState {
   board: Board;
   delta: BoardDelta;
+  start: number;
+  ship: number;
 }
 
 import gameService = gamingPlatform.gameService;
@@ -34,27 +36,7 @@ module gameLogic {
 
 
   export function getInitialState(): IState {
-    return {board: getInitialBoard(), delta: null};
-  }
-
-  /**
-   * Returns true if the game ended in a tie because there are no empty cells.
-   * E.g., isTie returns true for the following board:
-   *     [['X', 'O', 'X'],
-   *      ['X', 'O', 'O'],
-   *      ['O', 'X', 'X']]
-   */
-  function isTie(board: Board): boolean {
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        if (board[i][j] === '') {
-          // If there is an empty cell then we do not have a tie.
-          return false;
-        }
-      }
-    }
-    // No empty cells, so we have a tie!
-    return true;
+    return {board: getInitialBoard(), delta: null, ship: 0, start:0};
   }
 
   /**
@@ -65,20 +47,48 @@ module gameLogic {
    *      ['X', 'O', ''],
    *      ['X', '', '']]
    */
+    function setShip(board: Board, state: IState, row: number, col: number): IState {
+      let shipNum = state.ship;
+      let isStart = 0;
+      if(shipNum!=5) {
+        if(board[row][col] === 'O') {
+          throw new Error("already set!");
+        }
+        else 
+          board[row][col] = 'O';
+      }
+      else {
+        isStart = 1;
+      }
+      return {board, delta:{row,col}, ship: shipNum+1, start: isStart};
+
+  }
+
   function getWinner(board: Board): string {
     let sinkBoat = 0;
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
-        if(board[i][j]=='X')
-            sinkBoat += 1;
+        if(board[i][j]=='O') {
             console.log("sinkBoat: " + sinkBoat);
+            return '';
+        }
       }
     }
-    if(sinkBoat==3) {
-        console.log("Game Ends ");
-        return "I lose!";
+    console.log("Game Ends ");
+    return "I lose!";
+  }
+
+  function getShip(board: Board): number {
+    let shipNum = 0;
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        if(board[i][j]=='O') {
+            shipNum++;
+        }
+      }
     }
-    return '';
+
+    return shipNum;
   }
 
   /**
@@ -90,8 +100,17 @@ module gameLogic {
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
+
     let board: Board = stateBeforeMove.board;
-    if (board[row][col] === 'X') {
+    /**set ship */
+    if(stateBeforeMove.ship!=5 && stateBeforeMove.start!=1) {
+      console.log("setting ship");
+      let shipState = setShip(board, stateBeforeMove, row, col);
+      return {endMatchScores: null, turnIndex: 1-turnIndexBeforeMove, state: shipState};
+    }
+
+    if (board[row][col] === 'X' || board[row][col] === 'M') {
+      console.log("already shoot!");
       throw new Error("already shoot!");
     }
     if (getWinner(board) !== '') {
@@ -105,9 +124,10 @@ module gameLogic {
         boardAfterMove[row][col] = 'X';
 
     let winner = getWinner(boardAfterMove);
+    let shipNum = getShip(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
-    if (winner !== '' || isTie(boardAfterMove)) {
+    if (winner !== '') {
       // Game over.
       turnIndex = -1;
       endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
@@ -117,7 +137,7 @@ module gameLogic {
       endMatchScores = null;
     }
     let delta: BoardDelta = {row: row, col: col};
-    let state: IState = {delta: delta, board: boardAfterMove};
+    let state: IState = {delta: delta, board: boardAfterMove, ship:shipNum, start: 1};
     return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
   }
 
