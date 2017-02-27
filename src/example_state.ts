@@ -57,15 +57,37 @@ World.add(world, [
     Bodies.circle(380, 530, 25, {isStatic: true, render: <any>{fillStyle:'black'}}),
 ]);
 
+var collisionCategoryCue = 0x0001;
+var collisionCategoryNormalBalls = 0x0002;
+var collisionMaskAllBalls = 0x0003;
+var collisionMaskCueOnly = 0x0001;
+
 // create ball bodies
 World.add(world, [
     // cue
-    Bodies.circle(100, 350, 10, <any>{isStatic: false, render: {fillStyle:'white', strokeStyle:'black'}}),
+    Bodies.circle(100, 350, 10, <any>{isStatic: false, collisionFilter: { category: collisionCategoryCue, mask: collisionMaskAllBalls }, restitution: 0.9, friction: 0.2, render: {fillStyle:'white', strokeStyle:'black'}}),
     // eight ball
-    Bodies.circle(130, 160, 10, <any>{isStatic: false, render: {fillStyle:'black', strokeStyle:'black'}}),
+    Bodies.circle(130, 160, 10, <any>{isStatic: false, collisionFilter: { category: collisionCategoryNormalBalls, mask: collisionMaskAllBalls }, restitution: 0.9, friction: 0.2, render: {fillStyle:'black', strokeStyle:'black'}}),
     // a solid ball
-    Bodies.circle(350, 500, 10, <any>{isStatic: false, render: {fillStyle:'pink', strokeStyle:'black'}}),
+    Bodies.circle(350, 500, 10, <any>{isStatic: false, collisionFilter: { category: collisionCategoryNormalBalls, mask: collisionMaskAllBalls }, restitution: 0.9, friction: 0.2, render: {fillStyle:'pink', strokeStyle:'black'}}),
 ]);
+
+let mouse = Mouse.create(render.canvas),
+    mouseConstraint = (<any>MouseConstraint).create(engine, {
+        mouse: mouse,
+        constraint: {
+            stiffness: 0.2,
+            render: {
+                visible: true
+            }
+        }
+    });
+mouseConstraint.collisionFilter.mask = collisionMaskCueOnly;
+
+World.add(world, mouseConstraint);
+
+// keep the mouse in sync with rendering
+render.mouse = mouse;
 
 Render.run(render);
 Engine.run(engine);
