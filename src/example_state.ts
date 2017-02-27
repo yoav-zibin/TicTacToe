@@ -65,7 +65,7 @@ module GameplayConsts {
     export const CollisionMaskCueOnly = 0x0001;
 
     export const BallRestitution = 0.9;
-    export const BallFriction = 0.3;
+    export const BallFriction = 0.01;
 };
 
 // create ball bodies
@@ -73,17 +73,17 @@ World.add(world, [
     // cue
     Bodies.circle(100, 350, 10, <any>{isStatic: false, 
         collisionFilter: { category: GameplayConsts.CollisionCategoryCue, mask: GameplayConsts.CollisionMaskAllBalls }, 
-        restitution: GameplayConsts.BallRestitution, friction: GameplayConsts.BallFriction, 
+        restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction, 
         render: {fillStyle:'white', strokeStyle:'black'}}),
     // eight ball
     Bodies.circle(130, 160, 10, <any>{isStatic: false, 
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls }, 
-        restitution: GameplayConsts.BallRestitution, friction: GameplayConsts.BallFriction, 
+        restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction, 
         render: {fillStyle:'black', strokeStyle:'black'}}),
     // a solid ball
     Bodies.circle(350, 500, 10, <any>{isStatic: false, 
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls }, 
-        restitution: GameplayConsts.BallRestitution, friction: GameplayConsts.BallFriction, 
+        restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction, 
         render: {fillStyle:'pink', strokeStyle:'black'}}),
 ]);
 

@@ -48,7 +48,7 @@ var GameplayConsts;
     GameplayConsts.CollisionMaskAllBalls = 0x0003;
     GameplayConsts.CollisionMaskCueOnly = 0x0001;
     GameplayConsts.BallRestitution = 0.9;
-    GameplayConsts.BallFriction = 0.3;
+    GameplayConsts.BallFriction = 0.01;
 })(GameplayConsts || (GameplayConsts = {}));
 ;
 // create ball bodies
@@ -56,17 +56,17 @@ World.add(world, [
     // cue
     Bodies.circle(100, 350, 10, { isStatic: false,
         collisionFilter: { category: GameplayConsts.CollisionCategoryCue, mask: GameplayConsts.CollisionMaskAllBalls },
-        restitution: GameplayConsts.BallRestitution, friction: GameplayConsts.BallFriction,
+        restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
         render: { fillStyle: 'white', strokeStyle: 'black' } }),
     // eight ball
     Bodies.circle(130, 160, 10, { isStatic: false,
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
-        restitution: GameplayConsts.BallRestitution, friction: GameplayConsts.BallFriction,
+        restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
         render: { fillStyle: 'black', strokeStyle: 'black' } }),
     // a solid ball
     Bodies.circle(350, 500, 10, { isStatic: false,
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
-        restitution: GameplayConsts.BallRestitution, friction: GameplayConsts.BallFriction,
+        restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
         render: { fillStyle: 'pink', strokeStyle: 'black' } }),
 ]);
 var mouse = Mouse.create(render.canvas), mouseConstraint = MouseConstraint.create(engine, {
