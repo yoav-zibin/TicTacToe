@@ -75,7 +75,7 @@ module game {
     }
     // This must be after calling updateUI, because we nullify things there (like playerIdToProposal&proposals&etc)
     yourPlayerInfo = communityUI.yourPlayerInfo;
-    let playerIdToProposal = communityUI.playerIdToProposal; 
+    let playerIdToProposal = communityUI.playerIdToProposal;
     didMakeMove = !!playerIdToProposal[communityUI.yourPlayerInfo.playerId];
     proposals = [];
     for (let i = 0; i < gameLogic.ROWS; i++) {
@@ -92,14 +92,14 @@ module game {
   }
   export function isProposal(row: number, col: number) {
     return proposals && proposals[row][col] > 0;
-  } 
+  }
   export function isProposal1(row: number, col: number) {
     return proposals && proposals[row][col] == 1;
-  } 
+  }
   export function isProposal2(row: number, col: number) {
     return proposals && proposals[row][col] == 2;
   }
-  
+
   export function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
     didMakeMove = false; // Only one move per updateUI
@@ -144,7 +144,7 @@ module game {
       return;
     }
     didMakeMove = true;
-    
+
     if (!proposals) {
       gameService.makeMove(move);
     } else {
@@ -213,7 +213,7 @@ module game {
   function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
     return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
   }
-  
+
   export function isPieceX(row: number, col: number): boolean {
     return isPiece(row, col, 0, 'X');
   }

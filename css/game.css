@@ -32,10 +32,16 @@ body {
 }
 
 .r {
-  border-right: 4pt solid black;
+  border-right: 1pt solid black;
 }
 .b {
-  border-bottom: 4pt solid black;
+  border-bottom: 1pt solid black;
+}
+.l {
+  border-left: 1pt solid black;
+}
+.t {
+  border-top: 1pt solid black;
 }
 
 .isProposal1 {
