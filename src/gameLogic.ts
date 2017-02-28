@@ -93,7 +93,7 @@ const BallRadius = 12;
                 BallType : BallType.Cue,
                 Number : 0
         }
-
+//Create solid balls
         let solidBalls: Ball[]=[];
         let Ball1:Ball={
             Position : {X:blackX-2*BallRadius,Y:blackY-2*BallRadius*Math.sqrt(3)},
