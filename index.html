@@ -30,6 +30,7 @@
         style="position:absolute; top:0; left:{{col * 10}}%; width:10%; height:100%;"
         ng-class="{r: col < 10, b: row < 10, t: row < 1, l: col < 1}"
         ng-click="game.cellClicked(row, col)"
+        ng-mouseover="game.cellOver(row, col)"
         id="{{'e2e_test_div_' + row + 'x' + col}}">
 
 

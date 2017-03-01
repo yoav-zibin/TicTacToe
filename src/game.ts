@@ -208,7 +208,10 @@ module game {
 
   export function cellOver(row: number, col: number): void {
     log.info("Over on cell:", row, col);
-    
+  }
+
+    export function cellLeave(row: number, col: number): void {
+    log.info("Leave on cell:", row, col);
   }
 
   export function shouldShowImage(row: number, col: number): boolean {

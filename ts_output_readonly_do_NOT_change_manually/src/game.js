@@ -196,6 +196,10 @@ var game;
         log.info("Over on cell:", row, col);
     }
     game.cellOver = cellOver;
+    function cellLeave(row, col) {
+        log.info("Leave on cell:", row, col);
+    }
+    game.cellLeave = cellLeave;
     function shouldShowImage(row, col) {
         return game.state.board[row][col] !== "" || isProposal(row, col);
     }
