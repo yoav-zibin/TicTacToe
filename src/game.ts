@@ -206,6 +206,11 @@ module game {
     makeMove(nextMove);
   }
 
+  export function cellOver(row: number, col: number): void {
+    log.info("Over on cell:", row, col);
+    
+  }
+
   export function shouldShowImage(row: number, col: number): boolean {
     return state.board[row][col] !== "" || isProposal(row, col);
   }

@@ -192,6 +192,10 @@ var game;
         makeMove(nextMove);
     }
     game.cellClicked = cellClicked;
+    function cellOver(row, col) {
+        log.info("Over on cell:", row, col);
+    }
+    game.cellOver = cellOver;
     function shouldShowImage(row, col) {
         return game.state.board[row][col] !== "" || isProposal(row, col);
     }
