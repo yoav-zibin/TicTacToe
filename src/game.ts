@@ -199,7 +199,6 @@ module game {
       nextMove = gameLogic.createMove(
           state, row, col, currentUpdateUI.turnIndex, 1);
     } catch (e) {
-      log.info(["Not Started:", row, col]);
       return;
     }
     // Move is legal, make it!

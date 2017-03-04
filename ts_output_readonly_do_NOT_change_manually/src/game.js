@@ -185,7 +185,6 @@ var game;
             nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex, 1);
         }
         catch (e) {
-            log.info(["Not Started:", row, col]);
             return;
         }
         // Move is legal, make it!

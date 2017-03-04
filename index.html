@@ -31,10 +31,11 @@
         style="position:absolute; top:0; left:{{col * 10}}%; width:10%; height:100%;"
         ng-class="{r: col < 10, b: row < 10, t: row < 1, l: col < 1}"
         ng-click="game.cellClickedMy(row, col)"
+        ng-mouseover="style={'background-color': 'red'}"
+        ng-mouseleave="style={'background-color': 'white'}"
         id="{{'e2e_test_div_' + row + 'x' + col}}">
       <div style="width:100%; height: 100%"
           ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
-          ng-style="game.getCellStyle(row, col)"
           ng-if="game.shouldShowImage(row, col, 0)">
         <svg ng-if="game.isPieceO(row, col, 0)"
             id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
@@ -79,7 +80,6 @@
         id="{{'e3e_test_div_' + row + 'x' + col}}">
       <div style="width:100%; height: 100%"
           ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
-          ng-style="game.getCellStyle(row, col)"
           ng-if="game.shouldShowImage(row, col, 1)">
         <svg ng-if="game.isPieceO(row, col, 1)"
             id="{{'e3e_test_pieceO_' + row + 'x' + col}}"
