@@ -175,14 +175,31 @@ var game;
             game.currentUpdateUI.turnIndex >= 0 &&
             game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
-    function cellClicked(row, col) {
+    function cellClickedYours(row, col) {
         log.info("Clicked on cell:", row, col);
         log.info("Game got:", row);
         if (!isHumanTurn())
             return;
         var nextMove = null;
         try {
-            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
+            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex, 1);
+        }
+        catch (e) {
+            log.info(["Not Started:", row, col]);
+            return;
+        }
+        // Move is legal, make it!
+        makeMove(nextMove);
+    }
+    game.cellClickedYours = cellClickedYours;
+    function cellClickedMy(row, col) {
+        log.info("Clicked on cell:", row, col);
+        log.info("Game got:", row);
+        if (!isHumanTurn())
+            return;
+        var nextMove = null;
+        try {
+            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex, 0);
         }
         catch (e) {
             log.info(["Cell is already full in position:", row, col]);
@@ -191,7 +208,7 @@ var game;
         // Move is legal, make it!
         makeMove(nextMove);
     }
-    game.cellClicked = cellClicked;
+    game.cellClickedMy = cellClickedMy;
     function cellOver(row, col) {
         log.info("Over on cell:", row, col);
     }
@@ -200,21 +217,35 @@ var game;
         log.info("Leave on cell:", row, col);
     }
     game.cellLeave = cellLeave;
-    function shouldShowImage(row, col) {
-        return game.state.board[row][col] !== "" || isProposal(row, col);
+    function shouldShowImage(row, col, whichboard) {
+        if (whichboard == 0) {
+            return game.state.myBoard[row][col] !== "" || isProposal(row, col);
+        }
+        else {
+            return game.state.yourBoard[row][col] !== "" || isProposal(row, col);
+        }
     }
     game.shouldShowImage = shouldShowImage;
-    function isPiece(row, col, turnIndex, pieceKind) {
-        return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
+    function isPiece(row, col, turnIndex, pieceKind, whichboard) {
+        if (whichboard == 0) {
+            return game.state.myBoard[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
+        }
+        else {
+            return game.state.yourBoard[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
+        }
     }
-    function isPieceX(row, col) {
-        return isPiece(row, col, 0, 'X');
+    function isPieceX(row, col, whichboard) {
+        return isPiece(row, col, 0, 'X', whichboard);
     }
     game.isPieceX = isPieceX;
-    function isPieceO(row, col) {
-        return isPiece(row, col, 1, 'O');
+    function isPieceO(row, col, whichboard) {
+        return isPiece(row, col, 1, 'O', whichboard);
     }
     game.isPieceO = isPieceO;
+    function isPieceM(row, col, whichboard) {
+        return isPiece(row, col, 1, 'M', whichboard);
+    }
+    game.isPieceM = isPieceM;
     function shouldSlowlyAppear(row, col) {
         return game.state.delta &&
             game.state.delta.row === row && game.state.delta.col === col;

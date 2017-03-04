@@ -5,7 +5,8 @@ interface BoardDelta {
 }
 type IProposalData = BoardDelta;
 interface IState {
-  board: Board;
+  myBoard: Board;
+  yourBoard: Board;
   delta: BoardDelta;
   start: number;
   ship: number;
@@ -36,7 +37,7 @@ module gameLogic {
 
 
   export function getInitialState(): IState {
-    return {board: getInitialBoard(), delta: null, ship: 0, start:0};
+    return {myBoard: getInitialBoard(), yourBoard: getInitialBoard(), delta: null, ship: 0, start:0};
   }
 
   /**
@@ -50,6 +51,7 @@ module gameLogic {
     function setShip(board: Board, state: IState, row: number, col: number): IState {
       let shipNum = state.ship;
       let isStart = 0;
+      console.log("shipNum:", shipNum);
       if(shipNum!=5) {
         if(board[row][col] === 'O') {
           throw new Error("already set!");
@@ -60,7 +62,7 @@ module gameLogic {
       else {
         isStart = 1;
       }
-      return {board, delta:{row,col}, ship: shipNum+1, start: isStart};
+      return {myBoard: board,yourBoard: state.yourBoard, delta:{row,col}, ship: shipNum+1, start: isStart};
 
   }
 
@@ -95,36 +97,47 @@ module gameLogic {
    * Returns the move that should be performed when player
    * with index turnIndexBeforeMove makes a move in cell row X col.
    */
+
   export function createMove(
-      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number): IMove {
+      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number, whichBoard: number): IMove {
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
 
-    let board: Board = stateBeforeMove.board;
+    let myBoard: Board = stateBeforeMove.myBoard;
+    let yourBoard: Board = stateBeforeMove.yourBoard;
+
+    if (whichBoard==1 && (yourBoard[row][col] === 'X' || yourBoard[row][col] === 'M')) {
+      console.log("already full!");
+      throw new Error("already full!");
+    }
     /**set ship */
-    if(stateBeforeMove.ship!=5 && stateBeforeMove.start!=1) {
-      console.log("setting ship");
-      let shipState = setShip(board, stateBeforeMove, row, col);
-      return {endMatchScores: null, turnIndex: 1-turnIndexBeforeMove, state: shipState};
+    else if(whichBoard == 0) {
+      if(stateBeforeMove.start!=1) {
+        console.log("setting ship");
+        let shipState = setShip(myBoard, stateBeforeMove, row, col);
+        return {endMatchScores: null, turnIndex: 1-turnIndexBeforeMove, state: shipState};
+      }
+      else {
+        console.log("Game has started!");
+        return {endMatchScores: null, turnIndex: 1-turnIndexBeforeMove, state: stateBeforeMove};
+      }
     }
 
-    if (board[row][col] === 'X' || board[row][col] === 'M') {
-      console.log("already shoot!");
-      throw new Error("already shoot!");
-    }
-    if (getWinner(board) !== '') {
+    if (getWinner(myBoard) !== '') {
       throw new Error("Can only make a move if the game is not over!");
     }
-    let boardAfterMove = angular.copy(board);
-    //boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
-    if(board[row][col]==='')
-        boardAfterMove[row][col] = 'M';
-    else
-        boardAfterMove[row][col] = 'X';
+    let myBoardAfterMove = angular.copy(myBoard);
+    let yourBoardAfterMove = angular.copy(yourBoard);
 
-    let winner = getWinner(boardAfterMove);
-    let shipNum = getShip(boardAfterMove);
+    //boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+    if(yourBoard[row][col]==='')
+        yourBoardAfterMove[row][col] = 'M';
+    else
+        yourBoardAfterMove[row][col] = 'X';
+
+    let winner = getWinner(myBoardAfterMove);
+    let shipNum = getShip(myBoardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
     if (winner !== '') {
@@ -137,7 +150,11 @@ module gameLogic {
       endMatchScores = null;
     }
     let delta: BoardDelta = {row: row, col: col};
-    let state: IState = {delta: delta, board: boardAfterMove, ship:shipNum, start: 1};
+    let state: IState = {delta: delta, myBoard: myBoardAfterMove, yourBoard: yourBoardAfterMove, ship:shipNum, start: 1};
+
+    if(shipNum==0) {
+      window.alert("Game Ended!");
+    }
     return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
   }
 
@@ -147,7 +164,7 @@ module gameLogic {
   }
 
   export function forSimpleTestHtml() {
-    var move = gameLogic.createMove(null, 0, 0, 0);
+    var move = gameLogic.createMove(null,null, 0, 0, 0);
     log.log("move=", move);
   }
 }
