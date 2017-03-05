@@ -43,7 +43,11 @@ body {
 .t {
   border-top: 1pt solid black;
 }
-.hover {
+.myhover {
+  background-color: blue;
+  opacity: 0.5;
+}
+.yourhover {
   background-color: red;
   opacity: 0.5;
 }

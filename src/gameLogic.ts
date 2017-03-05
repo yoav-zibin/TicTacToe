@@ -44,7 +44,7 @@ module gameLogic {
     if(row + leng > 10 || col + leng > 10 || row < 0 || col < 0) {
       return false;
     }
-
+    
     return true;
   }
 
