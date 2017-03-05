@@ -41,45 +41,44 @@ module gameLogic {
   }
 
   function validSet(board: Board, row: number, col: number, leng: number): boolean {
-    if(row + leng > 10 || col + leng > 10 || row < 0 || col < 0 || board[row][col]!='') {
+    if(row + leng > 10 || col + leng > 10 || row < 0 || col < 0) {
       return false;
     }
+
     return true;
   }
 
   function setShip(board: Board, state: IState, row: number, col: number): IState {
     let shipNum = state.ship;
+    let originBoard = board;
     if(shipNum < 5) {
       if(state.start==0) {
         if(board[row][col] === 'O') {
           throw new Error("already set!");
         }
         else {
-          let count=0;
           let length=5-shipNum;
-          switch(shipNum) {
-            case 0: {
-              while(count!=5) {
-                if(validSet(board, row, col, length)) {
-                  for(let i=0; i<4; i++) {
-                    board[row+i][col]='O';
-                  }
-                  break;
-                }
-                else {
+          let compensate=0;
 
-                }
-              }
-              break;
+          /**check if already set */
+          for(let i=0; i<length; i++) {
+            /**check if already set */
+            if(board[row-compensate+i][col]==='O') {
+              window.alert("Already set ship here");
+              return {myBoard: originBoard ,yourBoard: state.yourBoard, delta:null, ship: shipNum, start: state.start};
             }
-
-            case 1:
-            case 2:
-            case 3:
-            case 4:
           }
-          board[row][col] = 'O';
-          shipNum++;
+
+          /**give compensate to out of boundary */
+          if(!validSet(board, row, col, length)) {
+            compensate = row+length-ROWS;
+          }
+
+          for(let i=0; i<length; i++) {
+            board[row-compensate+i][col]='O';
+          }
+          
+          shipNum++;     
           console.log("shipNum:", shipNum);
         }
       }
@@ -107,11 +106,6 @@ module gameLogic {
     console.log("Game Ends ");
     return "I lose!";
   }
-
-  /**
-   * Returns the move that should be performed when player
-   * with index turnIndexBeforeMove makes a move in cell row X col.
-   */
 
   export function createMove(
       stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number, whichBoard: number): IMove {

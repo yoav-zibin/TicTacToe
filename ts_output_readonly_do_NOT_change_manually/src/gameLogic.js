@@ -25,41 +25,37 @@ var gameLogic;
     }
     gameLogic.getInitialState = getInitialState;
     function validSet(board, row, col, leng) {
-        if (row + leng > 10 || col + leng > 10 || row < 0 || col < 0 || board[row][col] != '') {
+        if (row + leng > 10 || col + leng > 10 || row < 0 || col < 0) {
             return false;
         }
         return true;
     }
     function setShip(board, state, row, col) {
         var shipNum = state.ship;
+        var originBoard = board;
         if (shipNum < 5) {
             if (state.start == 0) {
                 if (board[row][col] === 'O') {
                     throw new Error("already set!");
                 }
                 else {
-                    var count = 0;
                     var length_1 = 5 - shipNum;
-                    switch (shipNum) {
-                        case 0: {
-                            while (count != 5) {
-                                if (validSet(board, row, col, length_1)) {
-                                    for (var i = 0; i < 4; i++) {
-                                        board[row + i][col] = 'O';
-                                    }
-                                    break;
-                                }
-                                else {
-                                }
-                            }
-                            break;
+                    var compensate = 0;
+                    /**check if already set */
+                    for (var i = 0; i < length_1; i++) {
+                        /**check if already set */
+                        if (board[row - compensate + i][col] === 'O') {
+                            window.alert("Already set ship here");
+                            return { myBoard: originBoard, yourBoard: state.yourBoard, delta: null, ship: shipNum, start: state.start };
                         }
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
                     }
-                    board[row][col] = 'O';
+                    /**give compensate to out of boundary */
+                    if (!validSet(board, row, col, length_1)) {
+                        compensate = row + length_1 - gameLogic.ROWS;
+                    }
+                    for (var i = 0; i < length_1; i++) {
+                        board[row - compensate + i][col] = 'O';
+                    }
                     shipNum++;
                     console.log("shipNum:", shipNum);
                 }
@@ -86,10 +82,6 @@ var gameLogic;
         console.log("Game Ends ");
         return "I lose!";
     }
-    /**
-     * Returns the move that should be performed when player
-     * with index turnIndexBeforeMove makes a move in cell row X col.
-     */
     function createMove(stateBeforeMove, row, col, turnIndexBeforeMove, whichBoard) {
         if (!stateBeforeMove) {
             stateBeforeMove = getInitialState();
