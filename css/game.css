@@ -43,6 +43,10 @@ body {
 .t {
   border-top: 1pt solid black;
 }
+.hover {
+  background-color: red;
+  opacity: 0.5;
+}
 
 .isProposal1 {
   transform: scale(0.6, 0.6);

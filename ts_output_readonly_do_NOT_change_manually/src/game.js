@@ -176,8 +176,8 @@ var game;
             game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
     function cellClickedYours(row, col) {
-        log.info("Clicked on cell:", row, col);
-        log.info("Game got:", row);
+        log.info("Your Board cell:", row, col);
+        //log.info("Game got:", row);
         if (!isHumanTurn())
             return;
         var nextMove = null;
@@ -192,8 +192,8 @@ var game;
     }
     game.cellClickedYours = cellClickedYours;
     function cellClickedMy(row, col) {
-        log.info("Clicked on cell:", row, col);
-        log.info("Game got:", row);
+        log.info("My Board cell:", row, col);
+        //log.info("Game got:", row);
         if (!isHumanTurn())
             return;
         var nextMove = null;
@@ -208,14 +208,14 @@ var game;
         makeMove(nextMove);
     }
     game.cellClickedMy = cellClickedMy;
-    function cellOver(row, col) {
-        log.info("Over on cell:", row, col);
+    function myHover(row, col) {
+        return game.state.myBoard[row][col] === "";
     }
-    game.cellOver = cellOver;
-    function cellLeave(row, col) {
-        log.info("Leave on cell:", row, col);
+    game.myHover = myHover;
+    function yourHover(row, col) {
+        return game.state.yourBoard[row][col] === "";
     }
-    game.cellLeave = cellLeave;
+    game.yourHover = yourHover;
     function shouldShowImage(row, col, whichboard) {
         if (whichboard == 0) {
             return game.state.myBoard[row][col] !== "" || isProposal(row, col);

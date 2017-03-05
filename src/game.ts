@@ -191,8 +191,8 @@ module game {
   }
 
   export function cellClickedYours(row: number, col: number): void {
-    log.info("Clicked on cell:", row, col);
-    log.info("Game got:", row);
+    log.info("Your Board cell:", row, col);
+    //log.info("Game got:", row);
     if (!isHumanTurn()) return;
     let nextMove: IMove = null;
     try {
@@ -206,8 +206,8 @@ module game {
   }
 
     export function cellClickedMy(row: number, col: number): void {
-    log.info("Clicked on cell:", row, col);
-    log.info("Game got:", row);
+    log.info("My Board cell:", row, col);
+    //log.info("Game got:", row);
     if (!isHumanTurn()) return;
     let nextMove: IMove = null;
     try {
@@ -221,13 +221,14 @@ module game {
     makeMove(nextMove);
   }
 
-  export function cellOver(row: number, col: number): void {
-    log.info("Over on cell:", row, col);
+  export function myHover(row: number, col: number): boolean {
+    return state.myBoard[row][col]==="";
   }
 
-    export function cellLeave(row: number, col: number): void {
-    log.info("Leave on cell:", row, col);
+  export function yourHover(row: number, col: number): boolean {
+    return state.yourBoard[row][col]==="";
   }
+  
 
   export function shouldShowImage(row: number, col: number, whichboard: number): boolean {
     if(whichboard==0) {

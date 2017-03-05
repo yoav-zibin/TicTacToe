@@ -24,6 +24,12 @@ var gameLogic;
         return { myBoard: getInitialBoard(), yourBoard: getInitialBoard(), delta: null, ship: 0, start: 0 };
     }
     gameLogic.getInitialState = getInitialState;
+    function validSet(board, row, col, leng) {
+        if (row + leng > 10 || col + leng > 10 || row < 0 || col < 0 || board[row][col] != '') {
+            return false;
+        }
+        return true;
+    }
     function setShip(board, state, row, col) {
         var shipNum = state.ship;
         if (shipNum < 5) {
@@ -32,6 +38,27 @@ var gameLogic;
                     throw new Error("already set!");
                 }
                 else {
+                    var count = 0;
+                    var length_1 = 5 - shipNum;
+                    switch (shipNum) {
+                        case 0: {
+                            while (count != 5) {
+                                if (validSet(board, row, col, length_1)) {
+                                    for (var i = 0; i < 4; i++) {
+                                        board[row + i][col] = 'O';
+                                    }
+                                    break;
+                                }
+                                else {
+                                }
+                            }
+                            break;
+                        }
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                    }
                     board[row][col] = 'O';
                     shipNum++;
                     console.log("shipNum:", shipNum);
