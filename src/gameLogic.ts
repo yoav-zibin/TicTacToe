@@ -225,9 +225,9 @@ module gameLogic {
     return shapes;
   }
 
-  export function tmp_printFrame(frame: string[][]): string {
+  export function tmp_printFrame(frame: string[][], height:number): string {
     let ret: string = "";
-    for (let i = 0; i < SHAPEHEIGHT; i++) {
+    for (let i = 0; i < height; i++) {
       ret += frame[i].toString() + "\n\r";
     }
     return ret;
@@ -248,7 +248,7 @@ module gameLogic {
     log.log("flip=", flip);
 
     log.log("origin shape")
-    console.log(tmp_printFrame(shape.frame));
+    console.log(tmp_printFrame(shape.frame, SHAPEHEIGHT));
 
     // vertical flip
     if (flip == 1) {
@@ -262,7 +262,7 @@ module gameLogic {
     }
 
     log.log("After flipping Allshape:")
-    console.log(tmp_printFrame(retShape.frame));
+    console.log(tmp_printFrame(retShape.frame, SHAPEHEIGHT));
 
     // rotation
     let rotateAny = function (retShape: Shape, rotation: number): string[][] {
@@ -278,12 +278,12 @@ module gameLogic {
 
       let ret: string[][] = angular.copy(retShape.frame)
       console.log("Before rotation:");
-      console.log(tmp_printFrame(ret));
+      console.log(tmp_printFrame(ret, SHAPEHEIGHT));
       for (let i = 0; i < rotation; i++) {
         console.log("Roate=", i);
         ret = rotate90(ret);
         console.log("After rotation:");
-        console.log(tmp_printFrame(ret));
+        console.log(tmp_printFrame(ret,SHAPEHEIGHT));
       }
       return ret;
     }
@@ -291,7 +291,7 @@ module gameLogic {
     retShape.frame = rotateAny(retShape, rotation);
 
     log.log("After rotation Allshape:")
-    console.log(tmp_printFrame(retShape.frame));
+    console.log(tmp_printFrame(retShape.frame, SHAPEHEIGHT));
 
     return retShape;
   }
@@ -370,7 +370,20 @@ module gameLogic {
 
   export function getBoardAction(row: number, col: number, shape: Shape): Board {
     let board: Board = [];
-    // TODO fill the shape matrix into the board;
+    // fill the shape matrix into the board;
+    for (let i = 0; i < ROWS; i++) {
+      board[i] = [];
+      for (let j = 0; j < COLS; j++) {
+        board[i][j] = '';
+      }
+    }
+
+    let margins: number[] = getAllMargin(shape);
+    for (let i = -margins[0]; i <= margins[2]; i++) {
+      for (let j = -margins[1]; j <= margins[3]; j++) {
+        board[row + i][col + j] = shape.frame[ Math.floor(SHAPEHEIGHT/2) + i][ Math.floor(SHAPEWIDTH/2) + j];
+      }
+    }
 
     return board;
   }
@@ -462,7 +475,7 @@ module gameLogic {
 
     // if the shape placement is not on the board
     if (!checkValidShapePlacement(row, col, shape)) {
-
+      throw new Error("Shape not on the board");
     }
 
     let boardAction: Board = getBoardAction(row, col, shape);
@@ -479,7 +492,6 @@ module gameLogic {
       throw new Error("Can only make a move if the game is not over!");
     }
     //~
-
 
     let boardAfterMove = angular.copy(board);
 
@@ -532,7 +544,7 @@ module gameLogic {
 
     log.log("frame:", shape);
     log.log("final shape:");
-    console.log(tmp_printFrame(shape.frame));
+    console.log(tmp_printFrame(shape.frame, SHAPEHEIGHT));
 
     let margins: number[] = getAllMargin(shape);
     log.log("margin=", margins)
@@ -541,5 +553,9 @@ module gameLogic {
     log.log(checkValidShapePlacement(0, 1, shape));
     log.log(checkValidShapePlacement(1, 0, shape));
     log.log(checkValidShapePlacement(0, 1, shape));
+
+    let boardAction: Board = getBoardAction(2, 2, shape);
+    console.log(tmp_printFrame(boardAction, COLS))
+
   }
 }
