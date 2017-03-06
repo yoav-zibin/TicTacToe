@@ -48,7 +48,7 @@ module gameLogic {
     return true;
   }
 
-  function setShip(board: Board, state: IState, row: number, col: number): IState {
+  function setShipRow(board: Board, state: IState, row: number, col: number): IState {
     let shipNum = state.ship;
     let originBoard = board;
     if(shipNum < 5) {
@@ -59,6 +59,11 @@ module gameLogic {
         else {
           let length=5-shipNum;
           let compensate=0;
+          
+          /**give compensate to out of boundary */
+          if(!validSet(board, row, col, length)) {
+            compensate = row+length-ROWS;
+          }
 
           /**check if already set */
           for(let i=0; i<length; i++) {
@@ -69,13 +74,53 @@ module gameLogic {
             }
           }
 
+          for(let i=0; i<length; i++) {
+            board[row-compensate+i][col]='O';
+          }
+          
+          shipNum++;     
+          console.log("shipNum:", shipNum);
+        }
+      }
+    }
+    else {
+      return {myBoard: board,yourBoard: state.yourBoard, delta:{row,col}, ship: shipNum, start: 1};
+    }
+    if(shipNum==5) {
+      state.start=1;
+    }
+
+    return {myBoard: board,yourBoard: state.yourBoard, delta:{row,col}, ship: shipNum, start: state.start};
+  }
+
+  function setShipCol(board: Board, state: IState, row: number, col: number): IState {
+    let shipNum = state.ship;
+    let originBoard = board;
+    if(shipNum < 5) {
+      if(state.start==0) {
+        if(board[row][col] === 'O') {
+          throw new Error("already set!");
+        }
+        else {
+          let length=5-shipNum;
+          let compensate=0;
+          
           /**give compensate to out of boundary */
           if(!validSet(board, row, col, length)) {
             compensate = row+length-ROWS;
           }
 
+          /**check if already set */
           for(let i=0; i<length; i++) {
-            board[row-compensate+i][col]='O';
+            /**check if already set */
+            if(board[row][col-compensate+i]==='O') {
+              window.alert("Already set ship here");
+              return {myBoard: originBoard ,yourBoard: state.yourBoard, delta:null, ship: shipNum, start: state.start};
+            }
+          }
+
+          for(let i=0; i<length; i++) {
+            board[row][col-compensate+i]='O';
           }
           
           shipNum++;     
@@ -108,7 +153,7 @@ module gameLogic {
   }
 
   export function createMove(
-      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number, whichBoard: number): IMove {
+      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number, whichBoard: number, direction: boolean): IMove {
 
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
@@ -121,12 +166,18 @@ module gameLogic {
     if(whichBoard == 0) {
       if(stateBeforeMove.start!=1) {
         console.log("setting ship");
-        let shipState = setShip(myBoard, stateBeforeMove, row, col);
-        return {endMatchScores: null, turnIndex: 1-turnIndexBeforeMove, state: shipState};
+        let shipState;
+        if(direction == true) {
+          shipState = setShipRow(myBoard, stateBeforeMove, row, col);
+        }
+        else 
+          shipState = setShipCol(myBoard, stateBeforeMove, row, col);
+
+        return {endMatchScores: null, turnIndex: 0, state: shipState};
       }
       else {
         console.log("Game has started!");
-        return {endMatchScores: null, turnIndex: 1-turnIndexBeforeMove, state: stateBeforeMove};
+        return {endMatchScores: null, turnIndex: 1, state: stateBeforeMove};
       }
     }
 

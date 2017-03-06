@@ -22,17 +22,20 @@
   <script src="ts_output_readonly_do_NOT_change_manually/src/aiService.js"></script>
   <!-- /build -->
 </head>
-<body ng-cloak>
-<div id="gameArea">
+<body ng-cloak ng-init="direction = true">
 
+<button ng-click="direction == true ? false : true">
+  change direction</button>
+
+<div id="gameArea">
   <div id="myBoard" ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
       style="position:absolute; top:{{row * 10}}%; left:55%; width:100%; height:10%;">
     <div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
         style="position:absolute; top:0; left:{{col * 10}}%; width:10%; height:100%;"
-        ng-class="{myhover: hover, r: col < 10, b: row < 10, t: row < 1, l: col < 1}"
-        ng-mouseenter="hover = game.myHover(row,col)"
-        ng-mouseleave="hover = false"
-        ng-click="game.cellClickedMy(row, col)"
+        ng-class="{myhover: cells, r: col < 10, b: row < 10, t: row < 1, l: col < 1}"
+        ng-mouseenter="cells = game.myHover(row,col)"
+        ng-mouseleave="cells = 0"
+        ng-click="game.cellClickedMy(row, col, direction)"
         id="{{'e2e_test_div_' + row + 'x' + col}}">
       <div style="width:100%; height: 100%"
           ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"

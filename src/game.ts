@@ -205,14 +205,14 @@ module game {
     makeMove(nextMove);
   }
 
-    export function cellClickedMy(row: number, col: number): void {
+    export function cellClickedMy(row: number, col: number, direction: boolean): void {
     log.info("My Board cell:", row, col);
     //log.info("Game got:", row);
     if (!isHumanTurn()) return;
     let nextMove: IMove = null;
     try {
       nextMove = gameLogic.createMove(
-          state, row, col, currentUpdateUI.turnIndex, 0);
+          state, row, col, currentUpdateUI.turnIndex, 0, direction);
     } catch (e) {
       log.info(["Cell is already full in position:", row, col]);
       return;
@@ -221,8 +221,9 @@ module game {
     makeMove(nextMove);
   }
 
-  export function myHover(row: number, col: number): boolean {
-    return state.myBoard[row][col]==="";
+  export function myHover(row: number, col: number): number {
+    if(state.myBoard[row][col]==="")
+      return row + 5 - state.ship;
   }
 
   export function yourHover(row: number, col: number): boolean {

@@ -7,11 +7,11 @@ describe("In TicTacToe", function () {
     var O_WIN_SCORES = [0, 1];
     var TIE_SCORES = [0, 0];
     function expectException(turnIndexBeforeMove, boardBeforeMove, row, col) {
-        var stateBeforeMove = boardBeforeMove ? { board: boardBeforeMove, delta: null } : null;
+        var stateBeforeMove = boardBeforeMove ? { myBoard: boardBeforeMove, yourBoard: boardBeforeMove, delta: null, ship: 0, start: 0 } : null;
         // We expect an exception to be thrown :)
         var didThrowException = false;
         try {
-            gameLogic.createMove(stateBeforeMove, row, col, turnIndexBeforeMove);
+            gameLogic.createMove(stateBeforeMove, row, col, turnIndexBeforeMove, 1);
         }
         catch (e) {
             didThrowException = true;
@@ -24,7 +24,7 @@ describe("In TicTacToe", function () {
         var expectedMove = {
             turnIndex: turnIndexAfterMove,
             endMatchScores: endMatchScores,
-            state: { board: boardAfterMove, delta: { row: row, col: col } }
+            state: { myBoard: boardAfterMove, yourBoard: boardAfterMove, delta: { row: row, col: col }, }
         };
         var stateBeforeMove = boardBeforeMove ? { board: boardBeforeMove, delta: null } : null;
         var move = gameLogic.createMove(stateBeforeMove, row, col, turnIndexBeforeMove);

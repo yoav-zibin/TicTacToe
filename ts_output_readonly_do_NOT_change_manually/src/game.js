@@ -191,14 +191,14 @@ var game;
         makeMove(nextMove);
     }
     game.cellClickedYours = cellClickedYours;
-    function cellClickedMy(row, col) {
+    function cellClickedMy(row, col, direction) {
         log.info("My Board cell:", row, col);
         //log.info("Game got:", row);
         if (!isHumanTurn())
             return;
         var nextMove = null;
         try {
-            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex, 0);
+            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex, 0, direction);
         }
         catch (e) {
             log.info(["Cell is already full in position:", row, col]);
@@ -209,7 +209,8 @@ var game;
     }
     game.cellClickedMy = cellClickedMy;
     function myHover(row, col) {
-        return game.state.myBoard[row][col] === "";
+        if (game.state.myBoard[row][col] === "")
+            return row + 5 - game.state.ship;
     }
     game.myHover = myHover;
     function yourHover(row, col) {

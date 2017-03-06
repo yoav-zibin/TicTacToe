@@ -13,11 +13,11 @@ describe("In TicTacToe", function() {
       boardBeforeMove: Board,
       row: number,
       col: number): void {
-    let stateBeforeMove: IState = boardBeforeMove ? {board: boardBeforeMove, delta: null} : null;
+    let stateBeforeMove: IState = boardBeforeMove ? {myBoard: boardBeforeMove, yourBoard: boardBeforeMove, delta: null,ship:0, start:0} : null;
     // We expect an exception to be thrown :)
     let didThrowException = false;
     try {
-      gameLogic.createMove(stateBeforeMove, row, col, turnIndexBeforeMove);
+      gameLogic.createMove(stateBeforeMove, row, col, turnIndexBeforeMove, 1);
     } catch (e) {
       didThrowException = true;
     }
@@ -37,7 +37,7 @@ describe("In TicTacToe", function() {
     let expectedMove:IMove = {
         turnIndex: turnIndexAfterMove,
         endMatchScores: endMatchScores,
-        state: {board: boardAfterMove, delta: {row: row, col: col}}
+        state: {myBoard: boardAfterMove, yourBoard: boardAfterMove, delta: {row: row, col: col},}
       };
     let stateBeforeMove: IState = boardBeforeMove ? {board: boardBeforeMove, delta: null} : null;
     let move: IMove = gameLogic.createMove(stateBeforeMove, row, col, turnIndexBeforeMove);

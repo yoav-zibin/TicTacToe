@@ -30,7 +30,7 @@ var gameLogic;
         }
         return true;
     }
-    function setShip(board, state, row, col) {
+    function setShipRow(board, state, row, col) {
         var shipNum = state.ship;
         var originBoard = board;
         if (shipNum < 5) {
@@ -41,6 +41,10 @@ var gameLogic;
                 else {
                     var length_1 = 5 - shipNum;
                     var compensate = 0;
+                    /**give compensate to out of boundary */
+                    if (!validSet(board, row, col, length_1)) {
+                        compensate = row + length_1 - gameLogic.ROWS;
+                    }
                     /**check if already set */
                     for (var i = 0; i < length_1; i++) {
                         /**check if already set */
@@ -49,12 +53,47 @@ var gameLogic;
                             return { myBoard: originBoard, yourBoard: state.yourBoard, delta: null, ship: shipNum, start: state.start };
                         }
                     }
-                    /**give compensate to out of boundary */
-                    if (!validSet(board, row, col, length_1)) {
-                        compensate = row + length_1 - gameLogic.ROWS;
-                    }
                     for (var i = 0; i < length_1; i++) {
                         board[row - compensate + i][col] = 'O';
+                    }
+                    shipNum++;
+                    console.log("shipNum:", shipNum);
+                }
+            }
+        }
+        else {
+            return { myBoard: board, yourBoard: state.yourBoard, delta: { row: row, col: col }, ship: shipNum, start: 1 };
+        }
+        if (shipNum == 5) {
+            state.start = 1;
+        }
+        return { myBoard: board, yourBoard: state.yourBoard, delta: { row: row, col: col }, ship: shipNum, start: state.start };
+    }
+    function setShipCol(board, state, row, col) {
+        var shipNum = state.ship;
+        var originBoard = board;
+        if (shipNum < 5) {
+            if (state.start == 0) {
+                if (board[row][col] === 'O') {
+                    throw new Error("already set!");
+                }
+                else {
+                    var length_2 = 5 - shipNum;
+                    var compensate = 0;
+                    /**give compensate to out of boundary */
+                    if (!validSet(board, row, col, length_2)) {
+                        compensate = row + length_2 - gameLogic.ROWS;
+                    }
+                    /**check if already set */
+                    for (var i = 0; i < length_2; i++) {
+                        /**check if already set */
+                        if (board[row][col - compensate + i] === 'O') {
+                            window.alert("Already set ship here");
+                            return { myBoard: originBoard, yourBoard: state.yourBoard, delta: null, ship: shipNum, start: state.start };
+                        }
+                    }
+                    for (var i = 0; i < length_2; i++) {
+                        board[row][col - compensate + i] = 'O';
                     }
                     shipNum++;
                     console.log("shipNum:", shipNum);
@@ -82,7 +121,7 @@ var gameLogic;
         console.log("Game Ends ");
         return "I lose!";
     }
-    function createMove(stateBeforeMove, row, col, turnIndexBeforeMove, whichBoard) {
+    function createMove(stateBeforeMove, row, col, turnIndexBeforeMove, whichBoard, direction) {
         if (!stateBeforeMove) {
             stateBeforeMove = getInitialState();
         }
@@ -92,12 +131,17 @@ var gameLogic;
         if (whichBoard == 0) {
             if (stateBeforeMove.start != 1) {
                 console.log("setting ship");
-                var shipState = setShip(myBoard, stateBeforeMove, row, col);
-                return { endMatchScores: null, turnIndex: 1 - turnIndexBeforeMove, state: shipState };
+                var shipState = void 0;
+                if (direction == true) {
+                    shipState = setShipRow(myBoard, stateBeforeMove, row, col);
+                }
+                else
+                    shipState = setShipCol(myBoard, stateBeforeMove, row, col);
+                return { endMatchScores: null, turnIndex: 0, state: shipState };
             }
             else {
                 console.log("Game has started!");
-                return { endMatchScores: null, turnIndex: 1 - turnIndexBeforeMove, state: stateBeforeMove };
+                return { endMatchScores: null, turnIndex: 1, state: stateBeforeMove };
             }
         }
         else if (whichBoard == 1) {
