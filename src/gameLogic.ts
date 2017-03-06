@@ -53,7 +53,7 @@ module gameLogic {
     let shapes: AllShape = [];
     // init all shapes 
     shapes = [{
-      id: -1, row: -1, column: -1,
+      id: 0, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '1', '1', '0'],
       ['0', '0', '1', '1', '0'],
@@ -61,7 +61,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 1, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0'],
       ['0', '0', '1', '0', '0'],
@@ -69,7 +69,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 2, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '1', '0', '0'],
       ['0', '1', '1', '1', '0'],
@@ -77,7 +77,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 3, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0'],
       ['0', '0', '1', '1', '0'],
@@ -85,7 +85,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 4, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0'],
       ['0', '1', '1', '1', '1'],
@@ -93,7 +93,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 5, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0'],
       ['0', '1', '1', '0', '0'],
@@ -101,7 +101,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 6, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '0', '1', '0'],
       ['0', '1', '1', '1', '0'],
@@ -109,7 +109,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 7, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0'],
       ['0', '1', '1', '1', '0'],
@@ -117,7 +117,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 8, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0'],
       ['0', '0', '1', '1', '0'],
@@ -125,7 +125,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 9, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '1', '0', '0', '0'],
       ['0', '1', '1', '1', '1'],
@@ -133,7 +133,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 10, row: -1, column: -1,
       frame: [['0', '0', '1', '0', '0'],
       ['0', '0', '1', '0', '0'],
       ['0', '1', '1', '1', '0'],
@@ -141,7 +141,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 11, row: -1, column: -1,
       frame: [['0', '0', '1', '0', '0'],
       ['0', '0', '1', '0', '0'],
       ['0', '0', '1', '1', '1'],
@@ -149,7 +149,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 12, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0'],
       ['0', '0', '1', '1', '1'],
@@ -157,7 +157,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 13, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '0', '1', '0'],
       ['0', '1', '1', '1', '0'],
@@ -165,7 +165,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 14, row: -1, column: -1,
       frame: [['0', '0', '1', '0', '0'],
       ['0', '0', '1', '0', '0'],
       ['0', '0', '1', '0', '0'],
@@ -173,7 +173,7 @@ module gameLogic {
       ['0', '0', '1', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 15, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '1', '0', '0'],
       ['0', '0', '1', '1', '0'],
@@ -181,7 +181,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 16, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '1', '1', '0'],
       ['0', '1', '1', '0', '0'],
@@ -189,7 +189,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 17, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '1', '1', '0'],
       ['0', '0', '1', '0', '0'],
@@ -197,7 +197,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 18, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '1', '1', '0'],
       ['0', '1', '1', '0', '0'],
@@ -205,7 +205,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 19, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '1', '0', '0'],
       ['0', '1', '1', '1', '0'],
@@ -213,7 +213,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0']]
     },
     {
-      id: -1, row: -1, column: -1,
+      id: 20, row: -1, column: -1,
       frame: [['0', '0', '0', '0', '0'],
       ['0', '0', '1', '0', '0'],
       ['0', '1', '1', '1', '1'],
@@ -280,7 +280,7 @@ module gameLogic {
       console.log("Before rotation:");
       console.log(tmp_printFrame(ret));
       for (let i = 0; i < rotation; i++) {
-        console.log("Roate=",i);
+        console.log("Roate=", i);
         ret = rotate90(ret);
         console.log("After rotation:");
         console.log(tmp_printFrame(ret));
@@ -360,7 +360,12 @@ module gameLogic {
     let margins: number[] = getAllMargin(shape);
 
     // TODO check valid with board, center and margin
-    return ret;
+    let up: number = row;
+    let left: number = col;
+    let bottom: number = ROWS - 1 - row;
+    let right: number = COLS - 1 - col;
+
+    return up >= margins[0] && left >= margins[1] && bottom >= margins[2] && right >= margins[3];
   }
 
   export function getBoardAction(row: number, col: number, shape: Shape): Board {
@@ -531,5 +536,10 @@ module gameLogic {
 
     let margins: number[] = getAllMargin(shape);
     log.log("margin=", margins)
+
+    log.log(checkValidShapePlacement(0, 0, shape));
+    log.log(checkValidShapePlacement(0, 1, shape));
+    log.log(checkValidShapePlacement(1, 0, shape));
+    log.log(checkValidShapePlacement(0, 1, shape));
   }
 }
