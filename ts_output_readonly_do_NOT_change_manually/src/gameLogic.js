@@ -24,13 +24,21 @@ var gameLogic;
         return { myBoard: getInitialBoard(), yourBoard: getInitialBoard(), delta: null, ship: 0, start: 0 };
     }
     gameLogic.getInitialState = getInitialState;
-    function validSet(board, row, col, leng) {
-        if (row + leng > 10 || col + leng > 10 || row < 0 || col < 0) {
-            return false;
+    function validSet(board, row, col, leng, direction) {
+        if (direction = true) {
+            if ((row + leng) > 10 || row < 0 || col < 0) {
+                return false;
+            }
+        }
+        else {
+            if ((col + leng) > 10 || row < 0 || col < 0) {
+                return false;
+            }
         }
         return true;
     }
-    function setShipRow(board, state, row, col) {
+    gameLogic.validSet = validSet;
+    function setShipRow(board, state, row, col, direction) {
         var shipNum = state.ship;
         var originBoard = board;
         if (shipNum < 5) {
@@ -42,7 +50,7 @@ var gameLogic;
                     var length_1 = 5 - shipNum;
                     var compensate = 0;
                     /**give compensate to out of boundary */
-                    if (!validSet(board, row, col, length_1)) {
+                    if (!validSet(board, row, col, length_1, direction)) {
                         compensate = row + length_1 - gameLogic.ROWS;
                     }
                     /**check if already set */
@@ -69,7 +77,7 @@ var gameLogic;
         }
         return { myBoard: board, yourBoard: state.yourBoard, delta: { row: row, col: col }, ship: shipNum, start: state.start };
     }
-    function setShipCol(board, state, row, col) {
+    function setShipCol(board, state, row, col, direction) {
         var shipNum = state.ship;
         var originBoard = board;
         if (shipNum < 5) {
@@ -81,8 +89,8 @@ var gameLogic;
                     var length_2 = 5 - shipNum;
                     var compensate = 0;
                     /**give compensate to out of boundary */
-                    if (!validSet(board, row, col, length_2)) {
-                        compensate = row + length_2 - gameLogic.ROWS;
+                    if (!validSet(board, row, col, length_2, direction)) {
+                        compensate = col + length_2 - gameLogic.COLS;
                     }
                     /**check if already set */
                     for (var i = 0; i < length_2; i++) {
@@ -133,10 +141,10 @@ var gameLogic;
                 console.log("setting ship");
                 var shipState = void 0;
                 if (direction == true) {
-                    shipState = setShipRow(myBoard, stateBeforeMove, row, col);
+                    shipState = setShipRow(myBoard, stateBeforeMove, row, col, direction);
                 }
                 else
-                    shipState = setShipCol(myBoard, stateBeforeMove, row, col);
+                    shipState = setShipCol(myBoard, stateBeforeMove, row, col, direction);
                 return { endMatchScores: null, turnIndex: 0, state: shipState };
             }
             else {
@@ -191,10 +199,11 @@ var gameLogic;
             state: getInitialState() };
     }
     gameLogic.createInitialMove = createInitialMove;
-    function forSimpleTestHtml() {
-        var move = gameLogic.createMove(null, null, 0, 0, 0);
+    /*
+      export function forSimpleTestHtml() {
+        var move = gameLogic.createMove(null,null, 0, 0, 0);
         log.log("move=", move);
-    }
-    gameLogic.forSimpleTestHtml = forSimpleTestHtml;
+      }
+    */
 })(gameLogic || (gameLogic = {}));
 //# sourceMappingURL=gameLogic.js.map

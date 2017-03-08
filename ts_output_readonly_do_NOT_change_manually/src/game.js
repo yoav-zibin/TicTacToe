@@ -1,6 +1,9 @@
 ;
 var game;
 (function (game) {
+    game.direction = true;
+    function flipDirection() { game.direction = !game.direction; }
+    game.flipDirection = flipDirection;
     game.$rootScope = null;
     game.$timeout = null;
     // Global variables are cleared when getting updateUI.
@@ -175,14 +178,14 @@ var game;
             game.currentUpdateUI.turnIndex >= 0 &&
             game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
-    function cellClickedYours(row, col) {
+    function cellClickedYours(row, col, direction) {
         log.info("Your Board cell:", row, col);
         //log.info("Game got:", row);
         if (!isHumanTurn())
             return;
         var nextMove = null;
         try {
-            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex, 1);
+            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex, 1, direction);
         }
         catch (e) {
             return;
@@ -208,11 +211,71 @@ var game;
         makeMove(nextMove);
     }
     game.cellClickedMy = cellClickedMy;
-    function myHover(row, col) {
-        if (game.state.myBoard[row][col] === "")
-            return row + 5 - game.state.ship;
+    function myHover(row, col, direction) {
+        var compensate = 0;
+        var length = 5 - game.state.ship;
+        var show = true;
+        if (direction == true) {
+            if (!gameLogic.validSet(game.state.myBoard, row, col, length, direction))
+                compensate = row + length - gameLogic.ROWS;
+            for (var i = 0; i < length; i++) {
+                if (game.state.myBoard[row - compensate + i][col] !== "") {
+                    show = false;
+                    break;
+                }
+            }
+        }
+        else {
+            if (!gameLogic.validSet(game.state.myBoard, row, col, length, direction))
+                compensate = col + length - gameLogic.COLS;
+            for (var i = 0; i < length; i++) {
+                if (game.state.myBoard[row][col - compensate + i] !== "") {
+                    show = false;
+                    break;
+                }
+            }
+        }
+        if (show == true) {
+            if (direction == true) {
+                for (var i = 0; i < length; i++) {
+                    document.getElementById('my' + (row - compensate + i) + 'x' + col).style.background = "blue";
+                    document.getElementById('my' + (row - compensate + i) + 'x' + col).style.opacity = "0.5";
+                }
+            }
+            else {
+                for (var i = 0; i < length; i++) {
+                    document.getElementById('my' + row + 'x' + (col - compensate + i)).style.background = "blue";
+                    document.getElementById('my' + row + 'x' + (col - compensate + i)).style.opacity = "0.5";
+                }
+            }
+        }
     }
     game.myHover = myHover;
+    function myHoverLeave(row, col, direction) {
+        var compensate = 0;
+        var length = 5 - game.state.ship;
+        if (direction == true) {
+            if (!gameLogic.validSet(game.state.myBoard, row, col, length, direction))
+                compensate = row + length - gameLogic.ROWS;
+        }
+        else {
+            if (!gameLogic.validSet(game.state.myBoard, row, col, length, direction))
+                compensate = col + length - gameLogic.COLS;
+        }
+        if (direction == true) {
+            for (var i = 0; i < length; i++) {
+                document.getElementById('my' + (row - compensate + i) + 'x' + col).style.background = "rgb(250,250,250)";
+                document.getElementById('my' + (row - compensate + i) + 'x' + col).style.opacity = "1";
+            }
+        }
+        else {
+            for (var i = 0; i < length; i++) {
+                document.getElementById('my' + row + 'x' + (col - compensate + i)).style.background = "rgb(250,250,250)";
+                document.getElementById('my' + row + 'x' + (col - compensate + i)).style.opacity = "1";
+            }
+        }
+    }
+    game.myHoverLeave = myHoverLeave;
     function yourHover(row, col) {
         return game.state.yourBoard[row][col] === "";
     }

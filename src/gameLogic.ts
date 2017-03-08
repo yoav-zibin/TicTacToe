@@ -40,15 +40,23 @@ module gameLogic {
     return {myBoard: getInitialBoard(), yourBoard: getInitialBoard(), delta: null, ship: 0, start:0};
   }
 
-  function validSet(board: Board, row: number, col: number, leng: number): boolean {
-    if(row + leng > 10 || col + leng > 10 || row < 0 || col < 0) {
-      return false;
+  export function validSet(board: Board, row: number, col: number, leng: number, direction: boolean): boolean {
+    if(direction = true) {
+      if((row + leng) > 10 || row < 0 || col < 0) {
+        return false;
+      }
     }
-    
+    else {
+      if((col + leng) > 10 || row < 0 || col < 0) {
+        return false;
+      }
+    }
+
     return true;
+    
   }
 
-  function setShipRow(board: Board, state: IState, row: number, col: number): IState {
+  function setShipRow(board: Board, state: IState, row: number, col: number, direction: boolean): IState {
     let shipNum = state.ship;
     let originBoard = board;
     if(shipNum < 5) {
@@ -61,7 +69,7 @@ module gameLogic {
           let compensate=0;
           
           /**give compensate to out of boundary */
-          if(!validSet(board, row, col, length)) {
+          if(!validSet(board, row, col, length, direction)) {
             compensate = row+length-ROWS;
           }
 
@@ -93,7 +101,7 @@ module gameLogic {
     return {myBoard: board,yourBoard: state.yourBoard, delta:{row,col}, ship: shipNum, start: state.start};
   }
 
-  function setShipCol(board: Board, state: IState, row: number, col: number): IState {
+  function setShipCol(board: Board, state: IState, row: number, col: number, direction: boolean): IState {
     let shipNum = state.ship;
     let originBoard = board;
     if(shipNum < 5) {
@@ -106,8 +114,8 @@ module gameLogic {
           let compensate=0;
           
           /**give compensate to out of boundary */
-          if(!validSet(board, row, col, length)) {
-            compensate = row+length-ROWS;
+          if(!validSet(board, row, col, length,direction)) {
+            compensate = col+length-COLS;
           }
 
           /**check if already set */
@@ -168,10 +176,10 @@ module gameLogic {
         console.log("setting ship");
         let shipState;
         if(direction == true) {
-          shipState = setShipRow(myBoard, stateBeforeMove, row, col);
+          shipState = setShipRow(myBoard, stateBeforeMove, row, col, direction);
         }
         else 
-          shipState = setShipCol(myBoard, stateBeforeMove, row, col);
+          shipState = setShipCol(myBoard, stateBeforeMove, row, col, direction);
 
         return {endMatchScores: null, turnIndex: 0, state: shipState};
       }
@@ -234,10 +242,12 @@ module gameLogic {
         state: getInitialState()};
   }
 
+/*
   export function forSimpleTestHtml() {
     var move = gameLogic.createMove(null,null, 0, 0, 0);
     log.log("move=", move);
   }
+*/
 
 }
 
