@@ -259,21 +259,19 @@ module game {
     if(show==true) {
       if(direction==true) {   //row
         for(let i=0; i<length; i++) { 
-          document.getElementById('my' + (row-compensate+i) + 'x' + col).style.background="blue";
-          document.getElementById('my' + (row-compensate+i) + 'x' + col).style.opacity="0.5";
+          document.getElementById('my' + (row-compensate+i) + 'x' + col).classList.add("myhover");
         }
       }
       else {
         for(let i=0; i<length; i++) { 
-          document.getElementById('my' + row + 'x' + (col-compensate+i)).style.background="blue";
-          document.getElementById('my' + row + 'x' + (col-compensate+i)).style.opacity="0.5";
+          document.getElementById('my' + row + 'x' + (col-compensate+i)).classList.add("myhover");
         }
       }
     }
-
   }
 
   export function myHoverLeave(row: number, col: number, direction: boolean): void {
+    /*
     let compensate = 0;
     let length = 5-state.ship;
 
@@ -285,20 +283,33 @@ module game {
       if(!gameLogic.validSet(state.myBoard, row, col, length, direction))
         compensate = col + length - gameLogic.COLS;
     }
-
+    
     if(direction==true) {
       for(let i=0; i<length; i++) {
-        document.getElementById('my' + (row-compensate+i) + 'x' + col).style.background="rgb(250,250,250)";
-        document.getElementById('my' + (row-compensate+i) + 'x' + col).style.opacity="1";
+          document.getElementById('my' + (row-compensate+i) + 'x' + col).classList.remove("myhover");
       } 
     }
     else {
       for(let i=0; i<length; i++) {
-        document.getElementById('my' + row + 'x' + (col-compensate+i)).style.background="rgb(250,250,250)";
-        document.getElementById('my' + row + 'x' + (col-compensate+i)).style.opacity="1";
+          document.getElementById('my' + row + 'x' + (col-compensate+i)).classList.remove("myhover");
       } 
     }
-    
+*/
+
+    if(direction==true) {
+      for(let i=0; i<gameLogic.ROWS; i++) {
+        if(document.getElementById('my' + i + 'x' + col).classList.contains("myhover")) {
+          document.getElementById('my' + i + 'x' + col).classList.remove("myhover");
+        }
+      }
+    }
+    else {
+      for(let i=0; i<gameLogic.COLS; i++) {
+        if(document.getElementById('my' + row + 'x' + i).classList.contains("myhover")) {
+          document.getElementById('my' + row + 'x' + i).classList.remove("myhover");
+        }
+      }
+    }
   }
 
 

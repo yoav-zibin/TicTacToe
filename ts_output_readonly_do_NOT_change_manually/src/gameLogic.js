@@ -25,7 +25,7 @@ var gameLogic;
     }
     gameLogic.getInitialState = getInitialState;
     function validSet(board, row, col, leng, direction) {
-        if (direction = true) {
+        if (direction == true) {
             if ((row + leng) > 10 || row < 0 || col < 0) {
                 return false;
             }
