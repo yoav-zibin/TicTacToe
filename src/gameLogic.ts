@@ -36,6 +36,8 @@ module gameLogic {
   export const SHAPECOUNT = 20;
   export const SHAPEHEIGHT = 5;
   export const SHAPEWIDTH = 5;
+  // TODO change this
+  export const STARTANCHOR: number[] = [0, 399];
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   export function getInitialBoard(): Board {
@@ -225,17 +227,38 @@ module gameLogic {
     return shapes;
   }
 
-  export function tmp_printFrame(frame: string[][], height: number): string {
-    let ret: string = "";
+  export function aux_printFrame(frame: string[][], height: number): string {
+    let ret: string = "   0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9\n\r  ----------------------------------------\n\r";
     for (let i = 0; i < height; i++) {
-      ret += frame[i].toString() + "\n\r";
+      let tmp: string[] = angular.copy(frame[i]);
+      for (let j = 0; j < tmp.length; j++) {
+        if (tmp[j] == '') {
+          tmp[j] = ' ';
+        }
+      }
+      if (i >= 10) {
+        ret += "" + i + "|" + tmp.toString() + "|\n\r";
+      } else {
+        ret += " " + i + "|" + tmp.toString() + "|\n\r";
+      }
+    }
+    ret += "  ----------------------------------------\n\r";
+    return ret;
+  }
+
+  export function aux_printCoordinator(numbers: number[]):string{
+    let ret:string = "";
+
+    for (let i = 0; i < numbers.length; i++) {
+      ret += "("+parseXY(numbers[i]).toString()+")";
+      ret += ", ";
     }
     return ret;
   }
 
   export function getShapeByTypeAndOperation(shapeType: number, operationType: number): Shape {
     let allShapes: AllShape = getInitShapes();
-    log.log("shapeType:", shapeType);
+    //log.log("shapeType:", shapeType);
     let shape: Shape = allShapes[shapeType];
     let rotation: number = operationType % 4;
     // only vertical flip. Horizontal flip <=> vertical flip + 180 rotation.
@@ -243,12 +266,12 @@ module gameLogic {
 
     let retShape: Shape = angular.copy(shape);
 
-    log.log("shapeId=", shapeType);
-    log.log("rotation=", rotation);
-    log.log("flip=", flip);
+    //log.log("shapeId=", shapeType);
+    //log.log("rotation=", rotation);
+    //log.log("flip=", flip);
 
-    log.log("origin shape")
-    console.log(tmp_printFrame(shape.frame, SHAPEHEIGHT));
+    //log.log("origin shape")
+    //console.log(aux_printFrame(shape.frame, SHAPEHEIGHT));
 
     // vertical flip
     if (flip == 1) {
@@ -261,8 +284,8 @@ module gameLogic {
       }
     }
 
-    log.log("After flipping Allshape:")
-    console.log(tmp_printFrame(retShape.frame, SHAPEHEIGHT));
+    //log.log("After flipping Allshape:")
+    //console.log(aux_printFrame(retShape.frame, SHAPEHEIGHT));
 
     // rotation
     let rotateAny = function (retShape: Shape, rotation: number): string[][] {
@@ -277,21 +300,21 @@ module gameLogic {
       }
 
       let ret: string[][] = angular.copy(retShape.frame)
-      console.log("Before rotation:");
-      console.log(tmp_printFrame(ret, SHAPEHEIGHT));
+      //console.log("Before rotation:");
+      //console.log(aux_printFrame(ret, SHAPEHEIGHT));
       for (let i = 0; i < rotation; i++) {
-        console.log("Roate=", i);
+        //console.log("Roate=", i);
         ret = rotate90(ret);
-        console.log("After rotation:");
-        console.log(tmp_printFrame(ret, SHAPEHEIGHT));
+        //console.log("After rotation:");
+        //console.log(aux_printFrame(ret, SHAPEHEIGHT));
       }
       return ret;
     }
 
     retShape.frame = rotateAny(retShape, rotation);
 
-    log.log("After rotation Allshape:")
-    console.log(tmp_printFrame(retShape.frame, SHAPEHEIGHT));
+    //log.log("After rotation Allshape:")
+    //console.log(aux_printFrame(retShape.frame, SHAPEHEIGHT));
 
     return retShape;
   }
@@ -326,8 +349,8 @@ module gameLogic {
       }
     }
 
-    console.log("colSum=", colSum.toString());
-    console.log("rowSum=", rowSum.toString());
+    //console.log("colSum=", colSum.toString());
+    //console.log("rowSum=", rowSum.toString());
 
     let marginVal = 1;
     // top, left margin
@@ -463,20 +486,26 @@ module gameLogic {
         if (("" + turnIndexBeforeMove) != board[i][j]) {
           continue;
         }
-        let hasEmptyNeighbour: boolean = false;
 
-        for (let k = 0; k < 4; k++) {
-          let nx = j + dirx8[k];
-          let ny = i + diry8[k];
+        for (let k = 0; k < dirx8.length; k++) {
+          let nx: number = j + dirx8[k];
+          let ny: number = i + diry8[k];
           if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && board[ny][nx] == '') {
             let hashcode: number = ny * COLS + nx;
-            if (boundary.indexOf(hashcode) != -1) {
+            if (boundary.indexOf(hashcode) == -1) {
               boundary.push(hashcode);
             }
           }
         }
       }
     }
+
+    /*
+    console.log("boundary:");
+    for (let i = 0; i < boundary.length; i++) {
+      console.log(parseXY(boundary[i]));
+    }
+    */
 
     let ret: number[] = [];
     for (let i = 0; i < boundary.length; i++) {
@@ -485,7 +514,7 @@ module gameLogic {
 
       // check adjecent, if adjecent to any blocks, then unavailble
       let skip: boolean = false;
-      for (let j = 0; j < 4; j++) {
+      for (let j = 0; j < dirx.length; j++) {
         let nx: number = x + dirx[j];
         let ny: number = y + diry[j];
         if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && board[ny][nx] != '') {
@@ -502,15 +531,43 @@ module gameLogic {
     return ret;
   }
 
+  export function noPreviousMove(board: Board, turnIndexBeforeMove: number): boolean {
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        if (board[i][j] == '' + turnIndexBeforeMove) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  export function parseXY(hashcode: number): number[] {
+    let x: number = hashcode % COLS;
+    let y: number = Math.floor(hashcode / COLS);
+
+    return [y, x];
+  }
+
   export function checkLegalMove(board: Board, row: number, col: number,
     boardAction: Board, turnIndexBeforeMove: number): boolean {
 
     let ret: boolean = true;
-    let possibleAnchor: number[] = getRecomandAnchor(board, turnIndexBeforeMove);
+    let possibleAnchor: number[] = [];
     let dirx: number[] = [-1, 0, 1, 0];
     let diry: number[] = [0, -1, 0, 1];
 
-    // 1.has atleast one anchor
+    // 0. if not territory, anchor is init state
+    if (noPreviousMove(board, turnIndexBeforeMove)) {
+      possibleAnchor.push(STARTANCHOR[turnIndexBeforeMove]);
+    } else {
+      possibleAnchor = getRecomandAnchor(board, turnIndexBeforeMove);
+    }
+
+    console.log("possible Anchor:");
+    console.log(aux_printCoordinator(possibleAnchor));
+
+    // 1.has at least one anchor
     let foundAnchor: boolean = false;
     for (let i = 0; i < possibleAnchor.length; i++) {
       let x: number = possibleAnchor[i] % COLS;
@@ -537,13 +594,13 @@ module gameLogic {
           break;
         }
         // adjecent
-        for (let k = 0; k < 4; k++) {
+        for (let k = 0; k < dirx.length; k++) {
           let nx = i + dirx[k];
           let ny = j + diry[k];
           if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && boardAction[ny][nx] != '1'
-            && board[ny][nx] != '' ) {
-              ret = false;
-              return ret;
+            && board[ny][nx] != '') {
+            ret = false;
+            return ret;
           }
         }
       }
@@ -552,11 +609,11 @@ module gameLogic {
     return ret;
   }
 
-  export function shapePlacement(boardAfterMove:Board, boardAction:Board, turnIndexBeforeMove:number) {
+  export function shapePlacement(boardAfterMove: Board, boardAction: Board, turnIndexBeforeMove: number) {
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
         if (boardAction[i][j] == '1') {
-          boardAfterMove[i][j] = ''+turnIndexBeforeMove;
+          boardAfterMove[i][j] = '' + turnIndexBeforeMove;
         }
       }
     }
@@ -586,12 +643,16 @@ module gameLogic {
     }
 
     let boardAction: Board = getBoardAction(row, col, shape);
+
+    console.log("boardAction:")
+    console.log(aux_printFrame(boardAction, COLS))
+
     let board: Board = stateBeforeMove.board;
 
     if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
       throw new Error("One can only make a move in an empty position!");
     }
-    
+
     // TODO change to IsGameOver function IsGameOver(board, boardAction, turnIndexBeforeMove)
     if (getWinner(board) !== '' || isTie(board)) {
       throw new Error("Can only make a move if the game is not over!");
@@ -601,7 +662,10 @@ module gameLogic {
     let boardAfterMove = angular.copy(board);
 
     shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove);
-    
+
+    console.log("boardAfterMove:")
+    console.log(aux_printFrame(boardAfterMove, COLS))
+
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
@@ -633,6 +697,41 @@ module gameLogic {
     };
   }
 
+  export function forSimplePlayTestHtml() {
+    let board: Board = getInitialBoard();
+    let turnIndexBeforeMove: number = 0;
+
+    let actionRow: number[] = [0, 18, 2, 16, 3];
+    let actionCol: number[] = [1, 19, 3, 17, 5];
+    let actionShapeId: number[] = [40, 40, 40, 40, 40];
+
+    for (let i = 0; i < actionShapeId.length; i++) {
+      let row = actionRow[i];
+      let col = actionCol[i];
+      let shapeId = actionShapeId[i];
+
+      let shape: Shape = getShapeFromShapeID(shapeId);
+      if (!checkValidShapePlacement(row, col, shape)) {
+        console.log("Shape not on the board");
+      }
+
+      let boardAction: Board = getBoardAction(row, col, shape);
+      console.log("turnindex:", turnIndexBeforeMove);
+      console.log("boardAction:")
+      console.log(aux_printFrame(boardAction, COLS))
+
+      if (checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+        shapePlacement(board, boardAction, turnIndexBeforeMove);
+        turnIndexBeforeMove = 1 - turnIndexBeforeMove;
+        console.log("Board:")
+        console.log(aux_printFrame(board, COLS));
+      } else {
+        console.log("Fail to add shape on the board. Board:")
+        console.log(aux_printFrame(board, COLS));
+      }
+    }
+  }
+
   export function forSimpleTestHtml() {
     /*
     var move = gameLogic.createMove(null, 0, 0, 0, 0);
@@ -647,7 +746,7 @@ module gameLogic {
 
     log.log("frame:", shape);
     log.log("final shape:");
-    console.log(tmp_printFrame(shape.frame, SHAPEHEIGHT));
+    console.log(aux_printFrame(shape.frame, SHAPEHEIGHT));
 
     let margins: number[] = getAllMargin(shape);
     log.log("margin=", margins)
@@ -658,7 +757,6 @@ module gameLogic {
     log.log(checkValidShapePlacement(0, 1, shape));
 
     let boardAction: Board = getBoardAction(2, 2, shape);
-    console.log(tmp_printFrame(boardAction, COLS))
-
+    console.log(aux_printFrame(boardAction, COLS))
   }
 }
