@@ -246,11 +246,11 @@ module gameLogic {
     return ret;
   }
 
-  export function aux_printCoordinator(numbers: number[]):string{
-    let ret:string = "";
+  export function aux_printCoordinator(numbers: number[]): string {
+    let ret: string = "";
 
     for (let i = 0; i < numbers.length; i++) {
-      ret += "("+parseXY(numbers[i]).toString()+")";
+      ret += "(" + parseIJ(numbers[i]).toString() + ")";
       ret += ", ";
     }
     return ret;
@@ -475,23 +475,23 @@ module gameLogic {
 
   export function getRecomandAnchor(board: Board, turnIndexBeforeMove: number): number[] {
     let boundary: number[] = [];
-    let dirx: number[] = [-1, 0, 1, 0];
-    let diry: number[] = [0, 1, 0, -1];
-    let dirx8: number[] = [-1, 0, 1, 0, -1, -1, 1, 1];
-    let diry8: number[] = [0, 1, 0, -1, 1, -1, -1, 1];
+    let diri: number[] = [-1, 0, 1, 0];
+    let dirj: number[] = [0, 1, 0, -1];
+    let dirj8: number[] = [-1, 0, 1, 0, -1, -1, 1, 1];
+    let diri8: number[] = [0, 1, 0, -1, 1, -1, -1, 1];
 
     // get all boundary around turnIndexBeforeMove's teritory
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
-        if (("" + turnIndexBeforeMove) != board[i][j]) {
+        if (("" + turnIndexBeforeMove) !== board[i][j]) {
           continue;
         }
 
-        for (let k = 0; k < dirx8.length; k++) {
-          let nx: number = j + dirx8[k];
-          let ny: number = i + diry8[k];
-          if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && board[ny][nx] == '') {
-            let hashcode: number = ny * COLS + nx;
+        for (let k = 0; k < dirj8.length; k++) {
+          let ni: number = i + diri8[k];
+          let nj: number = j + dirj8[k];
+          if (nj >= 0 && nj < COLS && ni >= 0 && ni < ROWS && board[ni][nj] == '') {
+            let hashcode: number = ni * COLS + nj;
             if (boundary.indexOf(hashcode) == -1) {
               boundary.push(hashcode);
             }
@@ -500,24 +500,20 @@ module gameLogic {
       }
     }
 
-    /*
-    console.log("boundary:");
-    for (let i = 0; i < boundary.length; i++) {
-      console.log(parseXY(boundary[i]));
-    }
-    */
+    console.log("boundary for ", turnIndexBeforeMove, ":");
+    console.log(aux_printCoordinator(boundary));
 
     let ret: number[] = [];
-    for (let i = 0; i < boundary.length; i++) {
-      let x: number = boundary[i] % COLS;
-      let y: number = Math.floor(boundary[i] / COLS);
+    for (let k = 0; k < boundary.length; k++) {
+      let j: number = boundary[k] % COLS;
+      let i: number = Math.floor(boundary[k] / COLS);
 
       // check adjecent, if adjecent to any blocks, then unavailble
       let skip: boolean = false;
-      for (let j = 0; j < dirx.length; j++) {
-        let nx: number = x + dirx[j];
-        let ny: number = y + diry[j];
-        if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && board[ny][nx] != '') {
+      for (let t = 0; t < diri.length; t++) {
+        let nj: number = j + diri[t];
+        let ni: number = i + dirj[t];
+        if (nj >= 0 && nj < COLS && ni >= 0 && ni < ROWS && board[ni][nj] == ('' + turnIndexBeforeMove)) {
           skip = true;
           break;
         }
@@ -525,7 +521,7 @@ module gameLogic {
       if (skip) {
         continue;
       }
-      ret.push(y * COLS + x);
+      ret.push(i * COLS + j);
     }
 
     return ret;
@@ -542,11 +538,11 @@ module gameLogic {
     return true;
   }
 
-  export function parseXY(hashcode: number): number[] {
-    let x: number = hashcode % COLS;
-    let y: number = Math.floor(hashcode / COLS);
+  export function parseIJ(hashcode: number): number[] {
+    let j: number = hashcode % COLS;
+    let i: number = Math.floor(hashcode / COLS);
 
-    return [y, x];
+    return [i, j];
   }
 
   export function checkLegalMove(board: Board, row: number, col: number,
@@ -554,8 +550,8 @@ module gameLogic {
 
     let ret: boolean = true;
     let possibleAnchor: number[] = [];
-    let dirx: number[] = [-1, 0, 1, 0];
-    let diry: number[] = [0, -1, 0, 1];
+    let diri: number[] = [0, -1, 0, 1];
+    let dirj: number[] = [-1, 0, 1, 0];
 
     // 0. if not territory, anchor is init state
     if (noPreviousMove(board, turnIndexBeforeMove)) {
@@ -564,15 +560,15 @@ module gameLogic {
       possibleAnchor = getRecomandAnchor(board, turnIndexBeforeMove);
     }
 
-    console.log("possible Anchor:");
+    console.log("possible Anchors for ", turnIndexBeforeMove, " :");
     console.log(aux_printCoordinator(possibleAnchor));
 
     // 1.has at least one anchor
     let foundAnchor: boolean = false;
-    for (let i = 0; i < possibleAnchor.length; i++) {
-      let x: number = possibleAnchor[i] % COLS;
-      let y: number = Math.floor(possibleAnchor[i] / COLS);
-      if (boardAction[y][x] == '1') {
+    for (let k = 0; k < possibleAnchor.length; k++) {
+      let i: number = Math.floor(possibleAnchor[k] / COLS);
+      let j: number = possibleAnchor[k] % COLS;
+      if (boardAction[i][j] == '1') {
         foundAnchor = true;
         break;
       }
@@ -582,6 +578,7 @@ module gameLogic {
       return false;
     }
 
+    console.log("Found anchor");
     // 2.not conflict with existing teritory and not adjacent to teritory
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
@@ -594,12 +591,13 @@ module gameLogic {
           break;
         }
         // adjecent
-        for (let k = 0; k < dirx.length; k++) {
-          let nx = i + dirx[k];
-          let ny = j + diry[k];
-          if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && boardAction[ny][nx] != '1'
-            && board[ny][nx] != '') {
+        for (let k = 0; k < dirj.length; k++) {
+          let ni = i + diri[k];
+          let nj = j + dirj[k];
+          if (nj >= 0 && nj < COLS && ni >= 0 && ni < ROWS && boardAction[ni][nj] != '1'
+            && board[ni][nj] == ('' + turnIndexBeforeMove)) {
             ret = false;
+            console.log("points at (", i, ",", j, ") adjacent with:(", ni, ",", nj, ")");
             return ret;
           }
         }
@@ -701,9 +699,11 @@ module gameLogic {
     let board: Board = getInitialBoard();
     let turnIndexBeforeMove: number = 0;
 
-    let actionRow: number[] = [0, 18, 2, 16, 3];
-    let actionCol: number[] = [1, 19, 3, 17, 5];
-    let actionShapeId: number[] = [40, 40, 40, 40, 40];
+    shapePlacement(board, getBoardAction(2, 1, getShapeFromShapeID(40)), 1);
+
+    let actionRow: number[] = [0, 4, 2, 1, 4];
+    let actionCol: number[] = [1, 3, 3, 2, 5];
+    let actionShapeId: number[] = [40, 40, 40, 0, 40];
 
     for (let i = 0; i < actionShapeId.length; i++) {
       let row = actionRow[i];
@@ -717,8 +717,8 @@ module gameLogic {
 
       let boardAction: Board = getBoardAction(row, col, shape);
       console.log("turnindex:", turnIndexBeforeMove);
-      console.log("boardAction:")
-      console.log(aux_printFrame(boardAction, COLS))
+      console.log("boardAction turn:", turnIndexBeforeMove, "row:", row, ", col:", col, "shape:", shapeId);
+      console.log(aux_printFrame(boardAction, COLS));
 
       if (checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
         shapePlacement(board, boardAction, turnIndexBeforeMove);
