@@ -225,7 +225,7 @@ module gameLogic {
     return shapes;
   }
 
-  export function tmp_printFrame(frame: string[][], height:number): string {
+  export function tmp_printFrame(frame: string[][], height: number): string {
     let ret: string = "";
     for (let i = 0; i < height; i++) {
       ret += frame[i].toString() + "\n\r";
@@ -283,7 +283,7 @@ module gameLogic {
         console.log("Roate=", i);
         ret = rotate90(ret);
         console.log("After rotation:");
-        console.log(tmp_printFrame(ret,SHAPEHEIGHT));
+        console.log(tmp_printFrame(ret, SHAPEHEIGHT));
       }
       return ret;
     }
@@ -381,7 +381,10 @@ module gameLogic {
     let margins: number[] = getAllMargin(shape);
     for (let i = -margins[0]; i <= margins[2]; i++) {
       for (let j = -margins[1]; j <= margins[3]; j++) {
-        board[row + i][col + j] = shape.frame[ Math.floor(SHAPEHEIGHT/2) + i][ Math.floor(SHAPEWIDTH/2) + j];
+        let val: string = shape.frame[Math.floor(SHAPEHEIGHT / 2) + i][Math.floor(SHAPEWIDTH / 2) + j];
+        if (val == '1') {
+          board[row + i][col + j] = val;
+        }
       }
     }
 
@@ -447,12 +450,116 @@ module gameLogic {
     return '';
   }
 
+  export function getRecomandAnchor(board: Board, turnIndexBeforeMove: number): number[] {
+    let boundary: number[] = [];
+    let dirx: number[] = [-1, 0, 1, 0];
+    let diry: number[] = [0, 1, 0, -1];
+    let dirx8: number[] = [-1, 0, 1, 0, -1, -1, 1, 1];
+    let diry8: number[] = [0, 1, 0, -1, 1, -1, -1, 1];
+
+    // get all boundary around turnIndexBeforeMove's teritory
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        if (("" + turnIndexBeforeMove) != board[i][j]) {
+          continue;
+        }
+        let hasEmptyNeighbour: boolean = false;
+
+        for (let k = 0; k < 4; k++) {
+          let nx = j + dirx8[k];
+          let ny = i + diry8[k];
+          if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && board[ny][nx] == '') {
+            let hashcode: number = ny * COLS + nx;
+            if (boundary.indexOf(hashcode) != -1) {
+              boundary.push(hashcode);
+            }
+          }
+        }
+      }
+    }
+
+    let ret: number[] = [];
+    for (let i = 0; i < boundary.length; i++) {
+      let x: number = boundary[i] % COLS;
+      let y: number = Math.floor(boundary[i] / COLS);
+
+      // check adjecent, if adjecent to any blocks, then unavailble
+      let skip: boolean = false;
+      for (let j = 0; j < 4; j++) {
+        let nx: number = x + dirx[j];
+        let ny: number = y + diry[j];
+        if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && board[ny][nx] != '') {
+          skip = true;
+          break;
+        }
+      }
+      if (skip) {
+        continue;
+      }
+      ret.push(y * COLS + x);
+    }
+
+    return ret;
+  }
+
   export function checkLegalMove(board: Board, row: number, col: number,
     boardAction: Board, turnIndexBeforeMove: number): boolean {
 
-    let ret: boolean = false;
+    let ret: boolean = true;
+    let possibleAnchor: number[] = getRecomandAnchor(board, turnIndexBeforeMove);
+    let dirx: number[] = [-1, 0, 1, 0];
+    let diry: number[] = [0, -1, 0, 1];
+
+    // 1.has atleast one anchor
+    let foundAnchor: boolean = false;
+    for (let i = 0; i < possibleAnchor.length; i++) {
+      let x: number = possibleAnchor[i] % COLS;
+      let y: number = Math.floor(possibleAnchor[i] / COLS);
+      if (boardAction[y][x] == '1') {
+        foundAnchor = true;
+        break;
+      }
+    }
+
+    if (!foundAnchor) {
+      return false;
+    }
+
+    // 2.not conflict with existing teritory and not adjacent to teritory
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        if (boardAction[i][j] == '') {
+          continue;
+        }
+        // conflict
+        if (boardAction[i][j] == '1' && board[i][j] != '') {
+          ret = false;
+          break;
+        }
+        // adjecent
+        for (let k = 0; k < 4; k++) {
+          let nx = i + dirx[k];
+          let ny = j + diry[k];
+          if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && boardAction[ny][nx] != '1'
+            && board[ny][nx] != '' ) {
+              ret = false;
+              return ret;
+          }
+        }
+      }
+    }
 
     return ret;
+  }
+
+  export function shapePlacement(boardAfterMove:Board, boardAction:Board, turnIndexBeforeMove:number) {
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        if (boardAction[i][j] == '1') {
+          boardAfterMove[i][j] = ''+turnIndexBeforeMove;
+        }
+      }
+    }
   }
 
   /**
@@ -481,12 +588,10 @@ module gameLogic {
     let boardAction: Board = getBoardAction(row, col, shape);
     let board: Board = stateBeforeMove.board;
 
-    // TODO change to checkLegalMove function checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)
     if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
       throw new Error("One can only make a move in an empty position!");
     }
-    //~
-
+    
     // TODO change to IsGameOver function IsGameOver(board, boardAction, turnIndexBeforeMove)
     if (getWinner(board) !== '' || isTie(board)) {
       throw new Error("Can only make a move if the game is not over!");
@@ -495,11 +600,8 @@ module gameLogic {
 
     let boardAfterMove = angular.copy(board);
 
-    // TODO change to shapePlacement function, shapePlacement(boardAfterMove, row, col, shapeID, turnIndexBeforeMove)
-    // TODO draw the actionBoard + turnIndexBeforeMove on the board;  
-    boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
-    //~
-
+    shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove);
+    
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
@@ -513,6 +615,7 @@ module gameLogic {
 
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
+      // TODO change to four player
       turnIndex = 1 - turnIndexBeforeMove;
       endMatchScores = null;
     }
