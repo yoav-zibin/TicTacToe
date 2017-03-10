@@ -52,6 +52,8 @@ var GameplayConsts;
 })(GameplayConsts || (GameplayConsts = {}));
 ;
 // create ball bodies
+var radius = 10;
+var textureScale = radius * 2 / 256.0; // texture is 256x256
 World.add(world, [
     // cue
     Bodies.circle(100, 350, 10, { isStatic: false,
@@ -62,17 +64,17 @@ World.add(world, [
     Bodies.circle(130, 160, 10, { isStatic: false,
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
         restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
-        render: { sprite: { texture: 'assets/8.png', xScale: 0.25, yScale: 0.25 } } }),
+        render: { sprite: { texture: 'imgs/8.png', xScale: textureScale, yScale: textureScale } } }),
     // a solid ball #4
     Bodies.circle(350, 500, 10, { isStatic: false,
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
         restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
-        render: { sprite: { texture: 'assets/4.png', xScale: 0.25, yScale: 0.25 } } }),
+        render: { sprite: { texture: 'imgs/4.png', xScale: textureScale, yScale: textureScale } } }),
     // a striped ball #10
     Bodies.circle(100, 200, 10, { isStatic: false,
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
         restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
-        render: { sprite: { texture: 'assets/10.png', xScale: 0.25, yScale: 0.25 } } }),
+        render: { sprite: { texture: 'imgs/10.png', xScale: textureScale, yScale: textureScale } } }),
 ]);
 var mouse = Mouse.create(render.canvas), mouseConstraint = MouseConstraint.create(engine, {
     mouse: mouse,
