@@ -8,6 +8,8 @@ type IProposalData = BoardDelta;
 interface IState {
   board: Board;
   delta: BoardDelta;
+  shapeStatus: boolean[][];
+  playerStatus: boolean[];
 }
 
 interface Shape {
@@ -36,6 +38,8 @@ module gameLogic {
   export const SHAPECOUNT = 20;
   export const SHAPEHEIGHT = 5;
   export const SHAPEWIDTH = 5;
+  export const SHAPENUMBER = 21;
+  export const GROUPNUMBER = 4;
   // TODO change this
   export const STARTANCHOR: number[] = [0, 399];
 
@@ -49,6 +53,20 @@ module gameLogic {
       }
     }
     return board;
+  }
+
+  export function getInitShapeStatus(): boolean[][] {
+    let status: boolean[][] = [];
+    for (let j = 0; j < GROUPNUMBER; j++) {
+      for (let i = 0; i < SHAPENUMBER; i++) {
+        status[j][i] = true;
+      }
+    }
+    return status;
+  }
+
+  export function getInitPlayerStatus(): boolean[] {
+    return [true, true, true, true];
   }
 
   export function getInitShapes(): AllShape {
@@ -319,15 +337,28 @@ module gameLogic {
     return retShape;
   }
 
+  export function getShapeType(shapeId: number): number {
+    return Math.floor(shapeId / OPERATIONS);
+  }
+
+  export function getShapeOpType(shapeId: number): number {
+    return shapeId % OPERATIONS;
+  }
+
   export function getShapeFromShapeID(shapeId: number): Shape {
-    let operationType = shapeId % OPERATIONS;
-    let shapeType = Math.floor(shapeId / OPERATIONS);
+    let operationType = getShapeOpType(shapeId);
+    let shapeType = getShapeType(shapeId);
 
     return getShapeByTypeAndOperation(shapeType, operationType);
   }
 
   export function getInitialState(): IState {
-    return { board: getInitialBoard(), delta: null };
+    return {
+      board: getInitialBoard(),
+      delta: null,
+      shapeStatus: getInitShapeStatus(),
+      playerStatus: getInitPlayerStatus()
+    };
   }
 
   export function getAllMargin(shape: Shape): number[] {
@@ -617,6 +648,20 @@ module gameLogic {
     }
   }
 
+  export function updateShapeStatus(shapeStatus:boolean[][], shapeId: number, turnIndexBeforeMove: number):boolean[][] {
+    let ret = angular.copy(shapeStatus);
+    ret[turnIndexBeforeMove][getShapeType(shapeId)] = false;
+    return ret;
+  }
+
+  export function updatePlayerStatus(playerStatus: boolean[], turnIndexBeforeMove:number, shapeStatus:boolean[][], board:Board):boolean[] {
+    let ret = angular.copy(playerStatus);
+
+    // TODO check the remianing move
+
+    return ret;
+  }
+
   /**
    * Returns the move that should be performed when player
    * with index turnIndexBeforeMove makes a move in cell row X col with shapeId.
@@ -633,6 +678,12 @@ module gameLogic {
       stateBeforeMove = getInitialState();
     }
 
+    let shapeStatus: boolean[][] = stateBeforeMove.shapeStatus;
+
+    if (!shapeStatus[turnIndexBeforeMove][getShapeType(shapeId)]) {
+      throw new Error("Shape already been used");
+    }
+
     let shape: Shape = getShapeFromShapeID(shapeId);
 
     // if the shape placement is not on the board
@@ -647,6 +698,8 @@ module gameLogic {
 
     let board: Board = stateBeforeMove.board;
 
+    let playerStatus: boolean[] = stateBeforeMove.playerStatus;
+
     if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
       throw new Error("One can only make a move in an empty position!");
     }
@@ -658,15 +711,20 @@ module gameLogic {
     //~
 
     let boardAfterMove = angular.copy(board);
-
-    shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove);
-
     console.log("boardAfterMove:")
     console.log(aux_printFrame(boardAfterMove, COLS))
 
+    shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove);
+    let shapeStatusAfterMove = updateShapeStatus(shapeStatus, shapeId, turnIndexBeforeMove);
+
+    //TODO implement the last check
+    let playerStatusAferMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, shapeStatusAfterMove, boardAfterMove);
+    
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
+
+    // CHANGE here
     if (winner !== '' || isTie(boardAfterMove)) {
       // Game over.
       turnIndex = -1;
@@ -674,17 +732,23 @@ module gameLogic {
       // TODO add endScore Function, the score is measured by the blocks unused.
       endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
       //~
-
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
       // TODO change to four player
       turnIndex = 1 - turnIndexBeforeMove;
       endMatchScores = null;
     }
+    //~
+
     // Here delta should be all the blocks covered by the new move
     let delta: BoardDelta = { row: row, col: col, shapeId: shapeId };
     //~
-    let state: IState = { delta: delta, board: boardAfterMove };
+    let state: IState = {
+      delta: delta,
+      board: boardAfterMove,
+      shapeStatus: shapeStatusAfterMove,
+      playerStatus: playerStatusAferMove,
+    };
     return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
   }
 
