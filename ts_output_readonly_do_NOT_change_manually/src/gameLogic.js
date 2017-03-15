@@ -30,10 +30,7 @@ var gameLogic;
     function getInitShapeStatus() {
         var status = [];
         for (var j = 0; j < gameLogic.GROUPNUMBER; j++) {
-<<<<<<< HEAD
             status[j] = [];
-=======
->>>>>>> 35c4936b69eb3fdaa52dfde45f2332e797436bf9
             for (var i = 0; i < gameLogic.SHAPENUMBER; i++) {
                 status[j][i] = true;
             }
@@ -291,11 +288,8 @@ var gameLogic;
             for (var i = 0; i < rotation; i++) {
                 //console.log("Roate=", i);
                 ret = rotate90(ret);
-<<<<<<< HEAD
                 //console.log("After rotation:");
                 //console.log(aux_printFrame(ret, SHAPEHEIGHT));
-=======
->>>>>>> 35c4936b69eb3fdaa52dfde45f2332e797436bf9
             }
             return ret;
         };
@@ -324,11 +318,8 @@ var gameLogic;
             board: getInitialBoard(),
             delta: null,
             shapeStatus: getInitShapeStatus(),
-<<<<<<< HEAD
-            playerStatus: getInitPlayerStatus(),
-=======
             playerStatus: getInitPlayerStatus()
->>>>>>> 35c4936b69eb3fdaa52dfde45f2332e797436bf9
+
         };
     }
     gameLogic.getInitialState = getInitialState;
