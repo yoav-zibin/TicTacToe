@@ -288,8 +288,6 @@ var gameLogic;
             for (var i = 0; i < rotation; i++) {
                 //console.log("Roate=", i);
                 ret = rotate90(ret);
-                //console.log("After rotation:");
-                //console.log(aux_printFrame(ret, SHAPEHEIGHT));
             }
             return ret;
         };
@@ -318,8 +316,7 @@ var gameLogic;
             board: getInitialBoard(),
             delta: null,
             shapeStatus: getInitShapeStatus(),
-            playerStatus: getInitPlayerStatus()
-
+            playerStatus: getInitPlayerStatus(),
         };
     }
     gameLogic.getInitialState = getInitialState;
@@ -648,7 +645,6 @@ var gameLogic;
             turnIndex = -1;
             // TODO add endScore Function, the score is measured by the blocks unused.
             endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
-            //~
         }
         else {
             // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).

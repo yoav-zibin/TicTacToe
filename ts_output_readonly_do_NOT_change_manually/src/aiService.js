@@ -20,7 +20,6 @@ var aiService;
                         possibleMoves.push(gameLogic.createMove(state, i, j, shapeId, turnIndexBeforeMove));
                     }
                     catch (e) {
-                        // The cell in that position was full.
                     }
                 }
             }
