@@ -46,3 +46,67 @@ body {
   from {opacity: 0.1;}
   to {opacity: 1;}
 }
+
+td {
+    padding:0 5px 0 5px;
+}
+
+.r {
+  border-right: 1pt solid white;
+}
+.t {
+  border-top: 1pt solid white;
+}
+
+.l {
+  border-left: 1pt solid white;
+}
+
+.b {
+  border-bottom: 1pt solid white;
+}
+.white_t{
+	border-top: 1pt solid white;
+}
+
+.white_b{
+	border-bottom: 1pt solid white;
+}
+.white_l{
+	border-left: 1pt solid white;
+}
+.white_r{
+	border-right: 1pt solid white;
+}
+.slowlyAppear {
+    animation-name: toRed;
+    animation-duration: 4s;
+}
+.blink {
+  animation: black-blink 4s infinite;
+  -webkit-animation: black-blink 4s infinite;
+}
+.shadow{
+	box-shadow: 5% 5% 5% #888888;
+}
+.transition{
+	transition: background-color 2s;
+}
+@keyframes toRed{
+    from {background-color: #E8E8E8;}
+    to {background-color: #FF3399;}
+}
+
+@keyframes black-blink {
+  50% {
+    filter: brightness(1.2);
+    -webkit-filter: brightness(1.2);
+    -webkit-box-shadow:0 0 18px #4C0000;
+  }
+}
+@-webkit-keyframes black-blink {
+  50% {
+    filter: brightness(1.2);
+    -webkit-filter: brightness(1.2);
+    -webkit-box-shadow:0 0 18px #4C0000;
+}
