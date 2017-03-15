@@ -190,26 +190,29 @@ var game;
         makeMove(nextMove);
     }
     game.cellClicked = cellClicked;
-    function shouldShowImage(row, col) {
-        return game.state.board[row][col] !== "" || isProposal(row, col);
+    /*
+    export function shouldShowImage(row: number, col: number): boolean {
+      return state.board[row][col] !== "" || isProposal(row, col);
     }
-    game.shouldShowImage = shouldShowImage;
-    function isPiece(row, col, turnIndex, pieceKind) {
-        return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
+  
+  
+    function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
+      return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
     }
-    function isPieceX(row, col) {
-        return isPiece(row, col, 0, 'X');
+    
+    export function isPieceX(row: number, col: number): boolean {
+      return isPiece(row, col, 0, 'X');
     }
-    game.isPieceX = isPieceX;
-    function isPieceO(row, col) {
-        return isPiece(row, col, 1, 'O');
+  
+    export function isPieceO(row: number, col: number): boolean {
+      return isPiece(row, col, 1, 'O');
     }
-    game.isPieceO = isPieceO;
-    function shouldSlowlyAppear(row, col) {
-        return game.state.delta &&
-            game.state.delta.row === row && game.state.delta.col === col;
+  
+    export function shouldSlowlyAppear(row: number, col: number): boolean {
+      return state.delta &&
+          state.delta.row === row && state.delta.col === col;
     }
-    game.shouldSlowlyAppear = shouldSlowlyAppear;
+    */
 })(game || (game = {}));
 angular.module('myApp', ['gameServices'])
     .run(['$rootScope', '$timeout',
