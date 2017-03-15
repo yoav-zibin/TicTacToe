@@ -32,16 +32,15 @@ import log = gamingPlatform.log;
 import dragAndDropService = gamingPlatform.dragAndDropService;
 
 module gameLogic {
-  export const ROWS = 20;
-  export const COLS = 20;
+  export const ROWS = 20; //14
+  export const COLS = 20; //14
   export const OPERATIONS = 8;
-  export const SHAPECOUNT = 20;
   export const SHAPEHEIGHT = 5;
   export const SHAPEWIDTH = 5;
   export const SHAPENUMBER = 21;
-  export const GROUPNUMBER = 4;
+  export const GROUPNUMBER = 4; /// 2
   // TODO change this
-  export const STARTANCHOR: number[] = [0, 399];
+  export const STARTANCHOR: number[] = [0, ROWS*COLS]; // [0, 14 * 14];
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   export function getInitialBoard(): Board {
