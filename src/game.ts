@@ -206,10 +206,12 @@ module game {
     // Move is legal, make it!
     makeMove(nextMove);
   }
-
+  
+  /* 
   export function shouldShowImage(row: number, col: number): boolean {
     return state.board[row][col] !== "" || isProposal(row, col);
   }
+
 
   function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
     return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
@@ -227,6 +229,7 @@ module game {
     return state.delta &&
         state.delta.row === row && state.delta.col === col;
   }
+  */
 }
 
 angular.module('myApp', ['gameServices'])

@@ -57,6 +57,7 @@ module gameLogic {
   export function getInitShapeStatus(): boolean[][] {
     let status: boolean[][] = [];
     for (let j = 0; j < GROUPNUMBER; j++) {
+      status[j] = [];
       for (let i = 0; i < SHAPENUMBER; i++) {
         status[j][i] = true;
       }
@@ -356,7 +357,7 @@ module gameLogic {
       board: getInitialBoard(),
       delta: null,
       shapeStatus: getInitShapeStatus(),
-      playerStatus: getInitPlayerStatus()
+      playerStatus: getInitPlayerStatus(),
     };
   }
 
