@@ -1,6 +1,10 @@
 describe("aiService", function () {
     function createStateFromBoard(board) {
-        return { board: board, delta: null };
+        return {
+            board: board, delta: null,
+            shapeStatus: null,
+            playerStatus: null,
+        };
     }
     function createComputerMove(board, turnIndex, maxDepth) {
         var move = {
@@ -32,7 +36,9 @@ describe("aiService", function () {
                 board: [['', '', 'O'],
                     ['O', 'X', 'X'],
                     ['O', 'X', 'O']],
-                delta: null
+                delta: null,
+                shapeStatus: null,
+                playerStatus: null,
             }
         });
         expect(angular.equals(move.state.delta, { row: 0, col: 1 })).toBe(true);
