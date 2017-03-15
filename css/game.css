@@ -111,3 +111,18 @@ td {
     -webkit-box-shadow:0 0 18px #4C0000;
   }
 }
+
+
+/* TODO only for development */
+#grid {
+    width: 120px;
+    height: 120px;        
+}
+
+/* TODO modify to display shapes */
+.cell {
+    outline: 1px solid blue;
+    float: left;
+    height: 24px;
+    width: 24px;    
+}

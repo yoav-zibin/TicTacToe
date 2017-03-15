@@ -13,33 +13,19 @@
   <script src="js/everything.min.js"></script>
 </head>
 <body ng-cloak>
-<div id="gameArea">
-  <div id="boardArea" style="position:absolute; top:0; left:0; width:100%; height:100%">
-		<div ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
-			style="position:absolute; top:{{row * 5}}%; left:0; width:100%; height:5%;">
-			<div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
-				style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;"
-				ng-class = "{l: true, t: true, r: col === 19, b: row === 19, blink:newlyPlaced(row, col)}"
-				ng-style = "setBoardAreaSquareStyle(row, col)"
-				id="{{'e2e_test_board_div_' + row + 'x' + col}}">
-			</div>
-		</div>
-
-    	<svg id="boardDraggingLines" width="100%" height="100%"
-			style="display:none;position:absolute; z-index: 60;">
-			<line id="boardHorizontalDraggingLine"
-				x1="0" y1="12.5%"
-				x2="100%" y2="12.5%"
-				stroke="grey"
-				stroke-width="0.4%"/>
-			<line id="boardVerticalDraggingLine"
-				y1="0" x1="12.5%"
-				y2="100%" x2="12.5%"
-				stroke="grey"
-				stroke-width="0.4%"/>
-		</svg>
-  </div>
+<div>
+	<div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
 </div>
+
+
 
 </body>
 </html>
