@@ -27,7 +27,7 @@ module game {
     registerServiceWorker();
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
-    resizeGameAreaService.setWidthToHeight(1);
+    resizeGameAreaService.setWidthToHeight(0.7);
     gameService.setGame({
       updateUI: updateUI,
       getStateForOgImage: null,
@@ -41,9 +41,9 @@ module game {
     if (!window.applicationCache && 'serviceWorker' in navigator) {
       let n: any = navigator;
       log.log('Calling serviceWorker.register');
-      n.serviceWorker.register('service-worker.js').then(function(registration: any) {
-        log.log('ServiceWorker registration successful with scope: ',    registration.scope);
-      }).catch(function(err: any) {
+      n.serviceWorker.register('service-worker.js').then(function (registration: any) {
+        log.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }).catch(function (err: any) {
         log.log('ServiceWorker registration failed: ', err);
       });
     }
@@ -72,7 +72,7 @@ module game {
       opacity: "" + opacity,
     };
   }
-  
+
   function getProposalsBoard(playerIdToProposal: IProposals): number[][] {
     let proposals: number[][] = [];
     for (let i = 0; i < gameLogic.ROWS; i++) {
@@ -92,7 +92,7 @@ module game {
   export function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
     let playerIdToProposal = params.playerIdToProposal;
-     // Only one move/proposal per updateUI
+    // Only one move/proposal per updateUI
     didMakeMove = playerIdToProposal && playerIdToProposal[yourPlayerInfo.playerId] != undefined;
     yourPlayerInfo = params.yourPlayerInfo;
     proposals = playerIdToProposal ? getProposalsBoard(playerIdToProposal) : null;
@@ -131,7 +131,7 @@ module game {
 
   function maybeSendComputerMove() {
     if (!isComputerTurn()) return;
-    let currentMove:IMove = {
+    let currentMove: IMove = {
       endMatchScores: currentUpdateUI.endMatchScores,
       state: currentUpdateUI.state,
       turnIndex: currentUpdateUI.turnIndex,
@@ -146,12 +146,12 @@ module game {
       return;
     }
     didMakeMove = true;
-    
+
     if (!proposals) {
       gameService.makeMove(move, null);
     } else {
       let delta = move.state.delta;
-      let myProposal:IProposal = {
+      let myProposal: IProposal = {
         data: delta,
         chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
         playerInfo: yourPlayerInfo,
@@ -198,7 +198,7 @@ module game {
     let nextMove: IMove = null;
     try {
       nextMove = gameLogic.createMove(
-          state, row, col, shapeId, currentUpdateUI.turnIndex);
+        state, row, col, shapeId, currentUpdateUI.turnIndex);
     } catch (e) {
       log.info(["Cell is already full in position:", row, col]);
       return;
@@ -206,7 +206,26 @@ module game {
     // Move is legal, make it!
     makeMove(nextMove);
   }
-  
+
+  function getBoardSquareColor(row: number, col: number) {
+    if (state.board[row][col] === '0') {
+      return '#33CCFF';
+    } else if (state.board[row][col] === '1') {
+      return '#FF9900';
+    } else if (state.board[row][col] === '2') {
+      return '#FF3399';
+    } else if (state.board[row][col] === '3') {
+      return '#99FF33';
+    } else {
+      return '#F0F0F0';
+    }
+  }
+
+  export function setBoardAreaSquareStyle(row: number, col: number) {
+    var color = getBoardSquareColor(row, col);
+    return { background: color };
+  }
+
   /* 
   export function shouldShowImage(row: number, col: number): boolean {
     return state.board[row][col] !== "" || isProposal(row, col);
