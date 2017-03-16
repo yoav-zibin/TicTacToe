@@ -24,11 +24,8 @@
 	<script src="ts_output_readonly_do_NOT_change_manually/src/aiService.js"></script>
 
 	<!-- scroolbars -->
-	<link href="lib/ng-scrollable.min.css" rel="stylesheet">
-	<script src="lib/ng-scrollable.min.js"></script>
-	<script>
-		var app = angular.module('app', ['ngScrollable']);
-	</script>
+	<!--link href="lib/ng-scrollable.min.css" rel="stylesheet">
+	<script src="lib/ng-scrollable.min.js"></script-->
 	<!-- /build -->
 </head>
 
@@ -76,23 +73,24 @@
 			</svg>
 		</div>
 
-		<div id="shapeArea" style="position:absolute; top:71%; left:0; width:100%; height:21%">
-			<!--div ng-app="app" ng-scrollable="{scrollX:'none',scrollY:'left'}" style="width:100%; height:100%"-->
-			<div ng-repeat="row in [0, 1, 2, 3, 4]" style="position:absolute; top:{{row * 20}}%; left:0; width:100%; height:20%;">
-				<div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]" style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;"
-				 ng-class="{l: true, t: true, r: col === 19, b: row === 19, blink:newlyPlaced(row, col)}" ng-style="setBoardAreaSquareStyle(row, col)"
-				 id="{{'e2e_test_shape_div_' + row + 'x' + col}}">
+		<!--div ng-scrollable="{scrollX:'bottom',scrollY:'none'}" style="position:absolute; top:71%; left:0; width:100%; height:21%">
+			<img src="http://echa.github.io/ng-scrollable/assets/dumbo.jpg"/-->
+			<div id="shapeArea" style="position:absolute; top:71%; left:0; width:100%; height:21%; overflow: scroll">
+				<div ng-repeat="row in [0, 1, 2, 3, 4]" style="position:absolute; top:{{row * 18}}%; left:0; width:100%; height:19%;">
+					<div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]" style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;"
+					 ng-class="{l: true, t: true, r: col === 19, b: row === 19, blink:newlyPlaced(row, col)}" ng-style="setBoardAreaSquareStyle(row, col)"
+					 id="{{'e2e_test_shape_div_' + row + 'x' + col}}">
+					</div>
 				</div>
 			</div>
-			<!--/div-->
-		</div>
+		<!--/div-->
 
 		<div class="buttonArea" ng-hide="game.hidePassButton" style="position:absolute; top:93%; left:0; width:100%; height:7%">
 			<button type="button" ng-hide="game.shouldHidePassButton()" ng-click="game.passClicked()" class="{{game.getPassBtnClasses()}}"
 			 ng-disabled="!game.isPassBtnEnabled()">PASS</button>
 			<button type="button" ng-show="game.showConfirmButton()" ng-click="game.confirmClicked()" class="text confirmBtn">CONFIRM</button>
 
-			<button type="button" ng-show="game.showContinuePlayingOrAgreeButtons()" ng-click="game.continuePlayingClicked()" class="text passBtn continuePlayingBtn">CONTINUE_PLAYING</button>
+			<button type="button" ng-show="game.showContinuePlayingOrAgreeButtons()" ng-click="game.continuePlayingClicked()" class="text passBtn continuePlayingBtn">CONT.</button>
 			<button type="button" ng-show="game.showContinuePlayingOrAgreeButtons()" ng-click="game.agreeClicked()" class="text confirmBtn">AGREE</button>
 		</div>
 	</div>

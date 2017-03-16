@@ -251,9 +251,33 @@ module game {
   */
 }
 
-angular.module('myApp', ['gameServices'])
+var app = angular.module('myApp', ['gameServices'/*,'ngScrollable'*/])
   .run(['$rootScope', '$timeout',
     function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
       $rootScope['game'] = game;
       game.init($rootScope, $timeout);
     }]);
+
+/*
+app.controller('Demo', function ($scope:any) {
+	'use strict';
+
+	$scope.posX = 0;
+	$scope.posY = 0;
+
+	$scope.moveX = function (pixels: any) {
+		$scope.posX = $scope.posX + pixels;
+	};
+	$scope.moveY = function (pixels : any) {
+		$scope.posY = $scope.posY + pixels;
+	};
+	$scope.$evalAsync(function () {
+		$scope.$broadcast('content.changed', 1000);
+	});
+
+	$scope.center = function () {
+		$scope.posX = 600;
+		$scope.posY = 410;
+	};
+});
+*/
