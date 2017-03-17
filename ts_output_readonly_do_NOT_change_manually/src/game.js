@@ -20,7 +20,7 @@ var game;
         registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
-        resizeGameAreaService.setWidthToHeight(1);
+        resizeGameAreaService.setWidthToHeight(0.7);
         gameService.setGame({
             updateUI: updateUI,
             getStateForOgImage: null,
@@ -190,6 +190,28 @@ var game;
         makeMove(nextMove);
     }
     game.cellClicked = cellClicked;
+    function getBoardSquareColor(row, col) {
+        if (game.state.board[row][col] === '0') {
+            return '#33CCFF';
+        }
+        else if (game.state.board[row][col] === '1') {
+            return '#FF9900';
+        }
+        else if (game.state.board[row][col] === '2') {
+            return '#FF3399';
+        }
+        else if (game.state.board[row][col] === '3') {
+            return '#99FF33';
+        }
+        else {
+            return '#F0F0F0';
+        }
+    }
+    function setBoardAreaSquareStyle(row, col) {
+        var color = getBoardSquareColor(row, col);
+        return { background: color };
+    }
+    game.setBoardAreaSquareStyle = setBoardAreaSquareStyle;
     /*
     export function shouldShowImage(row: number, col: number): boolean {
       return state.board[row][col] !== "" || isProposal(row, col);
@@ -214,10 +236,33 @@ var game;
     }
     */
 })(game || (game = {}));
-angular.module('myApp', ['gameServices'])
+var app = angular.module('myApp', ['gameServices' /*,'ngScrollable'*/])
     .run(['$rootScope', '$timeout',
     function ($rootScope, $timeout) {
         $rootScope['game'] = game;
         game.init($rootScope, $timeout);
     }]);
+/*
+app.controller('Demo', function ($scope:any) {
+    'use strict';
+
+    $scope.posX = 0;
+    $scope.posY = 0;
+
+    $scope.moveX = function (pixels: any) {
+        $scope.posX = $scope.posX + pixels;
+    };
+    $scope.moveY = function (pixels : any) {
+        $scope.posY = $scope.posY + pixels;
+    };
+    $scope.$evalAsync(function () {
+        $scope.$broadcast('content.changed', 1000);
+    });
+
+    $scope.center = function () {
+        $scope.posX = 600;
+        $scope.posY = 410;
+    };
+});
+*/ 
 //# sourceMappingURL=game.js.map
