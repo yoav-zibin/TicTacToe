@@ -52,31 +52,31 @@ td {
 }
 
 .r {
-  border-right: 1pt solid white;
+  border-right: 1pt solid black;
 }
 .t {
-  border-top: 1pt solid white;
+  border-top: 1pt solid black;
 }
 
 .l {
-  border-left: 1pt solid white;
+  border-left: 1pt solid black;
 }
 
 .b {
-  border-bottom: 1pt solid white;
+  border-bottom: 1pt solid black;
 }
 .white_t{
-	border-top: 1pt solid white;
+	border-top: 1pt solid black;
 }
 
 .white_b{
-	border-bottom: 1pt solid white;
+	border-bottom: 1pt solid black;
 }
 .white_l{
-	border-left: 1pt solid white;
+	border-left: 1pt solid black;
 }
 .white_r{
-	border-right: 1pt solid white;
+	border-right: 1pt solid black;
 }
 .slowlyAppear {
     animation-name: toRed;
