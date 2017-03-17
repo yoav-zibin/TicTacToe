@@ -21,6 +21,20 @@ interface Shape {
   frame: string[][];
 }
 
+class Point {
+  x: number;
+  y: number;
+
+  public toString = (): string => {
+    return '(x: ${this.x}, y:${this.y})';
+  }
+}
+interface ShapeBoard {
+  board: string[][];
+  shapeToCell: Point[][];
+  cellToShape: number[][];
+}
+
 // TODO add array to store all the Shape
 type AllShape = Shape[];
 
@@ -40,7 +54,7 @@ module gameLogic {
   export const SHAPENUMBER = 21;
   export const GROUPNUMBER = 4; /// 2
   // TODO change this
-  export const STARTANCHOR: number[] = [0, ROWS*COLS]; // [0, 14 * 14];
+  export const STARTANCHOR: number[] = [0, ROWS * COLS]; // [0, 14 * 14];
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   export function getInitialBoard(): Board {
@@ -243,6 +257,14 @@ module gameLogic {
     ];
 
     return shapes;
+  }
+
+  export function aux_printArray(frame: any[][]): string {
+    let ret: string = "";
+    for (let i = 0; i < frame.length; i++) {
+      ret += frame[i].toString() + "\n\r";
+    }
+    return ret;
   }
 
   export function aux_printFrame(frame: string[][], height: number): string {
@@ -648,13 +670,13 @@ module gameLogic {
     }
   }
 
-  export function updateShapeStatus(shapeStatus:boolean[][], shapeId: number, turnIndexBeforeMove: number):boolean[][] {
+  export function updateShapeStatus(shapeStatus: boolean[][], shapeId: number, turnIndexBeforeMove: number): boolean[][] {
     let ret = angular.copy(shapeStatus);
     ret[turnIndexBeforeMove][getShapeType(shapeId)] = false;
     return ret;
   }
 
-  export function updatePlayerStatus(playerStatus: boolean[], turnIndexBeforeMove:number, shapeStatus:boolean[][], board:Board):boolean[] {
+  export function updatePlayerStatus(playerStatus: boolean[], turnIndexBeforeMove: number, shapeStatus: boolean[][], board: Board): boolean[] {
     let ret = angular.copy(playerStatus);
 
     // TODO check the remianing move
@@ -719,7 +741,7 @@ module gameLogic {
 
     //TODO implement the last check
     let playerStatusAferMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, shapeStatusAfterMove, boardAfterMove);
-    
+
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
@@ -759,6 +781,92 @@ module gameLogic {
     };
   }
 
+  function transformMarginsToAbosolute(margins: number[]) {
+    let ret: number[] = [];
+    let CTR = Math.floor(SHAPEWIDTH / 2);
+    ret[0] = CTR - margins[0];
+    ret[1] = CTR - margins[1];
+    ret[2] = CTR + margins[2];
+    ret[3] = CTR + margins[3];
+
+    return ret;
+  }
+
+  export function getAllShapeMatrix(): ShapeBoard {
+    let shapeBoard: ShapeBoard = { board: [], cellToShape: [], shapeToCell: [] };
+    shapeBoard.board = [];
+    let allshape: AllShape = getInitShapes();
+    let height = SHAPEHEIGHT;
+    for (let i = 0; i < height; i++) {
+      shapeBoard.board[i] = [];
+      shapeBoard.cellToShape[i] = [];
+    }
+
+    let begin: number = 0;
+    for (let k = 0; k < SHAPEHEIGHT; k++) {
+      shapeBoard.board[k][begin] = '0';
+      shapeBoard.cellToShape[k][begin] = -1;
+    }
+    //TODO
+    for (let i = 0; i < allshape.length; i++) {
+      let shape: Shape = allshape[i];
+      let margins: number[] = getAllMargin(shape);
+      let index: number[] = transformMarginsToAbosolute(margins)
+      console.log(index[1], index[2]);
+
+      shapeBoard.shapeToCell[i] = [];
+
+      for (let j = index[1]; j <= index[2]; j++) {
+        for (let k = 0; k < SHAPEHEIGHT; k++) {
+          shapeBoard.board[k][begin] = shape.frame[k][j];
+          if (shape.frame[k][j] === '1') {
+            let pos: Point = { x: k, y: begin };
+            shapeBoard.shapeToCell[i].push(pos);
+            shapeBoard.cellToShape[k][begin] = shape.id;
+          } else {
+            shapeBoard.cellToShape[k][begin] = -1;
+          }
+        }
+        begin++;
+      }
+      for (let k = 0; k < SHAPEHEIGHT; k++) {
+        shapeBoard.board[k][begin] = '0';
+        shapeBoard.cellToShape[k][begin] = -1;
+      }
+      begin++;
+    }
+
+    return shapeBoard;
+  }
+
+  export function forSimpleTestHtml() {
+    /*
+    var move = gameLogic.createMove(null, 0, 0, 0, 0);
+    log.log("move=", move);
+    */
+    let shapeId: number = 40;
+    log.log("Test input=", shapeId);
+    log.log("Expeced Type=", 0);
+    log.log("Expeced rotate=", 1);
+    log.log("Expeced flip=", 1);
+    let shape: Shape = getShapeFromShapeID(shapeId);
+
+    log.log("frame:", shape);
+    log.log("final shape:");
+    console.log(aux_printFrame(shape.frame, SHAPEHEIGHT));
+
+    let margins: number[] = getAllMargin(shape);
+    log.log("margin=", margins)
+
+    log.log(checkValidShapePlacement(0, 0, shape));
+    log.log(checkValidShapePlacement(0, 1, shape));
+    log.log(checkValidShapePlacement(1, 0, shape));
+    log.log(checkValidShapePlacement(0, 1, shape));
+
+    let boardAction: Board = getBoardAction(2, 2, shape);
+    console.log(aux_printFrame(boardAction, COLS))
+  }
+
   export function forSimplePlayTestHtml() {
     let board: Board = getInitialBoard();
     let turnIndexBeforeMove: number = 0;
@@ -794,33 +902,38 @@ module gameLogic {
         console.log(aux_printFrame(board, COLS));
       }
     }
-  }
 
-  export function forSimpleTestHtml() {
-    /*
-    var move = gameLogic.createMove(null, 0, 0, 0, 0);
-    log.log("move=", move);
-    */
-    let shapeId: number = 40;
-    log.log("Test input=", shapeId);
-    log.log("Expeced Type=", 0);
-    log.log("Expeced rotate=", 1);
-    log.log("Expeced flip=", 1);
-    let shape: Shape = getShapeFromShapeID(shapeId);
+    let shapeBoard: ShapeBoard = getAllShapeMatrix();
+    console.log(aux_printArray(shapeBoard.board));
 
-    log.log("frame:", shape);
-    log.log("final shape:");
-    console.log(aux_printFrame(shape.frame, SHAPEHEIGHT));
+    let aux_printcell = function (frame: any[][]): string {
+      let ret: string = "";
+      for (let i = 0; i < frame.length; i++) {
+        for (let j = 0; j < frame[i].length; j++) {
+          if (frame[i][j] == undefined) {
+            frame[i][j] = " ";
+          }
+        }
+      }
+      for (let i = 0; i < frame.length; i++) {
+        ret += frame[i].toString() + "\n\r";
+      }
+      return ret;
+    }
+    console.log(aux_printcell(shapeBoard.cellToShape));
 
-    let margins: number[] = getAllMargin(shape);
-    log.log("margin=", margins)
-
-    log.log(checkValidShapePlacement(0, 0, shape));
-    log.log(checkValidShapePlacement(0, 1, shape));
-    log.log(checkValidShapePlacement(1, 0, shape));
-    log.log(checkValidShapePlacement(0, 1, shape));
-
-    let boardAction: Board = getBoardAction(2, 2, shape);
-    console.log(aux_printFrame(boardAction, COLS))
+    let aux_printshape = function (frame: Point[][]): string {
+      let ret: string = "";
+      for (let i = 0; i < frame.length; i++) {
+        ret += i.toString() + ": ";
+        for (let j = 0; j < frame[i].length; j++) {
+          ret += "(" + frame[i][j].x + "," + frame[i][j].y + ") ";
+        }
+        ret += "\n\r";
+      }
+      return ret;
+    }
+    console.log(aux_printshape(shapeBoard.shapeToCell));
   }
 }
+
