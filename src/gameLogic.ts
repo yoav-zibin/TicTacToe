@@ -807,6 +807,7 @@ module gameLogic {
       shapeBoard.board[k][begin] = '0';
       shapeBoard.cellToShape[k][begin] = -1;
     }
+    begin++;
     //TODO
     for (let i = 0; i < allshape.length; i++) {
       let shape: Shape = allshape[i];
