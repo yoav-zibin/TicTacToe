@@ -17,9 +17,22 @@ module game {
   export let didMakeMove: boolean = false; // You can only make one move per updateUI
   export let animationEndedTimeout: ng.IPromise<any> = null;
   export let state: IState = null;
+  // similar to friendlygo
+  export let passes: number;
+  export let moveToConfirm: BoardDelta = null; 
+  export let deadBoard: boolean[][] = null;
+  export let board: Board = null;
+  export let boardBeforeMove: Board = null;
+  let clickToDragPiece: HTMLImageElement;
+  export let hasDim = false;
+  export let dim = 14;
+
   // For community games.
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
+
+  export let gameArea: HTMLElement;
+  export let boardArea: HTMLElement;
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
@@ -28,7 +41,10 @@ module game {
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
     resizeGameAreaService.setWidthToHeight(0.7);
-    dragAndDropService('gameArea', handleDragEvent);
+    // dragAndDropService('gameArea', handleDragEvent);
+    gameArea = document.getElementById("gameArea");
+    boardArea = document.getElementById("boardArea");
+    dragAndDropService.addDragListener("boardArea", handleDragEvent);
     gameService.setGame({
       updateUI: updateUI,
       getStateForOgImage: null,
@@ -36,9 +52,81 @@ module game {
   }
 
   //TODO game.ts 92-188
-  function handleDragEvent(type: any, clientX: any, clientY: any) {
+  // After shape matrix is got, draw shape in board area, draggable
+  function handleDragEvent(type: any, clientX: any, clientY: any, shapeMatrix: any) {
+    if (!isHumanTurn() || passes == 2) {
+      return; // if the game is over, do not display dragging effect
+    }
+    if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
+      moveToConfirm = null;
+      $rootScope.$apply();
+    }
+    // Center point in boardArea
+    let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
+    let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
+    // TODO Is outside boardArea? board edges - 2
+    let button = document.getElementById("button");
+    if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
+      // clearClickToDrag();
+      return;
+    }
+    // Inside boardArea. Let's find the containing square's row and col
+    let col = Math.floor(dim * x / boardArea.clientWidth);
+    let row = Math.floor(dim * y / boardArea.clientHeight);
+    // TODO if the cell matrix is not empty, don't preview the piece
+    if ((board[row][col] !== '' && deadBoard == null) ||
+        (board[row][col] == '' && deadBoard != null)) {
+      clearClickToDrag();
+      return;
+    }
+    clickToDragPiece.style.display = deadBoard == null ? "inline" : "none";
+    let centerXY = getSquareCenterXY(row, col);
+    // show the piece
+    //let cell = document.getElementById('board' + row + 'x' + col).className = $scope.turnIndex === 0 ? 'black' : 'white';
 
+    let topLeft = getSquareTopLeft(row, col);
+    clickToDragPiece.style.left = topLeft.left + "px";
+    clickToDragPiece.style.top = topLeft.top + "px";
+    if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+      // drag ended
+      dragDone(row, col);
+    }
+  }
 
+  function clearClickToDrag() {
+    clickToDragPiece.style.display = "none";
+  }
+
+  function getSquareCenterXY(row: number, col: number) {
+    let size = getSquareWidthHeight();
+    return {
+      x: col * size.width + size.width / 2,
+      y: row * size.height + size.height / 2
+    };
+  }
+
+  function getSquareTopLeft(row: number, col: number) {
+    let size = getSquareWidthHeight();
+    return { top: row * size.height, left: col * size.width }
+  }
+
+  function getSquareWidthHeight() {
+    let boardArea = document.getElementById("boardArea");
+    return {
+      width: boardArea.clientWidth / (dim),
+      height: boardArea.clientHeight / (dim)
+    };
+  }
+
+  function dragDone(row: number, col: number) {
+    $rootScope.$apply(function () {
+      if (deadBoard == null) {
+        // moveToConfirm = {row: row, col: col};
+      } else {
+        // toggleDead(row, col);
+        clearClickToDrag();
+      }
+    });
   }
 
   function registerServiceWorker() {
