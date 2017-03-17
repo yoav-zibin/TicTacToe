@@ -28,7 +28,7 @@ module game {
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
     resizeGameAreaService.setWidthToHeight(0.7);
-    dragAndDropService('gameArea', handleDragEvent);
+    //dragAndDropService('gameArea', handleDragEvent);
     gameService.setGame({
       updateUI: updateUI,
       getStateForOgImage: null,

@@ -21,12 +21,16 @@ var game;
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
         resizeGameAreaService.setWidthToHeight(0.7);
+        //dragAndDropService('gameArea', handleDragEvent);
         gameService.setGame({
             updateUI: updateUI,
             getStateForOgImage: null,
         });
     }
     game.init = init;
+    //TODO game.ts 92-188
+    function handleDragEvent(type, clientX, clientY) {
+    }
     function registerServiceWorker() {
         // I prefer to use appCache over serviceWorker
         // (because iOS doesn't support serviceWorker, so we have to use appCache)

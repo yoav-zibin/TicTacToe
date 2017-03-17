@@ -1,3 +1,11 @@
+var Point = (function () {
+    function Point() {
+        this.toString = function () {
+            return '(x: ${this.x}, y:${this.y})';
+        };
+    }
+    return Point;
+}());
 var gameService = gamingPlatform.gameService;
 var alphaBetaService = gamingPlatform.alphaBetaService;
 var translate = gamingPlatform.translate;
@@ -217,6 +225,14 @@ var gameLogic;
         return shapes;
     }
     gameLogic.getInitShapes = getInitShapes;
+    function aux_printArray(frame) {
+        var ret = "";
+        for (var i = 0; i < frame.length; i++) {
+            ret += frame[i].toString() + "\n\r";
+        }
+        return ret;
+    }
+    gameLogic.aux_printArray = aux_printArray;
     function aux_printFrame(frame, height) {
         var ret = "   0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9\n\r  ----------------------------------------\n\r";
         for (var i = 0; i < height; i++) {
@@ -675,6 +691,84 @@ var gameLogic;
         };
     }
     gameLogic.createInitialMove = createInitialMove;
+    function transformMarginsToAbosolute(margins) {
+        var ret = [];
+        var CTR = Math.floor(gameLogic.SHAPEWIDTH / 2);
+        ret[0] = CTR - margins[0];
+        ret[1] = CTR - margins[1];
+        ret[2] = CTR + margins[2];
+        ret[3] = CTR + margins[3];
+        return ret;
+    }
+    function getAllShapeMatrix() {
+        var shapeBoard = { board: [], cellToShape: [], shapeToCell: [] };
+        shapeBoard.board = [];
+        var allshape = getInitShapes();
+        var height = gameLogic.SHAPEHEIGHT;
+        for (var i = 0; i < height; i++) {
+            shapeBoard.board[i] = [];
+            shapeBoard.cellToShape[i] = [];
+        }
+        var begin = 0;
+        for (var k = 0; k < gameLogic.SHAPEHEIGHT; k++) {
+            shapeBoard.board[k][begin] = '0';
+            shapeBoard.cellToShape[k][begin] = -1;
+        }
+        begin++;
+        //TODO
+        for (var i = 0; i < allshape.length; i++) {
+            var shape = allshape[i];
+            var margins = getAllMargin(shape);
+            var index = transformMarginsToAbosolute(margins);
+            console.log(index[1], index[2]);
+            shapeBoard.shapeToCell[i] = [];
+            for (var j = index[1]; j <= index[2]; j++) {
+                for (var k = 0; k < gameLogic.SHAPEHEIGHT; k++) {
+                    shapeBoard.board[k][begin] = shape.frame[k][j];
+                    if (shape.frame[k][j] === '1') {
+                        var pos = { x: k, y: begin };
+                        shapeBoard.shapeToCell[i].push(pos);
+                        shapeBoard.cellToShape[k][begin] = shape.id;
+                    }
+                    else {
+                        shapeBoard.cellToShape[k][begin] = -1;
+                    }
+                }
+                begin++;
+            }
+            for (var k = 0; k < gameLogic.SHAPEHEIGHT; k++) {
+                shapeBoard.board[k][begin] = '0';
+                shapeBoard.cellToShape[k][begin] = -1;
+            }
+            begin++;
+        }
+        return shapeBoard;
+    }
+    gameLogic.getAllShapeMatrix = getAllShapeMatrix;
+    function forSimpleTestHtml() {
+        /*
+        var move = gameLogic.createMove(null, 0, 0, 0, 0);
+        log.log("move=", move);
+        */
+        var shapeId = 40;
+        log.log("Test input=", shapeId);
+        log.log("Expeced Type=", 0);
+        log.log("Expeced rotate=", 1);
+        log.log("Expeced flip=", 1);
+        var shape = getShapeFromShapeID(shapeId);
+        log.log("frame:", shape);
+        log.log("final shape:");
+        console.log(aux_printFrame(shape.frame, gameLogic.SHAPEHEIGHT));
+        var margins = getAllMargin(shape);
+        log.log("margin=", margins);
+        log.log(checkValidShapePlacement(0, 0, shape));
+        log.log(checkValidShapePlacement(0, 1, shape));
+        log.log(checkValidShapePlacement(1, 0, shape));
+        log.log(checkValidShapePlacement(0, 1, shape));
+        var boardAction = getBoardAction(2, 2, shape);
+        console.log(aux_printFrame(boardAction, gameLogic.COLS));
+    }
+    gameLogic.forSimpleTestHtml = forSimpleTestHtml;
     function forSimplePlayTestHtml() {
         var board = getInitialBoard();
         var turnIndexBeforeMove = 0;
@@ -705,31 +799,36 @@ var gameLogic;
                 console.log(aux_printFrame(board, gameLogic.COLS));
             }
         }
+        var shapeBoard = getAllShapeMatrix();
+        console.log(aux_printArray(shapeBoard.board));
+        var aux_printcell = function (frame) {
+            var ret = "";
+            for (var i = 0; i < frame.length; i++) {
+                for (var j = 0; j < frame[i].length; j++) {
+                    if (frame[i][j] == undefined) {
+                        frame[i][j] = " ";
+                    }
+                }
+            }
+            for (var i = 0; i < frame.length; i++) {
+                ret += frame[i].toString() + "\n\r";
+            }
+            return ret;
+        };
+        console.log(aux_printcell(shapeBoard.cellToShape));
+        var aux_printshape = function (frame) {
+            var ret = "";
+            for (var i = 0; i < frame.length; i++) {
+                ret += i.toString() + ": ";
+                for (var j = 0; j < frame[i].length; j++) {
+                    ret += "(" + frame[i][j].x + "," + frame[i][j].y + ") ";
+                }
+                ret += "\n\r";
+            }
+            return ret;
+        };
+        console.log(aux_printshape(shapeBoard.shapeToCell));
     }
     gameLogic.forSimplePlayTestHtml = forSimplePlayTestHtml;
-    function forSimpleTestHtml() {
-        /*
-        var move = gameLogic.createMove(null, 0, 0, 0, 0);
-        log.log("move=", move);
-        */
-        var shapeId = 40;
-        log.log("Test input=", shapeId);
-        log.log("Expeced Type=", 0);
-        log.log("Expeced rotate=", 1);
-        log.log("Expeced flip=", 1);
-        var shape = getShapeFromShapeID(shapeId);
-        log.log("frame:", shape);
-        log.log("final shape:");
-        console.log(aux_printFrame(shape.frame, gameLogic.SHAPEHEIGHT));
-        var margins = getAllMargin(shape);
-        log.log("margin=", margins);
-        log.log(checkValidShapePlacement(0, 0, shape));
-        log.log(checkValidShapePlacement(0, 1, shape));
-        log.log(checkValidShapePlacement(1, 0, shape));
-        log.log(checkValidShapePlacement(0, 1, shape));
-        var boardAction = getBoardAction(2, 2, shape);
-        console.log(aux_printFrame(boardAction, gameLogic.COLS));
-    }
-    gameLogic.forSimpleTestHtml = forSimpleTestHtml;
 })(gameLogic || (gameLogic = {}));
 //# sourceMappingURL=gameLogic.js.map
