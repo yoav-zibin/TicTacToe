@@ -28,10 +28,17 @@ module game {
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
     resizeGameAreaService.setWidthToHeight(0.7);
+    dragAndDropService('gameArea', handleDragEvent);
     gameService.setGame({
       updateUI: updateUI,
       getStateForOgImage: null,
     });
+  }
+
+  //TODO game.ts 92-188
+  function handleDragEvent(type: any, clientX: any, clientY: any) {
+
+
   }
 
   function registerServiceWorker() {
@@ -257,7 +264,6 @@ var app = angular.module('myApp', ['gameServices'/*,'ngScrollable'*/])
       $rootScope['game'] = game;
       game.init($rootScope, $timeout);
     }]);
-
 /*
 app.controller('Demo', function ($scope:any) {
 	'use strict';
