@@ -79,6 +79,12 @@ module gameLogic {
     return status;
   }
 
+  /*
+  export function getTurnIdx() {
+    return ....
+  }
+  */
+
   export function getInitPlayerStatus(): boolean[] {
     return [true, true, true, true];
   }
@@ -808,16 +814,18 @@ module gameLogic {
       shapeBoard.cellToShape[k][begin] = -1;
     }
     begin++;
-    //TODO
+
     for (let i = 0; i < allshape.length; i++) {
       let shape: Shape = allshape[i];
       let margins: number[] = getAllMargin(shape);
       let index: number[] = transformMarginsToAbosolute(margins)
-      console.log(index[1], index[2]);
-
+      
+      //console.log(aux_printArray(shape.frame))
+      //console.log(index)
+      
       shapeBoard.shapeToCell[i] = [];
 
-      for (let j = index[1]; j <= index[2]; j++) {
+      for (let j = index[1]; j <= index[3]; j++) {
         for (let k = 0; k < SHAPEHEIGHT; k++) {
           shapeBoard.board[k][begin] = shape.frame[k][j];
           if (shape.frame[k][j] === '1') {
