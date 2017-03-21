@@ -46,6 +46,11 @@ var gameLogic;
         return status;
     }
     gameLogic.getInitShapeStatus = getInitShapeStatus;
+    /*
+    export function getTurnIdx() {
+      return ....
+    }
+    */
     function getInitPlayerStatus() {
         return [true, true, true, true];
     }
@@ -715,14 +720,14 @@ var gameLogic;
             shapeBoard.cellToShape[k][begin] = -1;
         }
         begin++;
-        //TODO
         for (var i = 0; i < allshape.length; i++) {
             var shape = allshape[i];
             var margins = getAllMargin(shape);
             var index = transformMarginsToAbosolute(margins);
-            console.log(index[1], index[2]);
+            //console.log(aux_printArray(shape.frame))
+            //console.log(index)
             shapeBoard.shapeToCell[i] = [];
-            for (var j = index[1]; j <= index[2]; j++) {
+            for (var j = index[1]; j <= index[3]; j++) {
                 for (var k = 0; k < gameLogic.SHAPEHEIGHT; k++) {
                     shapeBoard.board[k][begin] = shape.frame[k][j];
                     if (shape.frame[k][j] === '1') {

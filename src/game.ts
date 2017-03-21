@@ -19,7 +19,7 @@ module game {
   export let state: IState = null;
   // similar to friendlygo
   export let passes: number;
-  export let moveToConfirm: BoardDelta = null; 
+  export let moveToConfirm: BoardDelta = null;
   export let deadBoard: boolean[][] = null;
   export let board: Board = null;
   export let boardBeforeMove: Board = null;
@@ -34,6 +34,9 @@ module game {
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
 
+  export let shapeBoard: ShapeBoard = null;
+  export let turnIdx: number = 0;
+
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
     $timeout = $timeout_;
@@ -41,8 +44,7 @@ module game {
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
     resizeGameAreaService.setWidthToHeight(0.7);
-
-    //dragAndDropService('gameArea', handleDragEvent);
+    // dragAndDropService('gameArea', handleDragEvent);
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
@@ -50,6 +52,8 @@ module game {
       updateUI: updateUI,
       getStateForOgImage: null,
     });
+
+    shapeBoard = gameLogic.getAllShapeMatrix();
   }
 
   //TODO game.ts 92-188
@@ -76,7 +80,7 @@ module game {
     let row = Math.floor(dim * y / boardArea.clientHeight);
     // TODO if the cell matrix is not empty, don't preview the piece
     if ((board[row][col] !== '' && deadBoard == null) ||
-        (board[row][col] == '' && deadBoard != null)) {
+      (board[row][col] == '' && deadBoard != null)) {
       clearClickToDrag();
       return;
     }
@@ -207,6 +211,9 @@ module game {
     if (isFirstMove()) {
       state = gameLogic.getInitialState();
     }
+
+    //turnIdx = gameLogic.getTurnIdx();
+
     // We calculate the AI move only after the animation finishes,
     // because if we call aiService now
     // then the animation will be paused until the javascript finishes.
@@ -242,6 +249,9 @@ module game {
       return;
     }
     didMakeMove = true;
+
+    // change turnidx here
+    turnIdx = move.turnIndex;
 
     if (!proposals) {
       gameService.makeMove(move, null);
@@ -322,12 +332,34 @@ module game {
     return { background: color };
   }
 
+  function getTurnColor() {
+    var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
+    return color[turnIdx];
+  }
+
+  export function setShapeAreaSquareStyle (row: number, col: number) {
+    let shapeId: number = shapeBoard.cellToShape[row][col]
+    //console.log("turnidx:" + turnIdx + ":(" + row + "," + col + "):" + shapeId);
+    if (shapeId != -1) {
+      let color: string = 'C0C0C0'
+      if (state.shapeStatus[turnIdx][shapeId]) {
+         color = getTurnColor();
+      }
+      return {
+        border: '1pt solid white',
+        background: color
+      };
+    }
+    return { background: 'F0F0F0' };
+  }
+
+
   /* 
   export function shouldShowImage(row: number, col: number): boolean {
     return state.board[row][col] !== "" || isProposal(row, col);
   }
-
-
+ 
+ 
   function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
     return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
   }
@@ -335,11 +367,11 @@ module game {
   export function isPieceX(row: number, col: number): boolean {
     return isPiece(row, col, 0, 'X');
   }
-
+ 
   export function isPieceO(row: number, col: number): boolean {
     return isPiece(row, col, 1, 'O');
   }
-
+ 
   export function shouldSlowlyAppear(row: number, col: number): boolean {
     return state.delta &&
         state.delta.row === row && state.delta.col === col;

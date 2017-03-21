@@ -11,9 +11,18 @@ var game;
     game.didMakeMove = false; // You can only make one move per updateUI
     game.animationEndedTimeout = null;
     game.state = null;
+    game.moveToConfirm = null;
+    game.deadBoard = null;
+    game.board = null;
+    game.boardBeforeMove = null;
+    var clickToDragPiece;
+    game.hasDim = false;
+    game.dim = 14;
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
+    game.shapeBoard = null;
+    game.turnIdx = 0;
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
@@ -21,15 +30,88 @@ var game;
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
         resizeGameAreaService.setWidthToHeight(0.7);
-        //dragAndDropService('gameArea', handleDragEvent);
+        // dragAndDropService('gameArea', handleDragEvent);
+        game.gameArea = document.getElementById("gameArea");
+        game.boardArea = document.getElementById("boardArea");
+        dragAndDropService.addDragListener("boardArea", handleDragEvent);
         gameService.setGame({
             updateUI: updateUI,
             getStateForOgImage: null,
         });
+        game.shapeBoard = gameLogic.getAllShapeMatrix();
     }
     game.init = init;
     //TODO game.ts 92-188
-    function handleDragEvent(type, clientX, clientY) {
+    // After shape matrix is got, draw shape in board area, draggable
+    function handleDragEvent(type, clientX, clientY, shapeMatrix) {
+        if (!isHumanTurn() || game.passes == 2) {
+            return; // if the game is over, do not display dragging effect
+        }
+        if (type === "touchstart" && game.moveToConfirm != null && game.deadBoard == null) {
+            game.moveToConfirm = null;
+            game.$rootScope.$apply();
+        }
+        // Center point in boardArea
+        var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft;
+        var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop;
+        // TODO Is outside boardArea? board edges - 2
+        var button = document.getElementById("button");
+        if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
+            // clearClickToDrag();
+            return;
+        }
+        // Inside boardArea. Let's find the containing square's row and col
+        var col = Math.floor(game.dim * x / game.boardArea.clientWidth);
+        var row = Math.floor(game.dim * y / game.boardArea.clientHeight);
+        // TODO if the cell matrix is not empty, don't preview the piece
+        if ((game.board[row][col] !== '' && game.deadBoard == null) ||
+            (game.board[row][col] == '' && game.deadBoard != null)) {
+            clearClickToDrag();
+            return;
+        }
+        clickToDragPiece.style.display = game.deadBoard == null ? "inline" : "none";
+        var centerXY = getSquareCenterXY(row, col);
+        // show the piece
+        //let cell = document.getElementById('board' + row + 'x' + col).className = $scope.turnIndex === 0 ? 'black' : 'white';
+        var topLeft = getSquareTopLeft(row, col);
+        clickToDragPiece.style.left = topLeft.left + "px";
+        clickToDragPiece.style.top = topLeft.top + "px";
+        if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+            // drag ended
+            dragDone(row, col);
+        }
+    }
+    function clearClickToDrag() {
+        clickToDragPiece.style.display = "none";
+    }
+    function getSquareCenterXY(row, col) {
+        var size = getSquareWidthHeight();
+        return {
+            x: col * size.width + size.width / 2,
+            y: row * size.height + size.height / 2
+        };
+    }
+    function getSquareTopLeft(row, col) {
+        var size = getSquareWidthHeight();
+        return { top: row * size.height, left: col * size.width };
+    }
+    function getSquareWidthHeight() {
+        var boardArea = document.getElementById("boardArea");
+        return {
+            width: boardArea.clientWidth / (game.dim),
+            height: boardArea.clientHeight / (game.dim)
+        };
+    }
+    function dragDone(row, col) {
+        game.$rootScope.$apply(function () {
+            if (game.deadBoard == null) {
+                // moveToConfirm = {row: row, col: col};
+            }
+            else {
+                // toggleDead(row, col);
+                clearClickToDrag();
+            }
+        });
     }
     function registerServiceWorker() {
         // I prefer to use appCache over serviceWorker
@@ -106,6 +188,7 @@ var game;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
         }
+        //turnIdx = gameLogic.getTurnIdx();
         // We calculate the AI move only after the animation finishes,
         // because if we call aiService now
         // then the animation will be paused until the javascript finishes.
@@ -139,6 +222,8 @@ var game;
             return;
         }
         game.didMakeMove = true;
+        // change turnidx here
+        game.turnIdx = move.turnIndex;
         if (!game.proposals) {
             gameService.makeMove(move, null);
         }
@@ -216,12 +301,32 @@ var game;
         return { background: color };
     }
     game.setBoardAreaSquareStyle = setBoardAreaSquareStyle;
+    function getTurnColor() {
+        var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
+        return color[game.turnIdx];
+    }
+    function setShapeAreaSquareStyle(row, col) {
+        var shapeId = game.shapeBoard.cellToShape[row][col];
+        console.log("turnidx:" + game.turnIdx + ":(" + row + "," + col + "):" + shapeId);
+        if (shapeId != -1) {
+            var color = 'C0C0C0';
+            if (game.state.shapeStatus[game.turnIdx][shapeId]) {
+                color = getTurnColor();
+            }
+            return {
+                border: '1pt solid white',
+                background: color
+            };
+        }
+        return { background: 'F0F0F0' };
+    }
+    game.setShapeAreaSquareStyle = setShapeAreaSquareStyle;
     /*
     export function shouldShowImage(row: number, col: number): boolean {
       return state.board[row][col] !== "" || isProposal(row, col);
     }
-  
-  
+   
+   
     function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
       return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
     }
@@ -229,11 +334,11 @@ var game;
     export function isPieceX(row: number, col: number): boolean {
       return isPiece(row, col, 0, 'X');
     }
-  
+   
     export function isPieceO(row: number, col: number): boolean {
       return isPiece(row, col, 1, 'O');
     }
-  
+   
     export function shouldSlowlyAppear(row: number, col: number): boolean {
       return state.delta &&
           state.delta.row === row && state.delta.col === col;
