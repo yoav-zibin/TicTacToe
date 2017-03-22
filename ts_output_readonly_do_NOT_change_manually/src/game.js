@@ -38,7 +38,9 @@ var game;
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
         game.shapeArea = document.getElementById("shapeArea");
-        dragAndDropService.addDragListener("gameArea", handleDragEventGameArea);
+        //TODO split the two event
+        dragAndDropService.addDragListener("boardArea", handleDragEventGameArea);
+        dragAndDropService.addDragListener("shapeArea", handleDragEventGameArea);
         //dragAndDropService.addDragListener("boardArea", handleDragEvent);
         gameService.setGame({
             updateUI: updateUI,
@@ -73,7 +75,7 @@ var game;
             x = shapeX;
             y = shapeY;
             dragType = 'shape';
-            //clearDrag('board'); //TODO
+            clearDrag('board');
             console.log("[getXYandDragTyep]shape, x:", x, " y", y);
         }
         else {
@@ -176,7 +178,10 @@ var game;
         if (type === 'board') {
             for (var i = 0; i < game.preview.length; i++) {
                 for (var j = 0; j < game.preview[i].length; j++) {
-                    setSquareBackGroundColor(i, j, getBoardSquareColor(i, j));
+                    //  leave the shape on the board
+                    if (game.preview[i][j] === '') {
+                        setSquareBackGroundColor(i, j, getBoardSquareColor(i, j));
+                    }
                 }
             }
         }
@@ -293,6 +298,7 @@ var game;
     function dragDoneForBoard(row, col, dragType) {
         game.$rootScope.$apply(function () {
             if (dragType === 'board') {
+                // change the board base on preview and board
                 game.moveToConfirm = boardAreaChooseMove(row, col);
                 console.log("[dragDoneForBoard]moveToConfirm:", game.moveToConfirm);
             }
@@ -306,9 +312,11 @@ var game;
             }
         });
     }
+    //TODO
     function passClicked() {
     }
     game.passClicked = passClicked;
+    //TODO
     function showConfirmButton() {
         return game.moveToConfirm != null;
     }
@@ -327,6 +335,7 @@ var game;
         try {
             var move = gameLogic.createMove(game.state, row, col, game.shapeIdChosen, game.turnIdx);
             game.isYourTurn = false; // to prevent making another move
+            //TODO make sure this is corrcet
             makeMove(move);
             game.shapeIdChosen = -1; // to reset the shape being selected
         }

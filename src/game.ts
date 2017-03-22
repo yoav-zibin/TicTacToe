@@ -53,7 +53,11 @@ module game {
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     shapeArea = document.getElementById("shapeArea");
-    dragAndDropService.addDragListener("gameArea", handleDragEventGameArea);
+
+    //TODO split the two event
+    dragAndDropService.addDragListener("boardArea", handleDragEventGameArea);
+    dragAndDropService.addDragListener("shapeArea", handleDragEventGameArea);
+    
     //dragAndDropService.addDragListener("boardArea", handleDragEvent);
     gameService.setGame({
       updateUI: updateUI,
@@ -211,7 +215,10 @@ module game {
     if (type === 'board') {
       for (let i = 0; i < preview.length; i++) {
         for (let j = 0; j < preview[i].length; j++) {
-          setSquareBackGroundColor(i, j, getBoardSquareColor(i, j));
+          //  leave the shape on the board
+          if (preview[i][j] === '') {
+            setSquareBackGroundColor(i, j, getBoardSquareColor(i, j));
+          }
         }
       }
     }
@@ -344,6 +351,7 @@ module game {
   function dragDoneForBoard(row: number, col: number, dragType: string) {
     $rootScope.$apply(function () {
       if (dragType === 'board') {
+        // change the board base on preview and board
         moveToConfirm = boardAreaChooseMove(row, col);
         console.log("[dragDoneForBoard]moveToConfirm:", moveToConfirm);
       } else if (dragType == 'shape') {
@@ -357,10 +365,12 @@ module game {
     });
   }
 
+  //TODO
   export function passClicked() {
 
   }
 
+  //TODO
   export function showConfirmButton() {
     return moveToConfirm != null;
   }
@@ -382,6 +392,7 @@ module game {
     try {
       let move = gameLogic.createMove(state, row, col, shapeIdChosen, turnIdx);
       isYourTurn = false; // to prevent making another move
+      //TODO make sure this is corrcet
       makeMove(move);
       shapeIdChosen = -1; // to reset the shape being selected
     } catch (e) {
