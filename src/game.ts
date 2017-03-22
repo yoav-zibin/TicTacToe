@@ -25,7 +25,7 @@ module game {
   export let boardBeforeMove: Board = null;
   let clickToDragPiece: HTMLImageElement;
   export let hasDim = false;
-  export let dim = 14;
+  export let dim = 20;//14
 
   // For community games.
   export let proposals: number[][] = null;
@@ -33,9 +33,12 @@ module game {
 
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
+  export let shapeArea: HTMLElement;
 
   export let shapeBoard: ShapeBoard = null;
   export let turnIdx: number = 0;
+  export let shapeChosen: number = -1;
+  export let preview: Board = [];
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
@@ -47,6 +50,7 @@ module game {
     // dragAndDropService('gameArea', handleDragEvent);
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
+    shapeArea = document.getElementById("shapeArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
     gameService.setGame({
       updateUI: updateUI,
@@ -56,6 +60,119 @@ module game {
     shapeBoard = gameLogic.getAllShapeMatrix();
   }
 
+  function getAreaSize(type: string): { width: number; height: number; } {
+    let area: HTMLElement = document.getElementById(type + "Area");
+    return { width: area.clientWidth, height: area.clientHeight };
+  }
+
+  function getXYandDragTyep(clientX: any, clientY: any): { x: number, y: number, dragType: string } {
+    let boardX: number = clientX - gameArea.offsetLeft - boardArea.offsetLeft
+    let shapeX: number = clientX - gameArea.offsetLeft - shapeArea.offsetLeft;
+    let boardY: number = clientY - gameArea.offsetTop - boardArea.offsetTop;
+    let shapeY: number = clientY - gameArea.offsetTop - shapeArea.offsetTop;
+    let dragType: string = '';
+
+    let boardSize: { width: number; height: number; } = getAreaSize('board');
+    let shapeSize: { width: number; height: number; } = getAreaSize('shape');
+    let x, y: number = 0;
+    if (boardX > 0 && boardX < boardSize.width && boardY > 0 && boardY < boardSize.height) {
+      x = boardX;
+      y = boardY;
+      dragType = 'board';
+    } else if ((shapeChosen === -1 || shapeChosen >= 0) &&
+      shapeX < shapeSize.width && shapeY > 0 && shapeY < shapeSize.height) {
+      x = shapeX;
+      y = shapeY;
+      dragType = 'shape';
+      clearDrag('board');
+    }
+
+    if (dragType === '') {
+      clearDrag('board');
+      clearDrag('shape');
+    }
+
+    return { x: x, y: y, dragType: dragType };
+  }
+
+  function handleDragEventBoardArea(type: any, clientX: any, clientY: any) {
+    if (gameLogic.endOfMatch(state.playerStatus)) {
+      return;
+    }
+
+    // check if (!yourturn) return;
+
+    let XYDrag: { x: number; y: number; dragType: string; } = getXYandDragTyep(clientX, clientY);
+    let x: number = XYDrag.x;
+    let y: number = XYDrag.y;
+    let dragType: string = XYDrag.dragType;
+
+    let colAndRow: { rowsNum: number; colsNum: number; } = getRowColNum(dragType);
+    let clickArea: HTMLElement = getArea(dragType);
+    let col = Math.floor(colAndRow.colsNum * x / clickArea.clientWidth);
+    let row = Math.floor(colAndRow.rowsNum * y / clickArea.clientHeight);
+
+    if (dragType === 'board') {
+      if (shapeChosen === -1) {
+        return;
+      }
+
+      if (!gameLogic.checkLegalMoveForGame(state.board, row, col, turnIdx, shapeChosen)) {
+        clearDrag('board');
+        canConfirm = false;
+        return;
+      }
+
+      let boardAction = gameLogic.getBoardActionFromShapeID(row, col, shapeChosen);
+      if (!angular.equals(preview, boardAction)) {
+        clearDrag('board');
+        setboardActionGroundColor(boardAction);
+        preview = boardAction;
+      }
+      canConfirm = true;
+    }
+
+    // displaying the dragging lines
+    var draggingLines = document.getElementById(dragType + "DraggingLines");
+    var horizontalDraggingLine = document.getElementById(dragType + "HorizontalDraggingLine");
+    var verticalDraggingLine = document.getElementById(dragType + "VerticalDraggingLine");
+    draggingLines.style.display = "inline";
+    var centerXY = getSquareCenterXY(row, col, dragType);
+    verticalDraggingLine.setAttribute("x1", centerXY.x);
+    verticalDraggingLine.setAttribute("x2", centerXY.x);
+    horizontalDraggingLine.setAttribute("y1", centerXY.y);
+    horizontalDraggingLine.setAttribute("y2", centerXY.y);
+
+    if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+      // drag ended
+      dragDoneForBoard(row, col, dragType);
+      clearDrag(dragType);
+    }
+  }
+
+  function getArea(type: string): HTMLElement {
+    return document.getElementById(type + "Area");
+  }
+
+  function getRowColNum(type: string): { rowsNum: number; colsNum: number; } {
+    if (type === 'board') {
+      return { rowsNum: dim, colsNum: dim };
+    }
+    if (type === 'shape') {
+      //TODO to const
+      return { rowsNum: 5, colsNum: 30 };
+    }
+  }
+
+  function clearDrag(type: string) {
+    if (type === 'board') {
+
+    }
+    var draggingLines = document.getElementById(type + "DraggingLines");
+    draggingLines.style.display = "none";
+    // obsolete
+    clickToDragPiece.style.display = "none";
+  }
   //TODO game.ts 92-188
   // After shape matrix is got, draw shape in board area, draggable
   function handleDragEvent(type: any, clientX: any, clientY: any, shapeMatrix: any) {
@@ -79,12 +196,13 @@ module game {
     let col = Math.floor(dim * x / boardArea.clientWidth);
     let row = Math.floor(dim * y / boardArea.clientHeight);
     // TODO if the cell matrix is not empty, don't preview the piece
-    if ((board[row][col] !== '' && deadBoard == null) ||
-      (board[row][col] == '' && deadBoard != null)) {
+
+    if ((state.board[row][col] !== '' && deadBoard == null) ||
+      (state.board[row][col] == '' && deadBoard != null)) {
       clearClickToDrag();
       return;
     }
-    clickToDragPiece.style.display = deadBoard == null ? "inline" : "none";
+    //clickToDragPiece.style.display = deadBoard == null ? "inline" : "none";
     let centerXY = getSquareCenterXY(row, col);
     // show the piece
     //let cell = document.getElementById('board' + row + 'x' + col).className = $scope.turnIndex === 0 ? 'black' : 'white';
@@ -128,6 +246,41 @@ module game {
       if (deadBoard == null) {
         // moveToConfirm = {row: row, col: col};
       } else {
+        // toggleDead(row, col);
+        clearClickToDrag();
+      }
+    });
+  }
+
+  function getShapeNum(row: number, col: number): number {
+    return shapeBoard.cellToShape[row][col];
+  }
+
+  function shapeNumToShapeId(shapeNum: number): number {
+    return shapeNum * 8;
+  }
+
+  function shapeAreaCellClicked(row: number, col: number) {
+    let shapeNum: number = getShapeNum(row, col);
+
+    if (!state.shapeStatus[turnIdx][shapeNum]) {
+      return;
+    }
+
+    // TODO
+    //
+    shapeChosen = shapeNumToShapeId(shapeNum);
+  }
+
+  function dragDoneForBoard(row: number, col: number, dragType: string) {
+    $rootScope.$apply(function () {
+      if (dragType === 'board') {
+        boardAreaCellClicked(row, col);
+        //moveToConfirm = {row: row, col: col};
+      } else if (dragType == 'shape') {
+        shapeAreaCellClicked(row, col);
+      }
+      else {
         // toggleDead(row, col);
         clearClickToDrag();
       }
@@ -337,13 +490,13 @@ module game {
     return color[turnIdx];
   }
 
-  export function setShapeAreaSquareStyle (row: number, col: number) {
+  export function setShapeAreaSquareStyle(row: number, col: number) {
     let shapeId: number = shapeBoard.cellToShape[row][col]
     //console.log("turnidx:" + turnIdx + ":(" + row + "," + col + "):" + shapeId);
     if (shapeId != -1) {
       let color: string = 'C0C0C0'
       if (state.shapeStatus[turnIdx][shapeId]) {
-         color = getTurnColor();
+        color = getTurnColor();
       }
       return {
         border: '1pt solid white',

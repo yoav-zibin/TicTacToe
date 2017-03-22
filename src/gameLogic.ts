@@ -450,6 +450,11 @@ module gameLogic {
     return up >= margins[0] && left >= margins[1] && bottom >= margins[2] && right >= margins[3];
   }
 
+  export function getBoardActionFromShapeID(row: number, col:number, shapeId :number):Board {
+    let shape:Shape = getShapeFromShapeID(shapeId);
+    return getBoardAction(row, col, shape);
+  }
+
   export function getBoardAction(row: number, col: number, shape: Shape): Board {
     let board: Board = [];
     // fill the shape matrix into the board;
@@ -690,6 +695,32 @@ module gameLogic {
     return ret;
   }
 
+  export function checkLegalMoveForGame(board: Board, row: number, col: number, turnIndexBeforeMove: number, shapeId: number): boolean {
+    let shape: Shape = getShapeFromShapeID(shapeId);
+
+    if (!checkValidShapePlacement(row, col, shape)) {
+      return false;
+    }
+
+    let boardAction: Board = getBoardAction(row, col, shape);
+    if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+  /** return true if all the players die */
+  export function endOfMatch(playerStatus: boolean[]) {
+    for (let i = 0; i < playerStatus.length; i++) {
+      if (playerStatus[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /**
    * Returns the move that should be performed when player
    * with index turnIndexBeforeMove makes a move in cell row X col with shapeId.
@@ -715,19 +746,21 @@ module gameLogic {
     let shape: Shape = getShapeFromShapeID(shapeId);
 
     // if the shape placement is not on the board
+    // use in game.ts
     if (!checkValidShapePlacement(row, col, shape)) {
       throw new Error("Shape not on the board");
     }
 
     let boardAction: Board = getBoardAction(row, col, shape);
 
-    console.log("boardAction:")
-    console.log(aux_printFrame(boardAction, COLS))
+    //console.log("boardAction:")
+    //console.log(aux_printFrame(boardAction, COLS))
 
     let board: Board = stateBeforeMove.board;
 
     let playerStatus: boolean[] = stateBeforeMove.playerStatus;
 
+    //TODO export a function checkLealMove(board, row, col, turnIndexBeforeMove) // add boardAction
     if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
       throw new Error("One can only make a move in an empty position!");
     }
@@ -819,10 +852,10 @@ module gameLogic {
       let shape: Shape = allshape[i];
       let margins: number[] = getAllMargin(shape);
       let index: number[] = transformMarginsToAbosolute(margins)
-      
+
       //console.log(aux_printArray(shape.frame))
       //console.log(index)
-      
+
       shapeBoard.shapeToCell[i] = [];
 
       for (let j = index[1]; j <= index[3]; j++) {
