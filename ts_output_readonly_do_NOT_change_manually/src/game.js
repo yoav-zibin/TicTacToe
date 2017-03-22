@@ -23,8 +23,10 @@ var game;
     game.yourPlayerInfo = null;
     game.shapeBoard = null;
     game.turnIdx = 0;
-    game.shapeChosen = -1;
+    game.shapeIdChosen = -1;
     game.preview = [];
+    game.canConfirm = false;
+    game.isYourTurn = true;
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
@@ -36,7 +38,8 @@ var game;
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
         game.shapeArea = document.getElementById("shapeArea");
-        dragAndDropService.addDragListener("boardArea", handleDragEvent);
+        dragAndDropService.addDragListener("gameArea", handleDragEventGameArea);
+        //dragAndDropService.addDragListener("boardArea", handleDragEvent);
         gameService.setGame({
             updateUI: updateUI,
             getStateForOgImage: null,
@@ -49,6 +52,8 @@ var game;
         return { width: area.clientWidth, height: area.clientHeight };
     }
     function getXYandDragTyep(clientX, clientY) {
+        //TODO check if shapex and shapey is correct
+        console.log("[getXYandDragTyep], clientX:", clientX, " clientY:", clientY);
         var boardX = clientX - game.gameArea.offsetLeft - game.boardArea.offsetLeft;
         var shapeX = clientX - game.gameArea.offsetLeft - game.shapeArea.offsetLeft;
         var boardY = clientY - game.gameArea.offsetTop - game.boardArea.offsetTop;
@@ -61,13 +66,18 @@ var game;
             x = boardX;
             y = boardY;
             dragType = 'board';
+            console.log("[getXYandDragTyep]board, x:", x, " y", y);
         }
-        else if ((game.shapeChosen === -1 || game.shapeChosen >= 0) &&
+        else if ((game.shapeIdChosen == -1 || game.shapeIdChosen >= 0) &&
             shapeX < shapeSize.width && shapeY > 0 && shapeY < shapeSize.height) {
             x = shapeX;
             y = shapeY;
             dragType = 'shape';
-            clearDrag('board');
+            //clearDrag('board'); //TODO
+            console.log("[getXYandDragTyep]shape, x:", x, " y", y);
+        }
+        else {
+            console.log("[getXYandDragTyep]NOTYPE, x:", x, " y", y);
         }
         if (dragType === '') {
             clearDrag('board');
@@ -75,8 +85,11 @@ var game;
         }
         return { x: x, y: y, dragType: dragType };
     }
-    function handleDragEventBoardArea(type, clientX, clientY) {
+    function handleDragEventGameArea(type, clientX, clientY) {
         if (gameLogic.endOfMatch(game.state.playerStatus)) {
+            return;
+        }
+        if (!game.isYourTurn) {
             return;
         }
         // check if (!yourturn) return;
@@ -84,44 +97,70 @@ var game;
         var x = XYDrag.x;
         var y = XYDrag.y;
         var dragType = XYDrag.dragType;
+        if (dragType === '') {
+            return;
+        }
         var colAndRow = getRowColNum(dragType);
         var clickArea = getArea(dragType);
         var col = Math.floor(colAndRow.colsNum * x / clickArea.clientWidth);
         var row = Math.floor(colAndRow.rowsNum * y / clickArea.clientHeight);
-        if (dragType === 'board') {
-            if (game.shapeChosen === -1) {
-                return;
-            }
-            if (!gameLogic.checkLegalMoveForGame(game.state.board, row, col, game.turnIdx, game.shapeChosen)) {
-                clearDrag('board');
-                canConfirm = false;
-                return;
-            }
-            var boardAction = gameLogic.getBoardActionFromShapeID(row, col, game.shapeChosen);
-            if (!angular.equals(game.preview, boardAction)) {
-                clearDrag('board');
-                setboardActionGroundColor(boardAction);
-                game.preview = boardAction;
-            }
-            canConfirm = true;
-        }
         // displaying the dragging lines
         var draggingLines = document.getElementById(dragType + "DraggingLines");
         var horizontalDraggingLine = document.getElementById(dragType + "HorizontalDraggingLine");
         var verticalDraggingLine = document.getElementById(dragType + "VerticalDraggingLine");
         draggingLines.style.display = "inline";
-        var centerXY = getSquareCenterXY(row, col, dragType);
-        verticalDraggingLine.setAttribute("x1", centerXY.x);
-        verticalDraggingLine.setAttribute("x2", centerXY.x);
-        horizontalDraggingLine.setAttribute("y1", centerXY.y);
-        horizontalDraggingLine.setAttribute("y2", centerXY.y);
+        var centerXY = getSquareCenterXYWithType(row, col, dragType);
+        verticalDraggingLine.setAttribute("x1", "" + centerXY.x);
+        verticalDraggingLine.setAttribute("x2", "" + centerXY.x);
+        horizontalDraggingLine.setAttribute("y1", "" + centerXY.y);
+        horizontalDraggingLine.setAttribute("y2", "" + centerXY.y);
+        console.log("[handleDragEventGameArea], dragtype:", dragType);
+        if (dragType === 'board') {
+            console.log("[handleDragEventGameArea], in board get shapeIdChosen:", game.shapeIdChosen);
+            if (game.shapeIdChosen === undefined || game.shapeIdChosen == -1) {
+                return;
+            }
+            if (!gameLogic.checkLegalMoveForGame(game.state.board, row, col, game.turnIdx, game.shapeIdChosen)) {
+                clearDrag('board');
+                game.canConfirm = false;
+                return;
+            }
+            var boardAction = gameLogic.getBoardActionFromShapeID(row, col, game.shapeIdChosen);
+            if (!angular.equals(game.preview, boardAction)) {
+                clearDrag('board');
+                console.log("set board");
+                setboardActionGroundColor(boardAction);
+                game.preview = boardAction;
+            }
+            game.canConfirm = true;
+        }
         if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
             // drag ended
             dragDoneForBoard(row, col, dragType);
             clearDrag(dragType);
         }
     }
+    function setSquareBackGroundColor(row, col, color) {
+        document.getElementById('e2e_test_board_div_' + row + 'x' + col).style.background = color;
+    }
+    function setboardActionGroundColor(boardAction) {
+        for (var i = 0; i < boardAction.length; i++) {
+            for (var j = 0; j < boardAction[i].length; j++) {
+                if (boardAction[i][j] === '1') {
+                    setSquareBackGroundColor(i, j, getTurnColor());
+                }
+            }
+        }
+    }
+    function getSquareCenterXYWithType(row, col, type) {
+        var size = getSquareWidthHeightWithType(type);
+        return {
+            x: col * size.width + size.width / 2,
+            y: row * size.height + size.height / 2
+        };
+    }
     function getArea(type) {
+        console.log("getArea:", type + "Area");
         return document.getElementById(type + "Area");
     }
     function getRowColNum(type) {
@@ -130,16 +169,21 @@ var game;
         }
         if (type === 'shape') {
             //TODO to const
-            return { rowsNum: 5, colsNum: 30 };
+            return { rowsNum: 5, colsNum: 25 };
         }
     }
     function clearDrag(type) {
         if (type === 'board') {
+            for (var i = 0; i < game.preview.length; i++) {
+                for (var j = 0; j < game.preview[i].length; j++) {
+                    setSquareBackGroundColor(i, j, getBoardSquareColor(i, j));
+                }
+            }
         }
         var draggingLines = document.getElementById(type + "DraggingLines");
         draggingLines.style.display = "none";
         // obsolete
-        clickToDragPiece.style.display = "none";
+        //clickToDragPiece.style.display = "none";
     }
     //TODO game.ts 92-188
     // After shape matrix is got, draw shape in board area, draggable
@@ -202,6 +246,14 @@ var game;
             height: boardArea.clientHeight / (game.dim)
         };
     }
+    function getSquareWidthHeightWithType(type) {
+        var area = getArea(type);
+        var colAndRow = getRowColNum(type);
+        return {
+            width: area.clientWidth / (colAndRow.colsNum),
+            height: area.clientHeight / (colAndRow.rowsNum)
+        };
+    }
     function dragDone(row, col) {
         game.$rootScope.$apply(function () {
             if (game.deadBoard == null) {
@@ -217,25 +269,36 @@ var game;
         return game.shapeBoard.cellToShape[row][col];
     }
     function shapeNumToShapeId(shapeNum) {
+        if (shapeNum === -1) {
+            return -1;
+        }
         return shapeNum * 8;
     }
     function shapeAreaCellClicked(row, col) {
         var shapeNum = getShapeNum(row, col);
+        console.log("[shapeAreaCellClicked]shapeNum:", shapeNum);
         if (!game.state.shapeStatus[game.turnIdx][shapeNum]) {
             return;
         }
-        // TODO
-        //
-        game.shapeChosen = shapeNumToShapeId(shapeNum);
+        var shapeId = shapeNumToShapeId(shapeNum);
+        console.log("[shapeAreaCellClicked]shapeNum:", shapeNum, " shapeIdchosen:", shapeId);
+        return shapeId;
+    }
+    function boardAreaChooseMove(row, col) {
+        if (game.shapeIdChosen === undefined || game.shapeIdChosen == -1) {
+            return null;
+        }
+        return { row: row, col: col, shapeId: game.shapeIdChosen };
     }
     function dragDoneForBoard(row, col, dragType) {
         game.$rootScope.$apply(function () {
             if (dragType === 'board') {
-                boardAreaCellClicked(row, col);
-                //moveToConfirm = {row: row, col: col};
+                game.moveToConfirm = boardAreaChooseMove(row, col);
+                console.log("[dragDoneForBoard]moveToConfirm:", game.moveToConfirm);
             }
             else if (dragType == 'shape') {
-                shapeAreaCellClicked(row, col);
+                game.shapeIdChosen = shapeAreaCellClicked(row, col);
+                console.log("[dragDoneForBoard]shapeIdChosen:", game.shapeIdChosen);
             }
             else {
                 // toggleDead(row, col);
@@ -243,6 +306,52 @@ var game;
             }
         });
     }
+    function passClicked() {
+    }
+    game.passClicked = passClicked;
+    function showConfirmButton() {
+        return game.moveToConfirm != null;
+    }
+    game.showConfirmButton = showConfirmButton;
+    function boardAreaCellClicked(row, col) {
+        log.info(["Clicked on cell:", row, col]);
+        if (window.location.search === '?throwException') {
+            throw new Error("Throwing the error because URL has '?throwException'");
+        }
+        if (!game.isYourTurn) {
+            return;
+        }
+        if (game.shapeIdChosen === undefined || game.shapeIdChosen === -1) {
+            return;
+        }
+        try {
+            var move = gameLogic.createMove(game.state, row, col, game.shapeIdChosen, game.turnIdx);
+            game.isYourTurn = false; // to prevent making another move
+            makeMove(move);
+            game.shapeIdChosen = -1; // to reset the shape being selected
+        }
+        catch (e) {
+            log.info(["This is an illegal move:", row, col]);
+            return;
+        }
+    }
+    function confirmClicked() {
+        if (!showConfirmButton())
+            return;
+        log.info("confirmClicked");
+        if (false) {
+        }
+        else {
+            //confirm move
+            // make move 
+            boardAreaCellClicked(game.moveToConfirm.row, game.moveToConfirm.col);
+            game.moveToConfirm = null;
+            clearDrag('board');
+            clearDrag('shapeArea');
+            game.shapeIdChosen = -1;
+        }
+    }
+    game.confirmClicked = confirmClicked;
     function registerServiceWorker() {
         // I prefer to use appCache over serviceWorker
         // (because iOS doesn't support serviceWorker, so we have to use appCache)

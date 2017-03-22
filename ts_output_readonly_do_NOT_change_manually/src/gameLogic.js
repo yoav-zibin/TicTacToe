@@ -545,11 +545,47 @@ var gameLogic;
         return [i, j];
     }
     gameLogic.parseIJ = parseIJ;
-    function checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove) {
-        var ret = true;
-        var possibleAnchor = [];
+    function checkSquareOverlap(board, boardAction) {
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                if (boardAction[i][j] == '') {
+                    continue;
+                }
+                // conflict
+                if (boardAction[i][j] == '1' && board[i][j] != '') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    gameLogic.checkSquareOverlap = checkSquareOverlap;
+    function checkSquareAdj(board, boardAction, turnIndexBeforeMove) {
         var diri = [0, -1, 0, 1];
         var dirj = [-1, 0, 1, 0];
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                if (boardAction[i][j] == '') {
+                    continue;
+                }
+                // adjecent
+                for (var k = 0; k < dirj.length; k++) {
+                    var ni = i + diri[k];
+                    var nj = j + dirj[k];
+                    if (nj >= 0 && nj < gameLogic.COLS && ni >= 0 && ni < gameLogic.ROWS
+                        && boardAction[ni][nj] != '1'
+                        && board[ni][nj] == ('' + turnIndexBeforeMove)) {
+                        console.log("points at (", i, ",", j, ") adjacent with:(", ni, ",", nj, ")");
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    gameLogic.checkSquareAdj = checkSquareAdj;
+    function checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove) {
+        var possibleAnchor = [];
         // 0. if not territory, anchor is init state
         if (noPreviousMove(board, turnIndexBeforeMove)) {
             possibleAnchor.push(gameLogic.STARTANCHOR[turnIndexBeforeMove]);
@@ -573,31 +609,12 @@ var gameLogic;
             return false;
         }
         console.log("Found anchor");
-        // 2.not conflict with existing teritory and not adjacent to teritory
-        for (var i = 0; i < gameLogic.ROWS; i++) {
-            for (var j = 0; j < gameLogic.COLS; j++) {
-                if (boardAction[i][j] == '') {
-                    continue;
-                }
-                // conflict
-                if (boardAction[i][j] == '1' && board[i][j] != '') {
-                    ret = false;
-                    break;
-                }
-                // adjecent
-                for (var k = 0; k < dirj.length; k++) {
-                    var ni = i + diri[k];
-                    var nj = j + dirj[k];
-                    if (nj >= 0 && nj < gameLogic.COLS && ni >= 0 && ni < gameLogic.ROWS && boardAction[ni][nj] != '1'
-                        && board[ni][nj] == ('' + turnIndexBeforeMove)) {
-                        ret = false;
-                        console.log("points at (", i, ",", j, ") adjacent with:(", ni, ",", nj, ")");
-                        return ret;
-                    }
-                }
-            }
+        // not conflict with existing teritory and not adjacent to teritory
+        if (!checkSquareOverlap(board, boardAction) ||
+            !checkSquareAdj(board, boardAction, turnIndexBeforeMove)) {
+            return false;
         }
-        return ret;
+        return true;
     }
     gameLogic.checkLegalMove = checkLegalMove;
     function shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove) {
@@ -623,12 +640,20 @@ var gameLogic;
     }
     gameLogic.updatePlayerStatus = updatePlayerStatus;
     function checkLegalMoveForGame(board, row, col, turnIndexBeforeMove, shapeId) {
+        console.log("[checkLegalMoveForGame]col:", col, " row", row, " SI:", shapeId);
+        if (shapeId === undefined || shapeId < 0 || shapeId > 160) {
+            return false;
+        }
         var shape = getShapeFromShapeID(shapeId);
         if (!checkValidShapePlacement(row, col, shape)) {
             return false;
         }
         var boardAction = getBoardAction(row, col, shape);
-        if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+        /*if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+          return false;
+        }
+        */
+        if (!checkSquareOverlap(board, boardAction)) {
             return false;
         }
         return true;

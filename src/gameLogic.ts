@@ -450,8 +450,8 @@ module gameLogic {
     return up >= margins[0] && left >= margins[1] && bottom >= margins[2] && right >= margins[3];
   }
 
-  export function getBoardActionFromShapeID(row: number, col:number, shapeId :number):Board {
-    let shape:Shape = getShapeFromShapeID(shapeId);
+  export function getBoardActionFromShapeID(row: number, col: number, shapeId: number): Board {
+    let shape: Shape = getShapeFromShapeID(shapeId);
     return getBoardAction(row, col, shape);
   }
 
@@ -609,13 +609,50 @@ module gameLogic {
     return [i, j];
   }
 
+  export function checkSquareOverlap(board: Board, boardAction: Board): boolean {
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        if (boardAction[i][j] == '') {
+          continue;
+        }
+        // conflict
+        if (boardAction[i][j] == '1' && board[i][j] != '') {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  export function checkSquareAdj(board: Board, boardAction: Board, turnIndexBeforeMove: number) {
+    let diri: number[] = [0, -1, 0, 1];
+    let dirj: number[] = [-1, 0, 1, 0];
+
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        if (boardAction[i][j] == '') {
+          continue;
+        }
+        // adjecent
+        for (let k = 0; k < dirj.length; k++) {
+          let ni = i + diri[k];
+          let nj = j + dirj[k];
+          if (nj >= 0 && nj < COLS && ni >= 0 && ni < ROWS 
+            && boardAction[ni][nj] != '1'
+            && board[ni][nj] == ('' + turnIndexBeforeMove)) {
+            console.log("points at (", i, ",", j, ") adjacent with:(", ni, ",", nj, ")");
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
   export function checkLegalMove(board: Board, row: number, col: number,
     boardAction: Board, turnIndexBeforeMove: number): boolean {
 
-    let ret: boolean = true;
     let possibleAnchor: number[] = [];
-    let diri: number[] = [0, -1, 0, 1];
-    let dirj: number[] = [-1, 0, 1, 0];
 
     // 0. if not territory, anchor is init state
     if (noPreviousMove(board, turnIndexBeforeMove)) {
@@ -643,32 +680,13 @@ module gameLogic {
     }
 
     console.log("Found anchor");
-    // 2.not conflict with existing teritory and not adjacent to teritory
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        if (boardAction[i][j] == '') {
-          continue;
-        }
-        // conflict
-        if (boardAction[i][j] == '1' && board[i][j] != '') {
-          ret = false;
-          break;
-        }
-        // adjecent
-        for (let k = 0; k < dirj.length; k++) {
-          let ni = i + diri[k];
-          let nj = j + dirj[k];
-          if (nj >= 0 && nj < COLS && ni >= 0 && ni < ROWS && boardAction[ni][nj] != '1'
-            && board[ni][nj] == ('' + turnIndexBeforeMove)) {
-            ret = false;
-            console.log("points at (", i, ",", j, ") adjacent with:(", ni, ",", nj, ")");
-            return ret;
-          }
-        }
-      }
+    // not conflict with existing teritory and not adjacent to teritory
+    if (!checkSquareOverlap(board, boardAction) || 
+        !checkSquareAdj(board, boardAction, turnIndexBeforeMove)) {
+      return false;
     }
 
-    return ret;
+    return true;
   }
 
   export function shapePlacement(boardAfterMove: Board, boardAction: Board, turnIndexBeforeMove: number) {
@@ -696,6 +714,11 @@ module gameLogic {
   }
 
   export function checkLegalMoveForGame(board: Board, row: number, col: number, turnIndexBeforeMove: number, shapeId: number): boolean {
+    console.log("[checkLegalMoveForGame]col:", col, " row", row, " SI:", shapeId);
+    if (shapeId === undefined || shapeId < 0 || shapeId > 160) {
+      return false;
+    }
+
     let shape: Shape = getShapeFromShapeID(shapeId);
 
     if (!checkValidShapePlacement(row, col, shape)) {
@@ -703,7 +726,11 @@ module gameLogic {
     }
 
     let boardAction: Board = getBoardAction(row, col, shape);
-    if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+    /*if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+      return false;
+    }
+    */
+    if (!checkSquareOverlap(board, boardAction)) {
       return false;
     }
 
