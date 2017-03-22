@@ -584,15 +584,45 @@ var gameLogic;
         return true;
     }
     gameLogic.checkSquareAdj = checkSquareAdj;
-    function checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove) {
+    function getBoardAnchor(board, turnIndexBeforeMove) {
+        var boardAnchor = [];
+        // fill the shape matrix into the board;
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            boardAnchor[i] = [];
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                boardAnchor[i][j] = '';
+            }
+        }
+        var possibleAnchors = gameLogic.getPossibleAnchor(board, turnIndexBeforeMove);
+        //console.log("[getBoardAnchor]", possibleAnchors);
+        //aux_printCoordinator(possibleAnchors);
+        for (var i = 0; i < possibleAnchors.length; i++) {
+            var coord = gameLogic.parseIJ(possibleAnchors[i]);
+            //console.log(coord);
+            boardAnchor[coord[0]][coord[1]] = '1';
+        }
+        //console.log(aux_printFrame(boardAnchor, COLS));
+        return boardAnchor;
+    }
+    gameLogic.getBoardAnchor = getBoardAnchor;
+    function getPossibleAnchor(board, turnIndexBeforeMove) {
         var possibleAnchor = [];
         // 0. if not territory, anchor is init state
         if (noPreviousMove(board, turnIndexBeforeMove)) {
+            console.log("no previous move");
             possibleAnchor.push(gameLogic.STARTANCHOR[turnIndexBeforeMove]);
         }
         else {
             possibleAnchor = getRecomandAnchor(board, turnIndexBeforeMove);
         }
+        console.log(turnIndexBeforeMove);
+        console.log(possibleAnchor);
+        return possibleAnchor;
+    }
+    gameLogic.getPossibleAnchor = getPossibleAnchor;
+    function checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove) {
+        // 0. if not territory, anchor is init state
+        var possibleAnchor = getPossibleAnchor(board, turnIndexBeforeMove);
         console.log("possible Anchors for ", turnIndexBeforeMove, " :");
         console.log(aux_printCoordinator(possibleAnchor));
         // 1.has at least one anchor
@@ -860,6 +890,7 @@ var gameLogic;
         }
         var shapeBoard = getAllShapeMatrix();
         console.log(aux_printArray(shapeBoard.board));
+        console.log(shapeBoard.board.length, ",", shapeBoard.board[0].length);
         var aux_printcell = function (frame) {
             var ret = "";
             for (var i = 0; i < frame.length; i++) {

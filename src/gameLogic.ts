@@ -637,7 +637,7 @@ module gameLogic {
         for (let k = 0; k < dirj.length; k++) {
           let ni = i + diri[k];
           let nj = j + dirj[k];
-          if (nj >= 0 && nj < COLS && ni >= 0 && ni < ROWS 
+          if (nj >= 0 && nj < COLS && ni >= 0 && ni < ROWS
             && boardAction[ni][nj] != '1'
             && board[ni][nj] == ('' + turnIndexBeforeMove)) {
             console.log("points at (", i, ",", j, ") adjacent with:(", ni, ",", nj, ")");
@@ -649,17 +649,50 @@ module gameLogic {
     return true;
   }
 
-  export function checkLegalMove(board: Board, row: number, col: number,
-    boardAction: Board, turnIndexBeforeMove: number): boolean {
+  export function getBoardAnchor(board: Board, turnIndexBeforeMove: number): Board {
+    let boardAnchor: Board = [];
+    // fill the shape matrix into the board;
+    for (let i = 0; i < ROWS; i++) {
+      boardAnchor[i] = [];
+      for (let j = 0; j < COLS; j++) {
+        boardAnchor[i][j] = '';
+      }
+    }
+   
+    let possibleAnchors: number[] = gameLogic.getPossibleAnchor(board, turnIndexBeforeMove);
+    //console.log("[getBoardAnchor]", possibleAnchors);
 
+    //aux_printCoordinator(possibleAnchors);
+    for (let i = 0; i < possibleAnchors.length; i++) {
+      let coord: number[] = gameLogic.parseIJ(possibleAnchors[i])
+      //console.log(coord);
+      boardAnchor[coord[0]][coord[1]] = '1';
+    }
+    //console.log(aux_printFrame(boardAnchor, COLS));
+    
+    return boardAnchor;
+  }
+
+  export function getPossibleAnchor(board: Board, turnIndexBeforeMove: number): number[] {
     let possibleAnchor: number[] = [];
 
     // 0. if not territory, anchor is init state
     if (noPreviousMove(board, turnIndexBeforeMove)) {
+      console.log("no previous move");
       possibleAnchor.push(STARTANCHOR[turnIndexBeforeMove]);
     } else {
       possibleAnchor = getRecomandAnchor(board, turnIndexBeforeMove);
     }
+    console.log(turnIndexBeforeMove);
+    console.log(possibleAnchor);
+    return possibleAnchor;
+  }
+
+  export function checkLegalMove(board: Board, row: number, col: number,
+    boardAction: Board, turnIndexBeforeMove: number): boolean {
+
+    // 0. if not territory, anchor is init state
+    let possibleAnchor: number[] = getPossibleAnchor(board, turnIndexBeforeMove);
 
     console.log("possible Anchors for ", turnIndexBeforeMove, " :");
     console.log(aux_printCoordinator(possibleAnchor));
@@ -681,8 +714,8 @@ module gameLogic {
 
     console.log("Found anchor");
     // not conflict with existing teritory and not adjacent to teritory
-    if (!checkSquareOverlap(board, boardAction) || 
-        !checkSquareAdj(board, boardAction, turnIndexBeforeMove)) {
+    if (!checkSquareOverlap(board, boardAction) ||
+      !checkSquareAdj(board, boardAction, turnIndexBeforeMove)) {
       return false;
     }
 
@@ -974,6 +1007,7 @@ module gameLogic {
 
     let shapeBoard: ShapeBoard = getAllShapeMatrix();
     console.log(aux_printArray(shapeBoard.board));
+    console.log(shapeBoard.board.length, ",", shapeBoard.board[0].length);
 
     let aux_printcell = function (frame: any[][]): string {
       let ret: string = "";
