@@ -154,7 +154,7 @@ let mouse = Mouse.create(_render.canvas),
         constraint: {
             stiffness: 0.2,
             render: {
-                visible: true
+                visible: false
             }
         }
     });
@@ -196,9 +196,6 @@ Matter.Events.on(_render, 'afterRender', function() {
         console.log("player's turn is done");
     }
 });
-
-// keep the mouse in sync with rendering
-_render.mouse = mouse;
 
 Render.run(_render);
 Engine.run(_engine);
