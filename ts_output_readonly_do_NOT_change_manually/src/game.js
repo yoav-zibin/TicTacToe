@@ -378,6 +378,19 @@ var game;
         return game.moveToConfirm != null;
     }
     game.showConfirmButton = showConfirmButton;
+    // TODO figure out why this not working
+    var cacheIntegersTill = [];
+    function getIntegersTill(number) {
+        if (cacheIntegersTill[number])
+            return cacheIntegersTill[number];
+        var res = [];
+        for (var i = 0; i < number; i++) {
+            res.push(i);
+        }
+        cacheIntegersTill[number] = res;
+        return res;
+    }
+    game.getIntegersTill = getIntegersTill;
     function boardAreaCellClicked(row, col) {
         log.info(["Clicked on cell:", row, col]);
         if (window.location.search === '?throwException') {
