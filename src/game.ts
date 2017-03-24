@@ -440,6 +440,18 @@ module game {
     return moveToConfirm != null;
   }
 
+  // TODO figure out why this not working
+  let cacheIntegersTill: number[][] = [];
+  export function getIntegersTill(number: any): number[] {
+    if (cacheIntegersTill[number]) return cacheIntegersTill[number]; 
+    let res: number[] = [];
+    for (let i = 0; i < number; i++) {
+      res.push(i);
+    }
+    cacheIntegersTill[number] = res;
+    return res;
+  }
+
 
   function boardAreaCellClicked(row: number, col: number) {
     log.info(["Clicked on cell:", row, col]);
