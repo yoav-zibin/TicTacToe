@@ -181,7 +181,7 @@ function finalize() {
     for (let ballModel of stripedBallModels) {
         stripedBalls.push(ballModel.Ball);
     }
-    let finalState : IState {
+    let finalState : IState = {
         SolidBalls: solidBalls,
         StripedBalls: stripedBalls,
         EightBall: eightBallModel.Ball,
