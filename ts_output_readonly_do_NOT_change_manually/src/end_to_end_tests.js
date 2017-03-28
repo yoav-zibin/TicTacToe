@@ -3,8 +3,8 @@ function expectEmptyBrowserLogs() {
         // See if there are any errors (warnings are ok)
         var hasErrors = false;
         for (var _i = 0, browserLog_1 = browserLog; _i < browserLog_1.length; _i++) {
-            var log_1 = browserLog_1[_i];
-            var level = log_1.level.name;
+            var log = browserLog_1[_i];
+            var level = log.level.name;
             if (level === 'INFO' || level === 'WARNING')
                 continue; // (warnings are ok)
             hasErrors = true;

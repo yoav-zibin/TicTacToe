@@ -11,11 +11,13 @@ module GameplayConsts {
     export const CollisionCategoryCue = 0x0001;
     export const CollisionCategoryNormalBalls = 0x0002;
     export const CollisionMaskAllBalls = 0x0003;
-    export const CollisionMaskCueOnly = 0x0001;
     export const CollisionMaskMouse = 0x0000;
 
     export const BallRestitution = 0.9;
     export const BallFriction = 0.01;
+
+    export const BorderThickness = 10;
+    // export const BorderClearance = 10;
 
     export const TextureSize = 256.0; // texture is 256x256
 };
@@ -58,6 +60,8 @@ if (gameState.CanMoveCueBall) {
 } else {
     _gameStage = GameStage.Aiming;
 }
+var _firstTouchBall :Ball | null;
+var _pocketedBalls :Ball[] = [];
 
 function shootClick(cueBall : Matter.Body) {
     //if (!isHumanTurn()) return;
@@ -83,7 +87,7 @@ function shootClick(cueBall : Matter.Body) {
     _engine.enableSleeping = true;
 }
 
-function isWorldSleeping(world : Matter.World):boolean {
+function isWorldSleeping(world : Matter.World) :boolean {
     let bodies = Matter.Composite.allBodies(world);
     let sleeping = bodies.filter((body) => body.isSleeping);
     let isWorldSleeping = bodies.length === sleeping.length;
@@ -96,6 +100,57 @@ function distanceBetweenVectors(vec1 : Matter.Vector, vec2 : Matter.Vector) :num
     let ysq = Math.pow(vec1.y - vec2.y, 2);
     return Math.sqrt(xsq + ysq);
 }
+
+function createBorderBody(pocket1 : Pocket, pocket2 : Pocket, vertical : boolean) :Matter.Body {
+    let x, y, width, height : number;
+    if (vertical) {
+        x = pocket1.Position.X;
+        y = (pocket1.Position.Y + pocket2.Position.Y) / 2.0;
+        width = GameplayConsts.BorderThickness;
+        height = pocket2.Position.Y - pocket1.Position.Y - pocket1.Radius - pocket2.Radius;
+    } else {
+        x = (pocket1.Position.X + pocket2.Position.X) / 2.0;
+        y = pocket1.Position.Y;
+        width = pocket2.Position.X - pocket1.Position.X - pocket1.Radius - pocket2.Radius;
+        height = GameplayConsts.BorderThickness;
+    }
+    return Bodies.rectangle(
+        x, y, width, height,
+        <any>{
+            isStatic: true,
+            render: {fillStyle: '#825201', strokeStyle: 'black' },
+            label: 'Border'
+        });
+}
+
+function createBallModel(x:number, y:number, ballNumber:number, pocketed:boolean, radius:number) :Ball {
+    let ballType : BallType;
+    if (ballNumber == 0) ballType = BallType.Cue;
+    else if (ballNumber == 8) ballType = BallType.Eight;
+    else if (ballNumber > 8) ballType = BallType.Stripes;
+    else ballType = BallType.Solids;
+
+    let theBall = {
+        Position : {X: x, Y: y},
+        Pocketed : pocketed,
+        Radius : radius,
+        BallType : ballType,
+        Number : ballNumber,
+    };
+    return theBall;
+}
+
+
+// create borders
+let pockets = gameState.PoolBoard.Pockets;
+World.add(_world, [
+    createBorderBody(pockets[0], pockets[3], false), // top
+    createBorderBody(pockets[2], pockets[5], false), // bottom
+    createBorderBody(pockets[0], pockets[1], true), // left top
+    createBorderBody(pockets[1], pockets[2], true), // left bottom
+    createBorderBody(pockets[3], pockets[4], true), // right top
+    createBorderBody(pockets[4], pockets[5], true), // right bottom
+]);
 
 // create pockets
 for (let pocket of gameState.PoolBoard.Pockets) {
@@ -118,7 +173,7 @@ let cueBall = Bodies.circle(gameState.CueBall.Position.X, gameState.CueBall.Posi
         collisionFilter: { category: GameplayConsts.CollisionCategoryCue, mask: GameplayConsts.CollisionMaskAllBalls },
         restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
         render: { fillStyle: 'white', strokeStyle: 'black' },
-        label: 'Ball'
+        label: 'Ball 0'
     });
 World.add(_world, cueBall);
 // eight ball
@@ -130,7 +185,7 @@ World.add(_world,
         collisionFilter: { category: GameplayConsts.CollisionCategoryCue, mask: GameplayConsts.CollisionMaskAllBalls },
         restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
         render: { sprite: { texture: 'imgs/8.png', xScale: textureScale, yScale: textureScale } },
-        label: 'Ball'
+        label: 'Ball 8'
     }));
 // solid balls
 for (let ball of gameState.SolidBalls) {
@@ -141,7 +196,7 @@ for (let ball of gameState.SolidBalls) {
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
         restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
         render: { sprite: { texture: 'imgs/' + String(ball.Number) + '.png', xScale: textureScale, yScale: textureScale } },
-        label: 'Ball'
+        label: 'Ball ' + String(ball.Number)
     }));
 }
 // striped balls
@@ -153,7 +208,7 @@ for (let ball of gameState.StripedBalls) {
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
         restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
         render: { sprite: { texture: 'imgs/' + String(ball.Number) + '.png', xScale: textureScale, yScale: textureScale } },
-        label: 'Ball'
+        label: 'Ball ' + String(ball.Number)
     }));
 }
 
@@ -200,7 +255,36 @@ Matter.Events.on(mouseConstraint, 'mouseup', function (event) {
 // EVENT: handle pocket and ball collision
 Matter.Events.on(_engine, 'collisionStart', function(event) {
     for (let pair of event.pairs) {
-        console.log(pair.bodyA.label, pair.bodyB.label);
+        //console.log(pair.bodyA.label, pair.bodyB.label);
+        if (pair.bodyA.label == 'Pocket' && pair.bodyB.label.indexOf('Ball') >= 0) {
+            // pocket - ball collision
+            // destroy the ball body
+            World.remove(_world, pair.bodyB);
+            // get the ball number
+            let ballBody = pair.bodyB;
+            let ballNumber = Number(ballBody.label.split(' ')[1]);
+            // create the ball model and add to pocketed balls
+            let ballModel = createBallModel(ballBody.position.x, ballBody.position.y,
+                ballNumber, true, gameState.CueBall.Radius);
+            _pocketedBalls.push(ballModel);
+        } 
+        if (pair.bodyA.label.indexOf('Ball') >= 0 && pair.bodyB.label.indexOf('Ball') >= 0) {
+            // ball - ball collision
+            if (_firstTouchBall == null) {
+                let ballNumberA = Number(pair.bodyA.label.split(' ')[1]);
+                let ballNumberB = Number(pair.bodyB.label.split(' ')[1]);
+                // XXX: It always sets 'pocketed' to false for touched balls
+                if (ballNumberA != 0 && ballNumberB == 0) {
+                    // B is cue
+                    _firstTouchBall = createBallModel(pair.bodyA.position.x, 
+                        pair.bodyA.position.y, ballNumberA, false, gameState.CueBall.Radius);
+                } else if (ballNumberA == 0 && ballNumberB != 0) {
+                    // A is cue
+                    _firstTouchBall = createBallModel(pair.bodyB.position.x, 
+                        pair.bodyB.position.y, ballNumberB, false, gameState.CueBall.Radius);
+                }
+            }
+        }
     }
 });
 // EVENT: update
@@ -209,6 +293,11 @@ Matter.Events.on(_render, 'afterRender', function() {
         _gameStage = GameStage.NetworkSent;
         // send the move over network here
         console.log("player's turn is done");
+        let theReturnState = {
+            PocketedBalls: _pocketedBalls,
+            TouchedBall: _firstTouchBall,
+        }
+        console.log(theReturnState);
     }
 });
 
