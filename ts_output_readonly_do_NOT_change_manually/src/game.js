@@ -14,6 +14,10 @@ var game;
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
+    var translate = gamingPlatform.translate;
+    var resizeGameAreaService = gamingPlatform.resizeGameAreaService;
+    var gameService = gamingPlatform.gameService;
+    var log = gamingPlatform.log;
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
@@ -33,7 +37,7 @@ var game;
         // I've added this code for a future where all browsers support serviceWorker (so we can deprecate appCache!)
         if (!window.applicationCache && 'serviceWorker' in navigator) {
             var n = navigator;
-            log.log('Calling serviceWorker.register');
+            gamingPlatform.log.log('Calling serviceWorker.register');
             n.serviceWorker.register('service-worker.js').then(function (registration) {
                 log.log('ServiceWorker registration successful with scope: ', registration.scope);
             }).catch(function (err) {

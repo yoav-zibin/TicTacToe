@@ -50,11 +50,11 @@ else {
 }
 var _firstTouchBall;
 var _pocketedBalls = [];
+var cueBallModel;
+var eightBallModel;
+var solidBallModels = [];
+var stripedBallModels = [];
 function shootClick(cueBall) {
-    //if (!isHumanTurn()) return;
-    if (_gameStage != GameStage.Aiming)
-        return;
-    _gameStage = GameStage.CueHit;
     var forcePosition = {
         x: cueBall.position.x + 1.0 * Math.cos(cueBall.angle),
         y: cueBall.position.y + 1.0 * Math.sin(cueBall.angle)
@@ -102,24 +102,76 @@ function createBorderBody(pocket1, pocket2, vertical) {
         label: 'Border'
     });
 }
-function createBallModel(x, y, ballNumber, pocketed, radius) {
-    var ballType;
-    if (ballNumber == 0)
-        ballType = BallType.Cue;
-    else if (ballNumber == 8)
-        ballType = BallType.Eight;
-    else if (ballNumber > 8)
-        ballType = BallType.Stripes;
-    else
-        ballType = BallType.Solids;
-    var theBall = {
-        Position: { X: x, Y: y },
-        Pocketed: pocketed,
-        Radius: radius,
-        BallType: ballType,
-        Number: ballNumber,
+function getBallModelFromBody(ballBody) {
+    var ballNumber = Number(ballBody.label.split(' ')[1]);
+    if (ballNumber == 0) {
+        // cue ball
+        return cueBallModel;
+    }
+    else if (ballNumber == 8) {
+        // eight ball
+        return eightBallModel;
+    }
+    else if (ballNumber > 8) {
+        // striped ball
+        return stripedBallModels[ballNumber - 9];
+    }
+    else {
+        // solid ball
+        return solidBallModels[ballNumber - 1];
+    }
+}
+function syncBallModelPositions() {
+    // sync cue ball pos
+    cueBallModel.Ball.Position = { X: cueBallModel.Body.position.x, Y: cueBallModel.Body.position.y };
+    // sync eight ball pos
+    eightBallModel.Ball.Position = { X: eightBallModel.Body.position.x, Y: eightBallModel.Body.position.y };
+    // sync solid ball pos
+    for (var _i = 0, solidBallModels_1 = solidBallModels; _i < solidBallModels_1.length; _i++) {
+        var ballModel = solidBallModels_1[_i];
+        ballModel.Ball.Position = { X: ballModel.Body.position.x, Y: ballModel.Body.position.y };
+    }
+    // sync striped ball pos
+    for (var _a = 0, stripedBallModels_1 = stripedBallModels; _a < stripedBallModels_1.length; _a++) {
+        var ballModel = stripedBallModels_1[_a];
+        ballModel.Ball.Position = { X: ballModel.Body.position.x, Y: ballModel.Body.position.y };
+    }
+}
+function finalize() {
+    // send the move over network here
+    console.log("player's turn is done");
+    // sync the model positions
+    syncBallModelPositions();
+    // create return state
+    var theReturnState = {
+        PocketedBalls: _pocketedBalls,
+        TouchedBall: _firstTouchBall,
     };
-    return theBall;
+    // create IState
+    var solidBalls = [];
+    var stripedBalls = [];
+    for (var _i = 0, solidBallModels_2 = solidBallModels; _i < solidBallModels_2.length; _i++) {
+        var ballModel = solidBallModels_2[_i];
+        solidBalls.push(ballModel.Ball);
+    }
+    for (var _a = 0, stripedBallModels_2 = stripedBallModels; _a < stripedBallModels_2.length; _a++) {
+        var ballModel = stripedBallModels_2[_a];
+        stripedBalls.push(ballModel.Ball);
+    }
+    var finalState = {
+        SolidBalls: solidBalls,
+        StripedBalls: stripedBalls,
+        EightBall: eightBallModel.Ball,
+        CueBall: cueBallModel.Ball,
+        CanMoveCueBall: null,
+        PoolBoard: gameState.PoolBoard,
+        FirstMove: false,
+        Player1Color: null,
+        Player2Color: null,
+        DeltaBalls: theReturnState,
+    };
+    console.log(theReturnState);
+    console.log(finalState);
 }
 function drawGuideLine(context, cueBody) {
     var startPoint = { X: cueBody.position.x, Y: cueBody.position.y };
@@ -156,46 +208,53 @@ for (var _i = 0, _a = gameState.PoolBoard.Pockets; _i < _a.length; _i++) {
         label: 'Pocket'
     }));
 }
-// create ball bodies
+// create ball bodies and body models
 var textureScale = gameState.CueBall.Radius * 2 / GameplayConsts.TextureSize;
 // cue ball
-var cueBall = Bodies.circle(gameState.CueBall.Position.X, gameState.CueBall.Position.Y, gameState.CueBall.Radius, {
+var cueBallBody = Bodies.circle(gameState.CueBall.Position.X, gameState.CueBall.Position.Y, gameState.CueBall.Radius, {
     isStatic: false,
     collisionFilter: { category: GameplayConsts.CollisionCategoryCue, mask: GameplayConsts.CollisionMaskAllBalls },
     restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
     render: { fillStyle: 'white', strokeStyle: 'black' },
     label: 'Ball 0'
 });
-World.add(_world, cueBall);
+World.add(_world, cueBallBody);
+cueBallModel = { Ball: gameState.CueBall, Body: cueBallBody };
 // eight ball
-World.add(_world, Bodies.circle(gameState.EightBall.Position.X, gameState.EightBall.Position.Y, gameState.EightBall.Radius, {
+var eightBallBody = Bodies.circle(gameState.EightBall.Position.X, gameState.EightBall.Position.Y, gameState.EightBall.Radius, {
     isStatic: false,
     collisionFilter: { category: GameplayConsts.CollisionCategoryCue, mask: GameplayConsts.CollisionMaskAllBalls },
     restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
     render: { sprite: { texture: 'imgs/8.png', xScale: textureScale, yScale: textureScale } },
     label: 'Ball 8'
-}));
+});
+World.add(_world, eightBallBody);
+eightBallModel = { Ball: gameState.EightBall, Body: eightBallBody };
 // solid balls
 for (var _b = 0, _c = gameState.SolidBalls; _b < _c.length; _b++) {
     var ball = _c[_b];
-    World.add(_world, Bodies.circle(ball.Position.X, ball.Position.Y, ball.Radius, {
+    var theBallBody = Bodies.circle(ball.Position.X, ball.Position.Y, ball.Radius, {
         isStatic: false,
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
         restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
         render: { sprite: { texture: 'imgs/' + String(ball.Number) + '.png', xScale: textureScale, yScale: textureScale } },
         label: 'Ball ' + String(ball.Number)
-    }));
+    });
+    World.add(_world, theBallBody);
+    solidBallModels.push({ Ball: ball, Body: theBallBody });
 }
 // striped balls
 for (var _d = 0, _e = gameState.StripedBalls; _d < _e.length; _d++) {
     var ball = _e[_d];
-    World.add(_world, Bodies.circle(ball.Position.X, ball.Position.Y, ball.Radius, {
+    var theBallBody = Bodies.circle(ball.Position.X, ball.Position.Y, ball.Radius, {
         isStatic: false,
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
         restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
         render: { sprite: { texture: 'imgs/' + String(ball.Number) + '.png', xScale: textureScale, yScale: textureScale } },
         label: 'Ball ' + String(ball.Number)
-    }));
+    });
+    World.add(_world, theBallBody);
+    stripedBallModels.push({ Ball: ball, Body: theBallBody });
 }
 var mouse = Mouse.create(_render.canvas), mouseConstraint = MouseConstraint.create(_engine, {
     mouse: mouse,
@@ -212,25 +271,27 @@ World.add(_world, mouseConstraint);
 Matter.Events.on(mouseConstraint, 'mousemove', function (event) {
     // This function sets the angle and _renderLength
     var mousePosition = event.mouse.position;
-    var cuePosition = cueBall.position;
+    var cuePosition = cueBallBody.position;
     var horizontalDistance = cuePosition.x - mousePosition.x;
     var verticalDistance = cuePosition.y - mousePosition.y;
     var angle = Math.atan2(verticalDistance, horizontalDistance);
     _renderLength = Math.sqrt(horizontalDistance * horizontalDistance + verticalDistance * verticalDistance);
-    Matter.Body.setAngle(cueBall, angle);
+    Matter.Body.setAngle(cueBallBody, angle);
 });
 Matter.Events.on(mouseConstraint, 'mousedown', function (event) {
 });
 // EVENT: shoot cue ball on mouseup
 Matter.Events.on(mouseConstraint, 'mouseup', function (event) {
     var mouseUpPosition = event.mouse.mouseupPosition;
-    var cuePosition = cueBall.position;
+    var cuePosition = cueBallBody.position;
     // only shoot cue ball when the mouse is around the cue ball
-    var dist = distanceBetweenVectors(mouseUpPosition, cuePosition);
-    var distLimit = gameState.CueBall.Radius * GameplayConsts.ClickDistanceLimit;
-    console.log("dist ", dist, " limit ", distLimit);
-    if (dist < distLimit) {
-        shootClick(cueBall);
+    if (_gameStage == GameStage.Aiming /* && isHumanTurn() */) {
+        var dist = distanceBetweenVectors(mouseUpPosition, cuePosition);
+        var distLimit = gameState.CueBall.Radius * GameplayConsts.ClickDistanceLimit;
+        if (dist < distLimit) {
+            _gameStage = GameStage.CueHit;
+            shootClick(cueBallBody);
+        }
     }
 });
 // EVENT: handle pocket and ball collision
@@ -246,22 +307,22 @@ Matter.Events.on(_engine, 'collisionStart', function (event) {
             var ballBody = pair.bodyB;
             var ballNumber = Number(ballBody.label.split(' ')[1]);
             // create the ball model and add to pocketed balls
-            var ballModel = createBallModel(ballBody.position.x, ballBody.position.y, ballNumber, true, gameState.CueBall.Radius);
-            _pocketedBalls.push(ballModel);
+            var theBall = getBallModelFromBody(ballBody).Ball;
+            theBall.Pocketed = true;
+            _pocketedBalls.push(theBall);
         }
         if (pair.bodyA.label.indexOf('Ball') >= 0 && pair.bodyB.label.indexOf('Ball') >= 0) {
             // ball - ball collision
             if (_firstTouchBall == null) {
                 var ballNumberA = Number(pair.bodyA.label.split(' ')[1]);
                 var ballNumberB = Number(pair.bodyB.label.split(' ')[1]);
-                // XXX: It always sets 'pocketed' to false for touched balls
                 if (ballNumberA != 0 && ballNumberB == 0) {
                     // B is cue
-                    _firstTouchBall = createBallModel(pair.bodyA.position.x, pair.bodyA.position.y, ballNumberA, false, gameState.CueBall.Radius);
+                    _firstTouchBall = getBallModelFromBody(pair.bodyA).Ball;
                 }
                 else if (ballNumberA == 0 && ballNumberB != 0) {
                     // A is cue
-                    _firstTouchBall = createBallModel(pair.bodyB.position.x, pair.bodyB.position.y, ballNumberB, false, gameState.CueBall.Radius);
+                    _firstTouchBall = getBallModelFromBody(pair.bodyB).Ball;
                 }
             }
         }
@@ -273,18 +334,12 @@ Matter.Events.on(_render, 'afterRender', function () {
     if (_gameStage == GameStage.Aiming) {
         var distLimit = gameState.CueBall.Radius * GameplayConsts.ClickDistanceLimit;
         if (_renderLength < distLimit)
-            drawGuideLine(_render.context, cueBall);
+            drawGuideLine(_render.context, cueBallBody);
     }
     // send return state when all bodies are sleeping
     if (_gameStage == GameStage.CueHit && isWorldSleeping(_world)) {
         _gameStage = GameStage.NetworkSent;
-        // send the move over network here
-        console.log("player's turn is done");
-        var theReturnState = {
-            PocketedBalls: _pocketedBalls,
-            TouchedBall: _firstTouchBall,
-        };
-        console.log(theReturnState);
+        finalize();
     }
 });
 Render.run(_render);

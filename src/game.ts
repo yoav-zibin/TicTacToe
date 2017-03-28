@@ -21,6 +21,11 @@ module game {
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
 
+  var translate = gamingPlatform.translate;
+  var resizeGameAreaService = gamingPlatform.resizeGameAreaService;
+  var gameService = gamingPlatform.gameService;
+  var log = gamingPlatform.log;
+
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
     $timeout = $timeout_;
@@ -40,7 +45,7 @@ module game {
     // I've added this code for a future where all browsers support serviceWorker (so we can deprecate appCache!)
     if (!window.applicationCache && 'serviceWorker' in navigator) {
       let n: any = navigator;
-      log.log('Calling serviceWorker.register');
+      gamingPlatform.log.log('Calling serviceWorker.register');
       n.serviceWorker.register('service-worker.js').then(function(registration: any) {
         log.log('ServiceWorker registration successful with scope: ',    registration.scope);
       }).catch(function(err: any) {
