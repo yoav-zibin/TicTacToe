@@ -18,6 +18,7 @@ var GameplayConsts;
     GameplayConsts.BorderThickness = 10;
     // export const BorderClearance = 10;
     GameplayConsts.TextureSize = 256.0; // texture is 256x256
+    GameplayConsts.ClickDistanceLimit = 10; // 10x the ball radius
 })(GameplayConsts || (GameplayConsts = {}));
 ;
 // using shortcuts
@@ -120,6 +121,22 @@ function createBallModel(x, y, ballNumber, pocketed, radius) {
     };
     return theBall;
 }
+function drawGuideLine(context, cueBody) {
+    var startPoint = { X: cueBody.position.x, Y: cueBody.position.y };
+    var endPoint = {
+        X: cueBody.position.x + (_renderLength) * Math.cos(cueBody.angle),
+        Y: cueBody.position.y + (_renderLength) * Math.sin(cueBody.angle)
+    };
+    context.globalAlpha = 0.5;
+    context.beginPath();
+    context.setLineDash([3]);
+    context.moveTo(startPoint.X, startPoint.Y);
+    context.lineTo(endPoint.X, endPoint.Y);
+    context.strokeStyle = 'red';
+    context.lineWidth = 5.5;
+    context.stroke();
+    context.setLineDash([]);
+}
 // create borders
 var pockets = gameState.PoolBoard.Pockets;
 World.add(_world, [
@@ -202,13 +219,15 @@ Matter.Events.on(mouseConstraint, 'mousemove', function (event) {
     _renderLength = Math.sqrt(horizontalDistance * horizontalDistance + verticalDistance * verticalDistance);
     Matter.Body.setAngle(cueBall, angle);
 });
+Matter.Events.on(mouseConstraint, 'mousedown', function (event) {
+});
 // EVENT: shoot cue ball on mouseup
 Matter.Events.on(mouseConstraint, 'mouseup', function (event) {
     var mouseUpPosition = event.mouse.mouseupPosition;
     var cuePosition = cueBall.position;
     // only shoot cue ball when the mouse is around the cue ball
     var dist = distanceBetweenVectors(mouseUpPosition, cuePosition);
-    var distLimit = gameState.CueBall.Radius * 10;
+    var distLimit = gameState.CueBall.Radius * GameplayConsts.ClickDistanceLimit;
     console.log("dist ", dist, " limit ", distLimit);
     if (dist < distLimit) {
         shootClick(cueBall);
@@ -250,6 +269,13 @@ Matter.Events.on(_engine, 'collisionStart', function (event) {
 });
 // EVENT: update
 Matter.Events.on(_render, 'afterRender', function () {
+    // draw the render line
+    if (_gameStage == GameStage.Aiming) {
+        var distLimit = gameState.CueBall.Radius * GameplayConsts.ClickDistanceLimit;
+        if (_renderLength < distLimit)
+            drawGuideLine(_render.context, cueBall);
+    }
+    // send return state when all bodies are sleeping
     if (_gameStage == GameStage.CueHit && isWorldSleeping(_world)) {
         _gameStage = GameStage.NetworkSent;
         // send the move over network here
