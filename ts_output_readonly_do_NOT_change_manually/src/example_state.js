@@ -1,23 +1,56 @@
+// the game stage
+var GameStage;
+(function (GameStage) {
+    GameStage[GameStage["PlacingCue"] = 1] = "PlacingCue";
+    GameStage[GameStage["Aiming"] = 2] = "Aiming";
+    GameStage[GameStage["CueHit"] = 3] = "CueHit";
+    GameStage[GameStage["NetworkSent"] = 4] = "NetworkSent";
+})(GameStage || (GameStage = {}));
+// bunch of game play constants
+var GameplayConsts;
+(function (GameplayConsts) {
+    GameplayConsts.CollisionCategoryCue = 0x0001;
+    GameplayConsts.CollisionCategoryNormalBalls = 0x0002;
+    GameplayConsts.CollisionMaskAllBalls = 0x0003;
+    GameplayConsts.CollisionMaskCueOnly = 0x0001;
+    GameplayConsts.CollisionMaskMouse = 0x0000;
+    GameplayConsts.BallRestitution = 0.9;
+    GameplayConsts.BallFriction = 0.01;
+    GameplayConsts.TextureSize = 256.0; // texture is 256x256
+})(GameplayConsts || (GameplayConsts = {}));
+;
 // using shortcuts
 var Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner, Composites = Matter.Composites, MouseConstraint = Matter.MouseConstraint, Mouse = Matter.Mouse, World = Matter.World, Query = Matter.Query, Svg = Matter.Svg, Bodies = Matter.Bodies;
+// Get initial game state
+var gameState = GameLogic.getInitialState();
 // Globals
 var _engine = Engine.create(), _world = _engine.world;
 var _render = Render.create({
     element: document.getElementById("canvas-container"),
     engine: _engine,
     options: {
-        height: 550,
-        width: 410,
+        height: gameState.PoolBoard.Height,
+        width: gameState.PoolBoard.Width,
     }
 });
-var _renderLength = 0.0; // the guideline length
-var _didMakeMove = false;
-var _didSendMove = false;
+_engine.world.gravity.y = 0;
+var renderOptions = _render.options;
+renderOptions.wireframes = false;
+renderOptions.background = 'green';
+var _renderLength = 0.0; // the guideline _renderLength
+var _gameStage;
+if (gameState.CanMoveCueBall) {
+    //gameStage = GameStage.PlacingCue; // XXX: placing cue not implemented yet
+    _gameStage = GameStage.Aiming;
+}
+else {
+    _gameStage = GameStage.Aiming;
+}
 function shootClick(cueBall) {
     //if (!isHumanTurn()) return;
-    if (_didMakeMove)
+    if (_gameStage != GameStage.Aiming)
         return;
-    _didMakeMove = true;
+    _gameStage = GameStage.CueHit;
     var forcePosition = {
         x: cueBall.position.x + 1.0 * Math.cos(cueBall.angle),
         y: cueBall.position.y + 1.0 * Math.sin(cueBall.angle)
@@ -45,84 +78,56 @@ function distanceBetweenVectors(vec1, vec2) {
     var ysq = Math.pow(vec1.y - vec2.y, 2);
     return Math.sqrt(xsq + ysq);
 }
-_engine.world.gravity.y = 0;
-var renderOptions = _render.options;
-renderOptions.wireframes = false;
-renderOptions.background = 'green';
-// create terrain (table frames)
-World.add(_world, [
-    // left
-    Bodies.rectangle(30, 150, 5, 210, { isStatic: true, render: { fillStyle: '#825201', strokeStyle: 'black' } }),
-    Bodies.rectangle(30, 400, 5, 210, { isStatic: true, render: { fillStyle: '#825201', strokeStyle: 'black' } }),
-    // top
-    Bodies.rectangle(205, 20, 305, 5, { isStatic: true, render: { fillStyle: '#825201', strokeStyle: 'black' } }),
-    // bottom
-    Bodies.rectangle(205, 530, 305, 5, { isStatic: true, render: { fillStyle: '#825201', strokeStyle: 'black' } }),
-    // right
-    Bodies.rectangle(380, 150, 5, 210, { isStatic: true, render: { fillStyle: '#825201', strokeStyle: 'black' } }),
-    Bodies.rectangle(380, 400, 5, 210, { isStatic: true, render: { fillStyle: '#825201', strokeStyle: 'black' } }),
-]);
 // create pockets
-World.add(_world, [
-    // top-left
-    Bodies.circle(20, 15, 31, { isStatic: true, render: { fillStyle: 'black' } }),
-    // top-right
-    Bodies.circle(390, 15, 31, { isStatic: true, render: { fillStyle: 'black' } }),
-    // left
-    Bodies.circle(5, 275, 31, { isStatic: true, render: { fillStyle: 'black' } }),
-    // right
-    Bodies.circle(405, 275, 31, { isStatic: true, render: { fillStyle: 'black' } }),
-    // bottom-left
-    Bodies.circle(20, 535, 31, { isStatic: true, render: { fillStyle: 'black' } }),
-    // bottom-right
-    Bodies.circle(390, 535, 31, { isStatic: true, render: { fillStyle: 'black' } }),
-]);
-// bunch of game play constants
-var GameplayConsts;
-(function (GameplayConsts) {
-    GameplayConsts.CollisionCategoryCue = 0x0001;
-    GameplayConsts.CollisionCategoryNormalBalls = 0x0002;
-    GameplayConsts.CollisionMaskAllBalls = 0x0003;
-    GameplayConsts.CollisionMaskCueOnly = 0x0001;
-    GameplayConsts.BallRestitution = 0.9;
-    GameplayConsts.BallFriction = 0.01;
-    GameplayConsts.BallRadius = 10.0;
-    GameplayConsts.TextureSize = 256.0; // texture is 256x256
-})(GameplayConsts || (GameplayConsts = {}));
-;
+for (var _i = 0, _a = gameState.PoolBoard.Pockets; _i < _a.length; _i++) {
+    var pocket = _a[_i];
+    World.add(_world, Bodies.circle(pocket.Position.X, pocket.Position.Y, pocket.Radius, {
+        isStatic: true,
+        render: { fillStyle: 'black' },
+        label: 'Pocket'
+    }));
+}
 // create ball bodies
-var textureScale = GameplayConsts.BallRadius * 2 / GameplayConsts.TextureSize;
-var cueBall = Bodies.circle(100, 350, 10, {
+var textureScale = gameState.CueBall.Radius * 2 / GameplayConsts.TextureSize;
+// cue ball
+var cueBall = Bodies.circle(gameState.CueBall.Position.X, gameState.CueBall.Position.Y, gameState.CueBall.Radius, {
     isStatic: false,
     collisionFilter: { category: GameplayConsts.CollisionCategoryCue, mask: GameplayConsts.CollisionMaskAllBalls },
     restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
-    render: { fillStyle: 'white', strokeStyle: 'black' }
+    render: { fillStyle: 'white', strokeStyle: 'black' },
+    label: 'Ball'
 });
-World.add(_world, [
-    // cue
-    cueBall,
-    // eight ball
-    Bodies.circle(130, 160, 10, {
+World.add(_world, cueBall);
+// eight ball
+World.add(_world, Bodies.circle(gameState.EightBall.Position.X, gameState.EightBall.Position.Y, gameState.EightBall.Radius, {
+    isStatic: false,
+    collisionFilter: { category: GameplayConsts.CollisionCategoryCue, mask: GameplayConsts.CollisionMaskAllBalls },
+    restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
+    render: { sprite: { texture: 'imgs/8.png', xScale: textureScale, yScale: textureScale } },
+    label: 'Ball'
+}));
+// solid balls
+for (var _b = 0, _c = gameState.SolidBalls; _b < _c.length; _b++) {
+    var ball = _c[_b];
+    World.add(_world, Bodies.circle(ball.Position.X, ball.Position.Y, ball.Radius, {
         isStatic: false,
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
         restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
-        render: { sprite: { texture: 'imgs/8.png', xScale: textureScale, yScale: textureScale } }
-    }),
-    // a solid ball #4
-    Bodies.circle(350, 500, 10, {
+        render: { sprite: { texture: 'imgs/' + String(ball.Number) + '.png', xScale: textureScale, yScale: textureScale } },
+        label: 'Ball'
+    }));
+}
+// striped balls
+for (var _d = 0, _e = gameState.StripedBalls; _d < _e.length; _d++) {
+    var ball = _e[_d];
+    World.add(_world, Bodies.circle(ball.Position.X, ball.Position.Y, ball.Radius, {
         isStatic: false,
         collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
         restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
-        render: { sprite: { texture: 'imgs/4.png', xScale: textureScale, yScale: textureScale } }
-    }),
-    // a striped ball #10
-    Bodies.circle(100, 200, 10, {
-        isStatic: false,
-        collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
-        restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
-        render: { sprite: { texture: 'imgs/10.png', xScale: textureScale, yScale: textureScale } }
-    }),
-]);
+        render: { sprite: { texture: 'imgs/' + String(ball.Number) + '.png', xScale: textureScale, yScale: textureScale } },
+        label: 'Ball'
+    }));
+}
 var mouse = Mouse.create(_render.canvas), mouseConstraint = MouseConstraint.create(_engine, {
     mouse: mouse,
     constraint: {
@@ -132,7 +137,7 @@ var mouse = Mouse.create(_render.canvas), mouseConstraint = MouseConstraint.crea
         }
     }
 });
-mouseConstraint.collisionFilter.mask = 0x0000;
+mouseConstraint.collisionFilter.mask = GameplayConsts.CollisionMaskMouse;
 World.add(_world, mouseConstraint);
 // EVENT: set angle and _renderLength on mousemove
 Matter.Events.on(mouseConstraint, 'mousemove', function (event) {
@@ -151,16 +156,23 @@ Matter.Events.on(mouseConstraint, 'mouseup', function (event) {
     var cuePosition = cueBall.position;
     // only shoot cue ball when the mouse is around the cue ball
     var dist = distanceBetweenVectors(mouseUpPosition, cuePosition);
-    var distLimit = GameplayConsts.BallRadius * 10;
+    var distLimit = gameState.CueBall.Radius * 10;
     console.log("dist ", dist, " limit ", distLimit);
     if (dist < distLimit) {
         shootClick(cueBall);
     }
 });
+// EVENT: handle pocket and ball collision
+Matter.Events.on(_engine, 'collisionStart', function (event) {
+    for (var _i = 0, _a = event.pairs; _i < _a.length; _i++) {
+        var pair = _a[_i];
+        console.log(pair.bodyA.label, pair.bodyB.label);
+    }
+});
 // EVENT: update
 Matter.Events.on(_render, 'afterRender', function () {
-    if (_didMakeMove && !_didSendMove && isWorldSleeping(_world)) {
-        _didSendMove = true;
+    if (_gameStage == GameStage.CueHit && isWorldSleeping(_world)) {
+        _gameStage = GameStage.NetworkSent;
         // send the move over network here
         console.log("player's turn is done");
     }
