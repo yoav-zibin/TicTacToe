@@ -17,3 +17,9 @@ canvas:active {
     margin: 0px 0;
 }
 
+#game-overlay {
+    z-index: 2;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}

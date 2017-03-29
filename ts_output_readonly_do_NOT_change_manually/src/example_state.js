@@ -223,7 +223,7 @@ var GameExample;
             x: cueBody.position.x + _renderLength * Math.cos(cueBody.angle),
             y: cueBody.position.y + _renderLength * Math.sin(cueBody.angle)
         };
-        var originalAlpha = context.globalAlpha;
+        context.save();
         context.globalAlpha = 0.5;
         context.beginPath();
         context.setLineDash([3]);
@@ -233,7 +233,7 @@ var GameExample;
         context.lineWidth = 5.5;
         context.stroke();
         context.closePath();
-        context.globalAlpha = originalAlpha;
+        context.restore();
     }
     function drawCueStick(context) {
         if (_renderLength <= 0)
@@ -247,6 +247,46 @@ var GameExample;
         context.translate(cueBody.position.x, cueBody.position.y);
         context.rotate(cueBody.angle);
         context.drawImage(_stickImg, -_stickImg.width - _renderLength, -_stickImg.height / 2);
+        context.restore();
+    }
+    function drawGameHUD(context) {
+        context.save();
+        var fontSize = 20;
+        context.font = "20px Arial";
+        context.fillStyle = "white";
+        var textLeft = "";
+        switch (_gameStage) {
+            case GameStage.PlacingCue:
+                textLeft = "Click to place cue ball";
+                break;
+            case GameStage.Aiming:
+                textLeft = "Drag behind cue ball to aim";
+                break;
+            case GameStage.CueHit:
+                if (_firstTouchBall)
+                    textLeft = "First touch: " + _firstTouchBall.Number;
+                break;
+            case GameStage.Finalized:
+                textLeft = "Opponent's turn!";
+                break;
+        }
+        context.textAlign = "left";
+        context.fillText(textLeft, 0, fontSize);
+        if ((_gameStage == GameStage.PlacingCue || _gameStage == GameStage.Aiming)) {
+            // TODO: Use player turn index to get the current player
+            var myColorText = "Designated group: " + AssignedBallType[_gameState.Player1Color];
+            context.textAlign = "right";
+            context.fillText(myColorText, context.canvas.width, fontSize);
+        }
+        if ((_gameStage == GameStage.Finalized || _gameStage == GameStage.CueHit) && _pocketedBalls.length != 0) {
+            var statusText = "Pocketed: ";
+            for (var _i = 0, _pocketedBalls_1 = _pocketedBalls; _i < _pocketedBalls_1.length; _i++) {
+                var ball = _pocketedBalls_1[_i];
+                statusText += ball.Number + ",";
+            }
+            context.textAlign = "right";
+            context.fillText(statusText, context.canvas.width, fontSize);
+        }
         context.restore();
     }
     function updateUI() {
@@ -410,25 +450,18 @@ var GameExample;
                 _gameStage = GameStage.Finalized;
                 finalize();
             }
+            // always render game HUD
+            drawGameHUD(_render.context);
         });
         // start simulation
         Render.run(_render);
         Engine.run(_engine);
     }
     GameExample.updateUI = updateUI;
-    function getStatusText() {
-        switch (_gameStage) {
-            case GameStage.PlacingCue:
-                return "Click to place the cue ball";
-            case GameStage.Aiming:
-                return "Aim and shoot";
-            case GameStage.CueHit:
-                return "Simulating...";
-            case GameStage.Finalized:
-                return "Opponent's turn";
-        }
+    function getGameStage() {
+        return _gameStage;
     }
-    GameExample.getStatusText = getStatusText;
+    GameExample.getGameStage = getGameStage;
 })(GameExample || (GameExample = {}));
 GameExample.updateUI();
 //# sourceMappingURL=example_state.js.map
