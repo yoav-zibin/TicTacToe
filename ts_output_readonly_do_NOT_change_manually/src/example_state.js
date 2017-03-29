@@ -37,6 +37,7 @@ var GameExample;
     var _topLeftCorner; // used for bounds
     var _bottomRightCorner;
     var _renderLength = 0.0; // the guideline length. also used to calculate force
+    var _mousePos; // only used to render coords (for debug purposes)
     var _gameStage;
     var _firstTouchBall;
     var _pocketedBalls = [];
@@ -206,15 +207,16 @@ var GameExample;
             StripedBalls: stripedBalls,
             EightBall: eightBallModel.Ball,
             CueBall: cueBallModel.Ball,
-            CanMoveCueBall: null,
+            CanMoveCueBall: _gameState.CanMoveCueBall,
             PoolBoard: _gameState.PoolBoard,
-            FirstMove: false,
+            FirstMove: _gameState.FirstMove,
             Player1Color: null,
             Player2Color: null,
             DeltaBalls: theReturnState,
         };
         console.log(theReturnState);
         console.log(finalState);
+        console.log(GameLogic.createMove(finalState, 0));
     }
     function drawGuideLine(context) {
         var cueBody = cueBallModel.Body;
@@ -286,6 +288,12 @@ var GameExample;
             }
             context.textAlign = "right";
             context.fillText(statusText, context.canvas.width, fontSize);
+        }
+        // show mouse coords on screen bottom
+        if (_mousePos != null) {
+            var coordText = "(" + _mousePos.x.toFixed(0) + "," + _mousePos.y.toFixed(0) + ")";
+            context.textAlign = "center";
+            context.fillText(coordText, context.canvas.width / 2, context.canvas.height - fontSize);
         }
         context.restore();
     }
@@ -398,6 +406,7 @@ var GameExample;
             var horizontalDistance = cuePosition.x - mousePosition.x;
             var verticalDistance = cuePosition.y - mousePosition.y;
             var angle = Math.atan2(verticalDistance, horizontalDistance);
+            _mousePos = { x: mousePosition.x, y: mousePosition.y };
             _renderLength = Math.sqrt(horizontalDistance * horizontalDistance + verticalDistance * verticalDistance);
             Matter.Body.setAngle(cueBallModel.Body, angle);
         });

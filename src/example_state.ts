@@ -48,6 +48,7 @@ module GameExample {
     var _topLeftCorner : Matter.Vector; // used for bounds
     var _bottomRightCorner : Matter.Vector;
     var _renderLength = 0.0; // the guideline length. also used to calculate force
+    var _mousePos: Matter.Vector; // only used to render coords (for debug purposes)
     var _gameStage: GameStage;
     var _firstTouchBall: Ball | null;
     var _pocketedBalls: Ball[] = [];
@@ -224,15 +225,16 @@ module GameExample {
             StripedBalls: stripedBalls,
             EightBall: eightBallModel.Ball,
             CueBall: cueBallModel.Ball,
-            CanMoveCueBall: null, // set by gamelogic
+            CanMoveCueBall: _gameState.CanMoveCueBall, // set by gamelogic
             PoolBoard: _gameState.PoolBoard,
-            FirstMove: false, // XXX: hard code to false for now
+            FirstMove: _gameState.FirstMove, // set by gamelogic
             Player1Color: null, // set by gamelogic
             Player2Color: null, // set by gamelogic
             DeltaBalls: theReturnState,
         }
         console.log(theReturnState);
         console.log(finalState);
+        console.log(GameLogic.createMove(finalState, 0));
     }
 
     function drawGuideLine(context: CanvasRenderingContext2D) {
@@ -306,6 +308,12 @@ module GameExample {
             }
             context.textAlign = "right";
             context.fillText(statusText, context.canvas.width, fontSize);
+        }
+        // show mouse coords on screen bottom
+        if (_mousePos != null) {
+            let coordText = "(" + _mousePos.x.toFixed(0) + "," + _mousePos.y.toFixed(0) + ")";
+            context.textAlign = "center";
+            context.fillText(coordText, context.canvas.width/2, context.canvas.height - fontSize);
         }
         context.restore();
     }
@@ -424,7 +432,7 @@ module GameExample {
             let horizontalDistance = cuePosition.x - mousePosition.x;
             let verticalDistance = cuePosition.y - mousePosition.y;
             let angle = Math.atan2(verticalDistance, horizontalDistance);
-
+            _mousePos = {x: mousePosition.x, y: mousePosition.y};
             _renderLength = Math.sqrt(horizontalDistance * horizontalDistance + verticalDistance * verticalDistance);
             Matter.Body.setAngle(cueBallModel.Body, angle);
         });
