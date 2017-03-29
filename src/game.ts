@@ -36,7 +36,7 @@ module game {
   export let shapeArea: HTMLElement;
 
   export let shapeBoard: ShapeBoard = null;
-  export let turnIdx: number = 0;
+  //export let currentUpdateUI.turnIndex: number = 0;
   export let shapeIdChosen: number = -1;
   export let preview: Board = [];
   export let canConfirm: boolean = false;
@@ -121,7 +121,7 @@ module game {
   }
 
   function printBoardAnchor() {
-    anchorBoard = gameLogic.getBoardAnchor(state.board, turnIdx);
+    anchorBoard = gameLogic.getBoardAnchor(state.board, currentUpdateUI.turnIndex);
     //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
     setboardActionGroundColor(anchorBoard, getHintColor());
   }
@@ -138,8 +138,7 @@ module game {
     if (!isYourTurn) {
       return;
     }
-    // check if (!yourturn) return;
-
+   
     let XYDrag = getXYandDragTyep(clientX, clientY);
 
     let x: number = XYDrag.x;
@@ -180,7 +179,7 @@ module game {
         return;
       }
 
-      if (!gameLogic.checkLegalMoveForGame(state.board, row, col, turnIdx, shapeIdChosen)) {
+      if (!gameLogic.checkLegalMoveForGame(state.board, row, col, currentUpdateUI.turnIndex, shapeIdChosen)) {
         clearDrag('board', false);
         canConfirm = false;
         return;
@@ -393,7 +392,7 @@ module game {
     let shapeNum: number = getShapeNum(row, col);
     console.log("[shapeAreaCellClicked]shapeNum:", shapeNum);
 
-    if (!state.shapeStatus[turnIdx][shapeNum]) {
+    if (!state.shapeStatus[currentUpdateUI.turnIndex][shapeNum]) {
       return;
     }
 
@@ -467,7 +466,7 @@ module game {
       return;
     }
     try {
-      let move = gameLogic.createMove(state, row, col, shapeIdChosen, turnIdx);
+      let move = gameLogic.createMove(state, row, col, shapeIdChosen, currentUpdateUI.turnIndex);
       isYourTurn = false; // to prevent making another move
       //TODO make sure this is corrcet
       makeMove(move);
@@ -574,7 +573,8 @@ module game {
       state = gameLogic.getInitialState();
     }
 
-    //turnIdx = gameLogic.getTurnIdx();
+    isYourTurn = isMyTurn()
+    //currentUpdateUI.turnIndex = gameLogic.getcurrentUpdateUI.turnIndex();
 
     // We calculate the AI move only after the animation finishes,
     // because if we call aiService now
@@ -612,8 +612,8 @@ module game {
     }
     didMakeMove = true;
 
-    // change turnidx here
-    turnIdx = move.turnIndex;
+    // change currentUpdateUI.turnIndex here
+    currentUpdateUI.turnIndex = move.turnIndex;
 
     if (!proposals) {
       gameService.makeMove(move, null);
@@ -696,15 +696,15 @@ module game {
 
   function getTurnColor() {
     var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
-    return color[turnIdx];
+    return color[currentUpdateUI.turnIndex];
   }
 
   export function setShapeAreaSquareStyle(row: number, col: number) {
     let shapeId: number = shapeBoard.cellToShape[row][col]
-    //console.log("turnidx:" + turnIdx + ":(" + row + "," + col + "):" + shapeId);
+    //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
     if (shapeId != -1) {
       let color: string = '#C0C0C0'
-      if (state.shapeStatus[turnIdx][shapeId]) {
+      if (state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {
         color = getTurnColor();
       }
       return {

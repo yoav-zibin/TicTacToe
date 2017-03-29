@@ -22,7 +22,7 @@ var game;
     game.proposals = null;
     game.yourPlayerInfo = null;
     game.shapeBoard = null;
-    game.turnIdx = 0;
+    //export let currentUpdateUI.turnIndex: number = 0;
     game.shapeIdChosen = -1;
     game.preview = [];
     game.canConfirm = false;
@@ -98,7 +98,7 @@ var game;
         return "#FF0000";
     }
     function printBoardAnchor() {
-        game.anchorBoard = gameLogic.getBoardAnchor(game.state.board, game.turnIdx);
+        game.anchorBoard = gameLogic.getBoardAnchor(game.state.board, game.currentUpdateUI.turnIndex);
         //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
         setboardActionGroundColor(game.anchorBoard, getHintColor());
     }
@@ -112,7 +112,6 @@ var game;
         if (!game.isYourTurn) {
             return;
         }
-        // check if (!yourturn) return;
         var XYDrag = getXYandDragTyep(clientX, clientY);
         var x = XYDrag.x;
         var y = XYDrag.y;
@@ -147,7 +146,7 @@ var game;
             if (game.shapeIdChosen === undefined || game.shapeIdChosen == -1) {
                 return;
             }
-            if (!gameLogic.checkLegalMoveForGame(game.state.board, row, col, game.turnIdx, game.shapeIdChosen)) {
+            if (!gameLogic.checkLegalMoveForGame(game.state.board, row, col, game.currentUpdateUI.turnIndex, game.shapeIdChosen)) {
                 clearDrag('board', false);
                 game.canConfirm = false;
                 return;
@@ -336,7 +335,7 @@ var game;
     function shapeAreaCellClicked(row, col) {
         var shapeNum = getShapeNum(row, col);
         console.log("[shapeAreaCellClicked]shapeNum:", shapeNum);
-        if (!game.state.shapeStatus[game.turnIdx][shapeNum]) {
+        if (!game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeNum]) {
             return;
         }
         var shapeId = shapeNumToShapeId(shapeNum);
@@ -403,7 +402,7 @@ var game;
             return;
         }
         try {
-            var move = gameLogic.createMove(game.state, row, col, game.shapeIdChosen, game.turnIdx);
+            var move = gameLogic.createMove(game.state, row, col, game.shapeIdChosen, game.currentUpdateUI.turnIndex);
             game.isYourTurn = false; // to prevent making another move
             //TODO make sure this is corrcet
             makeMove(move);
@@ -507,7 +506,8 @@ var game;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
         }
-        //turnIdx = gameLogic.getTurnIdx();
+        game.isYourTurn = isMyTurn();
+        //currentUpdateUI.turnIndex = gameLogic.getcurrentUpdateUI.turnIndex();
         // We calculate the AI move only after the animation finishes,
         // because if we call aiService now
         // then the animation will be paused until the javascript finishes.
@@ -541,8 +541,8 @@ var game;
             return;
         }
         game.didMakeMove = true;
-        // change turnidx here
-        game.turnIdx = move.turnIndex;
+        // change currentUpdateUI.turnIndex here
+        game.currentUpdateUI.turnIndex = move.turnIndex;
         if (!game.proposals) {
             gameService.makeMove(move, null);
         }
@@ -622,14 +622,14 @@ var game;
     game.setBoardAreaSquareStyle = setBoardAreaSquareStyle;
     function getTurnColor() {
         var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
-        return color[game.turnIdx];
+        return color[game.currentUpdateUI.turnIndex];
     }
     function setShapeAreaSquareStyle(row, col) {
         var shapeId = game.shapeBoard.cellToShape[row][col];
-        //console.log("turnidx:" + turnIdx + ":(" + row + "," + col + "):" + shapeId);
+        //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
         if (shapeId != -1) {
             var color = '#C0C0C0';
-            if (game.state.shapeStatus[game.turnIdx][shapeId]) {
+            if (game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
                 color = getTurnColor();
             }
             return {

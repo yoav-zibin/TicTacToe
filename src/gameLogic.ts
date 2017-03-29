@@ -54,7 +54,8 @@ module gameLogic {
   export const SHAPENUMBER = 21;
   export const GROUPNUMBER = 4; /// 2
   // TODO change this
-  export const STARTANCHOR: number[] = [0, ROWS * COLS]; // [0, 14 * 14];
+  export const STARTANCHOR4: number[] = [0, COLS - 1, ROWS * (COLS - 1), ROWS * COLS - 1];
+  export const STARTANCHOR: number[] = [0, ROWS * COLS - 1]; // [0, 14 * 14];
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   export function getInitialBoard(): Board {
@@ -658,7 +659,7 @@ module gameLogic {
         boardAnchor[i][j] = '';
       }
     }
-   
+
     let possibleAnchors: number[] = gameLogic.getPossibleAnchor(board, turnIndexBeforeMove);
     //console.log("[getBoardAnchor]", possibleAnchors);
 
@@ -669,7 +670,7 @@ module gameLogic {
       boardAnchor[coord[0]][coord[1]] = '1';
     }
     //console.log(aux_printFrame(boardAnchor, COLS));
-    
+
     return boardAnchor;
   }
 
@@ -891,6 +892,83 @@ module gameLogic {
     return ret;
   }
 
+  export function getNextShapeFrom(shapeBoard: ShapeBoard, ColIdx: number) {
+    let oH: number = shapeBoard.board.length;
+    let oW: number = oH > 0 ? shapeBoard.board[0].length : 0;
+
+    let start: number = -1;
+    let i = ColIdx;
+    for (; i < oW; i++) {
+      let isBlank = true;
+      for (let j = 0; j < oH; j++) {
+        if (shapeBoard.board[j][i] === "1") {
+          isBlank = false;
+          break;
+        }
+      }
+      if (!isBlank && start === -1) {
+        start = i;
+        continue;
+      }
+      if (isBlank && start > 0 && (i-1 > start)) {
+        return { start: start, end: i - 1 };
+      }
+    }
+    return { start: start, end: i };
+  }
+
+  //TODO
+  export function getAllShapeMatrix_withWidth(width: number):ShapeBoard {
+    let shapeBoard: ShapeBoard = { board: [], cellToShape: [], shapeToCell: [] };
+    shapeBoard.board = [];
+
+    for (let i = 0; i < SHAPEHEIGHT; i++) {
+      shapeBoard.board[i] = [];
+      shapeBoard.cellToShape[i] = [];
+    }
+
+    let originSB = getAllShapeMatrix();
+
+    let oH: number = originSB.board.length;
+    let oW: number = oH > 0 ? originSB.board[0].length : 0;
+
+    let idx: number = 0;
+    let shapeId: number = 0;
+    let row = 0;
+    let col = 0;
+
+    while (idx < oW) {
+      let shapeIdx = getNextShapeFrom(originSB, 0);
+      console.log("get ", shapeIdx.start, "-", shapeIdx.end);
+      let len = shapeIdx.end - shapeIdx.start + 1;
+      if (col + len >= width) {
+        col = 0;
+        row += SHAPEHEIGHT;
+        for (let i = 0; i < SHAPEHEIGHT; i++) {
+          shapeBoard.board[row + i] = [];
+          shapeBoard.cellToShape[row + i] = [];
+        }
+      }
+      for (let j = shapeIdx.start; j <= shapeIdx.end; j++) {
+        for (let i = 0; i < SHAPEHEIGHT; i++) {
+          shapeBoard.board[row + i][col] = originSB.board[i][j];
+          shapeBoard.cellToShape[row + i][col] = originSB.cellToShape[i][j];
+        }
+        col++;
+      }
+      if (col < width) {
+        for (let i = 0; i < SHAPEHEIGHT; i++) {
+          shapeBoard.board[row + i][col] = '';
+          shapeBoard.cellToShape[row + i][col] = -1;
+        }
+        col++;
+      }
+      idx = shapeIdx.end + 1;
+    }
+
+    return shapeBoard;
+  }
+
   export function getAllShapeMatrix(): ShapeBoard {
     let shapeBoard: ShapeBoard = { board: [], cellToShape: [], shapeToCell: [] };
     shapeBoard.board = [];
@@ -1008,6 +1086,10 @@ module gameLogic {
     let shapeBoard: ShapeBoard = getAllShapeMatrix();
     console.log(aux_printArray(shapeBoard.board));
     console.log(shapeBoard.board.length, ",", shapeBoard.board[0].length);
+
+    let shapeBoardWWidth = getAllShapeMatrix_withWidth(20);
+    console.log(aux_printArray(shapeBoardWWidth.board));
+    console.log(shapeBoardWWidth.board.length, ",", shapeBoardWWidth.board[0].length);
 
     let aux_printcell = function (frame: any[][]): string {
       let ret: string = "";

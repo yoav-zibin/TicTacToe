@@ -22,7 +22,8 @@ var gameLogic;
     gameLogic.SHAPENUMBER = 21;
     gameLogic.GROUPNUMBER = 4; /// 2
     // TODO change this
-    gameLogic.STARTANCHOR = [0, gameLogic.ROWS * gameLogic.COLS]; // [0, 14 * 14];
+    gameLogic.STARTANCHOR4 = [0, gameLogic.COLS - 1, gameLogic.ROWS * (gameLogic.COLS - 1), gameLogic.ROWS * gameLogic.COLS - 1];
+    gameLogic.STARTANCHOR = [0, gameLogic.ROWS * gameLogic.COLS - 1]; // [0, 14 * 14];
     /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
     function getInitialBoard() {
         var board = [];
@@ -789,6 +790,76 @@ var gameLogic;
         ret[3] = CTR + margins[3];
         return ret;
     }
+    function getNextShapeFrom(shapeBoard, ColIdx) {
+        var oH = shapeBoard.board.length;
+        var oW = oH > 0 ? shapeBoard.board[0].length : 0;
+        var start = -1;
+        var i = ColIdx;
+        for (; i < oW; i++) {
+            var isBlank = true;
+            for (var j = 0; j < oH; j++) {
+                if (shapeBoard.board[j][i] === "1") {
+                    isBlank = false;
+                    break;
+                }
+            }
+            if (!isBlank && start === -1) {
+                start = i;
+                continue;
+            }
+            if (isBlank && start > 0 && i - 1 > start) {
+                return { start: start, end: i - 1 };
+            }
+        }
+        return { start: start, end: i };
+    }
+    gameLogic.getNextShapeFrom = getNextShapeFrom;
+    //TODO
+    function getAllShapeMatrix_withWidth(width) {
+        var shapeBoard = { board: [], cellToShape: [], shapeToCell: [] };
+        shapeBoard.board = [];
+        for (var i = 0; i < gameLogic.SHAPEHEIGHT; i++) {
+            shapeBoard.board[i] = [];
+            shapeBoard.cellToShape[i] = [];
+        }
+        var originSB = getAllShapeMatrix();
+        var oH = originSB.board.length;
+        var oW = oH > 0 ? originSB.board[0].length : 0;
+        var idx = 0;
+        var shapeId = 0;
+        var row = 0;
+        var col = 0;
+        while (idx < oW) {
+            var shapeIdx = getNextShapeFrom(originSB, 0);
+            console.log("get ", shapeIdx.start, "-", shapeIdx.end);
+            var len = shapeIdx.end - shapeIdx.start + 1;
+            if (col + len >= width) {
+                col = 0;
+                row += gameLogic.SHAPEHEIGHT;
+                for (var i = 0; i < gameLogic.SHAPEHEIGHT; i++) {
+                    shapeBoard.board[row + i] = [];
+                    shapeBoard.cellToShape[row + i] = [];
+                }
+            }
+            for (var j = shapeIdx.start; j <= shapeIdx.end; j++) {
+                for (var i = 0; i < gameLogic.SHAPEHEIGHT; i++) {
+                    shapeBoard.board[row + i][col] = originSB.board[i][j];
+                    shapeBoard.cellToShape[row + i][col] = originSB.cellToShape[i][j];
+                }
+                col++;
+            }
+            if (col < width) {
+                for (var i = 0; i < gameLogic.SHAPEHEIGHT; i++) {
+                    shapeBoard.board[row + i][col] = '';
+                    shapeBoard.cellToShape[row + i][col] = -1;
+                }
+                col++;
+            }
+            idx = shapeIdx.end + 1;
+        }
+        return shapeBoard;
+    }
+    gameLogic.getAllShapeMatrix_withWidth = getAllShapeMatrix_withWidth;
     function getAllShapeMatrix() {
         var shapeBoard = { board: [], cellToShape: [], shapeToCell: [] };
         shapeBoard.board = [];
@@ -891,6 +962,9 @@ var gameLogic;
         var shapeBoard = getAllShapeMatrix();
         console.log(aux_printArray(shapeBoard.board));
         console.log(shapeBoard.board.length, ",", shapeBoard.board[0].length);
+        var shapeBoardWWidth = getAllShapeMatrix_withWidth(20);
+        console.log(aux_printArray(shapeBoardWWidth.board));
+        console.log(shapeBoardWWidth.board.length, ",", shapeBoardWWidth.board[0].length);
         var aux_printcell = function (frame) {
             var ret = "";
             for (var i = 0; i < frame.length; i++) {
