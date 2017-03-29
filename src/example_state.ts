@@ -44,11 +44,11 @@ module GameExample {
     var _engine: Matter.Engine;
     var _world: Matter.World;
     var _render: Matter.Render;
+    var _mouse: Matter.Mouse;
     
     var _topLeftCorner : Matter.Vector; // used for bounds
     var _bottomRightCorner : Matter.Vector;
-    var _renderLength = 0.0; // the guideline length. also used to calculate force
-    var _mousePos: Matter.Vector; // only used to render coords (for debug purposes)
+    var _mouseDistance = 0; // mouse distance from cue ball
     var _gameStage: GameStage;
     var _firstTouchBall: Ball | null;
     var _pocketedBalls: Ball[] = [];
@@ -63,19 +63,16 @@ module GameExample {
             x: cueBall.position.x + 1.0 * Math.cos(cueBall.angle),
             y: cueBall.position.y + 1.0 * Math.sin(cueBall.angle)
         };
-        let force: number = _renderLength / GameplayConsts.ClickDistanceLimit * GameplayConsts.ClickForceMax;
+        let force: number = _mouseDistance / GameplayConsts.ClickDistanceLimit * GameplayConsts.ClickForceMax;
 
         console.log("force pos: ", forcePosition);
         console.log("force mag: ",  force);
-        console.log("render len: ", _renderLength);
+        console.log("render len: ", _mouseDistance);
 
         Matter.Body.applyForce(cueBall, forcePosition, {
             x: force * Math.cos(cueBall.angle),
             y: force * Math.sin(cueBall.angle)
         });
-
-        // reset render len
-        _renderLength = 0.0;
         _engine.enableSleeping = true;
     }
 
@@ -241,8 +238,8 @@ module GameExample {
         let cueBody = cueBallModel.Body;
         let startPoint = { x: cueBody.position.x, y: cueBody.position.y };
         let endPoint = {
-            x: cueBody.position.x + _renderLength * Math.cos(cueBody.angle),
-            y: cueBody.position.y + _renderLength * Math.sin(cueBody.angle)
+            x: cueBody.position.x + _mouseDistance * Math.cos(cueBody.angle),
+            y: cueBody.position.y + _mouseDistance * Math.sin(cueBody.angle)
         }
         context.save();
         context.globalAlpha = 0.5;
@@ -258,16 +255,11 @@ module GameExample {
     }
 
     function drawCueStick(context: CanvasRenderingContext2D) {
-        if (_renderLength <= 0) return;
         let cueBody = cueBallModel.Body;
-        let mousePos = {
-            x: cueBody.position.x - _renderLength * Math.cos(cueBody.angle),
-            y: cueBody.position.y - _renderLength * Math.sin(cueBody.angle)
-        }
         context.save();
         context.translate(cueBody.position.x, cueBody.position.y);
         context.rotate(cueBody.angle);
-        context.drawImage(_stickImg, -_stickImg.width - _renderLength, -_stickImg.height / 2);
+        context.drawImage(_stickImg, -_stickImg.width - _mouseDistance, -_stickImg.height / 2);
         context.restore();
     }
 
@@ -310,8 +302,8 @@ module GameExample {
             context.fillText(statusText, context.canvas.width, fontSize);
         }
         // show mouse coords on screen bottom
-        if (_mousePos != null) {
-            let coordText = "(" + _mousePos.x.toFixed(0) + "," + _mousePos.y.toFixed(0) + ")";
+        if (_mouse != null) {
+            let coordText = "(" + _mouse.position.x.toFixed(0) + "," + _mouse.position.y.toFixed(0) + ")";
             context.textAlign = "center";
             context.fillText(coordText, context.canvas.width/2, context.canvas.height - fontSize);
         }
@@ -418,26 +410,11 @@ module GameExample {
         }
 
         // add mouse control
-        let mouse = Mouse.create(_render.canvas);
-        let mouseConstraint = (<any>MouseConstraint).create(_engine, { mouse: mouse });
+        _mouse = Mouse.create(_render.canvas);
+        let mouseConstraint = (<any>MouseConstraint).create(_engine, { mouse: _mouse });
         mouseConstraint.collisionFilter.mask = GameplayConsts.CollisionMaskMouse;
         World.add(_world, mouseConstraint);
 
-        // EVENT: set angle and _renderLength on mousemove
-        Matter.Events.on(mouseConstraint, 'mousemove', function (event) {
-            // This function sets the angle and _renderLength
-            let mousePosition = event.mouse.position;
-            let cuePosition = cueBallModel.Body.position;
-
-            let horizontalDistance = cuePosition.x - mousePosition.x;
-            let verticalDistance = cuePosition.y - mousePosition.y;
-            let angle = Math.atan2(verticalDistance, horizontalDistance);
-            _mousePos = {x: mousePosition.x, y: mousePosition.y};
-            _renderLength = Math.sqrt(horizontalDistance * horizontalDistance + verticalDistance * verticalDistance);
-            Matter.Body.setAngle(cueBallModel.Body, angle);
-        });
-        Matter.Events.on(mouseConstraint, 'mousedown', function (event) {
-        });
         // EVENT: shoot cue ball on mouseup
         Matter.Events.on(mouseConstraint, 'mouseup', function (event) {
             let mouseUpPosition = <Matter.Vector>event.mouse.mouseupPosition;
@@ -470,9 +447,22 @@ module GameExample {
         });
         // EVENT: update
         Matter.Events.on(_render, 'afterRender', function () {
+            // update _renderLength (the distance between mouse and cue body)
+            let cuePosition = cueBallModel.Body.position;
+            let horizontalDistance = cuePosition.x - _mouse.position.x;
+            let verticalDistance = cuePosition.y - _mouse.position.y;
+            let angle = Math.atan2(verticalDistance, horizontalDistance);
+            _mouse.position = _mouse.position;
+            _mouseDistance = distanceBetweenVectors(cuePosition, _mouse.position);
+            
+            // set cue ball angle if aiming
+            if (_gameStage == GameStage.Aiming) {
+                Matter.Body.setAngle(cueBallModel.Body, angle);
+            }
+
             // draw the render line
             if (_gameStage == GameStage.Aiming) {
-                if (_renderLength < GameplayConsts.ClickDistanceLimit) {
+                if (_mouseDistance < GameplayConsts.ClickDistanceLimit) {
                     drawGuideLine(_render.context);
                     drawCueStick(_render.context);
                 }
