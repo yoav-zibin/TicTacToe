@@ -234,7 +234,7 @@ module GameExample {
         }
         console.log(theReturnState);
         console.log(finalState);
-        console.log(GameLogic.createMove(finalState, 0));
+        // console.log(GameLogic.createMove(finalState, 0));
     }
 
     function drawGuideLine(context: CanvasRenderingContext2D) {
