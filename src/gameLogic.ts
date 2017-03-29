@@ -274,7 +274,7 @@ const BallRadius = 12;
         let PoolBoard: Board = {
             Height : 960,
             Width : 531,
-            StartLine : 696,
+            StartLine : CueBall.Position.Y,
             Pockets : Pockets,
         }
 

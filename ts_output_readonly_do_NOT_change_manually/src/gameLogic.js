@@ -186,7 +186,7 @@ var GameLogic;
         var PoolBoard = {
             Height: 960,
             Width: 531,
-            StartLine: 696,
+            StartLine: CueBall.Position.Y,
             Pockets: Pockets,
         };
         var CanMoveCueBall = true;
