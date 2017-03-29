@@ -1087,9 +1087,9 @@ module gameLogic {
     console.log(aux_printArray(shapeBoard.board));
     console.log(shapeBoard.board.length, ",", shapeBoard.board[0].length);
 
-    let shapeBoardWWidth = getAllShapeMatrix_withWidth(20);
-    console.log(aux_printArray(shapeBoardWWidth.board));
-    console.log(shapeBoardWWidth.board.length, ",", shapeBoardWWidth.board[0].length);
+    //let shapeBoardWWidth = getAllShapeMatrix_withWidth(20);
+    //console.log(aux_printArray(shapeBoardWWidth.board));
+    //console.log(shapeBoardWWidth.board.length, ",", shapeBoardWWidth.board[0].length);
 
     let aux_printcell = function (frame: any[][]): string {
       let ret: string = "";

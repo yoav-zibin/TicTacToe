@@ -807,7 +807,7 @@ var gameLogic;
                 start = i;
                 continue;
             }
-            if (isBlank && start > 0 && i - 1 > start) {
+            if (isBlank && start > 0 && (i - 1 > start)) {
                 return { start: start, end: i - 1 };
             }
         }
@@ -962,9 +962,9 @@ var gameLogic;
         var shapeBoard = getAllShapeMatrix();
         console.log(aux_printArray(shapeBoard.board));
         console.log(shapeBoard.board.length, ",", shapeBoard.board[0].length);
-        var shapeBoardWWidth = getAllShapeMatrix_withWidth(20);
-        console.log(aux_printArray(shapeBoardWWidth.board));
-        console.log(shapeBoardWWidth.board.length, ",", shapeBoardWWidth.board[0].length);
+        //let shapeBoardWWidth = getAllShapeMatrix_withWidth(20);
+        //console.log(aux_printArray(shapeBoardWWidth.board));
+        //console.log(shapeBoardWWidth.board.length, ",", shapeBoardWWidth.board[0].length);
         var aux_printcell = function (frame) {
             var ret = "";
             for (var i = 0; i < frame.length; i++) {
