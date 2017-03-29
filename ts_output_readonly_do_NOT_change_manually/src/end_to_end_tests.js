@@ -26,7 +26,7 @@ var JasmineOverrides;
     jasmineSpec.prototype.execute = function () {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
+            args[_i - 0] = arguments[_i];
         }
         lastTest = this.result;
         executeMock.apply(this, args);

@@ -17,43 +17,41 @@ module GameplayConsts {
     export const CollisionCategoryNormalBalls = 0x0002;
     export const CollisionMaskAllBalls = 0x0003;
     export const CollisionMaskMouse = 0x0000;
-
     export const BallRestitution = 0.9;
     export const BallFriction = 0.01;
-
     export const BorderThickness = 10;
     // export const BorderClearance = 10;
-
-    export const TextureSize = 256.0; // texture is 256x256
-    export const ClickDistanceLimit = 10; // 10x the ball radius
+    export const BallTextureSize = 128; // ball textures are 128x128
+    export const ClickDistanceLimit = 150;
+    export const ClickForceMax = 0.04;
 };
 
 module GameExample {
     // using shortcuts
     var Engine = Matter.Engine,
         Render = Matter.Render,
-        Runner = Matter.Runner,
-        Composites = Matter.Composites,
         MouseConstraint = Matter.MouseConstraint,
         Mouse = Matter.Mouse,
         World = Matter.World,
-        Query = Matter.Query,
-        Svg = Matter.Svg,
         Bodies = Matter.Bodies;
 
-    // The saved game state
-    var gameState: IState;
+    // resources
+    var _stickImg : HTMLImageElement; // cue stick png image
 
+    // The saved game state
+    var _gameState: IState;
     // Globals
     var _engine: Matter.Engine;
     var _world: Matter.World;
     var _render: Matter.Render;
-
-    var _renderLength = 0.0; // the guideline _renderLength
+    
+    var _topLeftCorner : Matter.Vector; // used for bounds
+    var _bottomRightCorner : Matter.Vector;
+    var _renderLength = 0.0; // the guideline length. also used to calculate force
     var _gameStage: GameStage;
-
     var _firstTouchBall: Ball | null;
     var _pocketedBalls: Ball[] = [];
+    // view models
     var cueBallModel: BallModel;
     var eightBallModel: BallModel;
     var solidBallModels: BallModel[] = [];
@@ -64,16 +62,16 @@ module GameExample {
             x: cueBall.position.x + 1.0 * Math.cos(cueBall.angle),
             y: cueBall.position.y + 1.0 * Math.sin(cueBall.angle)
         };
-        let force: number = _renderLength * 0.0008;
+        let force: number = _renderLength / GameplayConsts.ClickDistanceLimit * GameplayConsts.ClickForceMax;
 
         console.log("force pos: ", forcePosition);
+        console.log("force mag: ",  force);
         console.log("render len: ", _renderLength);
 
-        Matter.Body.applyForce(cueBall, forcePosition,
-            {
-                x: force * cueBall.mass * Math.cos(cueBall.angle),
-                y: force * cueBall.mass * Math.sin(cueBall.angle)
-            });
+        Matter.Body.applyForce(cueBall, forcePosition, {
+            x: force * Math.cos(cueBall.angle),
+            y: force * Math.sin(cueBall.angle)
+        });
 
         // reset render len
         _renderLength = 0.0;
@@ -119,20 +117,19 @@ module GameExample {
         return Math.sqrt(xsq + ysq);
     }
 
+    // creates cue ball view-model from Ball. does not add to world
     function createCueBallModel(cueBall: Ball): BallModel {
-        return {
-            Ball: cueBall,
-            Body: Bodies.circle(cueBall.Position.X, cueBall.Position.Y,
-                cueBall.Radius, <any>{
-                    isStatic: false,
-                    collisionFilter: { category: GameplayConsts.CollisionCategoryCue, mask: GameplayConsts.CollisionMaskAllBalls },
-                    restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
-                    render: { fillStyle: 'white', strokeStyle: 'black' },
-                    label: 'Ball 0'
-                })
-        };
+        let newCueModel = { Ball: cueBall, Body: Bodies.circle(cueBall.Position.X, cueBall.Position.Y, cueBall.Radius, <any>{
+            isStatic: false,
+            collisionFilter: { category: GameplayConsts.CollisionCategoryCue, mask: GameplayConsts.CollisionMaskAllBalls },
+            restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
+            render: { fillStyle: 'white', strokeStyle: 'black' },
+            label: 'Ball 0'
+        })};
+        return newCueModel;
     }
 
+    // constructs a rectangle body as border, from pocket1 to pocket2
     function createBorderBody(pocket1: Pocket, pocket2: Pocket, vertical: boolean): Matter.Body {
         let x, y, width, height: number;
         if (vertical) {
@@ -155,6 +152,7 @@ module GameExample {
             });
     }
 
+    // gets the view-model associated with the body
     function getBallModelFromBody(ballBody: Matter.Body): BallModel {
         let ballNumber = Number(ballBody.label.split(' ')[1]);
         if (ballNumber == 0) {
@@ -169,31 +167,36 @@ module GameExample {
     }
 
     function syncBallModelPositions() {
-        // sync cue ball pos
         cueBallModel.Ball.Position = { X: cueBallModel.Body.position.x, Y: cueBallModel.Body.position.y };
-        // sync eight ball pos
         eightBallModel.Ball.Position = { X: eightBallModel.Body.position.x, Y: eightBallModel.Body.position.y };
-        // sync solid ball pos
         for (let ballModel of solidBallModels) {
             ballModel.Ball.Position = { X: ballModel.Body.position.x, Y: ballModel.Body.position.y };
         }
-        // sync striped ball pos
         for (let ballModel of stripedBallModels) {
             ballModel.Ball.Position = { X: ballModel.Body.position.x, Y: ballModel.Body.position.y };
         }
     }
 
+    // clamps the position within board bounds
+    function clampWithinBounds(pos : Matter.Vector) :Matter.Vector {
+        let x = Math.min(_bottomRightCorner.x - GameplayConsts.BorderThickness, Math.max(pos.x, _topLeftCorner.x + GameplayConsts.BorderThickness));
+        let y = Math.min(_bottomRightCorner.y - GameplayConsts.BorderThickness, Math.max(pos.y, _topLeftCorner.y + GameplayConsts.BorderThickness));
+        return {x: x, y: y};
+    }
+
+    // moves the cue ball and recreates the cue ball body and model
     function moveCueBall(pos: Matter.Vector, useStartLine: boolean) {
-        // recreates the cue ball
         World.remove(_world, cueBallModel.Body);
         let y: number;
         if (useStartLine) {
-            y = gameState.PoolBoard.StartLine;
+            y = _gameState.PoolBoard.StartLine;
         } else {
             y = pos.y;
         }
-        gameState.CueBall.Position = { X: pos.x, Y: y };
-        cueBallModel = createCueBallModel(gameState.CueBall);
+        // clamp within bounds
+        let clampedPos = clampWithinBounds({x: pos.x, y: y});
+        _gameState.CueBall.Position = { X: clampedPos.x, Y: clampedPos.y };
+        cueBallModel = createCueBallModel(_gameState.CueBall);
         World.add(_world, cueBallModel.Body);
     }
 
@@ -222,7 +225,7 @@ module GameExample {
             EightBall: eightBallModel.Ball,
             CueBall: cueBallModel.Ball,
             CanMoveCueBall: null, // set by gamelogic
-            PoolBoard: gameState.PoolBoard,
+            PoolBoard: _gameState.PoolBoard,
             FirstMove: false, // XXX: hard code to false for now
             Player1Color: null, // set by gamelogic
             Player2Color: null, // set by gamelogic
@@ -232,27 +235,48 @@ module GameExample {
         console.log(finalState);
     }
 
-    function drawGuideLine(context: CanvasRenderingContext2D, cueBody: Matter.Body) {
-        let startPoint = { X: cueBody.position.x, Y: cueBody.position.y };
+    function drawGuideLine(context: CanvasRenderingContext2D) {
+        let cueBody = cueBallModel.Body;
+        let startPoint = { x: cueBody.position.x, y: cueBody.position.y };
         let endPoint = {
-            X: cueBody.position.x + (_renderLength) * Math.cos(cueBody.angle),
-            Y: cueBody.position.y + (_renderLength) * Math.sin(cueBody.angle)
+            x: cueBody.position.x + _renderLength * Math.cos(cueBody.angle),
+            y: cueBody.position.y + _renderLength * Math.sin(cueBody.angle)
         }
+        let originalAlpha = context.globalAlpha;
         context.globalAlpha = 0.5;
-
         context.beginPath();
         context.setLineDash([3]);
-        context.moveTo(startPoint.X, startPoint.Y);
-        context.lineTo(endPoint.X, endPoint.Y);
+        context.moveTo(startPoint.x, startPoint.y);
+        context.lineTo(endPoint.x, endPoint.y);
         context.strokeStyle = 'red';
         context.lineWidth = 5.5;
         context.stroke();
-        context.setLineDash([]);
+        context.closePath();
+        context.globalAlpha = originalAlpha;
+
+        drawCueStick(context);
+    }
+
+    function drawCueStick(context: CanvasRenderingContext2D) {
+        let cueBody = cueBallModel.Body;
+        let mousePos = {
+            x: cueBody.position.x - _renderLength * Math.cos(cueBody.angle),
+            y: cueBody.position.y - _renderLength * Math.sin(cueBody.angle)
+        }
+        context.save();
+        context.translate(cueBody.position.x, cueBody.position.y);
+        context.rotate(cueBody.angle);
+        context.drawImage(_stickImg, -_stickImg.width - _renderLength, -_stickImg.height / 2);
+        context.restore();
     }
 
     export function updateUI() {
         // TODO: get the state from server
-        gameState = GameLogic.getInitialState();
+        _gameState = GameLogic.getInitialState();
+
+        // load resources
+        _stickImg = new Image();
+        _stickImg.src = 'imgs/stick.png';
 
         // set up matterjs
         _engine = Engine.create(),
@@ -261,8 +285,8 @@ module GameExample {
             element: document.getElementById("canvas-container"),
             engine: _engine,
             options: {
-                height: gameState.PoolBoard.Height,
-                width: gameState.PoolBoard.Width,
+                height: _gameState.PoolBoard.Height,
+                width: _gameState.PoolBoard.Width,
             }
         });
         _engine.world.gravity.y = 0;
@@ -270,14 +294,14 @@ module GameExample {
         renderOptions.wireframes = false;
         renderOptions.background = 'green';
         // starting game stage
-        if (gameState.CanMoveCueBall) {
+        if (_gameState.CanMoveCueBall) {
             _gameStage = GameStage.PlacingCue;
         } else {
             _gameStage = GameStage.Aiming;
         }
 
         // create borders
-        let pockets = gameState.PoolBoard.Pockets;
+        let pockets = _gameState.PoolBoard.Pockets;
         World.add(_world, [
             createBorderBody(pockets[0], pockets[3], false), // top
             createBorderBody(pockets[2], pockets[5], false), // bottom
@@ -286,9 +310,11 @@ module GameExample {
             createBorderBody(pockets[3], pockets[4], true), // right top
             createBorderBody(pockets[4], pockets[5], true), // right bottom
         ]);
+        _topLeftCorner = {x: pockets[0].Position.X, y: pockets[0].Position.Y};
+        _bottomRightCorner = {x: pockets[5].Position.X, y: pockets[5].Position.Y};
 
         // create pockets
-        for (let pocket of gameState.PoolBoard.Pockets) {
+        for (let pocket of _gameState.PoolBoard.Pockets) {
             World.add(_world,
                 Bodies.circle(pocket.Position.X, pocket.Position.Y, pocket.Radius,
                     <any>{
@@ -299,16 +325,16 @@ module GameExample {
         }
 
         // create ball bodies and body models
-        let textureScale = gameState.CueBall.Radius * 2 / GameplayConsts.TextureSize;
+        let textureScale = _gameState.CueBall.Radius * 2 / GameplayConsts.BallTextureSize;
         // cue ball
-        cueBallModel = createCueBallModel(gameState.CueBall);
-        if (!gameState.CueBall.Pocketed) World.add(_world, cueBallModel.Body);
+        cueBallModel = createCueBallModel(_gameState.CueBall);
+        if (!_gameState.CueBall.Pocketed && !_gameState.CanMoveCueBall) World.add(_world, cueBallModel.Body);
 
         // eight ball
         eightBallModel = {
-            Ball: gameState.EightBall,
-            Body: Bodies.circle(gameState.EightBall.Position.X, gameState.EightBall.Position.Y,
-                gameState.EightBall.Radius, <any>{
+            Ball: _gameState.EightBall,
+            Body: Bodies.circle(_gameState.EightBall.Position.X, _gameState.EightBall.Position.Y,
+                _gameState.EightBall.Radius, <any>{
                     isStatic: false,
                     collisionFilter: { category: GameplayConsts.CollisionCategoryCue, mask: GameplayConsts.CollisionMaskAllBalls },
                     restitution: GameplayConsts.BallRestitution, frictionAir: GameplayConsts.BallFriction,
@@ -316,10 +342,10 @@ module GameExample {
                     label: 'Ball 8'
                 })
         };
-        if (!gameState.EightBall.Pocketed) World.add(_world, eightBallModel.Body);
+        if (!_gameState.EightBall.Pocketed) World.add(_world, eightBallModel.Body);
 
         // solid balls
-        for (let ball of gameState.SolidBalls) {
+        for (let ball of _gameState.SolidBalls) {
             let theBallBody = Bodies.circle(ball.Position.X, ball.Position.Y, ball.Radius, <any>{
                 isStatic: false,
                 collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
@@ -331,7 +357,7 @@ module GameExample {
             solidBallModels.push({ Ball: ball, Body: theBallBody });
         }
         // striped balls
-        for (let ball of gameState.StripedBalls) {
+        for (let ball of _gameState.StripedBalls) {
             let theBallBody = Bodies.circle(ball.Position.X, ball.Position.Y, ball.Radius, <any>{
                 isStatic: false,
                 collisionFilter: { category: GameplayConsts.CollisionCategoryNormalBalls, mask: GameplayConsts.CollisionMaskAllBalls },
@@ -343,12 +369,10 @@ module GameExample {
             stripedBallModels.push({ Ball: ball, Body: theBallBody });
         }
 
-        let mouse = Mouse.create(_render.canvas),
-            mouseConstraint = (<any>MouseConstraint).create(_engine, {
-                mouse: mouse,
-            });
+        // add mouse control
+        let mouse = Mouse.create(_render.canvas);
+        let mouseConstraint = (<any>MouseConstraint).create(_engine, { mouse: mouse });
         mouseConstraint.collisionFilter.mask = GameplayConsts.CollisionMaskMouse;
-
         World.add(_world, mouseConstraint);
 
         // EVENT: set angle and _renderLength on mousemove
@@ -372,15 +396,14 @@ module GameExample {
             if (_gameStage == GameStage.Aiming /* && isHumanTurn() */) {
                 // only shoot cue ball when the mouse is around the cue ball
                 let dist = distanceBetweenVectors(mouseUpPosition, cueBallModel.Body.position);
-                let distLimit = gameState.CueBall.Radius * GameplayConsts.ClickDistanceLimit;
-                if (dist < distLimit) {
+                if (dist < GameplayConsts.ClickDistanceLimit) {
                     _gameStage = GameStage.CueHit;
                     shootClick(cueBallModel.Body);
                 }
             } else if (_gameStage == GameStage.PlacingCue) {
                 // place the cue ball at mouse position
                 // recreate the cue ball model (body)
-                moveCueBall(mouseUpPosition, gameState.FirstMove);
+                moveCueBall(mouseUpPosition, _gameState.FirstMove);
                 _gameStage = GameStage.Aiming;
             }
         });
@@ -401,10 +424,8 @@ module GameExample {
         Matter.Events.on(_render, 'afterRender', function () {
             // draw the render line
             if (_gameStage == GameStage.Aiming) {
-                let distLimit = gameState.CueBall.Radius * GameplayConsts.ClickDistanceLimit;
-                if (_renderLength < distLimit) drawGuideLine(_render.context, cueBallModel.Body);
+                if (_renderLength < GameplayConsts.ClickDistanceLimit) drawGuideLine(_render.context);
             }
-
             // send return state when all bodies are sleeping
             if (_gameStage == GameStage.CueHit && isWorldSleeping(_world)) {
                 _gameStage = GameStage.Finalized;
@@ -412,6 +433,7 @@ module GameExample {
             }
         });
 
+        // start simulation
         Render.run(_render);
         Engine.run(_engine);
     }
@@ -419,11 +441,11 @@ module GameExample {
     export function getStatusText() :string {
         switch (_gameStage) {
             case GameStage.PlacingCue:
-                return "Please place the cue ball";
+                return "Click to place the cue ball";
             case GameStage.Aiming:
                 return "Aim and shoot";
             case GameStage.CueHit:
-                return "Simulating";
+                return "Simulating...";
             case GameStage.Finalized:
                 return "Opponent's turn";
         }
