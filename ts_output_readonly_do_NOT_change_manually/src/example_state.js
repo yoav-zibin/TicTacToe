@@ -234,9 +234,10 @@ var GameExample;
         context.stroke();
         context.closePath();
         context.globalAlpha = originalAlpha;
-        drawCueStick(context);
     }
     function drawCueStick(context) {
+        if (_renderLength <= 0)
+            return;
         var cueBody = cueBallModel.Body;
         var mousePos = {
             x: cueBody.position.x - _renderLength * Math.cos(cueBody.angle),
@@ -399,8 +400,10 @@ var GameExample;
         Matter.Events.on(_render, 'afterRender', function () {
             // draw the render line
             if (_gameStage == GameStage.Aiming) {
-                if (_renderLength < GameplayConsts.ClickDistanceLimit)
+                if (_renderLength < GameplayConsts.ClickDistanceLimit) {
                     drawGuideLine(_render.context);
+                    drawCueStick(_render.context);
+                }
             }
             // send return state when all bodies are sleeping
             if (_gameStage == GameStage.CueHit && isWorldSleeping(_world)) {
