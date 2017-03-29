@@ -807,7 +807,7 @@ var gameLogic;
                 start = i;
                 continue;
             }
-            if (isBlank && start > 0 && i - 1 > start) {
+            if (isBlank && start > 0 && (i - 1 > start)) {
                 return { start: start, end: i - 1 };
             }
         }
