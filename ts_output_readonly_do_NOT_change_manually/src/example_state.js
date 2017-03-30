@@ -15,7 +15,7 @@ var GameplayConsts;
     GameplayConsts.CollisionMaskMouse = 0x0000;
     GameplayConsts.BallRestitution = 0.9;
     GameplayConsts.BallFriction = 0.01;
-    GameplayConsts.BorderThickness = 10;
+    GameplayConsts.BorderThickness = 16;
     // export const BorderClearance = 10;
     GameplayConsts.BallTextureSize = 128; // ball textures are 128x128
     GameplayConsts.ClickDistanceLimit = 150;
@@ -115,12 +115,12 @@ var GameExample;
             x = pocket1.Position.X;
             y = (pocket1.Position.Y + pocket2.Position.Y) / 2.0;
             width = GameplayConsts.BorderThickness;
-            height = pocket2.Position.Y - pocket1.Position.Y - pocket1.Radius - pocket2.Radius;
+            height = pocket2.Position.Y - pocket1.Position.Y - (pocket1.Radius - pocket2.Radius) / 2;
         }
         else {
             x = (pocket1.Position.X + pocket2.Position.X) / 2.0;
             y = pocket1.Position.Y;
-            width = pocket2.Position.X - pocket1.Position.X - pocket1.Radius - pocket2.Radius;
+            width = pocket2.Position.X - pocket1.Position.X - (pocket1.Radius - pocket2.Radius) / 2;
             height = GameplayConsts.BorderThickness;
         }
         return Bodies.rectangle(x, y, width, height, {
@@ -322,9 +322,9 @@ var GameExample;
         World.add(_world, [
             createBorderBody(pockets[0], pockets[3], false),
             createBorderBody(pockets[2], pockets[5], false),
-            createBorderBody(pockets[0], pockets[1], true),
+            createBorderBody(pockets[1], pockets[0], true),
             createBorderBody(pockets[1], pockets[2], true),
-            createBorderBody(pockets[3], pockets[4], true),
+            createBorderBody(pockets[4], pockets[3], true),
             createBorderBody(pockets[4], pockets[5], true),
         ]);
         _topLeftCorner = { x: pockets[0].Position.X, y: pockets[0].Position.Y };

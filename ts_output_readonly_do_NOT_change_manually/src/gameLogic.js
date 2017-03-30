@@ -15,9 +15,6 @@ var BallType;
 })(BallType || (BallType = {}));
 var GameLogic;
 (function (GameLogic) {
-    var blackX = 264;
-    var blackY = 264;
-    var BallRadius = 12;
     function getInitialState() {
         var blackX = 264;
         var blackY = 264;
@@ -159,7 +156,8 @@ var GameLogic;
         };
         Pockets.push(Pocket1);
         var Pocket2 = {
-            Position: { X: 48, Y: 481 },
+            Position: { X: 40, Y: 481 },
+            //Position: {X:48,Y:481},
             Radius: PocketRadius
         };
         Pockets.push(Pocket2);
@@ -174,7 +172,8 @@ var GameLogic;
         };
         Pockets.push(Pocket4);
         var Pocket5 = {
-            Position: { X: 482, Y: 481 },
+            Position: { X: 490, Y: 481 },
+            //Position: {X:482,Y:481},
             Radius: PocketRadius
         };
         Pockets.push(Pocket5);

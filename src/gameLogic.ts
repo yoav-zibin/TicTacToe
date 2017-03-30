@@ -76,11 +76,6 @@ interface IMove {
 
 module GameLogic{
     
-
-let blackX = 264;
-let blackY = 264;
-const BallRadius = 12;
-
   export function getInitialState(): IState {
         let blackX = 264;
         let blackY = 264;
@@ -242,7 +237,8 @@ const BallRadius = 12;
         Pockets.push(Pocket1);
 
         let Pocket2: Pocket = {
-            Position: {X:48,Y:481},
+            Position: {X:40,Y:481},
+            //Position: {X:48,Y:481},
             Radius: PocketRadius
         }
         Pockets.push(Pocket2);
@@ -260,7 +256,8 @@ const BallRadius = 12;
         Pockets.push(Pocket4);
 
         let Pocket5: Pocket = {
-            Position: {X:482,Y:481},
+            Position: {X:490,Y:481},
+            //Position: {X:482,Y:481},
             Radius: PocketRadius
         }
         Pockets.push(Pocket5);

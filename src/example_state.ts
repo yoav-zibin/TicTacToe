@@ -19,7 +19,7 @@ module GameplayConsts {
     export const CollisionMaskMouse = 0x0000;
     export const BallRestitution = 0.9;
     export const BallFriction = 0.01;
-    export const BorderThickness = 10;
+    export const BorderThickness = 16;
     // export const BorderClearance = 10;
     export const BallTextureSize = 128; // ball textures are 128x128
     export const ClickDistanceLimit = 150;
@@ -134,11 +134,11 @@ module GameExample {
             x = pocket1.Position.X;
             y = (pocket1.Position.Y + pocket2.Position.Y) / 2.0;
             width = GameplayConsts.BorderThickness;
-            height = pocket2.Position.Y - pocket1.Position.Y - pocket1.Radius - pocket2.Radius;
+            height = pocket2.Position.Y - pocket1.Position.Y - (pocket1.Radius - pocket2.Radius)/2;
         } else {
             x = (pocket1.Position.X + pocket2.Position.X) / 2.0;
             y = pocket1.Position.Y;
-            width = pocket2.Position.X - pocket1.Position.X - pocket1.Radius - pocket2.Radius;
+            width = pocket2.Position.X - pocket1.Position.X - (pocket1.Radius - pocket2.Radius)/2;
             height = GameplayConsts.BorderThickness;
         }
         return Bodies.rectangle(
@@ -345,9 +345,9 @@ module GameExample {
         World.add(_world, [
             createBorderBody(pockets[0], pockets[3], false), // top
             createBorderBody(pockets[2], pockets[5], false), // bottom
-            createBorderBody(pockets[0], pockets[1], true), // left top
+            createBorderBody(pockets[1], pockets[0], true), // left top
             createBorderBody(pockets[1], pockets[2], true), // left bottom
-            createBorderBody(pockets[3], pockets[4], true), // right top
+            createBorderBody(pockets[4], pockets[3], true), // right top
             createBorderBody(pockets[4], pockets[5], true), // right bottom
         ]);
         _topLeftCorner = {x: pockets[0].Position.X, y: pockets[0].Position.Y};
