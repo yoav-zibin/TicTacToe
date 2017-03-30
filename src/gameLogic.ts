@@ -6,10 +6,8 @@ interface BoardDelta {
 type IProposalData = BoardDelta;
 interface IState {
   myBoard: Board;
-  yourBoard: Board;
   delta: BoardDelta;
   start: number;
-  ship: number;
 }
 
 import gameService = gamingPlatform.gameService;
@@ -23,39 +21,8 @@ module gameLogic {
   export const ROWS = 10;
   export const COLS = 10;
 
-  /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
-  export function getInitialBoard(): Board {
-    let board: Board = [];
-    for (let i = 0; i < ROWS; i++) {
-      board[i] = [];
-      for (let j = 0; j < COLS; j++) {
-        board[i][j] = '';
-      }
-    }
-    return board;
-  }
 
-
-  export function getInitialState(): IState {
-    return {myBoard: getInitialBoard(), yourBoard: getInitialBoard(), delta: null, ship: 0, start:0};
-  }
-
-  export function validSet(board: Board, row: number, col: number, leng: number, direction: boolean): boolean {
-    if(direction == true) {
-      if((row + leng) > 10 || row < 0 || col < 0) {
-        return false;
-      }
-    }
-    else {
-      if((col + leng) > 10 || row < 0 || col < 0) {
-        return false;
-      }
-    }
-
-    return true;
-    
-  }
-
+/*
   function setShipRow(board: Board, state: IState, row: number, col: number, direction: boolean): IState {
     let shipNum = state.ship;
     let originBoard = board;
@@ -68,14 +35,14 @@ module gameLogic {
           let length=5-shipNum;
           let compensate=0;
           
-          /**give compensate to out of boundary */
+         // give compensate to out of boundary 
           if(!validSet(board, row, col, length, direction)) {
             compensate = row+length-ROWS;
           }
 
-          /**check if already set */
+          //check if already set 
           for(let i=0; i<length; i++) {
-            /**check if already set */
+            //check if already set
             if(board[row-compensate+i][col]==='O') {
               window.alert("Already set ship here");
               return {myBoard: originBoard ,yourBoard: state.yourBoard, delta:null, ship: shipNum, start: state.start};
@@ -100,7 +67,8 @@ module gameLogic {
 
     return {myBoard: board,yourBoard: state.yourBoard, delta:{row,col}, ship: shipNum, start: state.start};
   }
-
+*/
+/*
   function setShipCol(board: Board, state: IState, row: number, col: number, direction: boolean): IState {
     let shipNum = state.ship;
     let originBoard = board;
@@ -113,14 +81,14 @@ module gameLogic {
           let length=5-shipNum;
           let compensate=0;
           
-          /**give compensate to out of boundary */
+          //give compensate to out of boundary 
           if(!validSet(board, row, col, length,direction)) {
             compensate = col+length-COLS;
           }
 
-          /**check if already set */
+          //check if already set 
           for(let i=0; i<length; i++) {
-            /**check if already set */
+            //check if already set 
             if(board[row][col-compensate+i]==='O') {
               window.alert("Already set ship here");
               return {myBoard: originBoard ,yourBoard: state.yourBoard, delta:null, ship: shipNum, start: state.start};
@@ -145,20 +113,53 @@ module gameLogic {
 
     return {myBoard: board,yourBoard: state.yourBoard, delta:{row,col}, ship: shipNum, start: state.start};
   }
+*/
 
-  function getWinner(board: Board): string {
-    let sinkBoat = 0;
+  /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
+  export function getInitialBoard(): Board {
+    let board: Board = [];
     for (let i = 0; i < ROWS; i++) {
+      board[i] = [];
       for (let j = 0; j < COLS; j++) {
-        if(board[i][j]=='O') {
-            console.log("sinkBoat: " + sinkBoat);
-            return '';
-        }
+        board[i][j] = '';
       }
     }
-    console.log("Game Ends ");
-    return "I lose!";
+    
+    board[0][Math.floor(Math.random() * ROWS) + 1] = 'O';
+    board[ROWS][Math.floor(Math.random() * ROWS) + 1] = 'O';
+
+    return board;
   }
+
+
+  export function getInitialState(): IState {
+    return {myBoard: getInitialBoard(), delta: null, start:0};
+  }
+
+  export function validSet(board: Board, row: number, col: number, leng: number, direction: boolean): boolean {
+    if(direction == true) {
+      if((row + leng) > 10 || row < 0 || col < 0) {
+        return false;
+      }
+    }
+    else {
+      if((col + leng) > 10 || row < 0 || col < 0) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function getWinner(board: Board): string {
+    for (let i = 0; i < ROWS; i++) 
+      for (let j = 0; j < COLS; j++) 
+        if(board[i][j]=='X') {
+          console.log("Game Ends ");
+          return "I lose!";
+        }
+  }
+
 
   export function createMove(
       stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number, whichBoard: number, direction: boolean): IMove {
@@ -168,9 +169,9 @@ module gameLogic {
     }
 
     let myBoard: Board = stateBeforeMove.myBoard;
-    let yourBoard: Board = stateBeforeMove.yourBoard;
 
-    /**set ship */
+    //set ship 
+    /*
     if(whichBoard == 0) {
       if(stateBeforeMove.start!=1) {
         console.log("setting ship");
@@ -188,14 +189,17 @@ module gameLogic {
         return {endMatchScores: null, turnIndex: 1, state: stateBeforeMove};
       }
     }
+    */
 
-    else if (whichBoard==1) { 
+    //else if (whichBoard==1) { 
+      /*
       if(stateBeforeMove.start!=1) {
         console.log("Not Started");
         throw new Error("Not Started");
       }
+      */
 
-      if(yourBoard[row][col] === 'X' || yourBoard[row][col] === 'M') {
+      if(myBoard[row][col] === 'X' || myBoard[row][col] === 'M') {
         console.log("already full!");
         throw new Error("already full!");
       }
@@ -205,16 +209,14 @@ module gameLogic {
       }
 
       let myBoardAfterMove = angular.copy(myBoard);
-      let yourBoardAfterMove = angular.copy(yourBoard);
 
       //boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
-      if(yourBoard[row][col]==='')
-          yourBoardAfterMove[row][col] = 'M';
+      if(myBoard[row][col]==='')
+          myBoardAfterMove[row][col] = 'M';
       else
-          yourBoardAfterMove[row][col] = 'X';
+          myBoardAfterMove[row][col] = 'X';
 
       let winner = getWinner(myBoardAfterMove);
-      let shipNum = stateBeforeMove.ship;
       let endMatchScores: number[];
       let turnIndex: number;
       if (winner !== '') {
@@ -227,27 +229,15 @@ module gameLogic {
         endMatchScores = null;
       }
       let delta: BoardDelta = {row: row, col: col};
-      let state: IState = {delta: delta, myBoard: myBoardAfterMove, yourBoard: yourBoardAfterMove, ship:shipNum, start: 1};
-
-      if(shipNum==0) {
-        window.alert("Game Ended!");
-      }
+      let state: IState = {delta: delta, myBoard: myBoardAfterMove, start: 1};
 
       return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
-      }
     }
 
   export function createInitialMove(): IMove {
     return {endMatchScores: null, turnIndex: 0,
         state: getInitialState()};
   }
-
-/*
-  export function forSimpleTestHtml() {
-    var move = gameLogic.createMove(null,null, 0, 0, 0);
-    log.log("move=", move);
-  }
-*/
 
 }
 

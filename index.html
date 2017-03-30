@@ -35,15 +35,15 @@
       style="position:absolute; top:{{row * 10}}%; width:100%; height:10%;">
     <div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
         style="position:absolute; top:0; left:{{col * 10}}%; width:10%; height:100%;"
-        ng-class="{r: col < 10, b: row < 10, t: row < 1, l: col < 1}"
-        ng-mouseenter="game.myHover(row, col, game.direction)"
-        ng-mouseleave="game.myHoverLeave(row, col, game.direction)"
+        ng-class="{myhover:hover, r: col < 10, b: row < 10, t: row < 1, l: col < 1}"
+        ng-mouseenter="hover=true"
+        ng-mouseleave="hover=false"
         ng-click="game.cellClickedMy(row, col, game.direction)"
         id="{{'my' + row + 'x' + col}}">
       <div style="width:100%; height: 100%"
           ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
           ng-if="game.shouldShowImage(row, col, 0)">
-          <class="ship" img src="css/ship_t.gif" width="125%" height="125%" position='absolute' margin='auto'>
+          <img src="css/ship_t.gif" width="125%" height="125%" position='absolute' margin='auto'>
       </div>
     </div>
   </div>

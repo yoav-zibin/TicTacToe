@@ -6,8 +6,6 @@ interface SupportedLanguages {
 };
 
 
-
-
 module game {
 
   export let direction: boolean = true;
@@ -235,6 +233,7 @@ module game {
   }
 
 
+/*
   export function myHover(row: number, col: number, direction: boolean): void {
     let compensate = 0;
     let length = 5-state.ship;
@@ -275,7 +274,8 @@ module game {
       }
     }
   }
-
+*/
+/*
   export function myHoverLeave(row: number, col: number, direction: boolean): void {
     /*
     let compensate = 0;
@@ -300,7 +300,6 @@ module game {
           document.getElementById('my' + row + 'x' + (col-compensate+i)).classList.remove("myhover");
       }
     }
-*/
 
     if(direction==true) {
       for(let i=0; i<gameLogic.ROWS; i++) {
@@ -317,7 +316,7 @@ module game {
       }
     }
   }
-
+*/
 
   export function yourHover(row: number, col: number): boolean {
     return state.yourBoard[row][col]==="";
