@@ -20,18 +20,19 @@
   <script src="node_modules/jquery/dist/jquery.js"></script>
   <script src="ts_output_readonly_do_NOT_change_manually/src/gameLogic.js"></script>
   <script src="ts_output_readonly_do_NOT_change_manually/src/game.js"></script>
-  <script src="ts_output_readonly_do_NOT_change_manually/src/aiService.js"></script>  
+  <script src="ts_output_readonly_do_NOT_change_manually/src/aiService.js"></script>
   <!-- /build -->
 </head>
 
 <body ng-cloak>
 
-<button ng-click="game.flipDirection()">
-  change direction</button>
+<button ng-click="game.flipDirection()">change direction</button>
+<button ng-click="game.useRadar()">Use radar!</button>
 
 <div id="gameArea">
+
   <div id="myBoard" ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
-      style="position:absolute; top:{{row * 10}}%; left:55%; width:100%; height:10%;">
+      style="position:absolute; top:{{row * 10}}%; width:100%; height:10%;">
     <div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
         style="position:absolute; top:0; left:{{col * 10}}%; width:10%; height:100%;"
         ng-class="{r: col < 10, b: row < 10, t: row < 1, l: col < 1}"
@@ -42,83 +43,7 @@
       <div style="width:100%; height: 100%"
           ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
           ng-if="game.shouldShowImage(row, col, 0)">
-        <svg ng-if="game.isPieceO(row, col, 0)"
-            id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <circle cx="50%" cy="50%" r="27%"
-            stroke="blue" stroke-width="5%" fill="white" />
-        </svg>
-        <svg ng-if="game.isPieceX(row, col, 0)"
-            id="{{'e2e_test_pieceX_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <line x1="25%" y1="25%"
-                x2="75%" y2="75%"
-                stroke="red"
-                stroke-width="5%"/>
-          <line x1="25%" y1="75%"
-                x2="75%" y2="25%"
-                stroke="red"
-                stroke-width="5%"/>
-        </svg>
-        <svg ng-if="game.isPieceM(row, col, 0)"
-            id="{{'e2e_test_pieceM_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <line x1="0%" y1="0%"
-                x2="100%" y2="100%"
-                stroke="black"
-                stroke-width="5%"/>
-          <line x1="100%" y1="100%"
-                x2="0%" y2="0%"
-                stroke="black"
-                stroke-width="5%"/>
-        </svg>
-        
-      </div>
-    </div>
-  </div>
-
-  <div id="yourBoard" ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
-      style="position:absolute; top:{{row * 10}}%; right:55%; width:100%; height:10%;">
-    <div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
-        style="position:absolute; top:0; left:{{col * 10}}%; width:10%; height:100%;"
-        ng-class="{yourhover: hover, r: col < 10, b: row < 10, t: row < 1, l: col < 1}"
-        ng-click="game.cellClickedYours(row, col,direction)"
-        ng-mouseenter="hover = game.yourHover(row,col)"
-        ng-mouseleave="hover = false"
-        id="{{'e3e_test_div_' + row + 'x' + col}}">
-      <div style="width:100%; height: 100%"
-          ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
-          ng-if="game.shouldShowImage(row, col, 1)">
-        <svg ng-if="game.isPieceO(row, col, 1)"
-            id="{{'e3e_test_pieceO_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <circle cx="50%" cy="50%" r="27%"
-            stroke="blue" stroke-width="5%" fill="white" />
-        </svg>
-        <svg ng-if="game.isPieceX(row, col, 1)"
-            id="{{'e3e_test_pieceX_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <line x1="25%" y1="25%"
-                x2="75%" y2="75%"
-                stroke="red"
-                stroke-width="5%"/>
-          <line x1="25%" y1="75%"
-                x2="75%" y2="25%"
-                stroke="red"
-                stroke-width="5%"/>
-        </svg>
-        <svg ng-if="game.isPieceM(row, col, 1)"
-            id="{{'e2e_test_pieceM_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <line x1="0%" y1="0%"
-                x2="100%" y2="100%"
-                stroke="black"
-                stroke-width="5%"/>
-          <line x1="100%" y1="100%"
-                x2="0%" y2="0%"
-                stroke="black"
-                stroke-width="5%"/>
-        </svg>
+          <class="ship" img src="css/ship_t.gif" width="125%" height="125%" position='absolute' margin='auto'>
       </div>
     </div>
   </div>
