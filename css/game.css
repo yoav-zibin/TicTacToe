@@ -28,20 +28,35 @@ textarea, input {
   display: none !important;
 }
 body {
-  background-color: rgb(250,250,250);
+  background-color: #1E90FF;
 }
 
+.buttonUI {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+
+#gameArea{
+  background-color: #00BFFF;
+}
 .r {
-  border-right: 1pt solid black;
+  border-right: 2.5pt solid white;
 }
 .b {
-  border-bottom: 1pt solid black;
+  border-bottom: 2.5pt solid white;
 }
 .l {
-  border-left: 1pt solid black;
+  border-left: 2.5pt solid white;
 }
 .t {
-  border-top: 1pt solid black;
+  border-top: 2.5pt solid white;
 }
 .myhover {
   background-color: blue;

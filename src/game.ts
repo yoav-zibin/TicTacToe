@@ -13,6 +13,12 @@ module game {
   export let direction: boolean = true;
   export function flipDirection() { direction = !direction; }
 
+  export let radar: boolean = true;
+  export function useRadar() {
+    //check status before switching radar
+    radar = !radar;
+  }
+
   export let $rootScope: angular.IScope = null;
   export let $timeout: angular.ITimeoutService = null;
 
@@ -236,7 +242,7 @@ module game {
     if(direction==true) {
       if(!gameLogic.validSet(state.myBoard, row, col, length, direction))
         compensate = row + length - gameLogic.ROWS;
-      
+
       for(let i=0; i<length; i++) {
         if(state.myBoard[row-compensate+i][col]!=="") {
           show = false;
@@ -247,7 +253,7 @@ module game {
     else {
       if(!gameLogic.validSet(state.myBoard, row, col, length, direction))
         compensate = col + length - gameLogic.COLS;
-      
+
       for(let i=0; i<length; i++) {
         if(state.myBoard[row][col-compensate+i]!=="") {
           show = false;
@@ -258,12 +264,12 @@ module game {
 
     if(show==true) {
       if(direction==true) {   //row
-        for(let i=0; i<length; i++) { 
+        for(let i=0; i<length; i++) {
           document.getElementById('my' + (row-compensate+i) + 'x' + col).classList.add("myhover");
         }
       }
       else {
-        for(let i=0; i<length; i++) { 
+        for(let i=0; i<length; i++) {
           document.getElementById('my' + row + 'x' + (col-compensate+i)).classList.add("myhover");
         }
       }
@@ -283,16 +289,16 @@ module game {
       if(!gameLogic.validSet(state.myBoard, row, col, length, direction))
         compensate = col + length - gameLogic.COLS;
     }
-    
+
     if(direction==true) {
       for(let i=0; i<length; i++) {
           document.getElementById('my' + (row-compensate+i) + 'x' + col).classList.remove("myhover");
-      } 
+      }
     }
     else {
       for(let i=0; i<length; i++) {
           document.getElementById('my' + row + 'x' + (col-compensate+i)).classList.remove("myhover");
-      } 
+      }
     }
 */
 
@@ -316,7 +322,7 @@ module game {
   export function yourHover(row: number, col: number): boolean {
     return state.yourBoard[row][col]==="";
   }
-  
+
 
   export function shouldShowImage(row: number, col: number, whichboard: number): boolean {
     if(whichboard==0) {
@@ -330,10 +336,10 @@ module game {
   function isPiece(row: number, col: number, turnIndex: number, pieceKind: string, whichboard: number): boolean {
     if(whichboard==0) {
       return state.myBoard[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
-    } 
+    }
     else {
       return state.yourBoard[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
-    } 
+    }
 }
 
   export function isPieceX(row: number, col: number, whichboard: number): boolean {

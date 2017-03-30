@@ -4,6 +4,12 @@ var game;
     game.direction = true;
     function flipDirection() { game.direction = !game.direction; }
     game.flipDirection = flipDirection;
+    game.radar = true;
+    function useRadar() {
+        //check status before switching radar
+        game.radar = !game.radar;
+    }
+    game.useRadar = useRadar;
     game.$rootScope = null;
     game.$timeout = null;
     // Global variables are cleared when getting updateUI.
@@ -62,6 +68,7 @@ var game;
         };
         if (angular.equals(game.yourPlayerInfo, communityUI.yourPlayerInfo) &&
             game.currentUpdateUI && angular.equals(game.currentUpdateUI, nextUpdateUI)) {
+            // We're not calling updateUI to avoid disrupting the player if he's in the middle of a move.
         }
         else {
             // Things changed, so call updateUI.
@@ -262,7 +269,7 @@ var game;
           if(!gameLogic.validSet(state.myBoard, row, col, length, direction))
             compensate = col + length - gameLogic.COLS;
         }
-        
+    
         if(direction==true) {
           for(let i=0; i<length; i++) {
               document.getElementById('my' + (row-compensate+i) + 'x' + col).classList.remove("myhover");
