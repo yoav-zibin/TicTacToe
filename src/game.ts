@@ -203,12 +203,11 @@ module game {
 
     export function cellClickedMy(row: number, col: number): void {
     log.info("My Board cell:", row, col);
-    //log.info("Game got:", row);
     if (!isHumanTurn()) return;
     let nextMove: IMove = null;
     try {
       nextMove = gameLogic.createMove(
-          state, row, col, currentUpdateUI.turnIndex, 0);
+          state, row, col, currentUpdateUI.turnIndex);
     } catch (e) {
       log.info(["Cell is already full in position:", row, col]);
       return;

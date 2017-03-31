@@ -3,11 +3,15 @@ interface BoardDelta {
   row: number;
   col: number;
 }
+
 type IProposalData = BoardDelta;
+
 interface IState {
   myBoard: Board;
   delta: BoardDelta;
   start: number;
+  myShip: BoardDelta;
+  yourShip: BoardDelta;
 }
 
 import gameService = gamingPlatform.gameService;
@@ -115,8 +119,8 @@ module gameLogic {
   }
 */
 
-  /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
-  export function getInitialBoard(): Board {
+
+  export function getInitialState(): IState {
     let board: Board = [];
     for (let i = 0; i < ROWS; i++) {
       board[i] = [];
@@ -125,15 +129,12 @@ module gameLogic {
       }
     }
     // random starting point
-    board[0][Math.floor((Math.random() * 10))] = 'O';
-    board[9][Math.floor((Math.random() * 10))] = 'O';
-
-    return board;
-  }
-
-
-  export function getInitialState(): IState {
-    return {myBoard: getInitialBoard(), delta: null, start:0};
+    let mine = Math.floor((Math.random() * 10));
+    let your = Math.floor((Math.random() * 10));
+    board[0][mine] = 'O';
+    board[9][your] = 'O';
+    
+    return {myBoard: board, delta: null, start:0, myShip: {row:0,col:mine}, yourShip: {row:9,col:your} };
   }
 /*
   export function validSet(board: Board, row: number, col: number, leng: number, direction: boolean): boolean {
@@ -159,11 +160,12 @@ module gameLogic {
           console.log("Game Ends ");
           return "I lose!";
         }
+    return '';
   }
 
 
   export function createMove(
-      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number, whichBoard: number): IMove {
+      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number): IMove {
 
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
@@ -171,69 +173,60 @@ module gameLogic {
 
     let myBoard: Board = stateBeforeMove.myBoard;
 
-    //set ship 
-    /*
-    if(whichBoard == 0) {
-      if(stateBeforeMove.start!=1) {
-        console.log("setting ship");
-        let shipState;
-        if(direction == true) {
-          shipState = setShipRow(myBoard, stateBeforeMove, row, col, direction);
-        }
-        else 
-          shipState = setShipCol(myBoard, stateBeforeMove, row, col, direction);
-
-        return {endMatchScores: null, turnIndex: 0, state: shipState};
-      }
-      else {
-        console.log("Game has started!");
-        return {endMatchScores: null, turnIndex: 1, state: stateBeforeMove};
-      }
+    if(myBoard[row][col] === 'X' || myBoard[row][col] === 'M') {
+      console.log("already full!");
+      throw new Error("already full!");
     }
-    */
 
-    //else if (whichBoard==1) { 
-      /*
-      if(stateBeforeMove.start!=1) {
-        console.log("Not Started");
-        throw new Error("Not Started");
-      }
-      */
-
-      if(myBoard[row][col] === 'X' || myBoard[row][col] === 'M') {
-        console.log("already full!");
-        throw new Error("already full!");
-      }
-
-      if (getWinner(myBoard) !== '') {
-        throw new Error("Can only make a move if the game is not over!");
-      }
-
-      let myBoardAfterMove = angular.copy(myBoard);
-
-      //boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
-      if(myBoard[row][col]==='')
-          myBoardAfterMove[row][col] = 'M';
-      else
-          myBoardAfterMove[row][col] = 'X';
-
-      let winner = getWinner(myBoardAfterMove);
-      let endMatchScores: number[];
-      let turnIndex: number;
-      if (winner !== '') {
-        // Game over.
-        turnIndex = -1;
-        endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
-      } else {
-        // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
-        turnIndex = 1 - turnIndexBeforeMove;
-        endMatchScores = null;
-      }
-      let delta: BoardDelta = {row: row, col: col};
-      let state: IState = {delta: delta, myBoard: myBoardAfterMove, start: 1};
-
-      return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
+    if (getWinner(myBoard) !== '') {
+      throw new Error("Can only make a move if the game is not over!");
     }
+
+    let myBoardAfterMove = angular.copy(myBoard);
+
+    let myP: BoardDelta;
+    let yourP: BoardDelta;
+    let originRow;
+    let originCol;
+
+    if(turnIndexBeforeMove==0) {  //I move
+      originRow = stateBeforeMove.myShip.row;
+      originCol = stateBeforeMove.myShip.col;
+
+      myBoardAfterMove[originRow][originCol] = '';
+      myBoardAfterMove[row][col] = 'O';
+      myP = {row: row, col: col};
+      yourP = {row: stateBeforeMove.yourShip.row, col: stateBeforeMove.yourShip.col};
+    }
+    else {
+      originRow = stateBeforeMove.yourShip.row;
+      originCol = stateBeforeMove.yourShip.col;
+
+      myBoardAfterMove[originRow][originCol] = '';
+      myBoardAfterMove[row][col] = 'O';
+
+      myP = {row: stateBeforeMove.myShip.row, col: stateBeforeMove.myShip.col};
+      yourP = {row: row, col: col};
+    }
+
+    let winner = getWinner(myBoardAfterMove);
+    let endMatchScores: number[];
+    let turnIndex: number;
+    if (winner !== '') {
+      // Game over.
+      turnIndex = -1;
+      endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
+    } else {
+      // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
+      turnIndex = 1 - turnIndexBeforeMove;
+      endMatchScores = null;
+    }
+    let delta: BoardDelta = {row: row, col: col};
+
+    let state: IState = {delta: delta, myBoard: myBoardAfterMove, myShip: myP, yourShip: yourP, start: 1};
+
+    return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
+  }
 
   export function createInitialMove(): IMove {
     return {endMatchScores: null, turnIndex: 0,

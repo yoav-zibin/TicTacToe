@@ -186,12 +186,11 @@ var game;
     }
     function cellClickedMy(row, col) {
         log.info("My Board cell:", row, col);
-        //log.info("Game got:", row);
         if (!isHumanTurn())
             return;
         var nextMove = null;
         try {
-            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex, 0);
+            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
         }
         catch (e) {
             log.info(["Cell is already full in position:", row, col]);

@@ -100,8 +100,7 @@ var gameLogic;
         return {myBoard: board,yourBoard: state.yourBoard, delta:{row,col}, ship: shipNum, start: state.start};
       }
     */
-    /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
-    function getInitialBoard() {
+    function getInitialState() {
         var board = [];
         for (var i = 0; i < gameLogic.ROWS; i++) {
             board[i] = [];
@@ -110,13 +109,11 @@ var gameLogic;
             }
         }
         // random starting point
-        board[0][Math.floor((Math.random() * 10))] = 'O';
-        board[9][Math.floor((Math.random() * 10))] = 'O';
-        return board;
-    }
-    gameLogic.getInitialBoard = getInitialBoard;
-    function getInitialState() {
-        return { myBoard: getInitialBoard(), delta: null, start: 0 };
+        var mine = Math.floor((Math.random() * 10));
+        var your = Math.floor((Math.random() * 10));
+        board[0][mine] = 'O';
+        board[9][your] = 'O';
+        return { myBoard: board, delta: null, start: 0, myShip: { row: 0, col: mine }, yourShip: { row: 9, col: your } };
     }
     gameLogic.getInitialState = getInitialState;
     /*
@@ -142,39 +139,13 @@ var gameLogic;
                     console.log("Game Ends ");
                     return "I lose!";
                 }
+        return '';
     }
-    function createMove(stateBeforeMove, row, col, turnIndexBeforeMove, whichBoard) {
+    function createMove(stateBeforeMove, row, col, turnIndexBeforeMove) {
         if (!stateBeforeMove) {
             stateBeforeMove = getInitialState();
         }
         var myBoard = stateBeforeMove.myBoard;
-        //set ship 
-        /*
-        if(whichBoard == 0) {
-          if(stateBeforeMove.start!=1) {
-            console.log("setting ship");
-            let shipState;
-            if(direction == true) {
-              shipState = setShipRow(myBoard, stateBeforeMove, row, col, direction);
-            }
-            else
-              shipState = setShipCol(myBoard, stateBeforeMove, row, col, direction);
-    
-            return {endMatchScores: null, turnIndex: 0, state: shipState};
-          }
-          else {
-            console.log("Game has started!");
-            return {endMatchScores: null, turnIndex: 1, state: stateBeforeMove};
-          }
-        }
-        */
-        //else if (whichBoard==1) { 
-        /*
-        if(stateBeforeMove.start!=1) {
-          console.log("Not Started");
-          throw new Error("Not Started");
-        }
-        */
         if (myBoard[row][col] === 'X' || myBoard[row][col] === 'M') {
             console.log("already full!");
             throw new Error("already full!");
@@ -183,11 +154,26 @@ var gameLogic;
             throw new Error("Can only make a move if the game is not over!");
         }
         var myBoardAfterMove = angular.copy(myBoard);
-        //boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
-        if (myBoard[row][col] === '')
-            myBoardAfterMove[row][col] = 'M';
-        else
-            myBoardAfterMove[row][col] = 'X';
+        var myP;
+        var yourP;
+        var originRow;
+        var originCol;
+        if (turnIndexBeforeMove == 0) {
+            originRow = stateBeforeMove.myShip.row;
+            originCol = stateBeforeMove.myShip.col;
+            myBoardAfterMove[originRow][originCol] = '';
+            myBoardAfterMove[row][col] = 'O';
+            myP = { row: row, col: col };
+            yourP = { row: stateBeforeMove.yourShip.row, col: stateBeforeMove.yourShip.col };
+        }
+        else {
+            originRow = stateBeforeMove.yourShip.row;
+            originCol = stateBeforeMove.yourShip.col;
+            myBoardAfterMove[originRow][originCol] = '';
+            myBoardAfterMove[row][col] = 'O';
+            myP = { row: stateBeforeMove.myShip.row, col: stateBeforeMove.myShip.col };
+            yourP = { row: row, col: col };
+        }
         var winner = getWinner(myBoardAfterMove);
         var endMatchScores;
         var turnIndex;
@@ -202,7 +188,7 @@ var gameLogic;
             endMatchScores = null;
         }
         var delta = { row: row, col: col };
-        var state = { delta: delta, myBoard: myBoardAfterMove, start: 1 };
+        var state = { delta: delta, myBoard: myBoardAfterMove, myShip: myP, yourShip: yourP, start: 1 };
         return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
     }
     gameLogic.createMove = createMove;
