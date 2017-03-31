@@ -26,8 +26,8 @@
 
 <body ng-cloak>
 
-<button ng-click="game.flipDirection()">change direction</button>
-<button ng-click="game.useRadar()">Use radar!</button>
+<!-- <button ng-click="game.flipDirection()">change direction</button> -->
+<!-- <button ng-click="game.useRadar()">Use radar!</button> -->
 
 <div id="gameArea">
 
@@ -38,7 +38,7 @@
         ng-class="{myhover:hover, r: col < 10, b: row < 10, t: row < 1, l: col < 1}"
         ng-mouseenter="hover=true"
         ng-mouseleave="hover=false"
-        ng-click="game.cellClickedMy(row, col, game.direction)"
+        ng-click="game.cellClickedMy(row, col)"
         id="{{'my' + row + 'x' + col}}">
       <div style="width:100%; height: 100%"
           ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"

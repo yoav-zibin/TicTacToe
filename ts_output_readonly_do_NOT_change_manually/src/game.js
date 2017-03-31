@@ -184,30 +184,14 @@ var game;
             game.currentUpdateUI.turnIndex >= 0 &&
             game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
-    function cellClickedYours(row, col, direction) {
-        log.info("Your Board cell:", row, col);
-        //log.info("Game got:", row);
-        if (!isHumanTurn())
-            return;
-        var nextMove = null;
-        try {
-            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex, 1, direction);
-        }
-        catch (e) {
-            return;
-        }
-        // Move is legal, make it!
-        makeMove(nextMove);
-    }
-    game.cellClickedYours = cellClickedYours;
-    function cellClickedMy(row, col, direction) {
+    function cellClickedMy(row, col) {
         log.info("My Board cell:", row, col);
         //log.info("Game got:", row);
         if (!isHumanTurn())
             return;
         var nextMove = null;
         try {
-            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex, 0, direction);
+            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex, 0);
         }
         catch (e) {
             log.info(["Cell is already full in position:", row, col]);
@@ -301,35 +285,13 @@ var game;
         }
       }
     */
-    function yourHover(row, col) {
-        return game.state.yourBoard[row][col] === "";
-    }
-    game.yourHover = yourHover;
     function shouldShowImage(row, col, whichboard) {
-        if (whichboard == 0) {
-            return game.state.myBoard[row][col] !== "" || isProposal(row, col);
-        }
-        else {
-            return game.state.yourBoard[row][col] !== "" || isProposal(row, col);
-        }
+        return game.state.myBoard[row][col] !== "" || isProposal(row, col);
     }
     game.shouldShowImage = shouldShowImage;
     function isPiece(row, col, turnIndex, pieceKind, whichboard) {
-        if (whichboard == 0) {
-            return game.state.myBoard[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
-        }
-        else {
-            return game.state.yourBoard[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
-        }
+        return game.state.myBoard[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
     }
-    function isPieceX(row, col, whichboard) {
-        return isPiece(row, col, 0, 'X', whichboard);
-    }
-    game.isPieceX = isPieceX;
-    function isPieceO(row, col, whichboard) {
-        return isPiece(row, col, 1, 'O', whichboard);
-    }
-    game.isPieceO = isPieceO;
     function isPieceM(row, col, whichboard) {
         return isPiece(row, col, 1, 'M', whichboard);
     }

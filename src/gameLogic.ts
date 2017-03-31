@@ -124,9 +124,9 @@ module gameLogic {
         board[i][j] = '';
       }
     }
-    
-    board[0][Math.floor(Math.random() * ROWS) + 1] = 'O';
-    board[ROWS][Math.floor(Math.random() * ROWS) + 1] = 'O';
+    // random starting point
+    board[0][Math.floor((Math.random() * 10))] = 'O';
+    board[9][Math.floor((Math.random() * 10))] = 'O';
 
     return board;
   }
@@ -135,7 +135,7 @@ module gameLogic {
   export function getInitialState(): IState {
     return {myBoard: getInitialBoard(), delta: null, start:0};
   }
-
+/*
   export function validSet(board: Board, row: number, col: number, leng: number, direction: boolean): boolean {
     if(direction == true) {
       if((row + leng) > 10 || row < 0 || col < 0) {
@@ -150,6 +150,7 @@ module gameLogic {
 
     return true;
   }
+*/
 
   function getWinner(board: Board): string {
     for (let i = 0; i < ROWS; i++) 
@@ -162,7 +163,7 @@ module gameLogic {
 
 
   export function createMove(
-      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number, whichBoard: number, direction: boolean): IMove {
+      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number, whichBoard: number): IMove {
 
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();

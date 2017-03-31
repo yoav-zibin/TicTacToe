@@ -201,29 +201,14 @@ module game {
       currentUpdateUI.yourPlayerIndex === currentUpdateUI.turnIndex; // it's my turn
   }
 
-  export function cellClickedYours(row: number, col: number, direction: boolean): void {
-    log.info("Your Board cell:", row, col);
-    //log.info("Game got:", row);
-    if (!isHumanTurn()) return;
-    let nextMove: IMove = null;
-    try {
-      nextMove = gameLogic.createMove(
-          state, row, col, currentUpdateUI.turnIndex, 1,direction);
-    } catch (e) {
-      return;
-    }
-    // Move is legal, make it!
-    makeMove(nextMove);
-  }
-
-    export function cellClickedMy(row: number, col: number, direction: boolean): void {
+    export function cellClickedMy(row: number, col: number): void {
     log.info("My Board cell:", row, col);
     //log.info("Game got:", row);
     if (!isHumanTurn()) return;
     let nextMove: IMove = null;
     try {
       nextMove = gameLogic.createMove(
-          state, row, col, currentUpdateUI.turnIndex, 0, direction);
+          state, row, col, currentUpdateUI.turnIndex, 0);
     } catch (e) {
       log.info(["Cell is already full in position:", row, col]);
       return;
@@ -318,36 +303,15 @@ module game {
   }
 */
 
-  export function yourHover(row: number, col: number): boolean {
-    return state.yourBoard[row][col]==="";
-  }
 
 
   export function shouldShowImage(row: number, col: number, whichboard: number): boolean {
-    if(whichboard==0) {
-      return state.myBoard[row][col] !== "" || isProposal(row, col);
-    }
-    else {
-      return state.yourBoard[row][col] !== "" || isProposal(row, col);
-    }
+      return state.myBoard[row][col] !== "" || isProposal(row, col);    
   }
 
   function isPiece(row: number, col: number, turnIndex: number, pieceKind: string, whichboard: number): boolean {
-    if(whichboard==0) {
       return state.myBoard[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
-    }
-    else {
-      return state.yourBoard[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
-    }
 }
-
-  export function isPieceX(row: number, col: number, whichboard: number): boolean {
-      return isPiece(row, col, 0, 'X', whichboard);
-  }
-
-  export function isPieceO(row: number, col: number, whichboard: number): boolean {
-    return isPiece(row, col, 1, 'O', whichboard);
-  }
 
   export function isPieceM(row: number, col: number, whichboard: number): boolean {
     return isPiece(row, col, 1, 'M', whichboard);

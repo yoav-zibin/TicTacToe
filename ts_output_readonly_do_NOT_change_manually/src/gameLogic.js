@@ -109,8 +109,9 @@ var gameLogic;
                 board[i][j] = '';
             }
         }
-        board[0][Math.floor(Math.random() * gameLogic.ROWS) + 1] = 'O';
-        board[gameLogic.ROWS][Math.floor(Math.random() * gameLogic.ROWS) + 1] = 'O';
+        // random starting point
+        board[0][Math.floor((Math.random() * 10))] = 'O';
+        board[9][Math.floor((Math.random() * 10))] = 'O';
         return board;
     }
     gameLogic.getInitialBoard = getInitialBoard;
@@ -118,20 +119,22 @@ var gameLogic;
         return { myBoard: getInitialBoard(), delta: null, start: 0 };
     }
     gameLogic.getInitialState = getInitialState;
-    function validSet(board, row, col, leng, direction) {
-        if (direction == true) {
-            if ((row + leng) > 10 || row < 0 || col < 0) {
-                return false;
-            }
+    /*
+      export function validSet(board: Board, row: number, col: number, leng: number, direction: boolean): boolean {
+        if(direction == true) {
+          if((row + leng) > 10 || row < 0 || col < 0) {
+            return false;
+          }
         }
         else {
-            if ((col + leng) > 10 || row < 0 || col < 0) {
-                return false;
-            }
+          if((col + leng) > 10 || row < 0 || col < 0) {
+            return false;
+          }
         }
+    
         return true;
-    }
-    gameLogic.validSet = validSet;
+      }
+    */
     function getWinner(board) {
         for (var i = 0; i < gameLogic.ROWS; i++)
             for (var j = 0; j < gameLogic.COLS; j++)
@@ -140,7 +143,7 @@ var gameLogic;
                     return "I lose!";
                 }
     }
-    function createMove(stateBeforeMove, row, col, turnIndexBeforeMove, whichBoard, direction) {
+    function createMove(stateBeforeMove, row, col, turnIndexBeforeMove, whichBoard) {
         if (!stateBeforeMove) {
             stateBeforeMove = getInitialState();
         }
