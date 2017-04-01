@@ -41,7 +41,6 @@ module game {
     resizeGameAreaService.setWidthToHeight(1);
     gameService.setGame({
       updateUI: updateUI,
-      communityUI: communityUI,
       getStateForOgImage: null,
     });
   }
@@ -65,6 +64,7 @@ module game {
     return {};
   }
 
+<<<<<<< HEAD
   export function communityUI(communityUI: ICommunityUI) {
     log.info("Game got communityUI:", communityUI);
     // If only proposals changed, then do NOT call updateUI. Then update proposals.
@@ -89,6 +89,30 @@ module game {
     let playerIdToProposal = communityUI.playerIdToProposal;
     didMakeMove = !!playerIdToProposal[communityUI.yourPlayerInfo.playerId];
     proposals = [];
+=======
+  export function isProposal(row: number, col: number) {
+    return proposals && proposals[row][col] > 0;
+  }
+
+  export function getCellStyle(row: number, col: number): Object {
+    if (!isProposal(row, col)) return {};
+    // proposals[row][col] is > 0
+    let countZeroBased = proposals[row][col] - 1;
+    let maxCount = currentUpdateUI.numberOfPlayersRequiredToMove - 2;
+    let ratio = maxCount == 0 ? 1 : countZeroBased / maxCount; // a number between 0 and 1 (inclusive).
+    // scale will be between 0.6 and 0.8.
+    let scale = 0.6 + 0.2 * ratio;
+    // opacity between 0.5 and 0.7
+    let opacity = 0.5 + 0.2 * ratio;
+    return {
+      transform: `scale(${scale}, ${scale})`,
+      opacity: "" + opacity,
+    };
+  }
+  
+  function getProposalsBoard(playerIdToProposal: IProposals): number[][] {
+    let proposals: number[][] = [];
+>>>>>>> yoav-zibin/gh-pages
     for (let i = 0; i < gameLogic.ROWS; i++) {
       proposals[i] = [];
       for (let j = 0; j < gameLogic.COLS; j++) {
@@ -100,7 +124,9 @@ module game {
       let delta = proposal.data;
       proposals[delta.row][delta.col]++;
     }
+    return proposals;
   }
+<<<<<<< HEAD
   export function isProposal(row: number, col: number) {
     return proposals && proposals[row][col] > 0;
   }
@@ -110,10 +136,25 @@ module game {
   export function isProposal2(row: number, col: number) {
     return proposals && proposals[row][col] == 2;
   }
+=======
+>>>>>>> yoav-zibin/gh-pages
 
   export function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
-    didMakeMove = false; // Only one move per updateUI
+    let playerIdToProposal = params.playerIdToProposal;
+     // Only one move/proposal per updateUI
+    didMakeMove = playerIdToProposal && playerIdToProposal[yourPlayerInfo.playerId] != undefined;
+    yourPlayerInfo = params.yourPlayerInfo;
+    proposals = playerIdToProposal ? getProposalsBoard(playerIdToProposal) : null;
+    if (playerIdToProposal) {
+      // If only proposals changed, then return.
+      // I don't want to disrupt the player if he's in the middle of a move.
+      // I delete playerIdToProposal field from params (and so it's also not in currentUpdateUI),
+      // and compare whether the objects are now deep-equal.
+      params.playerIdToProposal = null;
+      if (currentUpdateUI && angular.equals(currentUpdateUI, params)) return;
+    }
+
     currentUpdateUI = params;
     clearAnimationTimeout();
     state = params.state;
@@ -157,7 +198,7 @@ module game {
     didMakeMove = true;
 
     if (!proposals) {
-      gameService.makeMove(move);
+      gameService.makeMove(move, null);
     } else {
       let delta = move.state.delta;
       let myProposal:IProposal = {
@@ -165,11 +206,11 @@ module game {
         chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
         playerInfo: yourPlayerInfo,
       };
-      // Decide whether we make a move or not (if we have 2 other proposals supporting the same thing).
-      if (proposals[delta.row][delta.col] < 2) {
+      // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
+      if (proposals[delta.row][delta.col] < currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
         move = null;
       }
-      gameService.communityMove(myProposal, move);
+      gameService.makeMove(move, myProposal);
     }
   }
 

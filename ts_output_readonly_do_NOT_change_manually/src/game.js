@@ -32,7 +32,6 @@ var game;
         resizeGameAreaService.setWidthToHeight(1);
         gameService.setGame({
             updateUI: updateUI,
-            communityUI: communityUI,
             getStateForOgImage: null,
         });
     }
@@ -89,6 +88,7 @@ var game;
             var delta = proposal.data;
             game.proposals[delta.row][delta.col]++;
         }
+        return game.proposals;
     }
     game.communityUI = communityUI;
     function isProposal(row, col) {
@@ -105,7 +105,20 @@ var game;
     game.isProposal2 = isProposal2;
     function updateUI(params) {
         log.info("Game got updateUI:", params);
-        game.didMakeMove = false; // Only one move per updateUI
+        var playerIdToProposal = params.playerIdToProposal;
+        // Only one move/proposal per updateUI
+        game.didMakeMove = playerIdToProposal && playerIdToProposal[game.yourPlayerInfo.playerId] != undefined;
+        game.yourPlayerInfo = params.yourPlayerInfo;
+        game.proposals = playerIdToProposal ? getProposalsBoard(playerIdToProposal) : null;
+        if (playerIdToProposal) {
+            // If only proposals changed, then return.
+            // I don't want to disrupt the player if he's in the middle of a move.
+            // I delete playerIdToProposal field from params (and so it's also not in currentUpdateUI),
+            // and compare whether the objects are now deep-equal.
+            params.playerIdToProposal = null;
+            if (game.currentUpdateUI && angular.equals(game.currentUpdateUI, params))
+                return;
+        }
         game.currentUpdateUI = params;
         clearAnimationTimeout();
         game.state = params.state;
@@ -146,7 +159,7 @@ var game;
         }
         game.didMakeMove = true;
         if (!game.proposals) {
-            gameService.makeMove(move);
+            gameService.makeMove(move, null);
         }
         else {
             var delta = move.state.delta;
@@ -155,11 +168,11 @@ var game;
                 chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
                 playerInfo: game.yourPlayerInfo,
             };
-            // Decide whether we make a move or not (if we have 2 other proposals supporting the same thing).
-            if (game.proposals[delta.row][delta.col] < 2) {
+            // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
+            if (game.proposals[delta.row][delta.col] < game.currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
                 move = null;
             }
-            gameService.communityMove(myProposal, move);
+            gameService.makeMove(move, myProposal);
         }
     }
     function isFirstMove() {

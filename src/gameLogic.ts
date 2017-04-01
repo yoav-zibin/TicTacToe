@@ -229,6 +229,7 @@ module gameLogic {
       turnIndex = 1 - turnIndexBeforeMove;
       endMatchScores = null;
     }
+<<<<<<< Updated upstream
     let delta: BoardDelta = {row: row, col: col};
 
     let state: IState = {delta: delta, myBoard: myBoardAfterMove, myShip: myP, yourShip: yourP, start: 1};
@@ -236,6 +237,21 @@ module gameLogic {
     return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
   }
 
+=======
+<<<<<<< HEAD
+
+=======
+    let delta: BoardDelta = {row: row, col: col};
+    let state: IState = {delta: delta, board: boardAfterMove};
+    return {
+      endMatchScores: endMatchScores,
+      turnIndex: turnIndex,
+      state: state
+    };
+  }
+  
+>>>>>>> yoav-zibin/gh-pages
+>>>>>>> Stashed changes
   export function createInitialMove(): IMove {
     return {endMatchScores: null, turnIndex: 0,
         state: getInitialState()};

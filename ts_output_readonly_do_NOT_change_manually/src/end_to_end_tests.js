@@ -53,10 +53,8 @@ var JasmineOverrides;
 describe('TicTacToe', function () {
     browser.driver.manage().window().setSize(400, 600);
     browser.driver.manage().window().setPosition(10, 10);
-    var checkNoErrorInLogsIntervalId = null;
     beforeEach(function () {
         console.log('\n\n\nRunning test: ', lastTest.fullName);
-        checkNoErrorInLogsIntervalId = setInterval(expectEmptyBrowserLogs, 100);
         getPage();
         waitForElement(element(by.id('game_iframe_0')));
         browser.driver.switchTo().frame('game_iframe_0');
@@ -65,7 +63,6 @@ describe('TicTacToe', function () {
     });
     afterEach(function () {
         expectEmptyBrowserLogs();
-        clearInterval(checkNoErrorInLogsIntervalId);
     });
     var startedExecutionTime = new Date().getTime();
     function log(msg) {
@@ -84,7 +81,17 @@ describe('TicTacToe', function () {
     function waitUntil(fn) {
         browser.driver.wait(fn, 10000).thenCatch(error);
     }
+    function getElementName(elem) {
+        return elem.locator();
+    }
+    function willDoLog(msg) {
+        log("Will do: " + msg);
+        browser.call(function () {
+            log("Doing: " + msg);
+        });
+    }
     function waitForElement(elem) {
+        willDoLog("waitForElement " + getElementName(elem));
         waitUntil(function () { return safePromise(elem.isPresent()).then(function (isPresent) { return isPresent &&
             safePromise(elem.isDisplayed()).then(function (isDisplayed) {
                 return isDisplayed && safePromise(elem.isEnabled());
@@ -92,6 +99,7 @@ describe('TicTacToe', function () {
         expect(elem.isDisplayed()).toBe(true);
     }
     function waitForElementToDisappear(elem) {
+        willDoLog("waitForElementToDisappear " + getElementName(elem));
         waitUntil(function () { return safePromise(elem.isPresent()).then(function (isPresent) { return !isPresent ||
             safePromise(elem.isDisplayed()).then(function (isDisplayed) { return !isDisplayed; }); }); });
         // Element is either not present or not displayed.
@@ -143,14 +151,6 @@ describe('TicTacToe', function () {
             ['', '', ''],
             ['', '', '']]);
     });
-    it('should ignore clicking on a non-empty cell', function () {
-        clickDivAndExpectPiece(0, 0, "X");
-        clickDivAndExpectPiece(0, 0, "X"); // clicking on a non-empty cell doesn't do anything.
-        clickDivAndExpectPiece(1, 1, "O");
-        expectBoard([['X', '', ''],
-            ['', 'O', ''],
-            ['', '', '']]);
-    });
     it('should end game if X wins', function () {
         for (var col = 0; col < 3; col++) {
             clickDivAndExpectPiece(1, col, "X");
@@ -160,6 +160,14 @@ describe('TicTacToe', function () {
         expectBoard([['', '', ''],
             ['X', 'X', 'X'],
             ['O', 'O', '']]);
+    });
+    it('should ignore clicking on a non-empty cell', function () {
+        clickDivAndExpectPiece(0, 0, "X");
+        clickDivAndExpectPiece(0, 0, "X"); // clicking on a non-empty cell doesn't do anything.
+        clickDivAndExpectPiece(1, 1, "O");
+        expectBoard([['X', '', ''],
+            ['', 'O', ''],
+            ['', '', '']]);
     });
     it('should end the game in tie', function () {
         clickDivAndExpectPiece(0, 0, "X");
