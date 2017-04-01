@@ -31,6 +31,11 @@ body {
   background-color: #1E90FF;
 }
 
+.background{
+  width: 100%;
+  height: auto;
+}
+
 .buttonUI {
     background-color: #4CAF50; /* Green */
     border: none;
@@ -44,19 +49,18 @@ body {
 
 
 #gameArea{
-  background-color: #00BFFF;
 }
 .r {
-  border-right: 2.5pt solid white;
+  border-right: 1pt solid white;
 }
 .b {
-  border-bottom: 2.5pt solid white;
+  border-bottom: 1pt solid white;
 }
 .l {
-  border-left: 2.5pt solid white;
+  border-left: 1pt solid white;
 }
 .t {
-  border-top: 2.5pt solid white;
+  border-top: 1pt solid white;
 }
 .myhover {
   background-color: blue;
