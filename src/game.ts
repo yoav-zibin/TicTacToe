@@ -302,8 +302,6 @@ module game {
   }
 */
 
-
-
   export function shouldShowImage(row: number, col: number, whichboard: number): boolean {
       return state.myBoard[row][col] !== "" || isProposal(row, col);    
   }
