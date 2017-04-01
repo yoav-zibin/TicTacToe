@@ -18,14 +18,14 @@ module game {
   export let animationEndedTimeout: ng.IPromise<any> = null;
   export let state: IState = null;
   // similar to friendlygo
-  export let passes: number;
+  export let passes: number;  // whose turn
   export let moveToConfirm: BoardDelta = null;
   export let deadBoard: boolean[][] = null;
   export let board: Board = null;
   export let boardBeforeMove: Board = null;
   let clickToDragPiece: HTMLImageElement;
   export let hasDim = false;
-  export let dim = 20;//14
+  export let dim = 20; //14
 
   // For community games.
   export let proposals: number[][] = null;
@@ -66,7 +66,7 @@ module game {
     });
 
     // TODO
-    shapeBoard = gameLogic.getAllShapeMatrix();
+    shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
   }
 
   function getAreaSize(type: string): { width: number; height: number; } {
