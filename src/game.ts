@@ -201,20 +201,20 @@ module game {
       currentUpdateUI.yourPlayerIndex === currentUpdateUI.turnIndex; // it's my turn
   }
 
-    export function cellClickedMy(row: number, col: number): void {
-    log.info("My Board cell:", row, col);
-    if (!isHumanTurn()) return;
-    let nextMove: IMove = null;
-    try {
-      nextMove = gameLogic.createMove(
-          state, row, col, currentUpdateUI.turnIndex);
-    } catch (e) {
-      log.info(["Cell is already full in position:", row, col]);
-      return;
-    }
-    // Move is legal, make it!
-    makeMove(nextMove);
+  export function cellClickedMy(row: number, col: number): void {
+  log.info("My Board cell:", row, col);
+  if (!isHumanTurn()) return;
+  let nextMove: IMove = null;
+  try {
+    nextMove = gameLogic.createMove(
+        state, row, col, currentUpdateUI.turnIndex);
+  } catch (e) {
+    log.info(["Cell is already full in position:", row, col]);
+    return;
   }
+  // Move is legal, make it!
+  makeMove(nextMove);
+}
 
 
 /*

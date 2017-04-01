@@ -153,6 +153,10 @@ module gameLogic {
   }
 */
 
+  export function validMove(board: Board, row: number, col: number): boolean {
+    return true;
+  }
+
   function getWinner(board: Board): string {
     for (let i = 0; i < ROWS; i++) 
       for (let j = 0; j < COLS; j++) 
@@ -173,9 +177,13 @@ module gameLogic {
 
     let myBoard: Board = stateBeforeMove.myBoard;
 
-    if(myBoard[row][col] === 'X' || myBoard[row][col] === 'M') {
-      console.log("already full!");
-      throw new Error("already full!");
+    if(myBoard[row][col] === 'M') {
+      console.log("has been destroy!!");
+      throw new Error("has been destroy!!");
+    }
+    else if(myBoard[row][col] === 'O') {
+      console.log("opponent is there!");
+      throw new Error("opponent is there!!");
     }
 
     if (getWinner(myBoard) !== '') {
