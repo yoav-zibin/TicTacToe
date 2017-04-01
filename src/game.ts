@@ -235,7 +235,7 @@ module game {
     }
     if (type === 'shape') {
       //TODO to const
-      return { rowsNum: 15, colsNum: 20 };
+      return { rowsNum: 12, colsNum: 23 };
     }
   }
 

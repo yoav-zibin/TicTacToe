@@ -48,7 +48,7 @@ var game;
             getStateForOgImage: null,
         });
         // TODO
-        game.shapeBoard = gameLogic.getAllShapeMatrix();
+        game.shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
     }
     game.init = init;
     function getAreaSize(type) {
@@ -195,7 +195,7 @@ var game;
         }
         if (type === 'shape') {
             //TODO to const
-            return { rowsNum: 15, colsNum: 20 };
+            return { rowsNum: 12, colsNum: 23 };
         }
     }
     function clearCoverBoard(coverBoard, forced, otherBoard, careOther) {
