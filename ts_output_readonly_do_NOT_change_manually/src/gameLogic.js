@@ -132,6 +132,10 @@ var gameLogic;
         return true;
       }
     */
+    function validMove(board, row, col) {
+        return true;
+    }
+    gameLogic.validMove = validMove;
     function getWinner(board) {
         for (var i = 0; i < gameLogic.ROWS; i++)
             for (var j = 0; j < gameLogic.COLS; j++)
@@ -146,9 +150,13 @@ var gameLogic;
             stateBeforeMove = getInitialState();
         }
         var myBoard = stateBeforeMove.myBoard;
-        if (myBoard[row][col] === 'X' || myBoard[row][col] === 'M') {
-            console.log("already full!");
-            throw new Error("already full!");
+        if (myBoard[row][col] === 'M') {
+            console.log("has been destroy!!");
+            throw new Error("has been destroy!!");
+        }
+        else if (myBoard[row][col] === 'O') {
+            console.log("opponent is there!");
+            throw new Error("opponent is there!!");
         }
         if (getWinner(myBoard) !== '') {
             throw new Error("Can only make a move if the game is not over!");
