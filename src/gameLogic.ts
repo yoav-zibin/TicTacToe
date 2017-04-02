@@ -1,12 +1,14 @@
-type Board = string[][];
+type Board = number[][];
 interface BoardDelta {
   row: number;
   col: number;
 }
 type IProposalData = BoardDelta;
 interface IState {
-  board: Board;
-  delta: BoardDelta;
+  board: Board; // 1 -> SIZE
+  shownBoard: Board; // -1 for hidden places; 0 for player 1; 1 for player 2
+  delta1: BoardDelta;
+  delta2: BoardDelta;
 }
 
 import gameService = gamingPlatform.gameService;
@@ -17,82 +19,58 @@ import log = gamingPlatform.log;
 import dragAndDropService = gamingPlatform.dragAndDropService;
 
 module gameLogic {
-  export const ROWS = 3;
-  export const COLS = 3;
+  export const ROWS = 4;
+  export const COLS = 4;
+  export const SIZE = ROWS * COLS / 2;
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
-  export function getInitialBoard(): Board {
+  export function getInitialBoards(): [Board, Board] {
     let board: Board = [];
+    let shownBoard: Board = [];
+    let counts: number[];
     for (let i = 0; i < ROWS; i++) {
       board[i] = [];
+      shownBoard[i] = [];
       for (let j = 0; j < COLS; j++) {
-        board[i][j] = '';
+        let n = 0;
+        while (counts[n] >= 2) {
+          n = Math.floor(Math.random() * SIZE) + 1;
+        }
+        counts[n]++;
+        board[i][j] = n;
+        shownBoard[i][j] = -1;
       }
     }
-    return board;
+    return [board, shownBoard];
   }
 
   export function getInitialState(): IState {
-    return {board: getInitialBoard(), delta: null};
+    let initBoards = getInitialBoards();
+    return {board: initBoards[0], shownBoard: initBoards[1], delta1: null, delta2: null};
   }
 
   /**
-   * Returns true if the game ended in a tie because there are no empty cells.
-   * E.g., isTie returns true for the following board:
-   *     [['X', 'O', 'X'],
-   *      ['X', 'O', 'O'],
-   *      ['O', 'X', 'X']]
+   * 
    */
-  function isTie(board: Board): boolean {
+  function hasEmptyGrid(board: Board): boolean {
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
-        if (board[i][j] === '') {
+        if (board[i][j] === -1) {
           // If there is an empty cell then we do not have a tie.
-          return false;
+          return true;
         }
       }
     }
     // No empty cells, so we have a tie!
-    return true;
+    return false;
   }
 
   /**
-   * Return the winner (either 'X' or 'O') or '' if there is no winner.
-   * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-   * E.g., getWinner returns 'X' for the following board:
-   *     [['X', 'O', ''],
-   *      ['X', 'O', ''],
-   *      ['X', '', '']]
+   * 
    */
-  function getWinner(board: Board): string {
-    let boardString = '';
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        let cell = board[i][j];
-        boardString += cell === '' ? ' ' : cell;
-      }
-    }
-    let win_patterns = [
-      'XXX......',
-      '...XXX...',
-      '......XXX',
-      'X..X..X..',
-      '.X..X..X.',
-      '..X..X..X',
-      'X...X...X',
-      '..X.X.X..'
-    ];
-    for (let win_pattern of win_patterns) {
-      let x_regexp = new RegExp(win_pattern);
-      let o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
-      if (x_regexp.test(boardString)) {
-        return 'X';
-      }
-      if (o_regexp.test(boardString)) {
-        return 'O';
-      }
-    }
-    return '';
+  function computeScores(board: Board): [number, number] {
+    // scan the board and compute the socre
+    return [0, 0];
   }
 
   /**
@@ -104,34 +82,59 @@ module gameLogic {
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
-    let board: Board = stateBeforeMove.board;
-    if (board[row][col] !== '') {
+    let board: Board = stateBeforeMove.shownBoard;
+    if (board[row][col] !== -1) {
       throw new Error("One can only make a move in an empty position!");
     }
-    if (getWinner(board) !== '' || isTie(board)) {
+    if (!hasEmptyGrid(board)) {
       throw new Error("Can only make a move if the game is not over!");
     }
     let boardAfterMove = angular.copy(board);
-    boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
-    let winner = getWinner(boardAfterMove);
+    boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 1 : 0;
+    let scores = computeScores(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
-    if (winner !== '' || isTie(boardAfterMove)) {
+    if (!hasEmptyGrid(boardAfterMove)) {
       // Game over.
       turnIndex = -1;
-      endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
+      if (scores[0] > scores[1]) {
+        endMatchScores = [1, 0];
+      } else if (scores[0] < scores[1]) {
+        endMatchScores = [0, 1];
+      } else {
+        endMatchScores = [0, 0];
+      }
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
       turnIndex = 1 - turnIndexBeforeMove;
       endMatchScores = null;
     }
     let delta: BoardDelta = {row: row, col: col};
-    let state: IState = {delta: delta, board: boardAfterMove};
+
+    let state: IState = {delta1: delta, delta2: null, shownBoard: boardAfterMove, 
+      board: stateBeforeMove.board};
+    if (stateBeforeMove.delta1 != null) {
+      state = {delta1: stateBeforeMove.delta1, delta2: delta, shownBoard: boardAfterMove, 
+        board: stateBeforeMove.board};
+    }
+    
     return {
       endMatchScores: endMatchScores,
       turnIndex: turnIndex,
       state: state
     };
+  }
+
+  export function checkMatch(state: IState) {
+    let delta1 = state.delta1;
+    let delta2 = state.delta2;
+    let board = state.board;
+    if(delta1 != null && delta2 != null) {
+      if(board[delta1.row][delta1.col] != board[delta2.row][delta2.col]) {
+        state.shownBoard[delta1.row][delta1.col] = -1;
+        state.shownBoard[delta2.row][delta2.col] = -1;
+      }
+    }
   }
   
   export function createInitialMove(): IMove {
