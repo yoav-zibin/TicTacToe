@@ -918,7 +918,7 @@ module gameLogic {
     return { start: start, end: i };
   }
 
-  // TODO get ShapeBoard information
+  // get ShapeBoard information
   export function getAllShapeMatrix_hardcode(): ShapeBoard {
     let shapeBoard: ShapeBoard = { board: [], cellToShape: [], shapeToCell: [] };
     shapeBoard = {

@@ -439,7 +439,6 @@ module game {
     return moveToConfirm != null;
   }
 
-  // TODO figure out why this not working
   let cacheIntegersTill: number[][] = [];
   export function getIntegersTill(number: any): number[] {
     if (cacheIntegersTill[number]) return cacheIntegersTill[number]; 
