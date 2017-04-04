@@ -508,7 +508,6 @@ var game;
         RotateAndFlip(false, true, false);
     }
     game.rotateRight = rotateRight;
-    // TODO figure out why this not working
     var cacheIntegersTill = [];
     function getIntegersTill(number) {
         if (cacheIntegersTill[number])

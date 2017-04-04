@@ -819,7 +819,7 @@ var gameLogic;
         return { start: start, end: i };
     }
     gameLogic.getNextShapeFrom = getNextShapeFrom;
-    // TODO get ShapeBoard information
+    // get ShapeBoard information
     function getAllShapeMatrix_hardcode() {
         var shapeBoard = { board: [], cellToShape: [], shapeToCell: [] };
         shapeBoard = {
