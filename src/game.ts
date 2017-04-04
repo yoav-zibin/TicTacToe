@@ -150,17 +150,7 @@ module game {
     if (!proposals) {
       gameService.makeMove(move, null);
     } else {
-      let delta = move.state.delta;
-      let myProposal:IProposal = {
-        data: delta,
-        chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
-        playerInfo: yourPlayerInfo,
-      };
-      // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
-      if (proposals[delta.row][delta.col] < currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
-        move = null;
-      }
-      gameService.makeMove(move, myProposal);
+      // TODO implement community game later.
     }
   }
 
@@ -208,24 +198,12 @@ module game {
   }
 
   export function shouldShowImage(row: number, col: number): boolean {
-    return state.board[row][col] !== "" || isProposal(row, col);
-  }
-
-  function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
-    return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
-  }
-  
-  export function isPieceX(row: number, col: number): boolean {
-    return isPiece(row, col, 0, 'X');
-  }
-
-  export function isPieceO(row: number, col: number): boolean {
-    return isPiece(row, col, 1, 'O');
+    return state.shownBoard[row][col] !== -1 || isProposal(row, col);
   }
 
   export function shouldSlowlyAppear(row: number, col: number): boolean {
-    return state.delta &&
-        state.delta.row === row && state.delta.col === col;
+    return (state.delta1 && state.delta1.row === row && state.delta1.col === col) ||
+      (state.delta2 && state.delta2.row === row && state.delta2.col === col);
   }
 }
 

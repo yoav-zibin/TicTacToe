@@ -6,22 +6,33 @@ var log = gamingPlatform.log;
 var dragAndDropService = gamingPlatform.dragAndDropService;
 var gameLogic;
 (function (gameLogic) {
-    gameLogic.ROWS = 3;
-    gameLogic.COLS = 3;
+    gameLogic.ROWS = 4;
+    gameLogic.COLS = 4;
+    gameLogic.SIZE = gameLogic.ROWS * gameLogic.COLS / 2;
     /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
-    function getInitialBoard() {
+    function getInitialBoards() {
         var board = [];
+        var shownBoard = [];
+        var counts;
         for (var i = 0; i < gameLogic.ROWS; i++) {
             board[i] = [];
+            shownBoard[i] = [];
             for (var j = 0; j < gameLogic.COLS; j++) {
-                board[i][j] = '';
+                var n = 0;
+                while (counts[n] >= 2) {
+                    n = Math.floor(Math.random() * gameLogic.SIZE) + 1;
+                }
+                counts[n]++;
+                board[i][j] = n;
+                shownBoard[i][j] = -1;
             }
         }
-        return board;
+        return [board, shownBoard];
     }
-    gameLogic.getInitialBoard = getInitialBoard;
+    gameLogic.getInitialBoards = getInitialBoards;
     function getInitialState() {
-        return { board: getInitialBoard(), delta: null };
+        var initBoards = getInitialBoards();
+        return { board: initBoards[0], shownBoard: initBoards[1], delta1: null, delta2: null };
     }
     gameLogic.getInitialState = getInitialState;
     /**
@@ -90,15 +101,15 @@ var gameLogic;
         if (!stateBeforeMove) {
             stateBeforeMove = getInitialState();
         }
-        var board = stateBeforeMove.board;
-        if (board[row][col] !== '') {
+        var board = stateBeforeMove.shownBoard;
+        if (board[row][col] !== -1) {
             throw new Error("One can only make a move in an empty position!");
         }
         if (getWinner(board) !== '' || isTie(board)) {
             throw new Error("Can only make a move if the game is not over!");
         }
         var boardAfterMove = angular.copy(board);
-        boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+        boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 1 : 0;
         var winner = getWinner(boardAfterMove);
         var endMatchScores;
         var turnIndex;
@@ -113,7 +124,12 @@ var gameLogic;
             endMatchScores = null;
         }
         var delta = { row: row, col: col };
-        var state = { delta: delta, board: boardAfterMove };
+        var state = { delta1: delta, delta2: null, shownBoard: boardAfterMove,
+            board: stateBeforeMove.board };
+        if (stateBeforeMove.delta1 != null) {
+            state = { delta1: stateBeforeMove.delta1, delta2: delta, shownBoard: boardAfterMove,
+                board: stateBeforeMove.board };
+        }
         return {
             endMatchScores: endMatchScores,
             turnIndex: turnIndex,
