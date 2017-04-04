@@ -117,7 +117,7 @@ module game {
   }
 
   function getHintColor() {
-    return "#FF0000";
+    return "#93FF33";
   }
 
   function printBoardAnchor() {
@@ -138,7 +138,7 @@ module game {
     if (!isYourTurn) {
       return;
     }
-   
+
     let XYDrag = getXYandDragTyep(clientX, clientY);
 
     let x: number = XYDrag.x;
@@ -179,7 +179,7 @@ module game {
         return;
       }
 
-      if (!gameLogic.checkLegalMoveForGame(state.board, row, col, currentUpdateUI.turnIndex, shapeIdChosen)) {
+      if (!gameLogic.checkLegalMoveForGame(state.board, row, col, currentUpdateUI.turnIndex, shapeIdChosen, false)) {
         clearDrag('board', false);
         canConfirm = false;
         return;
@@ -274,12 +274,15 @@ module game {
     }
 
     var draggingLines = document.getElementById(type + "DraggingLines");
-    draggingLines.style.display = "none";
+    if (draggingLines !== null && draggingLines.style !== null) {
+      draggingLines.style.display = "none";
+    }
     // obsolete
     //clickToDragPiece.style.display = "none";
   }
   //TODO game.ts 92-188
   // After shape matrix is got, draw shape in board area, draggable
+  /*
   function handleDragEvent(type: any, clientX: any, clientY: any, shapeMatrix: any) {
     if (!isHumanTurn() || passes == 2) {
       return; // if the game is over, do not display dragging effect
@@ -320,10 +323,12 @@ module game {
       dragDone(row, col);
     }
   }
-
+  */
+  /*
   function clearClickToDrag() {
     clickToDragPiece.style.display = "none";
   }
+  */
 
   function getSquareCenterXY(row: number, col: number) {
     let size = getSquareWidthHeight();
@@ -364,6 +369,7 @@ module game {
     };
   }
 
+  /*
   function dragDone(row: number, col: number) {
     $rootScope.$apply(function () {
       if (deadBoard == null) {
@@ -374,6 +380,7 @@ module game {
       }
     });
   }
+  */
 
   function getShapeNum(row: number, col: number): number {
     if (row >= 0 && row < shapeBoard.cellToShape.length && col >= 0 && col < shapeBoard.cellToShape[0].length)
@@ -401,12 +408,33 @@ module game {
     return shapeId;
   }
 
+  function updateboardAction(row: number, col: number) {
+    let boardAction = gameLogic.getBoardActionFromShapeID(row, col, shapeIdChosen);
+    
+    console.log(gameLogic.aux_printFrame(boardAction, 20));
+
+    if (!angular.equals(preview, boardAction)) {
+      clearDrag('board', true);
+      console.log("set board");
+
+      console.log(gameLogic.aux_printFrame(preview, 20));
+      console.log(gameLogic.aux_printFrame(boardAction, 20));
+      //clearPreview
+      setboardActionGroundColor(boardAction, getTurnColor());
+      preview = boardAction;
+    }
+    canConfirm = true;
+  }
+
   function boardAreaChooseMove(row: number, col: number): BoardDelta {
     if (shapeIdChosen === undefined || shapeIdChosen == -1) {
       return null;
     }
-
-    return { row: row, col: col, shapeId: shapeIdChosen };
+    // TODO: check legal and hint here
+    if (gameLogic.checkLegalMoveForGame(state.board, row, col, currentUpdateUI.turnIndex, shapeIdChosen, false)) {
+      return { row: row, col: col, shapeId: shapeIdChosen };
+    }
+    return null;
   }
 
   function dragDoneForBoard(row: number, col: number, dragType: string) {
@@ -429,19 +457,133 @@ module game {
     });
   }
 
-  //TODO
-  export function passClicked() {
+  export function clearClickToDrag() {
+    moveToConfirm = null;
+    clearDrag('board', true);
+    clearDrag('shapeArea', false);
+    shapeIdChosen = -1
+  }
 
+  export function isPassBtnEnabled() {
+    return true;
   }
 
   //TODO
+  export function passClicked() {
+    clearClickToDrag();
+  }
+  
   export function showConfirmButton() {
-    return moveToConfirm != null;
+    return moveToConfirm !== null;
+  }
+
+  /*
+  export function showRotateAndFlip() {
+    return moveToConfirm !== null; // TODO check flip state
+  }
+  */
+
+  export function showRotateLeft() {
+    return moveToConfirm !== null; // TODO check flip state
+  }
+
+  export function showRotateRight() {
+    return moveToConfirm !== null; // TODO check flip state
+  }
+
+  export function showFlip() {
+    return moveToConfirm !== null; // TODO check flip state
+  }
+
+  export function checkLegal() {
+    return moveToConfirm !== null && gameLogic.checkLegalMoveForGame(state.board, moveToConfirm.row, moveToConfirm.col,
+      currentUpdateUI.turnIndex, moveToConfirm.shapeId, true);
+  }
+
+  export function newlyPlaced(row:number, col:number) {
+		/*for the initial state, there is no newly added square*/
+    if (preview === undefined || preview.length <= 0) {
+			return false;
+		}
+
+		if(preview[row][col] === '1') {
+        return true;
+    }
+		return false;
+	}
+
+  export function shapeNewlyPlaced(row:number, col:number) {
+    if (shapeBoard === undefined || shapeBoard.cellToShape.length <= 0) {
+      return false;
+    }
+
+    if (shapeIdChosen >= 0 && shapeBoard.cellToShape[row][col] === gameLogic.getShapeType(shapeIdChosen)) {
+      return true;
+    }
+    return false;
+  }
+
+  function getShapeIdAfter(right:boolean, left:boolean, flip:boolean) {
+    if (shapeIdChosen === undefined || shapeIdChosen < 0) {
+      return -1;
+    }
+    
+    let originShapeId:number = gameLogic.getShapeType(shapeIdChosen);
+    let operationType:number = gameLogic.getShapeOpType(shapeIdChosen);
+    
+    let rotation: number = operationType % 4;
+    // only vertical flip. Horizontal flip <=> vertical flip + 180 rotation.
+    let currentFlip: boolean = operationType >= 4;
+    if (flip) {
+      currentFlip = !currentFlip;
+    }
+
+    let addon:number = 0;
+    if (left) {
+      addon ++;
+    }
+    if (right) {
+      addon --;
+    }
+
+    if (currentFlip) {
+      addon = -addon;
+    }
+
+    rotation = (rotation + addon + 4) % 4;
+    shapeIdChosen = gameLogic.getShapeId(originShapeId, rotation, currentFlip);
+
+    return shapeIdChosen;
+  }
+
+  export function RotateAndFlip(left:boolean, right:boolean, flip:boolean) {
+    if (!(showFlip() || showRotateLeft() || showRotateRight())) {
+      return;
+    }
+    let row: number = moveToConfirm.row;
+    let col: number = moveToConfirm.col;
+    let shapeId: number = moveToConfirm.shapeId;
+    // TODO change shapeId
+    getShapeIdAfter(left, right, flip);
+    updateboardAction(row, col);
+    dragDoneForBoard(row, col, 'board');
+  }
+
+  export function flip() {
+    RotateAndFlip(false, false, true);
+  }
+
+  export function rotateLeft() {
+    RotateAndFlip(true, false, false);
+  }
+
+  export function rotateRight() {
+    RotateAndFlip(false, true, false);
   }
 
   let cacheIntegersTill: number[][] = [];
   export function getIntegersTill(number: any): number[] {
-    if (cacheIntegersTill[number]) return cacheIntegersTill[number]; 
+    if (cacheIntegersTill[number]) return cacheIntegersTill[number];
     let res: number[] = [];
     for (let i = 0; i < number; i++) {
       res.push(i);
@@ -487,10 +629,7 @@ module game {
       clearBoardAnchor();
 
       boardAreaCellClicked(moveToConfirm.row, moveToConfirm.col);
-      moveToConfirm = null;
-      clearDrag('board', true);
-      clearDrag('shapeArea', false);
-      shapeIdChosen = -1;
+      clearClickToDrag();
     }
   }
 

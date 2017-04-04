@@ -24,6 +24,7 @@ var gameLogic;
     // TODO change this
     gameLogic.STARTANCHOR4 = [0, gameLogic.COLS - 1, gameLogic.ROWS * (gameLogic.COLS - 1), gameLogic.ROWS * gameLogic.COLS - 1];
     gameLogic.STARTANCHOR = [0, gameLogic.ROWS * gameLogic.COLS - 1]; // [0, 14 * 14];
+    gameLogic.SHAPEMAX = 168;
     /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
     function getInitialBoard() {
         var board = [];
@@ -293,6 +294,7 @@ var gameLogic;
         }
         //log.log("After flipping Allshape:")
         //console.log(aux_printFrame(retShape.frame, SHAPEHEIGHT));
+        // TODO check this
         // rotation
         var rotateAny = function (retShape, rotation) {
             var rotate90 = function (input) {
@@ -329,6 +331,10 @@ var gameLogic;
         return shapeId % gameLogic.OPERATIONS;
     }
     gameLogic.getShapeOpType = getShapeOpType;
+    function getShapeId(originShapeId, rotation, flip) {
+        return originShapeId * gameLogic.OPERATIONS + rotation + (flip ? 4 : 0);
+    }
+    gameLogic.getShapeId = getShapeId;
     function getShapeFromShapeID(shapeId) {
         var operationType = getShapeOpType(shapeId);
         var shapeType = getShapeType(shapeId);
@@ -670,9 +676,9 @@ var gameLogic;
         return ret;
     }
     gameLogic.updatePlayerStatus = updatePlayerStatus;
-    function checkLegalMoveForGame(board, row, col, turnIndexBeforeMove, shapeId) {
+    function checkLegalMoveForGame(board, row, col, turnIndexBeforeMove, shapeId, checkStrong) {
         console.log("[checkLegalMoveForGame]col:", col, " row", row, " SI:", shapeId);
-        if (shapeId === undefined || shapeId < 0 || shapeId > 160) {
+        if (shapeId === undefined || shapeId < 0 || shapeId >= gameLogic.SHAPEMAX) {
             return false;
         }
         var shape = getShapeFromShapeID(shapeId);
@@ -680,10 +686,9 @@ var gameLogic;
             return false;
         }
         var boardAction = getBoardAction(row, col, shape);
-        /*if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
-          return false;
+        if (checkStrong && !checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+            return false;
         }
-        */
         if (!checkSquareOverlap(board, boardAction)) {
             return false;
         }

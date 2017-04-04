@@ -32304,7 +32304,7 @@ var gameLogic;
     gameLogic.updatePlayerStatus = updatePlayerStatus;
     function checkLegalMoveForGame(board, row, col, turnIndexBeforeMove, shapeId) {
         console.log("[checkLegalMoveForGame]col:", col, " row", row, " SI:", shapeId);
-        if (shapeId === undefined || shapeId < 0 || shapeId > 160) {
+        if (shapeId === undefined || shapeId < 0 || shapeId >= SHAPEMAX) {
             return false;
         }
         var shape = getShapeFromShapeID(shapeId);
