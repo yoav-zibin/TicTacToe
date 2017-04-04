@@ -57,6 +57,7 @@ module gameLogic {
   // TODO change this
   export const STARTANCHOR4: number[] = [0, COLS - 1, ROWS * (COLS - 1), ROWS * COLS - 1];
   export const STARTANCHOR: number[] = [0, ROWS * COLS - 1]; // [0, 14 * 14];
+  export const SHAPEMAX = 168;
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   export function getInitialBoard(): Board {
@@ -335,6 +336,7 @@ module gameLogic {
     //log.log("After flipping Allshape:")
     //console.log(aux_printFrame(retShape.frame, SHAPEHEIGHT));
 
+    // TODO check this
     // rotation
     let rotateAny = function (retShape: Shape, rotation: number): string[][] {
       let rotate90 = function (input: string[][]): string[][] {
@@ -373,6 +375,10 @@ module gameLogic {
 
   export function getShapeOpType(shapeId: number): number {
     return shapeId % OPERATIONS;
+  }
+
+  export function getShapeId(originShapeId:number, rotation: number, flip: boolean):number{
+    return originShapeId * OPERATIONS + rotation + (flip?4:0);
   }
 
   export function getShapeFromShapeID(shapeId: number): Shape {
@@ -748,9 +754,9 @@ module gameLogic {
     return ret;
   }
 
-  export function checkLegalMoveForGame(board: Board, row: number, col: number, turnIndexBeforeMove: number, shapeId: number): boolean {
+  export function checkLegalMoveForGame(board: Board, row: number, col: number, turnIndexBeforeMove: number, shapeId: number, checkStrong:boolean): boolean {
     console.log("[checkLegalMoveForGame]col:", col, " row", row, " SI:", shapeId);
-    if (shapeId === undefined || shapeId < 0 || shapeId > 160) {
+    if (shapeId === undefined || shapeId < 0 || shapeId >= SHAPEMAX) {
       return false;
     }
 
@@ -761,10 +767,10 @@ module gameLogic {
     }
 
     let boardAction: Board = getBoardAction(row, col, shape);
-    /*if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
-      return false;
+      if (checkStrong && !checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+        return false;
     }
-    */
+    
     if (!checkSquareOverlap(board, boardAction)) {
       return false;
     }
