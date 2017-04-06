@@ -20,7 +20,7 @@ module game {
   // For community games.
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
-  export let colors : number[][] = [];
+  export let colors : string[] = [];
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
@@ -33,10 +33,14 @@ module game {
       updateUI: updateUI,
       getStateForOgImage: null,
     });
-    // TODO: remove 8
-    for (let i = 0; i < 8; i++) {
-        colors[i] = generateColor();
-    }
+    colors[0] = "red";
+    colors[1] = "yellow";
+    colors[2] = "lime";
+    colors[3] = "aqua";
+    colors[4] = "blue";
+    colors[5] = "purple";
+    colors[6] = "gray";
+    colors[7] = "orange";
   }
 
   function registerServiceWorker() {
@@ -212,16 +216,8 @@ module game {
   }
 
   export function getColor(row : number, col : number): string {
-    let idx: number = state.board[row][col]; 
-    return "rgb(" + colors[idx][0] + "," + colors[idx][1] + "," + colors[idx][2] + ")";
-  }
-
-  function generateColor(): number[] {
-    let color : number[] = [];
-    for (let i = 0; i < 3; i++) {
-        color[i] = Math.floor(Math.random() * 255);
-    }
-    return color;
+    let idx: number = state.board[row][col];
+    return colors[idx];
   }
 }
 

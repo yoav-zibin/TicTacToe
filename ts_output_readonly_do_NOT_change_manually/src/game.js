@@ -26,10 +26,14 @@ var game;
             updateUI: updateUI,
             getStateForOgImage: null,
         });
-        // TODO: remove 8
-        for (var i = 0; i < 8; i++) {
-            game.colors[i] = generateColor();
-        }
+        game.colors[0] = "red";
+        game.colors[1] = "yellow";
+        game.colors[2] = "lime";
+        game.colors[3] = "aqua";
+        game.colors[4] = "blue";
+        game.colors[5] = "purple";
+        game.colors[6] = "gray";
+        game.colors[7] = "orange";
     }
     game.init = init;
     function registerServiceWorker() {
@@ -195,18 +199,10 @@ var game;
     }
     game.shouldSlowlyAppear = shouldSlowlyAppear;
     function getColor(row, col) {
-        log.info("Get color on cell:", row, col);
         var idx = game.state.board[row][col];
-        return "rgb(" + game.colors[idx][0] + "," + game.colors[idx][1] + "," + game.colors[idx][2] + ")";
+        return game.colors[idx];
     }
     game.getColor = getColor;
-    function generateColor() {
-        var color = [];
-        for (var i = 0; i < 3; i++) {
-            color[i] = Math.floor(Math.random() * 255);
-        }
-        return color;
-    }
 })(game || (game = {}));
 angular.module('myApp', ['gameServices'])
     .run(['$rootScope', '$timeout',
