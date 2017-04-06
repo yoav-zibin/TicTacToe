@@ -189,6 +189,19 @@ var game;
         makeMove(nextMove);
     }
     game.cellClicked = cellClicked;
+    function isShow(row, col) {
+        //return true;  
+        return game.state.shownBoard[row][col] == -1;
+    }
+    game.isShow = isShow;
+    function isPlayer0(row, col) {
+        return game.state.shownBoard[row][col] == 0;
+    }
+    game.isPlayer0 = isPlayer0;
+    function isPlayer1(row, col) {
+        return game.state.shownBoard[row][col] == 1;
+    }
+    game.isPlayer1 = isPlayer1;
     function shouldShowImage(row, col) {
         return game.state.shownBoard[row][col] !== -1 || isProposal(row, col);
     }

@@ -6,7 +6,7 @@ interface BoardDelta {
 type IProposalData = BoardDelta;
 interface IState {
   board: Board; // 1 -> SIZE
-  shownBoard: Board; // -1 for hidden places; 0 for player 1; 1 for player 2
+  shownBoard: Board; // -1 for hidden places; 0 for player 0; 1 for player 1
   delta1: BoardDelta;
   delta2: BoardDelta;
 }

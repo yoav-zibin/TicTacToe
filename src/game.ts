@@ -206,6 +206,19 @@ module game {
     makeMove(nextMove);
   }
 
+  export function isShow(row: number, col: number): boolean {
+    return true;  
+    //return state.shownBoard[row][col] == -1;
+  }
+
+  export function isPlayer0(row: number, col: number): boolean {
+    return state.shownBoard[row][col] == 0;
+  }
+
+  export function isPlayer1(row: number, col: number): boolean {
+    return state.shownBoard[row][col] == 1;
+  }
+
   export function shouldShowImage(row: number, col: number): boolean {
     return state.shownBoard[row][col] !== -1 || isProposal(row, col);
   }
