@@ -27,14 +27,17 @@ module gameLogic {
   export function getInitialBoards(): [Board, Board] {
     let board: Board = [];
     let shownBoard: Board = [];
-    let counts: number[];
+    let counts: number[] = [];
+    for (let i = 0; i < SIZE; i++) {
+        counts[i] = 0;
+    }
     for (let i = 0; i < ROWS; i++) {
       board[i] = [];
       shownBoard[i] = [];
       for (let j = 0; j < COLS; j++) {
         let n = 0;
         while (counts[n] >= 2) {
-          n = Math.floor(Math.random() * SIZE) + 1;
+          n = Math.floor(Math.random() * SIZE);
         }
         counts[n]++;
         board[i][j] = n;
@@ -70,7 +73,18 @@ module gameLogic {
    */
   function computeScores(board: Board): [number, number] {
     // scan the board and compute the socre
-    return [0, 0];
+    let score0 : number = 0;
+    let score1 : number = 0;
+    for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+            if (board[i][j] == 0) {
+                score0++;
+            } else if (board[i][j] == 1) {
+                score1++;
+            }
+        }
+    }
+    return [score0, score1];
   }
 
   /**

@@ -13,14 +13,17 @@ var gameLogic;
     function getInitialBoards() {
         var board = [];
         var shownBoard = [];
-        var counts;
+        var counts = [];
+        for (var i = 0; i < gameLogic.SIZE; i++) {
+            counts[i] = 0;
+        }
         for (var i = 0; i < gameLogic.ROWS; i++) {
             board[i] = [];
             shownBoard[i] = [];
             for (var j = 0; j < gameLogic.COLS; j++) {
                 var n = 0;
                 while (counts[n] >= 2) {
-                    n = Math.floor(Math.random() * gameLogic.SIZE) + 1;
+                    n = Math.floor(Math.random() * gameLogic.SIZE);
                 }
                 counts[n]++;
                 board[i][j] = n;
@@ -36,62 +39,38 @@ var gameLogic;
     }
     gameLogic.getInitialState = getInitialState;
     /**
-     * Returns true if the game ended in a tie because there are no empty cells.
-     * E.g., isTie returns true for the following board:
-     *     [['X', 'O', 'X'],
-     *      ['X', 'O', 'O'],
-     *      ['O', 'X', 'X']]
+     *
      */
-    function isTie(board) {
+    function hasEmptyGrid(board) {
         for (var i = 0; i < gameLogic.ROWS; i++) {
             for (var j = 0; j < gameLogic.COLS; j++) {
-                if (board[i][j] === '') {
+                if (board[i][j] === -1) {
                     // If there is an empty cell then we do not have a tie.
-                    return false;
+                    return true;
                 }
             }
         }
         // No empty cells, so we have a tie!
-        return true;
+        return false;
     }
     /**
-     * Return the winner (either 'X' or 'O') or '' if there is no winner.
-     * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-     * E.g., getWinner returns 'X' for the following board:
-     *     [['X', 'O', ''],
-     *      ['X', 'O', ''],
-     *      ['X', '', '']]
+     *
      */
-    function getWinner(board) {
-        var boardString = '';
+    function computeScores(board) {
+        // scan the board and compute the socre
+        var score0 = 0;
+        var score1 = 0;
         for (var i = 0; i < gameLogic.ROWS; i++) {
             for (var j = 0; j < gameLogic.COLS; j++) {
-                var cell = board[i][j];
-                boardString += cell === '' ? ' ' : cell;
+                if (board[i][j] == 0) {
+                    score0++;
+                }
+                else if (board[i][j] == 1) {
+                    score1++;
+                }
             }
         }
-        var win_patterns = [
-            'XXX......',
-            '...XXX...',
-            '......XXX',
-            'X..X..X..',
-            '.X..X..X.',
-            '..X..X..X',
-            'X...X...X',
-            '..X.X.X..'
-        ];
-        for (var _i = 0, win_patterns_1 = win_patterns; _i < win_patterns_1.length; _i++) {
-            var win_pattern = win_patterns_1[_i];
-            var x_regexp = new RegExp(win_pattern);
-            var o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
-            if (x_regexp.test(boardString)) {
-                return 'X';
-            }
-            if (o_regexp.test(boardString)) {
-                return 'O';
-            }
-        }
-        return '';
+        return [score0, score1];
     }
     /**
      * Returns the move that should be performed when player
@@ -105,18 +84,26 @@ var gameLogic;
         if (board[row][col] !== -1) {
             throw new Error("One can only make a move in an empty position!");
         }
-        if (getWinner(board) !== '' || isTie(board)) {
+        if (!hasEmptyGrid(board)) {
             throw new Error("Can only make a move if the game is not over!");
         }
         var boardAfterMove = angular.copy(board);
         boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 1 : 0;
-        var winner = getWinner(boardAfterMove);
+        var scores = computeScores(boardAfterMove);
         var endMatchScores;
         var turnIndex;
-        if (winner !== '' || isTie(boardAfterMove)) {
+        if (!hasEmptyGrid(boardAfterMove)) {
             // Game over.
             turnIndex = -1;
-            endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
+            if (scores[0] > scores[1]) {
+                endMatchScores = [1, 0];
+            }
+            else if (scores[0] < scores[1]) {
+                endMatchScores = [0, 1];
+            }
+            else {
+                endMatchScores = [0, 0];
+            }
         }
         else {
             // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
@@ -126,7 +113,7 @@ var gameLogic;
         var delta = { row: row, col: col };
         var state = { delta1: delta, delta2: null, shownBoard: boardAfterMove,
             board: stateBeforeMove.board };
-        if (stateBeforeMove.delta1 != null) {
+        if (stateBeforeMove.delta2 == null) {
             state = { delta1: stateBeforeMove.delta1, delta2: delta, shownBoard: boardAfterMove,
                 board: stateBeforeMove.board };
         }
@@ -137,6 +124,18 @@ var gameLogic;
         };
     }
     gameLogic.createMove = createMove;
+    function checkMatch(state) {
+        var delta1 = state.delta1;
+        var delta2 = state.delta2;
+        var board = state.board;
+        if (delta1 != null && delta2 != null) {
+            if (board[delta1.row][delta1.col] != board[delta2.row][delta2.col]) {
+                state.shownBoard[delta1.row][delta1.col] = -1;
+                state.shownBoard[delta2.row][delta2.col] = -1;
+            }
+        }
+    }
+    gameLogic.checkMatch = checkMatch;
     function createInitialMove() {
         return { endMatchScores: null, turnIndex: 0,
             state: getInitialState() };
