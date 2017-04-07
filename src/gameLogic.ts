@@ -127,11 +127,13 @@ module gameLogic {
 
     let state: IState = {delta1: delta, delta2: null, shownBoard: boardAfterMove, 
       board: stateBeforeMove.board};
-    if (stateBeforeMove.delta2 == null) {
+    if (stateBeforeMove.delta1 != null && stateBeforeMove.delta2 == null) {
       state = {delta1: stateBeforeMove.delta1, delta2: delta, shownBoard: boardAfterMove, 
         board: stateBeforeMove.board};
     }
     
+    log.info("gameLogic.createMove", state);
+
     return {
       endMatchScores: endMatchScores,
       turnIndex: turnIndex,

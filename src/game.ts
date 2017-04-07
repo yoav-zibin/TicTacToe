@@ -119,6 +119,8 @@ module game {
     state = params.state;
     if (isFirstMove()) {
       state = gameLogic.getInitialState();
+    } else {
+      gameLogic.checkMatch(state);
     }
     // We calculate the AI move only after the animation finishes,
     // because if we call aiService now
@@ -151,6 +153,10 @@ module game {
   }
 
   function makeMove(move: IMove) {
+    if (move.state.delta2 == null) {
+      log.info("game.makeMove -> expect 2nd click...");
+      return;
+    }
     if (didMakeMove) { // Only one move per updateUI
       return;
     }
@@ -198,6 +204,7 @@ module game {
     try {
       nextMove = gameLogic.createMove(
           state, row, col, currentUpdateUI.turnIndex);
+      state = nextMove.state;
     } catch (e) {
       log.info(["Cell is already full in position:", row, col]);
       return;
