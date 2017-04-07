@@ -24,35 +24,31 @@
 </head>
 <body ng-cloak>
 <div id="gameArea">
-  <div ng-repeat="row in [0, 1, 2]"
-      style="position:absolute; top:{{row * 33}}%; left:0; width:100%; height:33%;">
-    <div ng-repeat="col in [0, 1, 2]"
-        style="position:absolute; top:0; left:{{col * 33}}%; width:33%; height:100%;"
-        ng-class="{r: col < 2, b: row < 2}"
+  <div ng-repeat="row in [0, 1, 2, 3]"
+      style="position:absolute; top:{{row * 25}}%; left:0; width:100%; height:25%;">
+    <div ng-repeat="col in [0, 1, 2, 3]"
+        style="position:absolute; top:0; left:{{col * 25}}%; width:25%; height:100%;"
+        ng-class="{r: col < 3, b: row < 3}"
         ng-click="game.cellClicked(row, col)"
         id="{{'e2e_test_div_' + row + 'x' + col}}">
       <div style="width:100%; height: 100%"
-          ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
+		  ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
           ng-style="game.getCellStyle(row, col)"
           ng-if="game.shouldShowImage(row, col)">
-        <svg ng-if="game.isPieceO(row, col)"
-            id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
-            width="100%" height="100%">
+		<!--<svg ng-if="game.isShow(row, col)" width="100%" height="100%">
           <circle cx="50%" cy="50%" r="27%"
-            stroke="blue" stroke-width="5%" fill="white" />
-        </svg>
-        <svg ng-if="game.isPieceX(row, col)"
-            id="{{'e2e_test_pieceX_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <line x1="25%" y1="25%"
-                x2="75%" y2="75%"
-                stroke="red"
-                stroke-width="5%"/>
-          <line x1="25%" y1="75%"
-                x2="75%" y2="25%"
-                stroke="red"
-                stroke-width="5%"/>
-        </svg>
+			stroke="white" stroke-width="5%" fill="{{game.getColor(row, col)}}" />
+		</svg>-->
+		<svg ng-if="game.isPlayer0(row, col)" width="100%" height="100%">
+			<rect width="100%" height="100%" fill="red" />
+          <circle cx="50%" cy="50%" r="27%"
+			stroke="white" stroke-width="5%" fill="{{game.getColor(row, col)}}" />
+		</svg>
+		<svg ng-if="game.isPlayer1(row, col)" width="100%" height="100%">
+			<rect width="100%" height="100%" fill="blue" />
+          <circle cx="50%" cy="50%" r="27%"
+			stroke="white" stroke-width="5%" fill="{{game.getColor(row, col)}}" />
+		</svg>
       </div>
     </div>
   </div>

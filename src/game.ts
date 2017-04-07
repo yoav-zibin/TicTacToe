@@ -20,6 +20,7 @@ module game {
   // For community games.
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
+  export let colors : string[] = [];
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
@@ -32,6 +33,14 @@ module game {
       updateUI: updateUI,
       getStateForOgImage: null,
     });
+    colors[0] = "red";
+    colors[1] = "yellow";
+    colors[2] = "lime";
+    colors[3] = "aqua";
+    colors[4] = "blue";
+    colors[5] = "purple";
+    colors[6] = "gray";
+    colors[7] = "orange";
   }
 
   function registerServiceWorker() {
@@ -110,6 +119,8 @@ module game {
     state = params.state;
     if (isFirstMove()) {
       state = gameLogic.getInitialState();
+    } else {
+      gameLogic.checkMatch(state);
     }
     // We calculate the AI move only after the animation finishes,
     // because if we call aiService now
@@ -142,6 +153,10 @@ module game {
   }
 
   function makeMove(move: IMove) {
+    if (move.state.delta2 == null) {
+      log.info("game.makeMove -> expect 2nd click...");
+      return;
+    }
     if (didMakeMove) { // Only one move per updateUI
       return;
     }
@@ -150,17 +165,7 @@ module game {
     if (!proposals) {
       gameService.makeMove(move, null);
     } else {
-      let delta = move.state.delta;
-      let myProposal:IProposal = {
-        data: delta,
-        chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
-        playerInfo: yourPlayerInfo,
-      };
-      // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
-      if (proposals[delta.row][delta.col] < currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
-        move = null;
-      }
-      gameService.makeMove(move, myProposal);
+      // TODO implement community game later.
     }
   }
 
@@ -199,6 +204,7 @@ module game {
     try {
       nextMove = gameLogic.createMove(
           state, row, col, currentUpdateUI.turnIndex);
+      state = nextMove.state;
     } catch (e) {
       log.info(["Cell is already full in position:", row, col]);
       return;
@@ -207,25 +213,31 @@ module game {
     makeMove(nextMove);
   }
 
+  export function isShow(row: number, col: number): boolean {
+    return true;  
+    //return state.shownBoard[row][col] == -1;
+  }
+
+  export function isPlayer0(row: number, col: number): boolean {
+    return state.shownBoard[row][col] == 0;
+  }
+
+  export function isPlayer1(row: number, col: number): boolean {
+    return state.shownBoard[row][col] == 1;
+  }
+
   export function shouldShowImage(row: number, col: number): boolean {
-    return state.board[row][col] !== "" || isProposal(row, col);
-  }
-
-  function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
-    return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
-  }
-  
-  export function isPieceX(row: number, col: number): boolean {
-    return isPiece(row, col, 0, 'X');
-  }
-
-  export function isPieceO(row: number, col: number): boolean {
-    return isPiece(row, col, 1, 'O');
+    return state.shownBoard[row][col] !== -1 || isProposal(row, col);
   }
 
   export function shouldSlowlyAppear(row: number, col: number): boolean {
-    return state.delta &&
-        state.delta.row === row && state.delta.col === col;
+    return (state.delta1 && state.delta1.row === row && state.delta1.col === col) ||
+      (state.delta2 && state.delta2.row === row && state.delta2.col === col);
+  }
+
+  export function getColor(row : number, col : number): string {
+    let idx: number = state.board[row][col];
+    return colors[idx];
   }
 }
 

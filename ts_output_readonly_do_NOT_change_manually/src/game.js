@@ -14,6 +14,7 @@ var game;
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
+    game.colors = [];
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
@@ -25,6 +26,14 @@ var game;
             updateUI: updateUI,
             getStateForOgImage: null,
         });
+        game.colors[0] = "red";
+        game.colors[1] = "yellow";
+        game.colors[2] = "lime";
+        game.colors[3] = "aqua";
+        game.colors[4] = "blue";
+        game.colors[5] = "purple";
+        game.colors[6] = "gray";
+        game.colors[7] = "orange";
     }
     game.init = init;
     function registerServiceWorker() {
@@ -102,6 +111,9 @@ var game;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
         }
+        else {
+            gameLogic.checkMatch(game.state);
+        }
         // We calculate the AI move only after the animation finishes,
         // because if we call aiService now
         // then the animation will be paused until the javascript finishes.
@@ -131,6 +143,10 @@ var game;
         makeMove(move);
     }
     function makeMove(move) {
+        if (move.state.delta2 == null) {
+            log.info("game.makeMove -> expect 2nd click...");
+            return;
+        }
         if (game.didMakeMove) {
             return;
         }
@@ -139,17 +155,7 @@ var game;
             gameService.makeMove(move, null);
         }
         else {
-            var delta = move.state.delta;
-            var myProposal = {
-                data: delta,
-                chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
-                playerInfo: game.yourPlayerInfo,
-            };
-            // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
-            if (game.proposals[delta.row][delta.col] < game.currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
-                move = null;
-            }
-            gameService.makeMove(move, myProposal);
+            // TODO implement community game later.
         }
     }
     function isFirstMove() {
@@ -181,6 +187,7 @@ var game;
         var nextMove = null;
         try {
             nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
+            game.state = nextMove.state;
         }
         catch (e) {
             log.info(["Cell is already full in position:", row, col]);
@@ -190,26 +197,33 @@ var game;
         makeMove(nextMove);
     }
     game.cellClicked = cellClicked;
+    function isShow(row, col) {
+        return true;
+        //return state.shownBoard[row][col] == -1;
+    }
+    game.isShow = isShow;
+    function isPlayer0(row, col) {
+        return game.state.shownBoard[row][col] == 0;
+    }
+    game.isPlayer0 = isPlayer0;
+    function isPlayer1(row, col) {
+        return game.state.shownBoard[row][col] == 1;
+    }
+    game.isPlayer1 = isPlayer1;
     function shouldShowImage(row, col) {
-        return game.state.board[row][col] !== "" || isProposal(row, col);
+        return game.state.shownBoard[row][col] !== -1 || isProposal(row, col);
     }
     game.shouldShowImage = shouldShowImage;
-    function isPiece(row, col, turnIndex, pieceKind) {
-        return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
-    }
-    function isPieceX(row, col) {
-        return isPiece(row, col, 0, 'X');
-    }
-    game.isPieceX = isPieceX;
-    function isPieceO(row, col) {
-        return isPiece(row, col, 1, 'O');
-    }
-    game.isPieceO = isPieceO;
     function shouldSlowlyAppear(row, col) {
-        return game.state.delta &&
-            game.state.delta.row === row && game.state.delta.col === col;
+        return (game.state.delta1 && game.state.delta1.row === row && game.state.delta1.col === col) ||
+            (game.state.delta2 && game.state.delta2.row === row && game.state.delta2.col === col);
     }
     game.shouldSlowlyAppear = shouldSlowlyAppear;
+    function getColor(row, col) {
+        var idx = game.state.board[row][col];
+        return game.colors[idx];
+    }
+    game.getColor = getColor;
 })(game || (game = {}));
 angular.module('myApp', ['gameServices'])
     .run(['$rootScope', '$timeout',
