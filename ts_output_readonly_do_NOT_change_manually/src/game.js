@@ -111,6 +111,9 @@ var game;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
         }
+        else {
+            gameLogic.checkMatch(game.state);
+        }
         // We calculate the AI move only after the animation finishes,
         // because if we call aiService now
         // then the animation will be paused until the javascript finishes.
@@ -140,6 +143,10 @@ var game;
         makeMove(move);
     }
     function makeMove(move) {
+        if (move.state.delta2 == null) {
+            log.info("game.makeMove -> expect 2nd click...");
+            return;
+        }
         if (game.didMakeMove) {
             return;
         }
@@ -180,6 +187,7 @@ var game;
         var nextMove = null;
         try {
             nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
+            game.state = nextMove.state;
         }
         catch (e) {
             log.info(["Cell is already full in position:", row, col]);
@@ -190,8 +198,8 @@ var game;
     }
     game.cellClicked = cellClicked;
     function isShow(row, col) {
-        //return true;  
-        return game.state.shownBoard[row][col] == -1;
+        return true;
+        //return state.shownBoard[row][col] == -1;
     }
     game.isShow = isShow;
     function isPlayer0(row, col) {

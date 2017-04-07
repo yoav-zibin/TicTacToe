@@ -35,28 +35,20 @@
 		  ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
           ng-style="game.getCellStyle(row, col)"
           ng-if="game.shouldShowImage(row, col)">
-		<svg ng-if="game.isShow(row, col)" width="100%" height="100%">
+		<!--<svg ng-if="game.isShow(row, col)" width="100%" height="100%">
           <circle cx="50%" cy="50%" r="27%"
 			stroke="white" stroke-width="5%" fill="{{game.getColor(row, col)}}" />
-        </svg>
+		</svg>-->
 		<svg ng-if="game.isPlayer0(row, col)" width="100%" height="100%">
 			<rect width="100%" height="100%" fill="red" />
+          <circle cx="50%" cy="50%" r="27%"
+			stroke="white" stroke-width="5%" fill="{{game.getColor(row, col)}}" />
 		</svg>
 		<svg ng-if="game.isPlayer1(row, col)" width="100%" height="100%">
 			<rect width="100%" height="100%" fill="blue" />
+          <circle cx="50%" cy="50%" r="27%"
+			stroke="white" stroke-width="5%" fill="{{game.getColor(row, col)}}" />
 		</svg>
-        <!--<svg ng-if="game.isPieceO(row, col)"
-            id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <circle cx="50%" cy="50%" r="27%"
-            stroke="white" stroke-width="5%" fill="rgb" />
-        </svg>
-        <svg ng-if="game.isPieceX(row, col)"
-            id="{{'e2e_test_pieceX_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <circle cx="50%" cy="50%" r="27%"
-            stroke="white" stroke-width="5%" fill="rgb" />
-		</svg>-->
       </div>
     </div>
   </div>
