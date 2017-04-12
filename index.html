@@ -30,33 +30,6 @@
 </head>
 
 <body ng-cloak>
-	<!--div id="grid">
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-		<div class="cell"></div>
-	</div-->
 
 	<div id="gameArea">
 		<div id="boardArea" style="position:absolute; top:0; left:0; width:100%; height:60%">
@@ -83,8 +56,8 @@
 				 id="{{'e2e_test_shape_div_' + row + 'x' + col}}">
 				</div>
 			</div-->
-			<div ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]" style="position:absolute; top:{{row * 8.33}}%; left:0; width:100%; height:8.33%;">
-				<div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]" style="position:absolute; top:0; left:{{col * 4.34}}%; width:4.34%; height:100%;"
+			<div ng-repeat="row in game.getIntegersTill(12)" style="position:absolute; top:{{row * 8.33}}%; left:0; width:100%; height:8.33%;">
+				<div ng-repeat="col in game.getIntegersTill(23)" style="position:absolute; top:0; left:{{col * 4.34}}%; width:4.34%; height:100%;"
 				 ng-class="{l: true, t: true, r: col === 22, b: row === 11, blink:game.shapeNewlyPlaced(row, col)}" ng-style="game.setShapeAreaSquareStyle(row, col)"
 				 id="{{'e2e_test_shape_div_' + row + 'x' + col}}">
 				</div>
@@ -123,7 +96,6 @@
 			<button type="button" ng-show="game.showRotateRight()" ng-click="game.rotateRight()" class="text confirmBtn">RotateRight</button>
 			<button type="button" ng-show="game.showConfirmButton()" ng-click="game.confirmClicked()" ng-disabled="!game.checkLegal()"
 			 class="text confirmBtn">CONFIRM</button>
-
 		</div>
 	</div>
 </body>
