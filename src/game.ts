@@ -814,14 +814,25 @@ module game {
   }
 
   function getBoardSquareColor(row: number, col: number) {
+    // if (state.board[row][col] === '0') {
+    //   return '#33CCFF';
+    // } else if (state.board[row][col] === '1') {
+    //   return '#FF9900';
+    // } else if (state.board[row][col] === '2') {
+    //   return '#FF3399';
+    // } else if (state.board[row][col] === '3') {
+    //   return '#99FF33';
+    // } else {
+    //   return '#F0F0F0';
+    // }
     if (state.board[row][col] === '0') {
-      return '#33CCFF';
+      return '#ff0066';
     } else if (state.board[row][col] === '1') {
-      return '#FF9900';
+      return '#0066ff';
     } else if (state.board[row][col] === '2') {
-      return '#FF3399';
+      return '#00e600';
     } else if (state.board[row][col] === '3') {
-      return '#99FF33';
+      return '#ffc34d';
     } else {
       return '#F0F0F0';
     }
@@ -833,7 +844,8 @@ module game {
   }
 
   function getTurnColor() {
-    var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
+    // var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
+    var color = ['#ff0066', '#0066ff', '#00e600', '#ffc34d'];
     return color[currentUpdateUI.turnIndex];
   }
 
