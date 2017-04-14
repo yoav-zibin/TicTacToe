@@ -260,7 +260,11 @@ module gameLogic {
 
     let delta: BoardDelta = {row: row, col: col};
     let state: IState = {delta: delta, board: boardAfterMove};
-    return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
+    return {
+      endMatchScores: endMatchScores,
+      turnIndex: turnIndex,
+      state: state
+    };
   }
 
   /**

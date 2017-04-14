@@ -214,7 +214,11 @@ var gameLogic;
         }
         var delta = { row: row, col: col };
         var state = { delta: delta, board: boardAfterMove };
-        return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
+        return {
+            endMatchScores: endMatchScores,
+            turnIndex: turnIndex,
+            state: state
+        };
     }
     gameLogic.createMove = createMove;
     /**
