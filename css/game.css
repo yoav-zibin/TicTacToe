@@ -32,11 +32,18 @@ body {
 }
 
 .r {
-  border-right: 4pt solid black;
+  border-right: 2pt dashed brown; 
 }
 .b {
-  border-bottom: 4pt solid black;
+  border-bottom: 2pt dashed brown;
 }
+.l {
+  border-left: 2pt dashed brown;
+}
+.t {
+  border-top: 2pt dashed brown;
+}
+
 
 .slowlyAppear {
   animation: slowlyAppear 0.5s linear;

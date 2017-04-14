@@ -31849,7 +31849,7 @@ var game;
         return proposals;
     }
     function updateUI(params) {
-        log.info("Game got updateUI:", params);
+        log.info("Hey Nikita!! Game got updateUI:", params);
         var playerIdToProposal = params.playerIdToProposal;
         // Only one move/proposal per updateUI
         game.didMakeMove = playerIdToProposal && playerIdToProposal[game.yourPlayerInfo.playerId] != undefined;

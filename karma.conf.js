@@ -39,6 +39,5 @@ module.exports = function(config) {
             'karma-jasmine',
             'karma-coverage'
             ]
-
   });
 };
