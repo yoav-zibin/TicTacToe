@@ -9,6 +9,8 @@ interface IState {
   delta: BoardDelta;
 }
 
+// Red turn index = 0, Blue turn index = 1
+
 import gameService = gamingPlatform.gameService;
 import alphaBetaService = gamingPlatform.alphaBetaService;
 import translate = gamingPlatform.translate;
@@ -17,8 +19,8 @@ import log = gamingPlatform.log;
 import dragAndDropService = gamingPlatform.dragAndDropService;
 
 module gameLogic {
-  export const ROWS = 3;
-  export const COLS = 3;
+  export const ROWS = 8;
+  export const COLS = 8;
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   export function getInitialBoard(): Board {
@@ -29,6 +31,12 @@ module gameLogic {
         board[i][j] = '';
       }
     }
+ 
+    board[4][4] = 'R';
+    board[4][5] = 'B';
+    board[5][4] = 'B';
+    board[5][5] = 'R';
+    
     return board;
   }
 
@@ -36,63 +44,148 @@ module gameLogic {
     return {board: getInitialBoard(), delta: null};
   }
 
+
   /**
-   * Returns true if the game ended in a tie because there are no empty cells.
-   * E.g., isTie returns true for the following board:
-   *     [['X', 'O', 'X'],
-   *      ['X', 'O', 'O'],
-   *      ['O', 'X', 'X']]
-   */
-  function isTie(board: Board): boolean {
+   * calculates the number of red and blue pieces on the board  
+   * returns the scores as an array
+   */  
+  function getScores(board: Board): number[] {
+    let red: number = 0;
+    let blue: number = 0;
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
-        if (board[i][j] === '') {
-          // If there is an empty cell then we do not have a tie.
-          return false;
-        }
+         if(board[i][j] === 'R') {
+             red = red + 1;
+         }
+         else if(board[i][j] === 'B') {
+             blue = blue + 1;
+         }
       }
     }
-    // No empty cells, so we have a tie!
-    return true;
+    return [red, blue];
   }
 
   /**
-   * Return the winner (either 'X' or 'O') or '' if there is no winner.
-   * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-   * E.g., getWinner returns 'X' for the following board:
-   *     [['X', 'O', ''],
-   *      ['X', 'O', ''],
-   *      ['X', '', '']]
+   * Returns the winner of the game 
+   * R = Red, B = Blue, T = Tie 
    */
-  function getWinner(board: Board): string {
-    let boardString = '';
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        let cell = board[i][j];
-        boardString += cell === '' ? ' ' : cell;
-      }
+  function getWinner(scores : number[]) : string {
+    let blue: number = scores.pop();
+    let red: number = scores.pop();
+    
+    if(red < blue) {
+       return 'B';
+    } 
+    else if (blue < red) {
+       return 'R';
     }
-    let win_patterns = [
-      'XXX......',
-      '...XXX...',
-      '......XXX',
-      'X..X..X..',
-      '.X..X..X.',
-      '..X..X..X',
-      'X...X...X',
-      '..X.X.X..'
-    ];
-    for (let win_pattern of win_patterns) {
-      let x_regexp = new RegExp(win_pattern);
-      let o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
-      if (x_regexp.test(boardString)) {
-        return 'X';
-      }
-      if (o_regexp.test(boardString)) {
-        return 'O';
-      }
+    else {
+       return 'T';
     }
-    return '';
+  } 
+
+  //type PossibleMoves = BoardDelta[];
+
+  /**
+   * Returns a possible move from a particular i, j 
+   * in a particular direction specified by inci, incj
+   */
+  export function getPossibleMove(board: Board, i: number, j: number, inci: number, incj: number, turn: number): BoardDelta {
+       let other: string;
+       let curr: string;
+
+       if(turn == 0) {
+          curr = 'R';
+          other = 'B';
+       }
+       else {
+          curr = 'B';
+          other = 'R';
+       } 
+
+       if(i >= 0 && i < ROWS && j >= 0 && j < COLS && board[i][j] === other){
+            i = i + inci;
+            j = j + incj;
+
+            while(i >= 0 && i < ROWS && j >= 0 && j < COLS) {
+                if(board[i][j] === other) {
+                    i = i + inci;
+                    j = j + incj;
+                }
+                else if (board[i][j] === curr) {
+                    break;
+                }
+                else { // (board[i][j] === '')
+                    return {row: i, col: j};
+                }
+            }
+       } 
+
+       return {row: -1, col: -1};
+  }
+
+  /**
+   * Returns the set of all possible moves that can be performed by a player in the current move
+   */
+  export function getAllPossibleMoves(board: Board, turn: number) : BoardDelta[] {
+       let possibleMoves : BoardDelta[] = [];
+       let temp : BoardDelta;
+       let curr: string;
+
+       if(turn == 0) {
+          curr = 'R';
+       }
+       else {
+          curr = 'B';
+       } 
+
+       for (let i = 0; i < ROWS; i++) {
+         for (let j = 0; j < COLS; j++) {
+             if(board[i][j] == curr) {
+                 temp = getPossibleMove(board, i-1, j, -1, 0, turn);
+                 if(temp.row !== -1) {
+                     possibleMoves.push(temp);
+                 }
+
+                 temp = getPossibleMove(board, i+1, j, +1, 0, turn); 
+                 if(temp.row !== -1) {
+                     possibleMoves.push(temp);
+                 }
+
+                 temp = getPossibleMove(board, i-1, j-1, -1, -1, turn);
+                 if(temp.row !== -1) {
+                     possibleMoves.push(temp);
+                 }
+
+                 temp = getPossibleMove(board, i+1, j+1, +1, +1, turn); 
+                 if(temp.row !== -1) {
+                     possibleMoves.push(temp);
+                 }
+
+                 temp = getPossibleMove(board, i-1, j+1, -1, +1, turn);
+                 if(temp.row !== -1) {
+                     possibleMoves.push(temp);
+                 }
+
+                 temp = getPossibleMove(board, i+1, j-1, +1, -1, turn); 
+                 if(temp.row !== -1) {
+                     possibleMoves.push(temp);
+                 } 
+
+                 temp = getPossibleMove(board, i, j-1, 0, -1, turn);
+                 if(temp.row !== -1) {
+                     possibleMoves.push(temp);
+                 }
+
+                 temp = getPossibleMove(board, i, j+1, 0, +1, turn);
+                 if(temp.row !== -1) {
+                     possibleMoves.push(temp);
+                 } 
+             }
+         }
+       }    
+
+       return possibleMoves;
   }
 
   /**
@@ -104,32 +197,75 @@ module gameLogic {
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
+
     let board: Board = stateBeforeMove.board;
+
     if (board[row][col] !== '') {
       throw new Error("One can only make a move in an empty position!");
     }
-    if (getWinner(board) !== '' || isTie(board)) {
+
+    let allMovesRed : BoardDelta[] = getAllPossibleMoves(board, 0);
+    let allMovesBlue : BoardDelta[] = getAllPossibleMoves(board, 0);
+
+    if (allMovesRed.length <= 0 && allMovesBlue.length <= 0) {
       throw new Error("Can only make a move if the game is not over!");
     }
+
+    let found: boolean = false;
+    let len : number;
+    if(turnIndexBeforeMove === 0) {
+       len = allMovesRed.length;
+    }
+    else {
+      len = allMovesBlue.length;
+    }   
+
+    for(var i = 0; i < len; i++) {
+      if(turnIndexBeforeMove === 0) {
+         if (allMovesRed[i].row === row && allMovesRed[i].col === col) {
+           found = true;
+           break;
+        }  
+      }
+      else {
+        if (allMovesBlue[i].row === row && allMovesBlue[i].col === col) {
+           found = true;
+           break;
+        }   
+      }    
+    }
+    
+    if(found === false) {
+       throw new Error("Invalid Move!"); 
+    }
+
     let boardAfterMove = angular.copy(board);
-    boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
-    let winner = getWinner(boardAfterMove);
+
+    boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'R' : 'B';
     let endMatchScores: number[];
+    let winner : string = '';
     let turnIndex: number;
-    if (winner !== '' || isTie(boardAfterMove)) {
-      // Game over.
+
+    if (getAllPossibleMoves(boardAfterMove, 0).length <= 0 && getAllPossibleMoves(boardAfterMove, 1).length <= 0)  {
+      // Game over. No more moves possible
       turnIndex = -1;
-      endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
-    } else {
+      endMatchScores = getScores(boardAfterMove);
+      winner = getWinner(endMatchScores);
+    }
+    else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
       turnIndex = 1 - turnIndexBeforeMove;
       endMatchScores = null;
     }
+
     let delta: BoardDelta = {row: row, col: col};
     let state: IState = {delta: delta, board: boardAfterMove};
     return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
   }
-  
+
+  /**
+   * Returns the first move
+   */
   export function createInitialMove(): IMove {
     return {endMatchScores: null, turnIndex: 0, 
         state: getInitialState()};  

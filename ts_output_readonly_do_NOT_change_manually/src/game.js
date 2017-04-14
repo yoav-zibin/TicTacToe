@@ -12,7 +12,6 @@ var game;
     game.animationEndedTimeout = null;
     game.state = null;
     // For community games.
-    game.currentCommunityUI = null;
     game.proposals = null;
     game.yourPlayerInfo = null;
     function init($rootScope_, $timeout_) {
@@ -24,7 +23,6 @@ var game;
         resizeGameAreaService.setWidthToHeight(1);
         gameService.setGame({
             updateUI: updateUI,
-            communityUI: communityUI,
             getStateForOgImage: null,
         });
     }
@@ -46,44 +44,6 @@ var game;
     function getTranslations() {
         return {};
     }
-    function communityUI(communityUI) {
-        game.currentCommunityUI = communityUI;
-        log.info("Game got communityUI:", communityUI);
-        // If only proposals changed, then do NOT call updateUI. Then update proposals.
-        var nextUpdateUI = {
-            playersInfo: [],
-            playMode: communityUI.yourPlayerIndex,
-            numberOfPlayers: communityUI.numberOfPlayers,
-            state: communityUI.state,
-            turnIndex: communityUI.turnIndex,
-            endMatchScores: communityUI.endMatchScores,
-            yourPlayerIndex: communityUI.yourPlayerIndex,
-        };
-        if (angular.equals(game.yourPlayerInfo, communityUI.yourPlayerInfo) &&
-            game.currentUpdateUI && angular.equals(game.currentUpdateUI, nextUpdateUI)) {
-        }
-        else {
-            // Things changed, so call updateUI.
-            updateUI(nextUpdateUI);
-        }
-        // This must be after calling updateUI, because we nullify things there (like playerIdToProposal&proposals&etc)
-        game.yourPlayerInfo = communityUI.yourPlayerInfo;
-        var playerIdToProposal = communityUI.playerIdToProposal;
-        game.didMakeMove = !!playerIdToProposal[communityUI.yourPlayerInfo.playerId];
-        game.proposals = [];
-        for (var i = 0; i < gameLogic.ROWS; i++) {
-            game.proposals[i] = [];
-            for (var j = 0; j < gameLogic.COLS; j++) {
-                game.proposals[i][j] = 0;
-            }
-        }
-        for (var playerId in playerIdToProposal) {
-            var proposal = playerIdToProposal[playerId];
-            var delta = proposal.data;
-            game.proposals[delta.row][delta.col]++;
-        }
-    }
-    game.communityUI = communityUI;
     function isProposal(row, col) {
         return game.proposals && game.proposals[row][col] > 0;
     }
@@ -93,7 +53,7 @@ var game;
             return {};
         // proposals[row][col] is > 0
         var countZeroBased = game.proposals[row][col] - 1;
-        var maxCount = game.currentCommunityUI.numberOfPlayersRequiredToMove - 2;
+        var maxCount = game.currentUpdateUI.numberOfPlayersRequiredToMove - 2;
         var ratio = maxCount == 0 ? 1 : countZeroBased / maxCount; // a number between 0 and 1 (inclusive).
         // scale will be between 0.6 and 0.8.
         var scale = 0.6 + 0.2 * ratio;
@@ -105,9 +65,37 @@ var game;
         };
     }
     game.getCellStyle = getCellStyle;
+    function getProposalsBoard(playerIdToProposal) {
+        var proposals = [];
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            proposals[i] = [];
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                proposals[i][j] = 0;
+            }
+        }
+        for (var playerId in playerIdToProposal) {
+            var proposal = playerIdToProposal[playerId];
+            var delta = proposal.data;
+            proposals[delta.row][delta.col]++;
+        }
+        return proposals;
+    }
     function updateUI(params) {
-        log.info("Hey Nikita!! Game got updateUI:", params);
-        game.didMakeMove = false; // Only one move per updateUI
+        log.info("Game got updateUI:", params);
+        var playerIdToProposal = params.playerIdToProposal;
+        // Only one move/proposal per updateUI
+        game.didMakeMove = playerIdToProposal && playerIdToProposal[game.yourPlayerInfo.playerId] != undefined;
+        game.yourPlayerInfo = params.yourPlayerInfo;
+        game.proposals = playerIdToProposal ? getProposalsBoard(playerIdToProposal) : null;
+        if (playerIdToProposal) {
+            // If only proposals changed, then return.
+            // I don't want to disrupt the player if he's in the middle of a move.
+            // I delete playerIdToProposal field from params (and so it's also not in currentUpdateUI),
+            // and compare whether the objects are now deep-equal.
+            params.playerIdToProposal = null;
+            if (game.currentUpdateUI && angular.equals(game.currentUpdateUI, params))
+                return;
+        }
         game.currentUpdateUI = params;
         clearAnimationTimeout();
         game.state = params.state;
@@ -148,7 +136,7 @@ var game;
         }
         game.didMakeMove = true;
         if (!game.proposals) {
-            gameService.makeMove(move);
+            gameService.makeMove(move, null);
         }
         else {
             var delta = move.state.delta;
@@ -158,10 +146,10 @@ var game;
                 playerInfo: game.yourPlayerInfo,
             };
             // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
-            if (game.proposals[delta.row][delta.col] < game.currentCommunityUI.numberOfPlayersRequiredToMove - 1) {
+            if (game.proposals[delta.row][delta.col] < game.currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
                 move = null;
             }
-            gameService.communityMove(myProposal, move);
+            gameService.makeMove(move, myProposal);
         }
     }
     function isFirstMove() {
