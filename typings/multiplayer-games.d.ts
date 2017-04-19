@@ -1,3 +1,9 @@
+/**
+ * IMPORTANT: do not change anything in this file!
+ * This is the API between the game and the platform,
+ * and it cannot be changed.
+ */
+
 // This file describes all the services provided by the gaming platform.
 // See examples for the platform at:
 // https://friendlygo.com/
