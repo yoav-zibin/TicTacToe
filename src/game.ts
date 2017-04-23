@@ -25,7 +25,7 @@ module game {
   export let boardBeforeMove: Board = null;
   let clickToDragPiece: HTMLImageElement;
   export let hasDim = false;
-  export let dim = 20; //14
+  export let dim = 14; //20
 
   // For community games.
   export let proposals: number[][] = null;

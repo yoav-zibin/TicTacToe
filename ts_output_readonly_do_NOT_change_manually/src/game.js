@@ -17,7 +17,7 @@ var game;
     game.boardBeforeMove = null;
     var clickToDragPiece;
     game.hasDim = false;
-    game.dim = 20; //14
+    game.dim = 14; //20
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;

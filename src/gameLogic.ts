@@ -47,8 +47,8 @@ import log = gamingPlatform.log;
 import dragAndDropService = gamingPlatform.dragAndDropService;
 
 module gameLogic {
-  export const ROWS = 20; //14
-  export const COLS = 20; //14
+  export const ROWS = 14; //14
+  export const COLS = 14; //14
   export const OPERATIONS = 8;
   export const SHAPEHEIGHT = 5;
   export const SHAPEWIDTH = 5;

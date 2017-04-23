@@ -14,8 +14,8 @@ var log = gamingPlatform.log;
 var dragAndDropService = gamingPlatform.dragAndDropService;
 var gameLogic;
 (function (gameLogic) {
-    gameLogic.ROWS = 20; //14
-    gameLogic.COLS = 20; //14
+    gameLogic.ROWS = 14; //14
+    gameLogic.COLS = 14; //14
     gameLogic.OPERATIONS = 8;
     gameLogic.SHAPEHEIGHT = 5;
     gameLogic.SHAPEWIDTH = 5;
