@@ -51,6 +51,18 @@ var game;
         game.shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
     }
     game.init = init;
+    function getTranslations() {
+        return {
+            "CONFIRM": {
+                "en": "Confirm",
+                "zh": "确定"
+            },
+            "PASS": {
+                "en": "Pass",
+                "zh": "过"
+            }
+        };
+    }
     function getAreaSize(type) {
         var area = document.getElementById(type + "Area");
         /*
@@ -571,9 +583,6 @@ var game;
                 log.log('ServiceWorker registration failed: ', err);
             });
         }
-    }
-    function getTranslations() {
-        return {};
     }
     function isProposal(row, col) {
         return game.proposals && game.proposals[row][col] > 0;

@@ -126,3 +126,27 @@ td {
     height: 24px;
     width: 24px;    
 }
+
+.confirmBtn {
+  background-color: #27ae60 !important;
+  float: right;
+}
+
+.passBtn {
+  background-color: #e74c3c !important;
+  float: right;
+}
+
+.text {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  text-transform: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+}

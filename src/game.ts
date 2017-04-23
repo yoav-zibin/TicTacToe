@@ -1,8 +1,5 @@
 interface SupportedLanguages {
-  en: string, iw: string,
-  pt: string, zh: string,
-  el: string, fr: string,
-  hi: string, es: string,
+  en: string, zh: string
 };
 
 module game {
@@ -67,6 +64,19 @@ module game {
 
     // TODO
     shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
+  }
+
+  function getTranslations(): Translations {
+    return {
+      "CONFIRM": {
+        "en": "Confirm",
+        "zh": "确定"
+      },
+      "PASS": {
+        "en": "Pass",
+        "zh": "过"
+      }
+    };
   }
 
   function getAreaSize(type: string): { width: number; height: number; } {
@@ -646,10 +656,6 @@ module game {
         log.log('ServiceWorker registration failed: ', err);
       });
     }
-  }
-
-  function getTranslations(): Translations {
-    return {};
   }
 
   export function isProposal(row: number, col: number) {
