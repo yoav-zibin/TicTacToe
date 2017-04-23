@@ -137,11 +137,25 @@ td {
   float: right;
 }
 
-.text {
+.text:enabled {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   font-weight: 700;
   font-size: 20px;
   color: white;
+  text-align: center;
+  text-transform: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+}
+
+.text:disabled {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #95a5a6;
   text-align: center;
   text-transform: none;
   -webkit-user-select: none;
