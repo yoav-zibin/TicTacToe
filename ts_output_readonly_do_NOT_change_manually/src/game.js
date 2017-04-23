@@ -353,12 +353,12 @@ var game;
     }
     function updateboardAction(row, col) {
         var boardAction = gameLogic.getBoardActionFromShapeID(row, col, game.shapeIdChosen);
-        console.log(gameLogic.aux_printFrame(boardAction, 20));
+        console.log(gameLogic.aux_printFrame(boardAction, game.dim));
         if (!angular.equals(game.preview, boardAction)) {
             clearDrag('board', true);
             console.log("set board");
-            console.log(gameLogic.aux_printFrame(game.preview, 20));
-            console.log(gameLogic.aux_printFrame(boardAction, 20));
+            console.log(gameLogic.aux_printFrame(game.preview, game.dim));
+            console.log(gameLogic.aux_printFrame(boardAction, game.dim));
             //clearPreview
             setboardActionGroundColor(boardAction, getTurnColor());
             game.preview = boardAction;

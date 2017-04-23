@@ -411,14 +411,14 @@ module game {
   function updateboardAction(row: number, col: number) {
     let boardAction = gameLogic.getBoardActionFromShapeID(row, col, shapeIdChosen);
     
-    console.log(gameLogic.aux_printFrame(boardAction, 20));
+    console.log(gameLogic.aux_printFrame(boardAction, dim));
 
     if (!angular.equals(preview, boardAction)) {
       clearDrag('board', true);
       console.log("set board");
 
-      console.log(gameLogic.aux_printFrame(preview, 20));
-      console.log(gameLogic.aux_printFrame(boardAction, 20));
+      console.log(gameLogic.aux_printFrame(preview, dim));
+      console.log(gameLogic.aux_printFrame(boardAction, dim));
       //clearPreview
       setboardActionGroundColor(boardAction, getTurnColor());
       preview = boardAction;
