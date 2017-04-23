@@ -11,6 +11,8 @@ exports.config = {
     },
   }],
   baseUrl: 'http://localhost:9000/',
+  // Make sure you have the lastest chromedriver and save it in this directory.
+  chromeDriver: '/Applications/chromedriver', 
   directConnect: true,
   framework: 'jasmine',
   jasmineNodeOpts: {

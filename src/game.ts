@@ -146,21 +146,20 @@ module game {
       return;
     }
     didMakeMove = true;
-    
+    let delta = move.state.delta;
+    let chatDescription = '' + (delta.row + 1) + 'x' + (delta.col + 1);
     if (!proposals) {
-      gameService.makeMove(move, null);
+      gameService.makeMove(move, null, chatDescription);
     } else {
-      let delta = move.state.delta;
       let myProposal:IProposal = {
         data: delta,
-        chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
         playerInfo: yourPlayerInfo,
       };
       // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
       if (proposals[delta.row][delta.col] < currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
         move = null;
       }
-      gameService.makeMove(move, myProposal);
+      gameService.makeMove(move, myProposal, chatDescription);
     }
   }
 

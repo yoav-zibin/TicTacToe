@@ -135,21 +135,21 @@ var game;
             return;
         }
         game.didMakeMove = true;
+        var delta = move.state.delta;
+        var chatDescription = '' + (delta.row + 1) + 'x' + (delta.col + 1);
         if (!game.proposals) {
-            gameService.makeMove(move, null);
+            gameService.makeMove(move, null, chatDescription);
         }
         else {
-            var delta = move.state.delta;
             var myProposal = {
                 data: delta,
-                chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
                 playerInfo: game.yourPlayerInfo,
             };
             // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
             if (game.proposals[delta.row][delta.col] < game.currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
                 move = null;
             }
-            gameService.makeMove(move, myProposal);
+            gameService.makeMove(move, myProposal, chatDescription);
         }
     }
     function isFirstMove() {
