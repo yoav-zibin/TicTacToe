@@ -19,9 +19,9 @@
 
 	<div id="gameArea">
 		<div id="boardArea" style="position:absolute; top:0; left:0; width:100%; height:60%">
-			<div ng-repeat="row in game.getIntegersTill(20)" style="position:absolute; top:{{row * 5}}%; left:0; width:100%; height:5%;">
-				<div ng-repeat="col in game.getIntegersTill(20)" style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;"
-				 ng-class="{l: true, t: true, r: col === 19, b: row === 19, blink:newlyPlaced(row, col)}" ng-style="game.setBoardAreaSquareStyle(row, col)"
+			<div ng-repeat="row in game.getIntegersTill(14)" style="position:absolute; top:{{row * 7.14}}%; left:0; width:100%; height:7.14%;">
+				<div ng-repeat="col in game.getIntegersTill(14)" style="position:absolute; top:0; left:{{col * 7.14}}%; width:7.14%; height:100%;"
+				 ng-class="{l: true, t: true, r: col === 13, b: row === 13, blink:newlyPlaced(row, col)}" ng-style="game.setBoardAreaSquareStyle(row, col)"
 				 id="{{'e2e_test_board_div_' + row + 'x' + col}}">
 				</div>
 			</div>
@@ -75,13 +75,21 @@
 		</div-->
 
 		<div class="buttonArea" ng-hide="game.hidePassButton" style="position:absolute; top:93%; left:0; width:100%; height:7%">
-			<button type="button" ng-hide="game.shouldHidePassButton()" ng-click="game.passClicked()" class="{{game.getPassBtnClasses()}}"
-			 ng-disabled="!game.isPassBtnEnabled()">PASS</button>
-			<button type="button" ng-show="game.showRotateLeft()" ng-click="game.rotateLeft()" src="icon/rotate-left.png">RotateLeft</button>
-			<button type="button" ng-show="game.showFlip()" ng-click="game.flip()">Flip</button>
-			<button type="button" ng-show="game.showRotateRight()" ng-click="game.rotateRight()"">RotateRight</button>
-			<button type="button" ng-show="game.showConfirmButton()" ng-click="game.confirmClicked()" ng-disabled="!game.checkLegal()"
-			 class="text confirmBtn">CONFIRM</button>
+			<!--<button type="button" ng-hide="game.shouldHidePassButton()" ng-click="game.passClicked()" class="{{game.getPassBtnClasses()}}"
+			 ng-disabled="!game.isPassBtnEnabled()">PASS</button>-->
+			 <button type="button"
+                    ng-hide="game.shouldHidePassButton()" 
+                    ng-click="game.passClicked()" 
+                    class="text passBtn"
+                    ng-disabled="!game.isPassBtnEnabled()">{{'PASS' | translate}}</button>
+			<button type="button" ng-show="game.showRotateLeft()" ng-click="game.rotateLeft()"><img ng-src="icon/rotate-left-small.png"/></button>
+			<button type="button" ng-show="game.showFlip()" ng-click="game.flip()"><img ng-src="icon/flip-small.png"/></button>
+			<button type="button" ng-show="game.showRotateRight()" ng-click="game.rotateRight()" ><img ng-src="icon/rotate-right-small.png"/></button>
+			<button type="button"
+                    ng-show="game.showConfirmButton()" 
+                    ng-click="game.confirmClicked()" 
+					ng-disabled="!game.checkLegal()"
+                    class="text confirmBtn">{{'CONFIRM' | translate}}</button>
 		</div>
 	</div>
 </body>

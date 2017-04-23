@@ -31646,8 +31646,8 @@ var log = gamingPlatform.log;
 var dragAndDropService = gamingPlatform.dragAndDropService;
 var gameLogic;
 (function (gameLogic) {
-    gameLogic.ROWS = 20; //14
-    gameLogic.COLS = 20; //14
+    gameLogic.ROWS = 14; //14
+    gameLogic.COLS = 14; //14
     gameLogic.OPERATIONS = 8;
     gameLogic.SHAPEHEIGHT = 5;
     gameLogic.SHAPEWIDTH = 5;
@@ -32712,7 +32712,7 @@ var game;
     game.boardBeforeMove = null;
     var clickToDragPiece;
     game.hasDim = false;
-    game.dim = 20; //14
+    game.dim = 14; //20
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -32746,6 +32746,18 @@ var game;
         game.shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
     }
     game.init = init;
+    function getTranslations() {
+        return {
+            "CONFIRM": {
+                "en": "Confirm",
+                "zh": "确定"
+            },
+            "PASS": {
+                "en": "Pass",
+                "zh": "过"
+            }
+        };
+    }
     function getAreaSize(type) {
         var area = document.getElementById(type + "Area");
         /*
@@ -33048,12 +33060,12 @@ var game;
     }
     function updateboardAction(row, col) {
         var boardAction = gameLogic.getBoardActionFromShapeID(row, col, game.shapeIdChosen);
-        console.log(gameLogic.aux_printFrame(boardAction, 20));
+        console.log(gameLogic.aux_printFrame(boardAction, game.dim));
         if (!angular.equals(game.preview, boardAction)) {
             clearDrag('board', true);
             console.log("set board");
-            console.log(gameLogic.aux_printFrame(game.preview, 20));
-            console.log(gameLogic.aux_printFrame(boardAction, 20));
+            console.log(gameLogic.aux_printFrame(game.preview, game.dim));
+            console.log(gameLogic.aux_printFrame(boardAction, game.dim));
             //clearPreview
             setboardActionGroundColor(boardAction, getTurnColor());
             game.preview = boardAction;
@@ -33266,9 +33278,6 @@ var game;
                 log.log('ServiceWorker registration failed: ', err);
             });
         }
-    }
-    function getTranslations() {
-        return {};
     }
     function isProposal(row, col) {
         return game.proposals && game.proposals[row][col] > 0;
