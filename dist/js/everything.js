@@ -32752,9 +32752,9 @@ var game;
                 "en": "Confirm",
                 "zh": "确定"
             },
-            "PASS": {
-                "en": "Pass",
-                "zh": "过"
+            "CANCEL": {
+                "en": "Cancel",
+                "zh": "取消"
             }
         };
     }

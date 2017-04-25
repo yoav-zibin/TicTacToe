@@ -81,7 +81,7 @@
                     ng-hide="game.shouldHidePassButton()" 
                     ng-click="game.passClicked()" 
                     class="text passBtn"
-                    ng-disabled="!game.isPassBtnEnabled()">{{'PASS' | translate}}</button>
+                    ng-disabled="!game.isPassBtnEnabled()">{{'CANCEL' | translate}}</button>
 			<button type="button" ng-show="game.showRotateLeft()" ng-click="game.rotateLeft()"><img ng-src="../icon/rotate-left-small.png"/></button>
 			<button type="button" ng-show="game.showFlip()" ng-click="game.flip()"><img ng-src="../icon/flip-small.png"/></button>
 			<button type="button" ng-show="game.showRotateRight()" ng-click="game.rotateRight()" ><img ng-src="../icon/rotate-right-small.png"/></button>
