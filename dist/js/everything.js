@@ -32742,7 +32742,6 @@ var game;
             updateUI: updateUI,
             getStateForOgImage: null,
         });
-        // TODO
         game.shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
     }
     game.init = init;
