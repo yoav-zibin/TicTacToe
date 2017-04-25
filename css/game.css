@@ -52,31 +52,31 @@ td {
 }
 
 .r {
-  border-right: 1pt solid black;
+  border-right: 1pt solid #7f8c8d;
 }
 .t {
-  border-top: 1pt solid black;
+  border-top: 1pt solid #7f8c8d;
 }
 
 .l {
-  border-left: 1pt solid black;
+  border-left: 1pt solid #7f8c8d;
 }
 
 .b {
-  border-bottom: 1pt solid black;
+  border-bottom: 1pt solid #7f8c8d;
 }
 .white_t{
-	border-top: 1pt solid black;
+	border-top: 1pt solid #7f8c8d;
 }
 
 .white_b{
-	border-bottom: 1pt solid black;
+	border-bottom: 1pt solid #7f8c8d;
 }
 .white_l{
-	border-left: 1pt solid black;
+	border-left: 1pt solid #7f8c8d;
 }
 .white_r{
-	border-right: 1pt solid black;
+	border-right: 1pt solid #7f8c8d;
 }
 .slowlyAppear {
     animation-name: toRed;
@@ -140,7 +140,7 @@ td {
 .text:enabled {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 15px;
   color: white;
   text-align: center;
   text-transform: none;
@@ -154,7 +154,7 @@ td {
 .text:disabled {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 15px;
   color: #95a5a6;
   text-align: center;
   text-transform: none;

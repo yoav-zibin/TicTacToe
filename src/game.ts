@@ -62,7 +62,6 @@ module game {
       getStateForOgImage: null,
     });
 
-    // TODO
     shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
   }
 
