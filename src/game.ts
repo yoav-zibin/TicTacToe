@@ -132,7 +132,7 @@ module game {
   }
 
   function printBoardAnchor() {
-    anchorBoard = gameLogic.getBoardAnchor(state.board, currentUpdateUI.turnIndex);
+    anchorBoard = gameLogic.getBoardAnchor(state.board, state.anchorStatus, currentUpdateUI.turnIndex);
     //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
     setboardActionGroundColor(anchorBoard, getHintColor());
   }
