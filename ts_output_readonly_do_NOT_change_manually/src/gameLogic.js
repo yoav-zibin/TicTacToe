@@ -79,7 +79,8 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0],
             },
             {
                 id: 1, row: -1, column: -1,
@@ -87,7 +88,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0],
             },
             {
                 id: 2, row: -1, column: -1,
@@ -95,7 +97,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 3, row: -1, column: -1,
@@ -103,7 +106,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 4, row: -1, column: -1,
@@ -111,7 +115,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '1', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 5, row: -1, column: -1,
@@ -119,7 +124,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '1', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 6, row: -1, column: -1,
@@ -127,7 +133,8 @@ var gameLogic;
                     ['0', '0', '0', '1', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 7, row: -1, column: -1,
@@ -135,7 +142,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 8, row: -1, column: -1,
@@ -143,7 +151,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '1', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 9, row: -1, column: -1,
@@ -151,7 +160,8 @@ var gameLogic;
                     ['0', '1', '0', '0', '0'],
                     ['0', '1', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 10, row: -1, column: -1,
@@ -159,7 +169,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 11, row: -1, column: -1,
@@ -167,7 +178,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 12, row: -1, column: -1,
@@ -175,7 +187,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '1'],
                     ['0', '1', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 13, row: -1, column: -1,
@@ -183,7 +196,8 @@ var gameLogic;
                     ['0', '0', '0', '1', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '1', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 14, row: -1, column: -1,
@@ -191,7 +205,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '1', '0', '0']]
+                    ['0', '0', '1', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 15, row: -1, column: -1,
@@ -199,7 +214,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '1', '1', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 16, row: -1, column: -1,
@@ -207,7 +223,8 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '1', '1', '0', '0'],
                     ['0', '1', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 17, row: -1, column: -1,
@@ -215,7 +232,8 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '1', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 18, row: -1, column: -1,
@@ -223,7 +241,8 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '1', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 19, row: -1, column: -1,
@@ -231,7 +250,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0],
             },
             {
                 id: 20, row: -1, column: -1,
@@ -239,7 +259,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             }
         ];
         return shapes;
@@ -624,7 +645,7 @@ var gameLogic;
         return true;
     }
     gameLogic.checkSquareAdj = checkSquareAdj;
-    function getBoardAnchor(board, turnIndexBeforeMove) {
+    function getBoardAnchor(board, anchorStatus, turnIndexBeforeMove) {
         var boardAnchor = [];
         // fill the shape matrix into the board;
         for (var i = 0; i < gameLogic.ROWS; i++) {
@@ -637,9 +658,11 @@ var gameLogic;
         //console.log("[getBoardAnchor]", possibleAnchors);
         //aux_printCoordinator(possibleAnchors);
         for (var i = 0; i < possibleAnchors.length; i++) {
-            var coord = gameLogic.parseIJ(possibleAnchors[i]);
-            //console.log(coord);
-            boardAnchor[coord[0]][coord[1]] = '1';
+            if (anchorStatus[turnIndexBeforeMove][possibleAnchors[i]]) {
+                var coord = gameLogic.parseIJ(possibleAnchors[i]);
+                //console.log(coord);
+                boardAnchor[coord[0]][coord[1]] = '1';
+            }
         }
         //console.log(aux_printFrame(boardAnchor, COLS));
         return boardAnchor;
@@ -724,7 +747,8 @@ var gameLogic;
         if (checkStrong && !checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
             return false;
         }
-        if (!checkSquareOverlap(board, boardAction)) {
+        // add checkStrong here to make overlap possible, add check in the confirm phase
+        if (checkStrong && !checkSquareOverlap(board, boardAction)) {
             return false;
         }
         return true;
@@ -779,6 +803,49 @@ var gameLogic;
         }
         return corners;
     }
+    function getNextPossibleMoveList(prevAnchor, board, shapeStatus, turnIndexBeforeMove) {
+        var retList = [];
+        var anchors = getRecomandAnchor(board, turnIndexBeforeMove);
+        var freeShapeIds = [];
+        var allshape = getInitShapes();
+        for (var i = 0; i < gameLogic.SHAPENUMBER; i++) {
+            if (shapeStatus[turnIndexBeforeMove][i] === true) {
+                freeShapeIds.push(i);
+            }
+        }
+        var hasMove = false;
+        for (var t = 0; t < anchors.length; t++) {
+            var anchor = anchors[t];
+            if (prevAnchor[turnIndexBeforeMove][anchor] === false) {
+                continue;
+            }
+            var row = parseIJ(anchor)[0];
+            var col = parseIJ(anchor)[1];
+            for (var id = 0; id < freeShapeIds.length; id++) {
+                var shapeId = freeShapeIds[id];
+                var stdShape = allshape[shapeId];
+                for (var _i = 0, _a = stdShape.ops; _i < _a.length; _i++) {
+                    var op = _a[_i];
+                    var shape = getShapeByTypeAndOperation(freeShapeIds[id], op);
+                    var realShapeId = shapeId * gameLogic.OPERATIONS + op;
+                    var corners = getAllCorners(shape);
+                    for (var c = 0; c < corners.length; c++) {
+                        var frameX = corners[c][0];
+                        var frameY = corners[c][1];
+                        var action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
+                        if (action.valid) {
+                            hasMove = true;
+                            retList.push({ row: action.row, col: action.col, shapeId: realShapeId });
+                        }
+                    }
+                }
+            }
+            // add it to invalid anchor, and purning these anchors for latter search
+            prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
+        }
+        return { anchorStatus: prevAnchor, valid: hasMove, moves: retList };
+    }
+    gameLogic.getNextPossibleMoveList = getNextPossibleMoveList;
     /**
      * find a possible next move for this turn user
      * @param board
@@ -805,8 +872,12 @@ var gameLogic;
             var row = parseIJ(anchor)[0];
             var col = parseIJ(anchor)[1];
             for (var id = 0; id < freeShapeIds.length; id++) {
-                for (var op = 0; op < gameLogic.OPERATIONS; op++) {
-                    var shapeId = freeShapeIds[id];
+                var shapeId = freeShapeIds[id];
+                var stdShape = allshape[shapeId];
+                for (var _i = 0, _a = stdShape.ops; _i < _a.length; _i++) {
+                    var op = _a[_i];
+                    //for (let op = 0; op < OPERATIONS; op++) {
+                    //et shapeId: number = freeShapeIds[id];
                     var shape = getShapeByTypeAndOperation(freeShapeIds[id], op);
                     var realShapeId = shapeId * gameLogic.OPERATIONS + op;
                     var corners = getAllCorners(shape);
@@ -820,8 +891,8 @@ var gameLogic;
                     }
                 }
             }
+            // add it to invalid anchor, and purning these anchors for latter search
             prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
-            // TODO add it to invalid anchor, and purning these anchors for latter search
         }
         return { anchorStatus: prevAnchor, board: retBoard, valid: false, shapeId: -1, row: -1, col: -1 };
     }

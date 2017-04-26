@@ -23,6 +23,8 @@ module game {
   let clickToDragPiece: HTMLImageElement;
   export let hasDim = false;
   export let dim = 14; //20
+  export const SHAPEROW = 12;
+  export const SHAPECOL = 23;
 
   // For community games.
   export let proposals: number[][] = null;
@@ -130,7 +132,7 @@ module game {
   }
 
   function printBoardAnchor() {
-    anchorBoard = gameLogic.getBoardAnchor(state.board, currentUpdateUI.turnIndex);
+    anchorBoard = gameLogic.getBoardAnchor(state.board, state.anchorStatus, currentUpdateUI.turnIndex);
     //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
     setboardActionGroundColor(anchorBoard, getHintColor());
   }
@@ -198,7 +200,10 @@ module game {
       if (!angular.equals(preview, boardAction)) {
         clearDrag('board', false);
         console.log("set board");
-        setboardActionGroundColor(boardAction, getTurnColor());
+
+        setboardActionGroundColor(boardAction, getTurnColorForMove());
+        
+        //setboardActionGroundColor(boardAction, getTurnColor());
         preview = boardAction;
       }
       canConfirm = true;
@@ -244,7 +249,7 @@ module game {
     }
     if (type === 'shape') {
       //TODO to const
-      return { rowsNum: 12, colsNum: 23 };
+      return { rowsNum: SHAPEROW, colsNum: SHAPECOL };
     }
   }
 
@@ -289,55 +294,6 @@ module game {
     // obsolete
     //clickToDragPiece.style.display = "none";
   }
-  //TODO game.ts 92-188
-  // After shape matrix is got, draw shape in board area, draggable
-  /*
-  function handleDragEvent(type: any, clientX: any, clientY: any, shapeMatrix: any) {
-    if (!isHumanTurn() || passes == 2) {
-      return; // if the game is over, do not display dragging effect
-    }
-    if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
-      moveToConfirm = null;
-      $rootScope.$apply();
-    }
-    // Center point in boardArea
-    let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
-    let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
-    // TODO Is outside boardArea? board edges - 2
-    let button = document.getElementById("button");
-    if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
-      // clearClickToDrag();
-      return;
-    }
-    // Inside boardArea. Let's find the containing square's row and col
-    let col = Math.floor(dim * x / boardArea.clientWidth);
-    let row = Math.floor(dim * y / boardArea.clientHeight);
-    // TODO if the cell matrix is not empty, don't preview the piece
-
-    if ((state.board[row][col] !== '' && deadBoard == null) ||
-      (state.board[row][col] == '' && deadBoard != null)) {
-      clearClickToDrag();
-      return;
-    }
-    //clickToDragPiece.style.display = deadBoard == null ? "inline" : "none";
-    let centerXY = getSquareCenterXY(row, col);
-    // show the piece
-    //let cell = document.getElementById('board' + row + 'x' + col).className = $scope.turnIndex === 0 ? 'black' : 'white';
-
-    let topLeft = getSquareTopLeft(row, col);
-    clickToDragPiece.style.left = topLeft.left + "px";
-    clickToDragPiece.style.top = topLeft.top + "px";
-    if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
-      // drag ended
-      dragDone(row, col);
-    }
-  }
-  */
-  /*
-  function clearClickToDrag() {
-    clickToDragPiece.style.display = "none";
-  }
-  */
 
   function getSquareCenterXY(row: number, col: number) {
     let size = getSquareWidthHeight();
@@ -378,19 +334,6 @@ module game {
     };
   }
 
-  /*
-  function dragDone(row: number, col: number) {
-    $rootScope.$apply(function () {
-      if (deadBoard == null) {
-        // moveToConfirm = {row: row, col: col};
-      } else {
-        // toggleDead(row, col);
-        clearClickToDrag();
-      }
-    });
-  }
-  */
-
   function getShapeNum(row: number, col: number): number {
     if (row >= 0 && row < shapeBoard.cellToShape.length && col >= 0 && col < shapeBoard.cellToShape[0].length)
       return shapeBoard.cellToShape[row][col];
@@ -419,7 +362,7 @@ module game {
 
   function updateboardAction(row: number, col: number) {
     let boardAction = gameLogic.getBoardActionFromShapeID(row, col, shapeIdChosen);
-    
+
     console.log(gameLogic.aux_printFrame(boardAction, dim));
 
     if (!angular.equals(preview, boardAction)) {
@@ -429,7 +372,9 @@ module game {
       console.log(gameLogic.aux_printFrame(preview, dim));
       console.log(gameLogic.aux_printFrame(boardAction, dim));
       //clearPreview
-      setboardActionGroundColor(boardAction, getTurnColor());
+      //setboardActionGroundColor(boardAction, getTurnColor());
+      setboardActionGroundColor(boardAction, getTurnColorForMove());
+      
       preview = boardAction;
     }
     canConfirm = true;
@@ -481,7 +426,7 @@ module game {
   export function cancelClicked() {
     clearClickToDrag();
   }
-  
+
   export function showConfirmButton() {
     return checkLegal();
   }
@@ -514,19 +459,19 @@ module game {
       currentUpdateUI.turnIndex, moveToConfirm.shapeId, true);
   }
 
-  export function newlyPlaced(row:number, col:number) {
-		/*for the initial state, there is no newly added square*/
+  export function newlyPlaced(row: number, col: number) {
+    /*for the initial state, there is no newly added square*/
     if (preview === undefined || preview.length <= 0) {
-			return false;
-		}
-
-		if(preview[row][col] === '1') {
-        return true;
+      return false;
     }
-		return false;
-	}
 
-  export function shapeNewlyPlaced(row:number, col:number) {
+    if (preview[row][col] === '1') {
+      return true;
+    }
+    return false;
+  }
+
+  export function shapeNewlyPlaced(row: number, col: number) {
     if (shapeBoard === undefined || shapeBoard.cellToShape.length <= 0) {
       return false;
     }
@@ -537,14 +482,14 @@ module game {
     return false;
   }
 
-  function getShapeIdAfter(right:boolean, left:boolean, flip:boolean) {
+  function getShapeIdAfter(right: boolean, left: boolean, flip: boolean) {
     if (shapeIdChosen === undefined || shapeIdChosen < 0) {
       return -1;
     }
-    
-    let originShapeId:number = gameLogic.getShapeType(shapeIdChosen);
-    let operationType:number = gameLogic.getShapeOpType(shapeIdChosen);
-    
+
+    let originShapeId: number = gameLogic.getShapeType(shapeIdChosen);
+    let operationType: number = gameLogic.getShapeOpType(shapeIdChosen);
+
     let rotation: number = operationType % 4;
     // only vertical flip. Horizontal flip <=> vertical flip + 180 rotation.
     let currentFlip: boolean = operationType >= 4;
@@ -552,12 +497,12 @@ module game {
       currentFlip = !currentFlip;
     }
 
-    let addon:number = 0;
+    let addon: number = 0;
     if (left) {
-      addon ++;
+      addon++;
     }
     if (right) {
-      addon --;
+      addon--;
     }
 
     if (currentFlip) {
@@ -570,7 +515,7 @@ module game {
     return shapeIdChosen;
   }
 
-  export function RotateAndFlip(left:boolean, right:boolean, flip:boolean) {
+  export function RotateAndFlip(left: boolean, right: boolean, flip: boolean) {
     if (!(showFlip() || showRotateLeft() || showRotateRight())) {
       return;
     }
@@ -860,6 +805,11 @@ module game {
     return color[currentUpdateUI.turnIndex];
   }
 
+  function getTurnColorForMove() {
+    var color = ['#f481b3', '#81b1f9', '#00e600', '#ffc34d'];
+    return color[currentUpdateUI.turnIndex];
+  }
+
   export function setShapeAreaSquareStyle(row: number, col: number) {
     let shapeId: number = shapeBoard.cellToShape[row][col]
     //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
@@ -875,7 +825,6 @@ module game {
     }
     return { background: '#F0F0F0' };
   }
-
 
   /* 
   export function shouldShowImage(row: number, col: number): boolean {
@@ -908,26 +857,3 @@ var app = angular.module('myApp', ['gameServices'/*,'ngScrollable'*/])
       $rootScope['game'] = game;
       game.init($rootScope, $timeout);
     }]);
-/*
-app.controller('Demo', function ($scope:any) {
-	'use strict';
-
-	$scope.posX = 0;
-	$scope.posY = 0;
-
-	$scope.moveX = function (pixels: any) {
-		$scope.posX = $scope.posX + pixels;
-	};
-	$scope.moveY = function (pixels : any) {
-		$scope.posY = $scope.posY + pixels;
-	};
-	$scope.$evalAsync(function () {
-		$scope.$broadcast('content.changed', 1000);
-	});
-
-	$scope.center = function () {
-		$scope.posX = 600;
-		$scope.posY = 410;
-	};
-});
-*/

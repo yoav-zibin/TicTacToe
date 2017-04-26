@@ -33,9 +33,15 @@ module aiService {
     */
     
     try {
-      //TODO should return all possible nextstep rather than just one
-      let nextstep = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
-      possibleMoves.push(gameLogic.createMove(state, nextstep.row, nextstep.col, nextstep.shapeId, turnIndexBeforeMove));
+
+      let nextmoves = gameLogic.getNextPossibleMoveList(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
+      if (nextmoves.valid) {
+        state.anchorStatus = nextmoves.anchorStatus
+        for (let move of nextmoves.moves) {
+          possibleMoves.push(gameLogic.createMove(state, move.row, move.col, move.shapeId, turnIndexBeforeMove));
+        }
+      }
+      
     } catch (e) {
 
     }
