@@ -33258,19 +33258,24 @@ var game;
         game.shapeIdChosen = -1;
     }
     game.clearClickToDrag = clearClickToDrag;
-    function isPassBtnEnabled() {
+    function isCancelBtnEnabled() {
         return true;
     }
-    game.isPassBtnEnabled = isPassBtnEnabled;
+    game.isCancelBtnEnabled = isCancelBtnEnabled;
     //TODO
-    function passClicked() {
+    function cancelClicked() {
         clearClickToDrag();
     }
-    game.passClicked = passClicked;
+    game.cancelClicked = cancelClicked;
     function showConfirmButton() {
-        return game.moveToConfirm !== null;
+        return checkLegal();
     }
     game.showConfirmButton = showConfirmButton;
+    function showCancelButton() {
+        // TODO only show cancel when some block is chosen
+        return true;
+    }
+    game.showCancelButton = showCancelButton;
     /*
     export function showRotateAndFlip() {
       return moveToConfirm !== null; // TODO check flip state

@@ -473,17 +473,22 @@ module game {
     shapeIdChosen = -1
   }
 
-  export function isPassBtnEnabled() {
+  export function isCancelBtnEnabled() {
     return true;
   }
 
   //TODO
-  export function passClicked() {
+  export function cancelClicked() {
     clearClickToDrag();
   }
   
   export function showConfirmButton() {
-    return moveToConfirm !== null;
+    return checkLegal();
+  }
+
+  export function showCancelButton() {
+    // TODO only show cancel when some block is chosen
+    return true;
   }
 
   /*
