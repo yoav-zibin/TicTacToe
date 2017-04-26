@@ -835,7 +835,8 @@ module gameLogic {
       return false;
     }
 
-    if (!checkSquareOverlap(board, boardAction)) {
+    // add checkStrong here to make overlap possible, add check in the confirm phase
+    if (checkStrong && !checkSquareOverlap(board, boardAction)) {
       return false;
     }
 

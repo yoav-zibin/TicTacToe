@@ -32,8 +32,14 @@ var aiService;
         }
         */
         try {
-            var nextstep = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
-            possibleMoves.push(gameLogic.createMove(state, nextstep.row, nextstep.col, nextstep.shapeId, turnIndexBeforeMove));
+            var nextmoves = gameLogic.getNextPossibleMoveList(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
+            if (nextmoves.valid) {
+                state.anchorStatus = nextmoves.anchorStatus;
+                for (var _i = 0, _a = nextmoves.moves; _i < _a.length; _i++) {
+                    var move = _a[_i];
+                    possibleMoves.push(gameLogic.createMove(state, move.row, move.col, move.shapeId, turnIndexBeforeMove));
+                }
+            }
         }
         catch (e) {
         }

@@ -200,7 +200,10 @@ module game {
       if (!angular.equals(preview, boardAction)) {
         clearDrag('board', false);
         console.log("set board");
-        setboardActionGroundColor(boardAction, getTurnColor());
+
+        setboardActionGroundColor(boardAction, getTurnColorForMove());
+        
+        //setboardActionGroundColor(boardAction, getTurnColor());
         preview = boardAction;
       }
       canConfirm = true;
@@ -359,7 +362,7 @@ module game {
 
   function updateboardAction(row: number, col: number) {
     let boardAction = gameLogic.getBoardActionFromShapeID(row, col, shapeIdChosen);
-    
+
     console.log(gameLogic.aux_printFrame(boardAction, dim));
 
     if (!angular.equals(preview, boardAction)) {
@@ -369,7 +372,9 @@ module game {
       console.log(gameLogic.aux_printFrame(preview, dim));
       console.log(gameLogic.aux_printFrame(boardAction, dim));
       //clearPreview
-      setboardActionGroundColor(boardAction, getTurnColor());
+      //setboardActionGroundColor(boardAction, getTurnColor());
+      setboardActionGroundColor(boardAction, getTurnColorForMove());
+      
       preview = boardAction;
     }
     canConfirm = true;
@@ -421,7 +426,7 @@ module game {
   export function cancelClicked() {
     clearClickToDrag();
   }
-  
+
   export function showConfirmButton() {
     return checkLegal();
   }
@@ -454,19 +459,19 @@ module game {
       currentUpdateUI.turnIndex, moveToConfirm.shapeId, true);
   }
 
-  export function newlyPlaced(row:number, col:number) {
-		/*for the initial state, there is no newly added square*/
+  export function newlyPlaced(row: number, col: number) {
+    /*for the initial state, there is no newly added square*/
     if (preview === undefined || preview.length <= 0) {
-			return false;
-		}
-
-		if(preview[row][col] === '1') {
-        return true;
+      return false;
     }
-		return false;
-	}
 
-  export function shapeNewlyPlaced(row:number, col:number) {
+    if (preview[row][col] === '1') {
+      return true;
+    }
+    return false;
+  }
+
+  export function shapeNewlyPlaced(row: number, col: number) {
     if (shapeBoard === undefined || shapeBoard.cellToShape.length <= 0) {
       return false;
     }
@@ -477,14 +482,14 @@ module game {
     return false;
   }
 
-  function getShapeIdAfter(right:boolean, left:boolean, flip:boolean) {
+  function getShapeIdAfter(right: boolean, left: boolean, flip: boolean) {
     if (shapeIdChosen === undefined || shapeIdChosen < 0) {
       return -1;
     }
-    
-    let originShapeId:number = gameLogic.getShapeType(shapeIdChosen);
-    let operationType:number = gameLogic.getShapeOpType(shapeIdChosen);
-    
+
+    let originShapeId: number = gameLogic.getShapeType(shapeIdChosen);
+    let operationType: number = gameLogic.getShapeOpType(shapeIdChosen);
+
     let rotation: number = operationType % 4;
     // only vertical flip. Horizontal flip <=> vertical flip + 180 rotation.
     let currentFlip: boolean = operationType >= 4;
@@ -492,12 +497,12 @@ module game {
       currentFlip = !currentFlip;
     }
 
-    let addon:number = 0;
+    let addon: number = 0;
     if (left) {
-      addon ++;
+      addon++;
     }
     if (right) {
-      addon --;
+      addon--;
     }
 
     if (currentFlip) {
@@ -510,7 +515,7 @@ module game {
     return shapeIdChosen;
   }
 
-  export function RotateAndFlip(left:boolean, right:boolean, flip:boolean) {
+  export function RotateAndFlip(left: boolean, right: boolean, flip: boolean) {
     if (!(showFlip() || showRotateLeft() || showRotateRight())) {
       return;
     }
@@ -797,6 +802,11 @@ module game {
   function getTurnColor() {
     // var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
     var color = ['#ff0066', '#0066ff', '#00e600', '#ffc34d'];
+    return color[currentUpdateUI.turnIndex];
+  }
+
+  function getTurnColorForMove() {
+    var color = ['#f481b3', '#81b1f9', '#00e600', '#ffc34d'];
     return color[currentUpdateUI.turnIndex];
   }
 

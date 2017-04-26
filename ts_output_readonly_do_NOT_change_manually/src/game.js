@@ -111,7 +111,7 @@ var game;
         return "#93FF33";
     }
     function printBoardAnchor() {
-        game.anchorBoard = gameLogic.getBoardAnchor(game.state.board, game.currentUpdateUI.turnIndex);
+        game.anchorBoard = gameLogic.getBoardAnchor(game.state.board, game.state.anchorStatus, game.currentUpdateUI.turnIndex);
         //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
         setboardActionGroundColor(game.anchorBoard, getHintColor());
     }
@@ -168,7 +168,8 @@ var game;
             if (!angular.equals(game.preview, boardAction)) {
                 clearDrag('board', false);
                 console.log("set board");
-                setboardActionGroundColor(boardAction, getTurnColor());
+                setboardActionGroundColor(boardAction, getTurnColorForMove());
+                //setboardActionGroundColor(boardAction, getTurnColor());
                 game.preview = boardAction;
             }
             game.canConfirm = true;
@@ -248,55 +249,6 @@ var game;
         // obsolete
         //clickToDragPiece.style.display = "none";
     }
-    //TODO game.ts 92-188
-    // After shape matrix is got, draw shape in board area, draggable
-    /*
-    function handleDragEvent(type: any, clientX: any, clientY: any, shapeMatrix: any) {
-      if (!isHumanTurn() || passes == 2) {
-        return; // if the game is over, do not display dragging effect
-      }
-      if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
-        moveToConfirm = null;
-        $rootScope.$apply();
-      }
-      // Center point in boardArea
-      let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
-      let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
-      // TODO Is outside boardArea? board edges - 2
-      let button = document.getElementById("button");
-      if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
-        // clearClickToDrag();
-        return;
-      }
-      // Inside boardArea. Let's find the containing square's row and col
-      let col = Math.floor(dim * x / boardArea.clientWidth);
-      let row = Math.floor(dim * y / boardArea.clientHeight);
-      // TODO if the cell matrix is not empty, don't preview the piece
-  
-      if ((state.board[row][col] !== '' && deadBoard == null) ||
-        (state.board[row][col] == '' && deadBoard != null)) {
-        clearClickToDrag();
-        return;
-      }
-      //clickToDragPiece.style.display = deadBoard == null ? "inline" : "none";
-      let centerXY = getSquareCenterXY(row, col);
-      // show the piece
-      //let cell = document.getElementById('board' + row + 'x' + col).className = $scope.turnIndex === 0 ? 'black' : 'white';
-  
-      let topLeft = getSquareTopLeft(row, col);
-      clickToDragPiece.style.left = topLeft.left + "px";
-      clickToDragPiece.style.top = topLeft.top + "px";
-      if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
-        // drag ended
-        dragDone(row, col);
-      }
-    }
-    */
-    /*
-    function clearClickToDrag() {
-      clickToDragPiece.style.display = "none";
-    }
-    */
     function getSquareCenterXY(row, col) {
         var size = getSquareWidthHeight();
         return {
@@ -331,18 +283,6 @@ var game;
             height: area.clientHeight / (colAndRow.rowsNum)
         };
     }
-    /*
-    function dragDone(row: number, col: number) {
-      $rootScope.$apply(function () {
-        if (deadBoard == null) {
-          // moveToConfirm = {row: row, col: col};
-        } else {
-          // toggleDead(row, col);
-          clearClickToDrag();
-        }
-      });
-    }
-    */
     function getShapeNum(row, col) {
         if (row >= 0 && row < game.shapeBoard.cellToShape.length && col >= 0 && col < game.shapeBoard.cellToShape[0].length)
             return game.shapeBoard.cellToShape[row][col];
@@ -373,7 +313,8 @@ var game;
             console.log(gameLogic.aux_printFrame(game.preview, game.dim));
             console.log(gameLogic.aux_printFrame(boardAction, game.dim));
             //clearPreview
-            setboardActionGroundColor(boardAction, getTurnColor());
+            //setboardActionGroundColor(boardAction, getTurnColor());
+            setboardActionGroundColor(boardAction, getTurnColorForMove());
             game.preview = boardAction;
         }
         game.canConfirm = true;
@@ -779,6 +720,10 @@ var game;
         var color = ['#ff0066', '#0066ff', '#00e600', '#ffc34d'];
         return color[game.currentUpdateUI.turnIndex];
     }
+    function getTurnColorForMove() {
+        var color = ['#f481b3', '#81b1f9', '#00e600', '#ffc34d'];
+        return color[game.currentUpdateUI.turnIndex];
+    }
     function setShapeAreaSquareStyle(row, col) {
         var shapeId = game.shapeBoard.cellToShape[row][col];
         //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
@@ -825,27 +770,4 @@ var app = angular.module('myApp', ['gameServices' /*,'ngScrollable'*/])
         $rootScope['game'] = game;
         game.init($rootScope, $timeout);
     }]);
-/*
-app.controller('Demo', function ($scope:any) {
-    'use strict';
-
-    $scope.posX = 0;
-    $scope.posY = 0;
-
-    $scope.moveX = function (pixels: any) {
-        $scope.posX = $scope.posX + pixels;
-    };
-    $scope.moveY = function (pixels : any) {
-        $scope.posY = $scope.posY + pixels;
-    };
-    $scope.$evalAsync(function () {
-        $scope.$broadcast('content.changed', 1000);
-    });
-
-    $scope.center = function () {
-        $scope.posX = 600;
-        $scope.posY = 410;
-    };
-});
-*/ 
 //# sourceMappingURL=game.js.map
