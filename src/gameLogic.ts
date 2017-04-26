@@ -991,7 +991,7 @@ module gameLogic {
 
     //TODO implement the last check
     let nextstep = getNextPossibleShape(stateBeforeMove.anchorStatus, boardAfterMove, shapeStatusAfterMove, turnIndexBeforeMove);
-    let anchorStatusAfterMove = nextstep.anchorStatus;
+    let anchorStatusAfterMove = angular.copy(nextstep.anchorStatus);
 
     console.log(boardAfterMove);
     console.log("possibleMove");
