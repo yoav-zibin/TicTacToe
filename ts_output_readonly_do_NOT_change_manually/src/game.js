@@ -550,6 +550,7 @@ var game;
             game.shapeIdChosen = -1; // to reset the shape being selected
         }
         catch (e) {
+            log.info(e);
             log.info(["This is an illegal move:", row, col]);
             return;
         }

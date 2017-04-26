@@ -11,6 +11,7 @@ interface IState {
   delta: BoardDelta;
   shapeStatus: boolean[][];
   playerStatus: boolean[];
+  anchorStatus: boolean[][];
 }
 
 interface Shape {
@@ -53,7 +54,7 @@ module gameLogic {
   export const SHAPEHEIGHT = 5;
   export const SHAPEWIDTH = 5;
   export const SHAPENUMBER = 21;
-  export const GROUPNUMBER = 4; /// 2
+  export const GROUPNUMBER = 2; /// 4
   // TODO change this
   export const STARTANCHOR4: number[] = [0, COLS - 1, ROWS * (COLS - 1), ROWS * COLS - 1];
   export const STARTANCHOR: number[] = [0, ROWS * COLS - 1]; // [0, 14 * 14];
@@ -82,6 +83,18 @@ module gameLogic {
     return status;
   }
 
+  export function getInitPrevAnchor(): boolean[][] {
+    let ret: boolean[][] = [];
+    for (let p = 0; p < GROUPNUMBER; p++) {
+      ret[p] = [];
+      for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+          ret[p][i * COLS + j] = true;
+        }
+      }
+    }
+    return ret;
+  }
   /*
   export function getTurnIdx() {
     return ....
@@ -280,6 +293,9 @@ module gameLogic {
     let ret: string = "   0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9\n\r  ----------------------------------------\n\r";
     for (let i = 0; i < height; i++) {
       let tmp: string[] = angular.copy(frame[i]);
+      if (tmp === null || tmp === undefined) {
+        continue;
+      }
       for (let j = 0; j < tmp.length; j++) {
         if (tmp[j] == '') {
           tmp[j] = ' ';
@@ -377,8 +393,8 @@ module gameLogic {
     return shapeId % OPERATIONS;
   }
 
-  export function getShapeId(originShapeId:number, rotation: number, flip: boolean):number{
-    return originShapeId * OPERATIONS + rotation + (flip?4:0);
+  export function getShapeId(originShapeId: number, rotation: number, flip: boolean): number {
+    return originShapeId * OPERATIONS + rotation + (flip ? 4 : 0);
   }
 
   export function getShapeFromShapeID(shapeId: number): Shape {
@@ -394,6 +410,7 @@ module gameLogic {
       delta: null,
       shapeStatus: getInitShapeStatus(),
       playerStatus: getInitPlayerStatus(),
+      anchorStatus: getInitPrevAnchor(),
     };
   }
 
@@ -493,19 +510,39 @@ module gameLogic {
    *      ['X', 'O', 'O'],
    *      ['O', 'X', 'X']]
    */
-  function isTie(board: Board): boolean {
+  function isTie(board: Board, playerStatus: boolean[]): boolean {
+    let over = true;
+    let winner:string = '';
+      
+    for (let i = 0; i < GROUPNUMBER; i++) {
+      if (playerStatus[i] === true) {
+        over = false;
+        continue;
+      }
+    }
+    if (over) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function getScore(board:Board): number[] {
+    let score : number[] = [];
+    for (let i = 0; i < GROUPNUMBER; i++) {
+      score[i] = 0;
+    }
+
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
-        if (board[i][j] === '') {
-          // If there is an empty cell then we do not have a tie.
-          return false;
+        if (board[i][j] !== '') {
+          let idx:number = +board[i][j];
+          score[idx] ++;
         }
       }
     }
-    // No empty cells, so we have a tie!
-    return true;
+    return score;
   }
-
   /**
    * Return the winner (either 'X' or 'O') or '' if there is no winner.
    * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
@@ -514,38 +551,38 @@ module gameLogic {
    *      ['X', 'O', ''],
    *      ['X', '', '']]
    */
-  function getWinner(board: Board): string {
-    let boardString = '';
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        let cell = board[i][j];
-        boardString += cell === '' ? ' ' : cell;
+  function getWinner(board: Board, playerStatus: boolean[]): string {
+    let over = true;
+    let winner:string = '';
+      
+    for (let i = 0; i < GROUPNUMBER; i++) {
+      if (playerStatus[i] === true) {
+        over = false;
+        continue;
       }
     }
-    let win_patterns = [
-      'XXX......',
-      '...XXX...',
-      '......XXX',
-      'X..X..X..',
-      '.X..X..X.',
-      '..X..X..X',
-      'X...X...X',
-      '..X.X.X..'
-    ];
-    for (let win_pattern of win_patterns) {
-      let x_regexp = new RegExp(win_pattern);
-      let o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
-      if (x_regexp.test(boardString)) {
-        return 'X';
+    if (over) {
+      let scores: number[] = getScore(board);
+      let maxval: number = 0;
+      let maxIdx: number = -1;
+      for (let i = 0; i < GROUPNUMBER; i++) {
+        if (maxval < scores[i]) {
+          maxval = scores[i];
+          maxIdx = -1;
+        }
       }
-      if (o_regexp.test(boardString)) {
-        return 'O';
+      if (maxIdx >= 0) {
+        winner = maxIdx + '';
       }
     }
-    return '';
+    return winner;
   }
 
   export function getRecomandAnchor(board: Board, turnIndexBeforeMove: number): number[] {
+    if (noPreviousMove(board, turnIndexBeforeMove)) {
+      return [STARTANCHOR[turnIndexBeforeMove]];
+    }
+
     let boundary: number[] = [];
     let diri: number[] = [-1, 0, 1, 0];
     let dirj: number[] = [0, 1, 0, -1];
@@ -572,8 +609,8 @@ module gameLogic {
       }
     }
 
-    console.log("boundary for ", turnIndexBeforeMove, ":");
-    console.log(aux_printCoordinator(boundary));
+    //console.log("boundary for ", turnIndexBeforeMove, ":");
+    //console.log(aux_printCoordinator(boundary));
 
     let ret: number[] = [];
     for (let k = 0; k < boundary.length; k++) {
@@ -648,7 +685,7 @@ module gameLogic {
           if (nj >= 0 && nj < COLS && ni >= 0 && ni < ROWS
             && boardAction[ni][nj] != '1'
             && board[ni][nj] == ('' + turnIndexBeforeMove)) {
-            console.log("points at (", i, ",", j, ") adjacent with:(", ni, ",", nj, ")");
+            //console.log("points at (", i, ",", j, ") adjacent with:(", ni, ",", nj, ")");
             return false;
           }
         }
@@ -686,13 +723,13 @@ module gameLogic {
 
     // 0. if not territory, anchor is init state
     if (noPreviousMove(board, turnIndexBeforeMove)) {
-      console.log("no previous move");
+      //console.log("no previous move");
       possibleAnchor.push(STARTANCHOR[turnIndexBeforeMove]);
     } else {
       possibleAnchor = getRecomandAnchor(board, turnIndexBeforeMove);
     }
-    console.log(turnIndexBeforeMove);
-    console.log(possibleAnchor);
+    //console.log(turnIndexBeforeMove);
+    //console.log(possibleAnchor);
     return possibleAnchor;
   }
 
@@ -702,8 +739,8 @@ module gameLogic {
     // 0. if not territory, anchor is init state
     let possibleAnchor: number[] = getPossibleAnchor(board, turnIndexBeforeMove);
 
-    console.log("possible Anchors for ", turnIndexBeforeMove, " :");
-    console.log(aux_printCoordinator(possibleAnchor));
+    //console.log("possible Anchors for ", turnIndexBeforeMove, " :");
+    //console.log(aux_printCoordinator(possibleAnchor));
 
     // 1.has at least one anchor
     let foundAnchor: boolean = false;
@@ -720,7 +757,7 @@ module gameLogic {
       return false;
     }
 
-    console.log("Found anchor");
+    //console.log("Found anchor");
     // not conflict with existing teritory and not adjacent to teritory
     if (!checkSquareOverlap(board, boardAction) ||
       !checkSquareAdj(board, boardAction, turnIndexBeforeMove)) {
@@ -746,16 +783,18 @@ module gameLogic {
     return ret;
   }
 
-  export function updatePlayerStatus(playerStatus: boolean[], turnIndexBeforeMove: number, shapeStatus: boolean[][], board: Board): boolean[] {
+  export function updatePlayerStatus(playerStatus: boolean[], turnIndexBeforeMove: number, nextstep: { anchorStatus: boolean[][], board: Board, valid: boolean }): boolean[] {
     let ret = angular.copy(playerStatus);
 
-    // TODO check the remianing move
+    if (nextstep.valid === false) {
+      ret[turnIndexBeforeMove] = false;
+    }
 
     return ret;
   }
 
-  export function checkLegalMoveForGame(board: Board, row: number, col: number, turnIndexBeforeMove: number, shapeId: number, checkStrong:boolean): boolean {
-    console.log("[checkLegalMoveForGame]col:", col, " row", row, " SI:", shapeId);
+  export function checkLegalMoveForGame(board: Board, row: number, col: number, turnIndexBeforeMove: number, shapeId: number, checkStrong: boolean): boolean {
+    //console.log("[checkLegalMoveForGame]col:", col, " row", row, " SI:", shapeId);
     if (shapeId === undefined || shapeId < 0 || shapeId >= SHAPEMAX) {
       return false;
     }
@@ -767,17 +806,16 @@ module gameLogic {
     }
 
     let boardAction: Board = getBoardAction(row, col, shape);
-      if (checkStrong && !checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
-        return false;
+    if (checkStrong && !checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+      return false;
     }
-    
+
     if (!checkSquareOverlap(board, boardAction)) {
       return false;
     }
 
     return true;
   }
-
 
   /** return true if all the players die */
   export function endOfMatch(playerStatus: boolean[]) {
@@ -789,6 +827,109 @@ module gameLogic {
     return true;
   }
 
+  function mapShapeToPos(frow: number, fcol: number, board: Board,
+    shape: Shape, frameX: number, frameY: number, turnIndexBeforeMove: number): { board: Board, valid: boolean, row:number, col:number } {
+
+    let CTR = Math.floor(SHAPEWIDTH / 2);
+    let row: number = frow - frameX + CTR;
+    let col: number = fcol - frameY + CTR;
+
+    if (!checkValidShapePlacement(row, col, shape)) {
+      return { board: [], valid: false, row:-1, col:-1 };
+    }
+
+    let boardAction: Board = getBoardAction(row, col, shape);
+
+    //TODO export a function checkLealMove(board, row, col, turnIndexBeforeMove) // add boardAction
+    if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+      return { board: [], valid: false, row:-1, col:-1 };
+    }
+
+    return { board: boardAction, valid: true, row:row, col:col };
+  }
+
+  function getAllCorners(shape: Shape): number[][] {
+    let corners: number[][] = [];
+
+    let dirx: number[] = [-1, 0, 1, 0];
+    let diry: number[] = [0, -1, 0, 1];
+    for (let i = 0; i < SHAPEWIDTH; i++) {
+      for (let j = 0; j < SHAPEHEIGHT; j++) {
+        let empty: number[] = [0, 0, 0, 0]
+        if (shape.frame[i][j] === '1') {
+          for (let t = 0; t < 4; t++) {
+            let nx: number = dirx[t] + i;
+            let ny: number = diry[t] + j;
+            if (nx < 0 || nx > SHAPEWIDTH - 1 || ny < 0 || ny > SHAPEHEIGHT - 1 || shape.frame[nx][ny] === '0') {
+              empty[t] = 1;
+            }
+          }
+        }
+        for (let t = 0; t < 4; t++) {
+          if (empty[t] === 1 && empty[(t + 1) % 4] === 1) {
+            corners.push([i, j]);
+          }
+        }
+      }
+    }
+
+    return corners;
+  }
+  /**
+   * find a possible next move for this turn user
+   * @param board 
+   * @param shapeStatus 
+   * @param turnIndexBeforeMove 
+   * @return board:Board,valid:boolean, the board in return is an boardAction only contains the shape
+   */
+  export function getNextPossibleShape(prevAnchor: boolean[][], board: Board, shapeStatus: boolean[][], turnIndexBeforeMove: number):
+    { anchorStatus: boolean[][], board: Board, valid: boolean, shapeId: number, row:number, col:number } {
+    let retBoard: Board = [];
+    let anchors: number[] = getRecomandAnchor(board, turnIndexBeforeMove);
+    let freeShapeIds: number[] = [];
+    let allshape: AllShape = getInitShapes();
+
+    for (let i = 0; i < SHAPENUMBER; i++) {
+      if (shapeStatus[turnIndexBeforeMove][i] === true) {
+        freeShapeIds.push(i);
+      }
+    }
+
+    let thisAnchor: boolean[][] = angular.copy(prevAnchor);
+
+    let hasMove = false;
+    for (let t = 0; t < anchors.length; t++) {
+      let anchor = anchors[t];
+      if (thisAnchor[turnIndexBeforeMove][anchor] === false) {
+        continue;
+      }
+
+      let row: number = parseIJ(anchor)[0];
+      let col: number = parseIJ(anchor)[1];
+
+      for (let id = 0; id < freeShapeIds.length; id++) {
+        for (let op = 0; op < OPERATIONS; op++) {
+          let shapeId: number = freeShapeIds[id];
+          let shape: Shape = getShapeByTypeAndOperation(freeShapeIds[shapeId], op);
+          let realShapeId: number = shapeId * OPERATIONS + op;
+          let corners: number[][] = getAllCorners(shape);
+          for (let c = 0; c < corners.length; c++) {
+            let frameX: number = corners[c][0];
+            let frameY: number = corners[c][1];
+            let action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
+            if (action.valid) {
+              return { anchorStatus: thisAnchor, board: angular.copy(action.board), valid: action.valid, shapeId:realShapeId, row:action.row, col:action.col };
+            }
+          }
+        }
+      }
+      thisAnchor[turnIndexBeforeMove][row * COLS + col] = false;
+      // TODO add it to invalid anchor, and purning these anchors for latter search
+    }
+
+    return { anchorStatus: thisAnchor, board: retBoard, valid: false, shapeId:-1, row:-1, col:-1 };
+  }
+
   /**
    * Returns the move that should be performed when player
    * with index turnIndexBeforeMove makes a move in cell row X col with shapeId.
@@ -797,6 +938,8 @@ module gameLogic {
    */
   export function createMove(
     stateBeforeMove: IState, row: number, col: number, shapeId: number, turnIndexBeforeMove: number): IMove {
+
+    console.log("player ", turnIndexBeforeMove, "'s turn");
 
     if (shapeId < 0) {
       throw new Error("Wrong shapeid");
@@ -834,38 +977,55 @@ module gameLogic {
     }
 
     // TODO change to IsGameOver function IsGameOver(board, boardAction, turnIndexBeforeMove)
-    if (getWinner(board) !== '' || isTie(board)) {
+    if (getWinner(board, playerStatus) !== '' || isTie(board, playerStatus)) {
       throw new Error("Can only make a move if the game is not over!");
     }
     //~
 
     let boardAfterMove = angular.copy(board);
-    console.log("boardAfterMove:")
-    console.log(aux_printFrame(boardAfterMove, COLS))
-
     shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove);
     let shapeStatusAfterMove = updateShapeStatus(shapeStatus, shapeId, turnIndexBeforeMove);
+    console.log("boardAfterMove:")
+    console.log(aux_printFrame(boardAfterMove, COLS))
+    console.log(aux_printArray(shapeStatusAfterMove));
 
     //TODO implement the last check
-    let playerStatusAferMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, shapeStatusAfterMove, boardAfterMove);
+    let nextstep = getNextPossibleShape(stateBeforeMove.anchorStatus, boardAfterMove, shapeStatusAfterMove, turnIndexBeforeMove);
+    let anchorStatusAfterMove = nextstep.anchorStatus;
 
-    let winner = getWinner(boardAfterMove);
+    console.log(boardAfterMove);
+    console.log("possibleMove");
+    console.log(nextstep.valid);
+    console.log("board")
+    console.log(nextstep.board);
+    console.log("anchor status");
+    console.log(anchorStatusAfterMove);
+    console.log(aux_printFrame(nextstep.board, ROWS));
+
+    let playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
+
+    let winner = getWinner(boardAfterMove, playerStatusAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
 
     // CHANGE here
-    if (winner !== '' || isTie(boardAfterMove)) {
+    if (winner !== '' || isTie(boardAfterMove, playerStatusAfterMove)) {
       // Game over.
       turnIndex = -1;
 
       // TODO add endScore Function, the score is measured by the blocks unused.
-      endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
+      endMatchScores = getScore(boardAfterMove);
       //~
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
       // TODO change to four player
-      turnIndex = 1 - turnIndexBeforeMove;
-      endMatchScores = null;
+      turnIndex = getNextTurn(turnIndexBeforeMove, playerStatus);
+      //turnIndex = (turnIndexBeforeMove + 1) % GROUPNUMBER;
+      if (turnIndex == -1) {
+        endMatchScores = getScore(boardAfterMove);
+      } else {
+        endMatchScores = null;
+      }
     }
     //~
 
@@ -876,7 +1036,8 @@ module gameLogic {
       delta: delta,
       board: boardAfterMove,
       shapeStatus: shapeStatusAfterMove,
-      playerStatus: playerStatusAferMove,
+      playerStatus: playerStatusAfterMove,
+      anchorStatus: anchorStatusAfterMove,
     };
     return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
   }
@@ -886,6 +1047,17 @@ module gameLogic {
       endMatchScores: null, turnIndex: 0,
       state: getInitialState()
     };
+  }
+
+  function getNextTurn(turnIndexBeforeMove:number, playerStatus:boolean[]):number {
+    let turnIdx = -1;
+    for (let i = 0; i < GROUPNUMBER; i++) {
+      let t = (turnIndexBeforeMove + i + 1) % GROUPNUMBER;
+      if (playerStatus[t] == true) {
+        return t;
+      }
+    }
+    return turnIdx;
   }
 
   function transformMarginsToAbosolute(margins: number[]) {
@@ -917,7 +1089,7 @@ module gameLogic {
         start = i;
         continue;
       }
-      if (isBlank && start > 0 && (i-1 > start)) {
+      if (isBlank && start > 0 && (i - 1 > start)) {
         return { start: start, end: i - 1 };
       }
     }
@@ -929,62 +1101,62 @@ module gameLogic {
     let shapeBoard: ShapeBoard = { board: [], cellToShape: [], shapeToCell: [] };
     shapeBoard = {
       board: [
-              ['0', '0', '0', '1', '0', '0', '0', '1', '1', '0', '0', '0', '1', '1', '0', '0', '0', '1', '1', '1', '0', '0', '0'], 
-              ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'], 
-              ['1', '1', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '1', '1'], 
-              ['1', '1', '0', '0', '1', '1', '1', '0', '0', '1', '1', '1', '1', '0', '0', '1', '1', '1', '0', '0', '1', '1', '0'], 
-              ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'], 
-              ['0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '1'], 
-              ['1', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '0', '1', '1', '1', '0', '1', '1', '1', '0', '1'], 
-              ['1', '1', '1', '1', '0', '1', '1', '1', '0', '1', '1', '1', '0', '1', '1', '0', '0', '0', '1', '0', '0', '0', '1'], 
-              ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1'], 
-              ['1', '0', '0', '0', '1', '1', '0', '1', '1', '0', '0', '0', '1', '1', '0', '0', '1', '0', '0', '0', '0', '0', '1'], 
-              ['1', '1', '0', '1', '1', '0', '0', '1', '0', '0', '0', '1', '1', '0', '0', '1', '1', '1', '0', '0', '1', '0', '0'],
-              ['1', '1', '0', '1', '0', '0', '0', '1', '1', '0', '0', '0', '1', '0', '0', '0', '1', '0', '0', '1', '1', '1', '1']
-            ],
+        ['0', '0', '0', '1', '0', '0', '0', '1', '1', '0', '0', '0', '1', '1', '0', '0', '0', '1', '1', '1', '0', '0', '0'],
+        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+        ['1', '1', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '1', '1'],
+        ['1', '1', '0', '0', '1', '1', '1', '0', '0', '1', '1', '1', '1', '0', '0', '1', '1', '1', '0', '0', '1', '1', '0'],
+        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+        ['0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '1'],
+        ['1', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '0', '1', '1', '1', '0', '1', '1', '1', '0', '1'],
+        ['1', '1', '1', '1', '0', '1', '1', '1', '0', '1', '1', '1', '0', '1', '1', '0', '0', '0', '1', '0', '0', '0', '1'],
+        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1'],
+        ['1', '0', '0', '0', '1', '1', '0', '1', '1', '0', '0', '0', '1', '1', '0', '0', '1', '0', '0', '0', '0', '0', '1'],
+        ['1', '1', '0', '1', '1', '0', '0', '1', '0', '0', '0', '1', '1', '0', '0', '1', '1', '1', '0', '0', '1', '0', '0'],
+        ['1', '1', '0', '1', '0', '0', '0', '1', '1', '0', '0', '0', '1', '0', '0', '0', '1', '0', '0', '1', '1', '1', '1']
+      ],
       shapeToCell: [
-              [{ x:2, y:0 }, { x:2 , y:1 }, { x:3 , y:0 }, { x:3 , y:1 }], // 0
-              [{ x:0, y:3 }], // 1
-              [{ x:2, y:5 }, { x:3, y:4 }, { x:3, y:5 }, { x:3, y:6 }], // 2
-              [{ x:0, y:7 }, { x:0, y:8 }],  // 3
-              [{ x:3, y:9 }, { x:3, y:10 }, { x:3, y:11 }, { x:3, y:12 }], // 4
-              [{ x:0, y:12 }, { x:0, y:13 }, { x:1, y:13 }], // 5
-              [{ x:2, y:17 }, { x:3, y:15 }, { x:3, y:16 }, { x:3, y:17 }], // 6
-              [{ x:0, y:17 }, { x:0, y:18 }, { x:0, y:19 }], // 7
-              [{ x:2, y:21 }, { x:2, y:22 }, { x:3, y:20 }, { x:3, y:21 }], // 8
-              [{ x:6, y:0 }, { x:7, y:0 }, { x:7, y:1 }, { x:7, y:2 }, { x:7, y:3 }], // 9
-              [{ x:5, y:6 }, { x:6, y:6 }, { x:7, y:5 }, { x:7, y:6 }, { x:7, y:7 }], // 10
-              [{ x:5, y:9 }, { x:6, y:9 }, { x:7, y:9 }, { x:7, y:10 }, { x:7, y:11 }], // 11
-              [{ x:6, y:14 }, { x:6, y:15 }, { x:6, y:16 }, { x:7, y:13 }, { x:7, y:14 }], // 12
-              [{ x:5, y:20 }, { x:6, y:18 }, { x:6, y:19 }, { x:6, y:20 }, { x:7, y:18 }], // 13
-              [{ x:5, y:22 }, { x:6, y:22 }, { x:7, y:22 }, { x:8, y:22 }, { x:9, y:22 }], // 14
-              [{ x:9, y:0 }, { x:10, y:0 }, { x:10, y:1 }, { x:11, y:0 }, { x:11, y:1 }], // 15
-              [{ x:9, y:4 }, { x:9, y:5 }, { x:10, y:3 }, { x:10, y:4 }, { x:11, y:3 }], // 16
-              [{ x:9, y:7 }, { x:9, y:8 }, { x:10, y:7 }, { x:11, y:7 }, { x:11, y:8 }], // 17
-              [{ x:9, y:12 }, { x:9, y:13 }, { x:10, y:11 }, { x:10, y:12 }, { x:11, y:12 }], // 18
-              [{ x:9, y:16 }, { x:10, y:15 }, { x:10, y:16 }, { x:10, y:17 }, { x:11, y:16 }], // 19
-              [{ x:10, y:20 }, { x:11, y:19 }, { x:11, y:20 }, { x:11, y:21 }, { x:11, y:22 }] // 20
-              ],
+        [{ x: 2, y: 0 }, { x: 2, y: 1 }, { x: 3, y: 0 }, { x: 3, y: 1 }], // 0
+        [{ x: 0, y: 3 }], // 1
+        [{ x: 2, y: 5 }, { x: 3, y: 4 }, { x: 3, y: 5 }, { x: 3, y: 6 }], // 2
+        [{ x: 0, y: 7 }, { x: 0, y: 8 }],  // 3
+        [{ x: 3, y: 9 }, { x: 3, y: 10 }, { x: 3, y: 11 }, { x: 3, y: 12 }], // 4
+        [{ x: 0, y: 12 }, { x: 0, y: 13 }, { x: 1, y: 13 }], // 5
+        [{ x: 2, y: 17 }, { x: 3, y: 15 }, { x: 3, y: 16 }, { x: 3, y: 17 }], // 6
+        [{ x: 0, y: 17 }, { x: 0, y: 18 }, { x: 0, y: 19 }], // 7
+        [{ x: 2, y: 21 }, { x: 2, y: 22 }, { x: 3, y: 20 }, { x: 3, y: 21 }], // 8
+        [{ x: 6, y: 0 }, { x: 7, y: 0 }, { x: 7, y: 1 }, { x: 7, y: 2 }, { x: 7, y: 3 }], // 9
+        [{ x: 5, y: 6 }, { x: 6, y: 6 }, { x: 7, y: 5 }, { x: 7, y: 6 }, { x: 7, y: 7 }], // 10
+        [{ x: 5, y: 9 }, { x: 6, y: 9 }, { x: 7, y: 9 }, { x: 7, y: 10 }, { x: 7, y: 11 }], // 11
+        [{ x: 6, y: 14 }, { x: 6, y: 15 }, { x: 6, y: 16 }, { x: 7, y: 13 }, { x: 7, y: 14 }], // 12
+        [{ x: 5, y: 20 }, { x: 6, y: 18 }, { x: 6, y: 19 }, { x: 6, y: 20 }, { x: 7, y: 18 }], // 13
+        [{ x: 5, y: 22 }, { x: 6, y: 22 }, { x: 7, y: 22 }, { x: 8, y: 22 }, { x: 9, y: 22 }], // 14
+        [{ x: 9, y: 0 }, { x: 10, y: 0 }, { x: 10, y: 1 }, { x: 11, y: 0 }, { x: 11, y: 1 }], // 15
+        [{ x: 9, y: 4 }, { x: 9, y: 5 }, { x: 10, y: 3 }, { x: 10, y: 4 }, { x: 11, y: 3 }], // 16
+        [{ x: 9, y: 7 }, { x: 9, y: 8 }, { x: 10, y: 7 }, { x: 11, y: 7 }, { x: 11, y: 8 }], // 17
+        [{ x: 9, y: 12 }, { x: 9, y: 13 }, { x: 10, y: 11 }, { x: 10, y: 12 }, { x: 11, y: 12 }], // 18
+        [{ x: 9, y: 16 }, { x: 10, y: 15 }, { x: 10, y: 16 }, { x: 10, y: 17 }, { x: 11, y: 16 }], // 19
+        [{ x: 10, y: 20 }, { x: 11, y: 19 }, { x: 11, y: 20 }, { x: 11, y: 21 }, { x: 11, y: 22 }] // 20
+      ],
       cellToShape: [
-              [-1, -1, -1,  1, -1, -1, -1,  3,  3, -1, -1, -1,  5,  5, -1, -1, -1,  7,  7,  7, -1, -1, -1], 
-              [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  5, -1, -1, -1, -1, -1, -1, -1, -1, -1], 
-              [ 0,  0, -1, -1, -1,  2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  6, -1, -1, -1,  8,  8], 
-              [ 0,  0, -1, -1,  2,  2,  2, -1, -1,  4,  4,  4,  4, -1, -1,  6,  6,  6, -1, -1,  8,  8, -1], 
-              [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], 
-              [-1, -1, -1, -1, -1, -1, 10, -1, -1, 11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13, -1, 14], 
-              [ 9, -1, -1, -1, -1, -1, 10, -1, -1, 11, -1, -1, -1, -1, 12, 12, 12, -1, 13, 13, 13, -1, 14], 
-              [ 9,  9,  9,  9, -1, 10, 10, 10, -1, 11, 11, 11, -1, 12, 12, -1, -1, -1, 13, -1, -1, -1, 14], 
-              [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14], 
-              [15, -1, -1, -1, 16, 16, -1, 17, 17, -1, -1, -1, 18, 18, -1, -1, 19, -1, -1, -1, -1, -1, 14], 
-              [15, 15, -1, 16, 16, -1, -1, 17, -1, -1, -1, 18, 18, -1, -1, 19, 19, 19, -1, -1, 20, -1, -1], 
-              [15, 15, -1, 16, -1, -1, -1, 17, 17, -1, -1, -1, 18, -1, -1, -1, 19, -1, -1, 20, 20, 20, 20]
+        [-1, -1, -1, 1, -1, -1, -1, 3, 3, -1, -1, -1, 5, 5, -1, -1, -1, 7, 7, 7, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+        [0, 0, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6, -1, -1, -1, 8, 8],
+        [0, 0, -1, -1, 2, 2, 2, -1, -1, 4, 4, 4, 4, -1, -1, 6, 6, 6, -1, -1, 8, 8, -1],
+        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, 10, -1, -1, 11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13, -1, 14],
+        [9, -1, -1, -1, -1, -1, 10, -1, -1, 11, -1, -1, -1, -1, 12, 12, 12, -1, 13, 13, 13, -1, 14],
+        [9, 9, 9, 9, -1, 10, 10, 10, -1, 11, 11, 11, -1, 12, 12, -1, -1, -1, 13, -1, -1, -1, 14],
+        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14],
+        [15, -1, -1, -1, 16, 16, -1, 17, 17, -1, -1, -1, 18, 18, -1, -1, 19, -1, -1, -1, -1, -1, 14],
+        [15, 15, -1, 16, 16, -1, -1, 17, -1, -1, -1, 18, 18, -1, -1, 19, 19, 19, -1, -1, 20, -1, -1],
+        [15, 15, -1, 16, -1, -1, -1, 17, 17, -1, -1, -1, 18, -1, -1, -1, 19, -1, -1, 20, 20, 20, 20]
       ]
     };
     return shapeBoard;
-  } 
+  }
 
   //TODO
-  export function getAllShapeMatrix_withWidth(width: number):ShapeBoard {
+  export function getAllShapeMatrix_withWidth(width: number): ShapeBoard {
     let shapeBoard: ShapeBoard = { board: [], cellToShape: [], shapeToCell: [] };
     shapeBoard.board = [];
 
@@ -1005,7 +1177,7 @@ module gameLogic {
 
     while (idx < oW) {
       let shapeIdx = getNextShapeFrom(originSB, 0);
-      console.log("get ", shapeIdx.start, "-", shapeIdx.end);
+      ////console.log("get ", shapeIdx.start, "-", shapeIdx.end);
       let len = shapeIdx.end - shapeIdx.start + 1;
       if (col + len >= width) {
         col = 0;

@@ -12,10 +12,16 @@ module aiService {
    */
   export function getPossibleMoves(state: IState, turnIndexBeforeMove: number): IMove[] {
     let possibleMoves: IMove[] = [];
+    
+    /*
     for (let i = 0; i < gameLogic.ROWS; i++) {
       for (let j = 0; j < gameLogic.COLS; j++) {
         for (let shapeId = 0; shapeId < gameLogic.OPERATIONS; shapeId++) {
+          if (!state.shapeStatus[turnIndexBeforeMove][shapeId]) {
+            continue;
+          }
           try {
+            //let nextstep = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
             possibleMoves.push(gameLogic.createMove(state, i, j, shapeId, turnIndexBeforeMove));
           } catch (e) {
             // The cell in that position was full.
@@ -23,6 +29,14 @@ module aiService {
         }
 
       }
+    }
+    */
+    
+    try {
+      let nextstep = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
+      possibleMoves.push(gameLogic.createMove(state, nextstep.row, nextstep.col, nextstep.shapeId, turnIndexBeforeMove));
+    } catch (e) {
+
     }
     return possibleMoves;
   }

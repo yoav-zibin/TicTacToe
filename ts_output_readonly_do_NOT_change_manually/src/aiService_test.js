@@ -4,6 +4,7 @@ describe("aiService", function () {
             board: board, delta: null,
             shapeStatus: null,
             playerStatus: null,
+            anchorStatus: null,
         };
     }
     function createComputerMove(board, turnIndex, maxDepth) {
@@ -39,7 +40,8 @@ describe("aiService", function () {
                 delta: null,
                 shapeStatus: null,
                 playerStatus: null,
-            }
+                anchorStatus: null,
+            },
         });
         expect(angular.equals(move.state.delta, { row: 0, col: 1 })).toBe(true);
     });
