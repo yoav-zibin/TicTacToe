@@ -32439,7 +32439,7 @@ var gameLogic;
             for (var id = 0; id < freeShapeIds.length; id++) {
                 for (var op = 0; op < gameLogic.OPERATIONS; op++) {
                     var shapeId = freeShapeIds[id];
-                    var shape = getShapeByTypeAndOperation(freeShapeIds[id], op);
+                    var shape = getShapeByTypeAndOperation(freeShapeIds[shapeId], op);
                     var realShapeId = shapeId * gameLogic.OPERATIONS + op;
                     var corners = getAllCorners(shape);
                     for (var c = 0; c < corners.length; c++) {
