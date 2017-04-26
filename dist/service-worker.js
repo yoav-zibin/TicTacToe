@@ -8,7 +8,7 @@ var urlsToCache = [
   '//yoav-zibin.github.io/TicTacToe/dist/js/everything.min.js',
   '//yoav-zibin.github.io/TicTacToe/dist/css/everything.min.css',
 ];
-var CACHE_NAME = 'cache-v2017-04-26T18:41:59.943Z';
+var CACHE_NAME = 'cache-v2017-04-26T23:15:58.557Z';
 
 self.addEventListener('activate', function(event) {
   event.waitUntil(

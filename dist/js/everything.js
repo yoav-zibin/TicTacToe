@@ -31711,7 +31711,8 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0],
             },
             {
                 id: 1, row: -1, column: -1,
@@ -31719,7 +31720,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0],
             },
             {
                 id: 2, row: -1, column: -1,
@@ -31727,7 +31729,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 3, row: -1, column: -1,
@@ -31735,7 +31738,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 4, row: -1, column: -1,
@@ -31743,7 +31747,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '1', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 5, row: -1, column: -1,
@@ -31751,7 +31756,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '1', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 6, row: -1, column: -1,
@@ -31759,7 +31765,8 @@ var gameLogic;
                     ['0', '0', '0', '1', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 7, row: -1, column: -1,
@@ -31767,7 +31774,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 8, row: -1, column: -1,
@@ -31775,7 +31783,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '1', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 9, row: -1, column: -1,
@@ -31783,7 +31792,8 @@ var gameLogic;
                     ['0', '1', '0', '0', '0'],
                     ['0', '1', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 10, row: -1, column: -1,
@@ -31791,7 +31801,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 11, row: -1, column: -1,
@@ -31799,7 +31810,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 12, row: -1, column: -1,
@@ -31807,7 +31819,8 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '1', '1', '1'],
                     ['0', '1', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 13, row: -1, column: -1,
@@ -31815,7 +31828,8 @@ var gameLogic;
                     ['0', '0', '0', '1', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '1', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 14, row: -1, column: -1,
@@ -31823,7 +31837,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '1', '0', '0']]
+                    ['0', '0', '1', '0', '0']],
+                ops: [0, 1, 2, 3],
             },
             {
                 id: 15, row: -1, column: -1,
@@ -31831,7 +31846,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '1', '1', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 16, row: -1, column: -1,
@@ -31839,7 +31855,8 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '1', '1', '0', '0'],
                     ['0', '1', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 17, row: -1, column: -1,
@@ -31847,7 +31864,8 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '1', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 18, row: -1, column: -1,
@@ -31855,7 +31873,8 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '1', '1', '0', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             },
             {
                 id: 19, row: -1, column: -1,
@@ -31863,7 +31882,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '0'],
                     ['0', '0', '1', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0],
             },
             {
                 id: 20, row: -1, column: -1,
@@ -31871,7 +31891,8 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '1', '1', '1', '1'],
                     ['0', '0', '0', '0', '0'],
-                    ['0', '0', '0', '0', '0']]
+                    ['0', '0', '0', '0', '0']],
+                ops: [0, 1, 2, 3, 4, 5, 6, 7],
             }
         ];
         return shapes;
@@ -32256,7 +32277,7 @@ var gameLogic;
         return true;
     }
     gameLogic.checkSquareAdj = checkSquareAdj;
-    function getBoardAnchor(board, turnIndexBeforeMove) {
+    function getBoardAnchor(board, anchorStatus, turnIndexBeforeMove) {
         var boardAnchor = [];
         // fill the shape matrix into the board;
         for (var i = 0; i < gameLogic.ROWS; i++) {
@@ -32269,9 +32290,11 @@ var gameLogic;
         //console.log("[getBoardAnchor]", possibleAnchors);
         //aux_printCoordinator(possibleAnchors);
         for (var i = 0; i < possibleAnchors.length; i++) {
-            var coord = gameLogic.parseIJ(possibleAnchors[i]);
-            //console.log(coord);
-            boardAnchor[coord[0]][coord[1]] = '1';
+            if (anchorStatus[turnIndexBeforeMove][possibleAnchors[i]]) {
+                var coord = gameLogic.parseIJ(possibleAnchors[i]);
+                //console.log(coord);
+                boardAnchor[coord[0]][coord[1]] = '1';
+            }
         }
         //console.log(aux_printFrame(boardAnchor, COLS));
         return boardAnchor;
@@ -32356,7 +32379,8 @@ var gameLogic;
         if (checkStrong && !checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
             return false;
         }
-        if (!checkSquareOverlap(board, boardAction)) {
+        // add checkStrong here to make overlap possible, add check in the confirm phase
+        if (checkStrong && !checkSquareOverlap(board, boardAction)) {
             return false;
         }
         return true;
@@ -32411,6 +32435,49 @@ var gameLogic;
         }
         return corners;
     }
+    function getNextPossibleMoveList(prevAnchor, board, shapeStatus, turnIndexBeforeMove) {
+        var retList = [];
+        var anchors = getRecomandAnchor(board, turnIndexBeforeMove);
+        var freeShapeIds = [];
+        var allshape = getInitShapes();
+        for (var i = 0; i < gameLogic.SHAPENUMBER; i++) {
+            if (shapeStatus[turnIndexBeforeMove][i] === true) {
+                freeShapeIds.push(i);
+            }
+        }
+        var hasMove = false;
+        for (var t = 0; t < anchors.length; t++) {
+            var anchor = anchors[t];
+            if (prevAnchor[turnIndexBeforeMove][anchor] === false) {
+                continue;
+            }
+            var row = parseIJ(anchor)[0];
+            var col = parseIJ(anchor)[1];
+            for (var id = 0; id < freeShapeIds.length; id++) {
+                var shapeId = freeShapeIds[id];
+                var stdShape = allshape[shapeId];
+                for (var _i = 0, _a = stdShape.ops; _i < _a.length; _i++) {
+                    var op = _a[_i];
+                    var shape = getShapeByTypeAndOperation(freeShapeIds[id], op);
+                    var realShapeId = shapeId * gameLogic.OPERATIONS + op;
+                    var corners = getAllCorners(shape);
+                    for (var c = 0; c < corners.length; c++) {
+                        var frameX = corners[c][0];
+                        var frameY = corners[c][1];
+                        var action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
+                        if (action.valid) {
+                            hasMove = true;
+                            retList.push({ row: action.row, col: action.col, shapeId: realShapeId });
+                        }
+                    }
+                }
+            }
+            // add it to invalid anchor, and purning these anchors for latter search
+            prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
+        }
+        return { anchorStatus: prevAnchor, valid: hasMove, moves: retList };
+    }
+    gameLogic.getNextPossibleMoveList = getNextPossibleMoveList;
     /**
      * find a possible next move for this turn user
      * @param board
@@ -32437,9 +32504,13 @@ var gameLogic;
             var row = parseIJ(anchor)[0];
             var col = parseIJ(anchor)[1];
             for (var id = 0; id < freeShapeIds.length; id++) {
-                for (var op = 0; op < gameLogic.OPERATIONS; op++) {
-                    var shapeId = freeShapeIds[id];
-                    var shape = getShapeByTypeAndOperation(freeShapeIds[shapeId], op);
+                var shapeId = freeShapeIds[id];
+                var stdShape = allshape[shapeId];
+                for (var _i = 0, _a = stdShape.ops; _i < _a.length; _i++) {
+                    var op = _a[_i];
+                    //for (let op = 0; op < OPERATIONS; op++) {
+                    //et shapeId: number = freeShapeIds[id];
+                    var shape = getShapeByTypeAndOperation(freeShapeIds[id], op);
                     var realShapeId = shapeId * gameLogic.OPERATIONS + op;
                     var corners = getAllCorners(shape);
                     for (var c = 0; c < corners.length; c++) {
@@ -32452,8 +32523,8 @@ var gameLogic;
                     }
                 }
             }
+            // add it to invalid anchor, and purning these anchors for latter search
             prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
-            // TODO add it to invalid anchor, and purning these anchors for latter search
         }
         return { anchorStatus: prevAnchor, board: retBoard, valid: false, shapeId: -1, row: -1, col: -1 };
     }
@@ -32863,6 +32934,8 @@ var game;
     var clickToDragPiece;
     game.hasDim = false;
     game.dim = 14; //20
+    game.SHAPEROW = 12;
+    game.SHAPECOL = 23;
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -32954,7 +33027,7 @@ var game;
         return "#93FF33";
     }
     function printBoardAnchor() {
-        game.anchorBoard = gameLogic.getBoardAnchor(game.state.board, game.currentUpdateUI.turnIndex);
+        game.anchorBoard = gameLogic.getBoardAnchor(game.state.board, game.state.anchorStatus, game.currentUpdateUI.turnIndex);
         //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
         setboardActionGroundColor(game.anchorBoard, getHintColor());
     }
@@ -33011,7 +33084,8 @@ var game;
             if (!angular.equals(game.preview, boardAction)) {
                 clearDrag('board', false);
                 console.log("set board");
-                setboardActionGroundColor(boardAction, getTurnColor());
+                setboardActionGroundColor(boardAction, getTurnColorForMove());
+                //setboardActionGroundColor(boardAction, getTurnColor());
                 game.preview = boardAction;
             }
             game.canConfirm = true;
@@ -33051,7 +33125,7 @@ var game;
         }
         if (type === 'shape') {
             //TODO to const
-            return { rowsNum: 12, colsNum: 23 };
+            return { rowsNum: game.SHAPEROW, colsNum: game.SHAPECOL };
         }
     }
     function clearCoverBoard(coverBoard, forced, otherBoard, careOther) {
@@ -33091,55 +33165,6 @@ var game;
         // obsolete
         //clickToDragPiece.style.display = "none";
     }
-    //TODO game.ts 92-188
-    // After shape matrix is got, draw shape in board area, draggable
-    /*
-    function handleDragEvent(type: any, clientX: any, clientY: any, shapeMatrix: any) {
-      if (!isHumanTurn() || passes == 2) {
-        return; // if the game is over, do not display dragging effect
-      }
-      if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
-        moveToConfirm = null;
-        $rootScope.$apply();
-      }
-      // Center point in boardArea
-      let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
-      let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
-      // TODO Is outside boardArea? board edges - 2
-      let button = document.getElementById("button");
-      if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
-        // clearClickToDrag();
-        return;
-      }
-      // Inside boardArea. Let's find the containing square's row and col
-      let col = Math.floor(dim * x / boardArea.clientWidth);
-      let row = Math.floor(dim * y / boardArea.clientHeight);
-      // TODO if the cell matrix is not empty, don't preview the piece
-  
-      if ((state.board[row][col] !== '' && deadBoard == null) ||
-        (state.board[row][col] == '' && deadBoard != null)) {
-        clearClickToDrag();
-        return;
-      }
-      //clickToDragPiece.style.display = deadBoard == null ? "inline" : "none";
-      let centerXY = getSquareCenterXY(row, col);
-      // show the piece
-      //let cell = document.getElementById('board' + row + 'x' + col).className = $scope.turnIndex === 0 ? 'black' : 'white';
-  
-      let topLeft = getSquareTopLeft(row, col);
-      clickToDragPiece.style.left = topLeft.left + "px";
-      clickToDragPiece.style.top = topLeft.top + "px";
-      if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
-        // drag ended
-        dragDone(row, col);
-      }
-    }
-    */
-    /*
-    function clearClickToDrag() {
-      clickToDragPiece.style.display = "none";
-    }
-    */
     function getSquareCenterXY(row, col) {
         var size = getSquareWidthHeight();
         return {
@@ -33174,18 +33199,6 @@ var game;
             height: area.clientHeight / (colAndRow.rowsNum)
         };
     }
-    /*
-    function dragDone(row: number, col: number) {
-      $rootScope.$apply(function () {
-        if (deadBoard == null) {
-          // moveToConfirm = {row: row, col: col};
-        } else {
-          // toggleDead(row, col);
-          clearClickToDrag();
-        }
-      });
-    }
-    */
     function getShapeNum(row, col) {
         if (row >= 0 && row < game.shapeBoard.cellToShape.length && col >= 0 && col < game.shapeBoard.cellToShape[0].length)
             return game.shapeBoard.cellToShape[row][col];
@@ -33216,7 +33229,8 @@ var game;
             console.log(gameLogic.aux_printFrame(game.preview, game.dim));
             console.log(gameLogic.aux_printFrame(boardAction, game.dim));
             //clearPreview
-            setboardActionGroundColor(boardAction, getTurnColor());
+            //setboardActionGroundColor(boardAction, getTurnColor());
+            setboardActionGroundColor(boardAction, getTurnColorForMove());
             game.preview = boardAction;
         }
         game.canConfirm = true;
@@ -33622,6 +33636,10 @@ var game;
         var color = ['#ff0066', '#0066ff', '#00e600', '#ffc34d'];
         return color[game.currentUpdateUI.turnIndex];
     }
+    function getTurnColorForMove() {
+        var color = ['#f481b3', '#81b1f9', '#00e600', '#ffc34d'];
+        return color[game.currentUpdateUI.turnIndex];
+    }
     function setShapeAreaSquareStyle(row, col) {
         var shapeId = game.shapeBoard.cellToShape[row][col];
         //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
@@ -33668,29 +33686,6 @@ var app = angular.module('myApp', ['gameServices' /*,'ngScrollable'*/])
         $rootScope['game'] = game;
         game.init($rootScope, $timeout);
     }]);
-/*
-app.controller('Demo', function ($scope:any) {
-    'use strict';
-
-    $scope.posX = 0;
-    $scope.posY = 0;
-
-    $scope.moveX = function (pixels: any) {
-        $scope.posX = $scope.posX + pixels;
-    };
-    $scope.moveY = function (pixels : any) {
-        $scope.posY = $scope.posY + pixels;
-    };
-    $scope.$evalAsync(function () {
-        $scope.$broadcast('content.changed', 1000);
-    });
-
-    $scope.center = function () {
-        $scope.posX = 600;
-        $scope.posY = 410;
-    };
-});
-*/ 
 //# sourceMappingURL=game.js.map
 ;
 var aiService;
@@ -33727,8 +33722,14 @@ var aiService;
         }
         */
         try {
-            var nextstep = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
-            possibleMoves.push(gameLogic.createMove(state, nextstep.row, nextstep.col, nextstep.shapeId, turnIndexBeforeMove));
+            var nextmoves = gameLogic.getNextPossibleMoveList(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
+            if (nextmoves.valid) {
+                state.anchorStatus = nextmoves.anchorStatus;
+                for (var _i = 0, _a = nextmoves.moves; _i < _a.length; _i++) {
+                    var move = _a[_i];
+                    possibleMoves.push(gameLogic.createMove(state, move.row, move.col, move.shapeId, turnIndexBeforeMove));
+                }
+            }
         }
         catch (e) {
         }
