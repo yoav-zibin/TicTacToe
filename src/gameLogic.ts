@@ -895,12 +895,10 @@ module gameLogic {
       }
     }
 
-    let thisAnchor: boolean[][] = angular.copy(prevAnchor);
-
     let hasMove = false;
     for (let t = 0; t < anchors.length; t++) {
       let anchor = anchors[t];
-      if (thisAnchor[turnIndexBeforeMove][anchor] === false) {
+      if (prevAnchor[turnIndexBeforeMove][anchor] === false) {
         continue;
       }
 
@@ -918,16 +916,16 @@ module gameLogic {
             let frameY: number = corners[c][1];
             let action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
             if (action.valid) {
-              return { anchorStatus: thisAnchor, board: angular.copy(action.board), valid: action.valid, shapeId:realShapeId, row:action.row, col:action.col };
+              return { anchorStatus: prevAnchor, board: angular.copy(action.board), valid: action.valid, shapeId:realShapeId, row:action.row, col:action.col };
             }
           }
         }
       }
-      thisAnchor[turnIndexBeforeMove][row * COLS + col] = false;
+      prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
       // TODO add it to invalid anchor, and purning these anchors for latter search
     }
 
-    return { anchorStatus: thisAnchor, board: retBoard, valid: false, shapeId:-1, row:-1, col:-1 };
+    return { anchorStatus: prevAnchor, board: retBoard, valid: false, shapeId:-1, row:-1, col:-1 };
   }
 
   /**
