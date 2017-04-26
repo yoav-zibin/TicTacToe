@@ -33,6 +33,7 @@ module aiService {
     */
     
     try {
+      //TODO should return all possible nextstep rather than just one
       let nextstep = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
       possibleMoves.push(gameLogic.createMove(state, nextstep.row, nextstep.col, nextstep.shapeId, turnIndexBeforeMove));
     } catch (e) {
