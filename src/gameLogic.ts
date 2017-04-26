@@ -901,10 +901,10 @@ module gameLogic {
     return corners;
   }
 
-  export function getNextPossibleShapeIdList(prevAnchor: boolean[][], board: Board, shapeStatus: boolean[][], turnIndexBeforeMove: number):
-    { anchorStatus: boolean[][], valid: boolean, shapeIds: number[] } {
+  export function getNextPossibleMoveList(prevAnchor: boolean[][], board: Board, shapeStatus: boolean[][], turnIndexBeforeMove: number):
+    { anchorStatus: boolean[][], valid: boolean, moves: {row:number, col:number, shapeId:number}[] } {
 
-    let retList: number[] = [];
+    let retList: {row:number, col:number, shapeId:number}[] = [];
     let anchors: number[] = getRecomandAnchor(board, turnIndexBeforeMove);
     let freeShapeIds: number[] = [];
     let allshape: AllShape = getInitShapes();
@@ -939,7 +939,7 @@ module gameLogic {
             let action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
             if (action.valid) {
               hasMove = true;
-              retList.push(realShapeId);
+              retList.push({row:action.row, col:action.col, shapeId:realShapeId});
             }
           }
         }
@@ -948,7 +948,7 @@ module gameLogic {
       prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
     }
 
-    return { anchorStatus: prevAnchor, valid: hasMove, shapeIds: retList };
+    return { anchorStatus: prevAnchor, valid: hasMove, moves: retList };
   }
 
   /**

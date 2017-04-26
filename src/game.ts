@@ -291,55 +291,6 @@ module game {
     // obsolete
     //clickToDragPiece.style.display = "none";
   }
-  //TODO game.ts 92-188
-  // After shape matrix is got, draw shape in board area, draggable
-  /*
-  function handleDragEvent(type: any, clientX: any, clientY: any, shapeMatrix: any) {
-    if (!isHumanTurn() || passes == 2) {
-      return; // if the game is over, do not display dragging effect
-    }
-    if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
-      moveToConfirm = null;
-      $rootScope.$apply();
-    }
-    // Center point in boardArea
-    let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
-    let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
-    // TODO Is outside boardArea? board edges - 2
-    let button = document.getElementById("button");
-    if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
-      // clearClickToDrag();
-      return;
-    }
-    // Inside boardArea. Let's find the containing square's row and col
-    let col = Math.floor(dim * x / boardArea.clientWidth);
-    let row = Math.floor(dim * y / boardArea.clientHeight);
-    // TODO if the cell matrix is not empty, don't preview the piece
-
-    if ((state.board[row][col] !== '' && deadBoard == null) ||
-      (state.board[row][col] == '' && deadBoard != null)) {
-      clearClickToDrag();
-      return;
-    }
-    //clickToDragPiece.style.display = deadBoard == null ? "inline" : "none";
-    let centerXY = getSquareCenterXY(row, col);
-    // show the piece
-    //let cell = document.getElementById('board' + row + 'x' + col).className = $scope.turnIndex === 0 ? 'black' : 'white';
-
-    let topLeft = getSquareTopLeft(row, col);
-    clickToDragPiece.style.left = topLeft.left + "px";
-    clickToDragPiece.style.top = topLeft.top + "px";
-    if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
-      // drag ended
-      dragDone(row, col);
-    }
-  }
-  */
-  /*
-  function clearClickToDrag() {
-    clickToDragPiece.style.display = "none";
-  }
-  */
 
   function getSquareCenterXY(row: number, col: number) {
     let size = getSquareWidthHeight();
@@ -379,19 +330,6 @@ module game {
       height: area.clientHeight / (colAndRow.rowsNum)
     };
   }
-
-  /*
-  function dragDone(row: number, col: number) {
-    $rootScope.$apply(function () {
-      if (deadBoard == null) {
-        // moveToConfirm = {row: row, col: col};
-      } else {
-        // toggleDead(row, col);
-        clearClickToDrag();
-      }
-    });
-  }
-  */
 
   function getShapeNum(row: number, col: number): number {
     if (row >= 0 && row < shapeBoard.cellToShape.length && col >= 0 && col < shapeBoard.cellToShape[0].length)
@@ -878,7 +816,6 @@ module game {
     return { background: '#F0F0F0' };
   }
 
-
   /* 
   export function shouldShowImage(row: number, col: number): boolean {
     return state.board[row][col] !== "" || isProposal(row, col);
@@ -910,26 +847,3 @@ var app = angular.module('myApp', ['gameServices'/*,'ngScrollable'*/])
       $rootScope['game'] = game;
       game.init($rootScope, $timeout);
     }]);
-/*
-app.controller('Demo', function ($scope:any) {
-	'use strict';
-
-	$scope.posX = 0;
-	$scope.posY = 0;
-
-	$scope.moveX = function (pixels: any) {
-		$scope.posX = $scope.posX + pixels;
-	};
-	$scope.moveY = function (pixels : any) {
-		$scope.posY = $scope.posY + pixels;
-	};
-	$scope.$evalAsync(function () {
-		$scope.$broadcast('content.changed', 1000);
-	});
-
-	$scope.center = function () {
-		$scope.posX = 600;
-		$scope.posY = 410;
-	};
-});
-*/
