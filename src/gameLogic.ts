@@ -21,6 +21,8 @@ interface Shape {
   column: number;
   // the centroid of frame is 2,2. The height and width of frame is 5.
   frame: string[][];
+  // how many identipodem operations
+  op: number[];
 }
 
 class Point {
@@ -114,7 +116,8 @@ module gameLogic {
       ['0', '0', '1', '1', '0'],
       ['0', '0', '1', '1', '0'],
       ['0', '0', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0],
     },
     {
       id: 1, row: -1, column: -1,
@@ -122,7 +125,8 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '1', '0', '0'],
       ['0', '0', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0],
     },
     {
       id: 2, row: -1, column: -1,
@@ -130,7 +134,8 @@ module gameLogic {
       ['0', '0', '1', '0', '0'],
       ['0', '1', '1', '1', '0'],
       ['0', '0', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 3, row: -1, column: -1,
@@ -138,7 +143,8 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '1', '1', '0'],
       ['0', '0', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3],
     },
     {
       id: 4, row: -1, column: -1,
@@ -146,7 +152,8 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '1', '1', '1', '1'],
       ['0', '0', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3],
     },
     {
       id: 5, row: -1, column: -1,
@@ -154,7 +161,8 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '1', '1', '0', '0'],
       ['0', '0', '1', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3],
     },
     {
       id: 6, row: -1, column: -1,
@@ -162,7 +170,8 @@ module gameLogic {
       ['0', '0', '0', '1', '0'],
       ['0', '1', '1', '1', '0'],
       ['0', '0', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 7, row: -1, column: -1,
@@ -170,7 +179,8 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '1', '1', '1', '0'],
       ['0', '0', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3],
     },
     {
       id: 8, row: -1, column: -1,
@@ -178,7 +188,8 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '1', '1', '0'],
       ['0', '1', '1', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 9, row: -1, column: -1,
@@ -186,7 +197,8 @@ module gameLogic {
       ['0', '1', '0', '0', '0'],
       ['0', '1', '1', '1', '1'],
       ['0', '0', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 10, row: -1, column: -1,
@@ -194,7 +206,8 @@ module gameLogic {
       ['0', '0', '1', '0', '0'],
       ['0', '1', '1', '1', '0'],
       ['0', '0', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3],
     },
     {
       id: 11, row: -1, column: -1,
@@ -202,7 +215,8 @@ module gameLogic {
       ['0', '0', '1', '0', '0'],
       ['0', '0', '1', '1', '1'],
       ['0', '0', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3],
     },
     {
       id: 12, row: -1, column: -1,
@@ -210,7 +224,8 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '1', '1', '1'],
       ['0', '1', '1', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 13, row: -1, column: -1,
@@ -218,7 +233,8 @@ module gameLogic {
       ['0', '0', '0', '1', '0'],
       ['0', '1', '1', '1', '0'],
       ['0', '1', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 14, row: -1, column: -1,
@@ -226,7 +242,8 @@ module gameLogic {
       ['0', '0', '1', '0', '0'],
       ['0', '0', '1', '0', '0'],
       ['0', '0', '1', '0', '0'],
-      ['0', '0', '1', '0', '0']]
+      ['0', '0', '1', '0', '0']],
+      op: [0, 1, 2, 3],
     },
     {
       id: 15, row: -1, column: -1,
@@ -234,7 +251,8 @@ module gameLogic {
       ['0', '0', '1', '0', '0'],
       ['0', '0', '1', '1', '0'],
       ['0', '0', '1', '1', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 16, row: -1, column: -1,
@@ -242,7 +260,8 @@ module gameLogic {
       ['0', '0', '1', '1', '0'],
       ['0', '1', '1', '0', '0'],
       ['0', '1', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 17, row: -1, column: -1,
@@ -250,7 +269,8 @@ module gameLogic {
       ['0', '0', '1', '1', '0'],
       ['0', '0', '1', '0', '0'],
       ['0', '0', '1', '1', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 18, row: -1, column: -1,
@@ -258,7 +278,8 @@ module gameLogic {
       ['0', '0', '1', '1', '0'],
       ['0', '1', '1', '0', '0'],
       ['0', '0', '1', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 19, row: -1, column: -1,
@@ -266,7 +287,8 @@ module gameLogic {
       ['0', '0', '1', '0', '0'],
       ['0', '1', '1', '1', '0'],
       ['0', '0', '1', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0],
     },
     {
       id: 20, row: -1, column: -1,
@@ -274,7 +296,8 @@ module gameLogic {
       ['0', '0', '1', '0', '0'],
       ['0', '1', '1', '1', '1'],
       ['0', '0', '0', '0', '0'],
-      ['0', '0', '0', '0', '0']]
+      ['0', '0', '0', '0', '0']],
+      op: [0, 1, 2, 3, 4, 5, 6, 7],
     }
     ];
 
@@ -512,8 +535,8 @@ module gameLogic {
    */
   function isTie(board: Board, playerStatus: boolean[]): boolean {
     let over = true;
-    let winner:string = '';
-      
+    let winner: string = '';
+
     for (let i = 0; i < GROUPNUMBER; i++) {
       if (playerStatus[i] === true) {
         over = false;
@@ -527,8 +550,8 @@ module gameLogic {
     }
   }
 
-  function getScore(board:Board): number[] {
-    let score : number[] = [];
+  function getScore(board: Board): number[] {
+    let score: number[] = [];
     for (let i = 0; i < GROUPNUMBER; i++) {
       score[i] = 0;
     }
@@ -536,8 +559,8 @@ module gameLogic {
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
         if (board[i][j] !== '') {
-          let idx:number = +board[i][j];
-          score[idx] ++;
+          let idx: number = +board[i][j];
+          score[idx]++;
         }
       }
     }
@@ -553,8 +576,8 @@ module gameLogic {
    */
   function getWinner(board: Board, playerStatus: boolean[]): string {
     let over = true;
-    let winner:string = '';
-      
+    let winner: string = '';
+
     for (let i = 0; i < GROUPNUMBER; i++) {
       if (playerStatus[i] === true) {
         over = false;
@@ -828,24 +851,24 @@ module gameLogic {
   }
 
   function mapShapeToPos(frow: number, fcol: number, board: Board,
-    shape: Shape, frameX: number, frameY: number, turnIndexBeforeMove: number): { board: Board, valid: boolean, row:number, col:number } {
+    shape: Shape, frameX: number, frameY: number, turnIndexBeforeMove: number): { board: Board, valid: boolean, row: number, col: number } {
 
     let CTR = Math.floor(SHAPEWIDTH / 2);
     let row: number = frow - frameX + CTR;
     let col: number = fcol - frameY + CTR;
 
     if (!checkValidShapePlacement(row, col, shape)) {
-      return { board: [], valid: false, row:-1, col:-1 };
+      return { board: [], valid: false, row: -1, col: -1 };
     }
 
     let boardAction: Board = getBoardAction(row, col, shape);
 
     //TODO export a function checkLealMove(board, row, col, turnIndexBeforeMove) // add boardAction
     if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
-      return { board: [], valid: false, row:-1, col:-1 };
+      return { board: [], valid: false, row: -1, col: -1 };
     }
 
-    return { board: boardAction, valid: true, row:row, col:col };
+    return { board: boardAction, valid: true, row: row, col: col };
   }
 
   function getAllCorners(shape: Shape): number[][] {
@@ -883,7 +906,7 @@ module gameLogic {
    * @return board:Board,valid:boolean, the board in return is an boardAction only contains the shape
    */
   export function getNextPossibleShape(prevAnchor: boolean[][], board: Board, shapeStatus: boolean[][], turnIndexBeforeMove: number):
-    { anchorStatus: boolean[][], board: Board, valid: boolean, shapeId: number, row:number, col:number } {
+    { anchorStatus: boolean[][], board: Board, valid: boolean, shapeId: number, row: number, col: number } {
     let retBoard: Board = [];
     let anchors: number[] = getRecomandAnchor(board, turnIndexBeforeMove);
     let freeShapeIds: number[] = [];
@@ -916,7 +939,7 @@ module gameLogic {
             let frameY: number = corners[c][1];
             let action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
             if (action.valid) {
-              return { anchorStatus: prevAnchor, board: angular.copy(action.board), valid: action.valid, shapeId:realShapeId, row:action.row, col:action.col };
+              return { anchorStatus: prevAnchor, board: angular.copy(action.board), valid: action.valid, shapeId: realShapeId, row: action.row, col: action.col };
             }
           }
         }
@@ -925,7 +948,7 @@ module gameLogic {
       // TODO add it to invalid anchor, and purning these anchors for latter search
     }
 
-    return { anchorStatus: prevAnchor, board: retBoard, valid: false, shapeId:-1, row:-1, col:-1 };
+    return { anchorStatus: prevAnchor, board: retBoard, valid: false, shapeId: -1, row: -1, col: -1 };
   }
 
   /**
@@ -1047,7 +1070,7 @@ module gameLogic {
     };
   }
 
-  function getNextTurn(turnIndexBeforeMove:number, playerStatus:boolean[]):number {
+  function getNextTurn(turnIndexBeforeMove: number, playerStatus: boolean[]): number {
     let turnIdx = -1;
     for (let i = 0; i < GROUPNUMBER; i++) {
       let t = (turnIndexBeforeMove + i + 1) % GROUPNUMBER;

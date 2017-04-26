@@ -18,6 +18,8 @@ var game;
     var clickToDragPiece;
     game.hasDim = false;
     game.dim = 14; //20
+    game.SHAPEROW = 12;
+    game.SHAPECOL = 23;
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -206,7 +208,7 @@ var game;
         }
         if (type === 'shape') {
             //TODO to const
-            return { rowsNum: 12, colsNum: 23 };
+            return { rowsNum: game.SHAPEROW, colsNum: game.SHAPECOL };
         }
     }
     function clearCoverBoard(coverBoard, forced, otherBoard, careOther) {

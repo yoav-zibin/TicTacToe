@@ -23,6 +23,8 @@ module game {
   let clickToDragPiece: HTMLImageElement;
   export let hasDim = false;
   export let dim = 14; //20
+  export const SHAPEROW = 12;
+  export const SHAPECOL = 23;
 
   // For community games.
   export let proposals: number[][] = null;
@@ -244,7 +246,7 @@ module game {
     }
     if (type === 'shape') {
       //TODO to const
-      return { rowsNum: 12, colsNum: 23 };
+      return { rowsNum: SHAPEROW, colsNum: SHAPECOL };
     }
   }
 
