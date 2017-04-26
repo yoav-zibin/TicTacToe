@@ -796,10 +796,12 @@ var gameLogic;
                 freeShapeIds.push(i);
             }
         }
+        let thisAnchor = angular.copy(prevAnchor);
+
         var hasMove = false;
         for (var t = 0; t < anchors.length; t++) {
             var anchor = anchors[t];
-            if (prevAnchor[turnIndexBeforeMove][anchor] === false) {
+            if (thisAnchor[turnIndexBeforeMove][anchor] === false) {
                 continue;
             }
             var row = parseIJ(anchor)[0];
@@ -815,15 +817,15 @@ var gameLogic;
                         var frameY = corners[c][1];
                         var action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
                         if (action.valid) {
-                            return { anchorStatus: prevAnchor, board: angular.copy(action.board), valid: action.valid, shapeId: realShapeId, row: action.row, col: action.col };
+                            return { anchorStatus: thisAnchor, board: angular.copy(action.board), valid: action.valid, shapeId: realShapeId, row: action.row, col: action.col };
                         }
                     }
                 }
             }
-            prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
+            thisAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
             // TODO add it to invalid anchor, and purning these anchors for latter search
         }
-        return { anchorStatus: prevAnchor, board: retBoard, valid: false, shapeId: -1, row: -1, col: -1 };
+        return { anchorStatus: thisAnchor, board: retBoard, valid: false, shapeId: -1, row: -1, col: -1 };
     }
     gameLogic.getNextPossibleShape = getNextPossibleShape;
     /**
