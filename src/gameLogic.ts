@@ -908,7 +908,7 @@ module gameLogic {
       for (let id = 0; id < freeShapeIds.length; id++) {
         for (let op = 0; op < OPERATIONS; op++) {
           let shapeId: number = freeShapeIds[id];
-          let shape: Shape = getShapeByTypeAndOperation(freeShapeIds[shapeId], op);
+          let shape: Shape = getShapeByTypeAndOperation(freeShapeIds[id], op);
           let realShapeId: number = shapeId * OPERATIONS + op;
           let corners: number[][] = getAllCorners(shape);
           for (let c = 0; c < corners.length; c++) {
