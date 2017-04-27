@@ -79,6 +79,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0],
+                pt: 4,
             },
             {
                 id: 1, row: -1, column: -1,
@@ -88,6 +89,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0],
+                pt: 1,
             },
             {
                 id: 2, row: -1, column: -1,
@@ -97,6 +99,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 4,
             },
             {
                 id: 3, row: -1, column: -1,
@@ -106,6 +109,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 2,
             },
             {
                 id: 4, row: -1, column: -1,
@@ -115,6 +119,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 3,
             },
             {
                 id: 5, row: -1, column: -1,
@@ -124,6 +129,7 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 3,
             },
             {
                 id: 6, row: -1, column: -1,
@@ -133,6 +139,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 4,
             },
             {
                 id: 7, row: -1, column: -1,
@@ -142,6 +149,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 3,
             },
             {
                 id: 8, row: -1, column: -1,
@@ -151,6 +159,7 @@ var gameLogic;
                     ['0', '1', '1', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 4,
             },
             {
                 id: 9, row: -1, column: -1,
@@ -160,6 +169,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 10, row: -1, column: -1,
@@ -169,6 +179,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 5,
             },
             {
                 id: 11, row: -1, column: -1,
@@ -178,6 +189,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 5,
             },
             {
                 id: 12, row: -1, column: -1,
@@ -187,6 +199,7 @@ var gameLogic;
                     ['0', '1', '1', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 13, row: -1, column: -1,
@@ -196,6 +209,7 @@ var gameLogic;
                     ['0', '1', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 14, row: -1, column: -1,
@@ -205,6 +219,7 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 5,
             },
             {
                 id: 15, row: -1, column: -1,
@@ -214,6 +229,7 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 16, row: -1, column: -1,
@@ -223,6 +239,7 @@ var gameLogic;
                     ['0', '1', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 17, row: -1, column: -1,
@@ -232,6 +249,7 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 18, row: -1, column: -1,
@@ -241,6 +259,7 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 19, row: -1, column: -1,
@@ -250,6 +269,7 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0],
+                pt: 5,
             },
             {
                 id: 20, row: -1, column: -1,
@@ -259,6 +279,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             }
         ];
         return shapes;
@@ -834,6 +855,7 @@ var gameLogic;
                         var action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
                         if (action.valid) {
                             hasMove = true;
+                            console.log();
                             retList.push({ row: action.row, col: action.col, shapeId: realShapeId });
                         }
                     }
@@ -872,6 +894,7 @@ var gameLogic;
             }
             var row = parseIJ(anchor)[0];
             var col = parseIJ(anchor)[1];
+            // TODO shuffle and make random
             for (var id = 0; id < freeShapeIds.length; id++) {
                 var shapeId = freeShapeIds[id];
                 var stdShape = allshape[shapeId];
@@ -887,6 +910,8 @@ var gameLogic;
                         var frameY = corners[c][1];
                         var action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
                         if (action.valid) {
+                            //console.log("action");//~
+                            //console.log(action);//~
                             return { invalidAnchors: invalidAnchors, board: angular.copy(action.board), valid: action.valid, shapeId: realShapeId, row: action.row, col: action.col };
                         }
                     }
@@ -949,8 +974,7 @@ var gameLogic;
         var anchorStatusAfterMove = angular.copy(anchorStatus);
         for (var _i = 0, _a = nextstep.invalidAnchors; _i < _a.length; _i++) {
             var anchorPos = _a[_i];
-            var pox = parseIJ(anchorPos);
-            anchorStatus[pox[0]][pox[1]] = false;
+            anchorStatus[turnIndexBeforeMove][anchorPos] = false;
         }
         console.log(boardAfterMove);
         console.log("possibleMove");

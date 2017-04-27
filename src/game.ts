@@ -26,6 +26,16 @@ module game {
   export const SHAPEROW = 12;
   export const SHAPECOL = 23;
 
+  export const SHOW_HINT_COLOR = false;
+  let showHintColor: boolean = SHOW_HINT_COLOR;
+
+  export const BACKGROUND_COLOR = "rgb(240, 240, 240)";//"#F0F0F0"
+  export const PLAYER_1_COLOR = "#f39c12";
+  export const PLAYER_2_COLOR = "#2980b9";
+  export const HINT_1_COLOR = "#ffcce0";
+  export const HINT_2_COLOR = "#ccebff";
+  export const PLAYER_1_MOVE_COLOR = "#f1c40f";
+  export const PLAYER_2_MOVE_COLOR = "#3498db";
   // For community games.
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
@@ -65,6 +75,7 @@ module game {
     });
 
     shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
+    showHintColor = SHOW_HINT_COLOR;
   }
 
   function getTranslations(): Translations {
@@ -90,7 +101,7 @@ module game {
     return { width: area.clientWidth, height: area.clientHeight };
   }
 
-  function getXYandDragTyep(clientX: any, clientY: any) {
+  function getXYandDragType(clientX: any, clientY: any) {
     //TODO check if shapex and shapey is correct
     console.log("[getXYandDragTyep], clientX:", clientX, " clientY:", clientY);
     let boardX: number = clientX - gameArea.offsetLeft - boardArea.offsetLeft
@@ -128,13 +139,16 @@ module game {
   }
 
   function getHintColor() {
-    return "#93FF33";
+    var color = [HINT_1_COLOR, HINT_2_COLOR, '#00e600', '#ffc34d'];
+    return color[currentUpdateUI.turnIndex];
+    //return "#93FF33";
   }
 
   function printBoardAnchor() {
     anchorBoard = gameLogic.getBoardAnchor(state.board, state.anchorStatus, currentUpdateUI.turnIndex);
     //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
-    setboardActionGroundColor(anchorBoard, getHintColor());
+    setboardHintColor(anchorBoard, getHintColor());
+    //setboardActionGroundColor(anchorBoard, getHintColor());
   }
 
   function clearBoardAnchor() {
@@ -150,7 +164,7 @@ module game {
       return;
     }
 
-    let XYDrag = getXYandDragTyep(clientX, clientY);
+    let XYDrag = getXYandDragType(clientX, clientY);
 
     let x: number = XYDrag.x;
     let y: number = XYDrag.y;
@@ -183,6 +197,7 @@ module game {
     horizontalDraggingLine.setAttribute("y1", "" + centerXY.y);
     horizontalDraggingLine.setAttribute("y2", "" + centerXY.y);
 
+    printBoardAnchor();
     console.log("[handleDragEventGameArea], dragtype:", dragType);
     if (dragType === 'board') {
       console.log("[handleDragEventGameArea], in board get shapeIdChosen:", shapeIdChosen);
@@ -202,7 +217,6 @@ module game {
         console.log("set board");
 
         setboardActionGroundColor(boardAction, getTurnColorForMove());
-        
         //setboardActionGroundColor(boardAction, getTurnColor());
         preview = boardAction;
       }
@@ -220,11 +234,28 @@ module game {
     document.getElementById('e2e_test_board_div_' + row + 'x' + col).style.background = color;
   }
 
+  function getSquareBackGroundColor(row: number, col: number) {
+    return document.getElementById('e2e_test_board_div_' + row + 'x' + col).style.background;
+  }
+
   function setboardActionGroundColor(boardAction: Board, color: string) {
     for (let i = 0; i < boardAction.length; i++) {
       for (let j = 0; j < boardAction[i].length; j++) {
         if (boardAction[i][j] === '1') {
           setSquareBackGroundColor(i, j, color);
+        }
+      }
+    }
+  }
+
+  function setboardHintColor(boardAction: Board, color: string) {
+    for (let i = 0; i < boardAction.length; i++) {
+      for (let j = 0; j < boardAction[i].length; j++) {
+        //console.log(getSquareBackGroundColor(i, j));
+        if (boardAction[i][j] === '1') {
+          if (showHintColor === true || getSquareBackGroundColor(i, j) === BACKGROUND_COLOR) {
+            setSquareBackGroundColor(i, j, color);
+          }
         }
       }
     }
@@ -365,7 +396,7 @@ module game {
 
     console.log(gameLogic.aux_printFrame(boardAction, dim));
 
-    if (!angular.equals(preview, boardAction)) {
+    //if (!angular.equals(preview, boardAction)) {
       clearDrag('board', true);
       console.log("set board");
 
@@ -374,9 +405,9 @@ module game {
       //clearPreview
       //setboardActionGroundColor(boardAction, getTurnColor());
       setboardActionGroundColor(boardAction, getTurnColorForMove());
-      
+
       preview = boardAction;
-    }
+    //}
     canConfirm = true;
   }
 
@@ -433,7 +464,7 @@ module game {
 
   export function showCancelButton() {
     // TODO only show cancel when some block is chosen
-    return true;
+    return isMyTurn();
   }
 
   /*
@@ -441,6 +472,9 @@ module game {
     return moveToConfirm !== null; // TODO check flip state
   }
   */
+  export function showHintBtn() {
+    return isMyTurn();
+  }
 
   export function showRotateLeft() {
     return moveToConfirm !== null; // TODO check flip state
@@ -457,6 +491,66 @@ module game {
   export function checkLegal() {
     return moveToConfirm !== null && gameLogic.checkLegalMoveForGame(state.board, moveToConfirm.row, moveToConfirm.col,
       currentUpdateUI.turnIndex, moveToConfirm.shapeId, true);
+  }
+
+  export function getHint() {
+    console.log("state");
+    console.log(state);
+    clearDrag('board', true);
+    //let nextmove = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, currentUpdateUI.turnIndex);
+    let anchorStatus = angular.copy(state.anchorStatus);
+    let nextmoves = gameLogic.getNextPossibleMoveList(anchorStatus, state.board, state.shapeStatus, currentUpdateUI.turnIndex);
+    console.log("HINT nextmove");
+    console.log(nextmoves);
+    if (nextmoves.valid) {
+      let pick: number = 0;
+      if (shapeIdChosen != undefined && shapeIdChosen > 0) {
+        let readyList: number[] = [];
+        for (let i = 0; i < nextmoves.moves.length; i++) {
+          if (gameLogic.getShapeType(nextmoves.moves[i].shapeId) == gameLogic.getShapeType(shapeIdChosen)) {
+            readyList.push(i);
+          }
+        }
+        let randPos: number = Math.floor(Math.random() * readyList.length);
+        pick = readyList[randPos];
+      } else {
+        pick = Math.floor(Math.random() * nextmoves.moves.length)
+      }
+      moveToConfirm = {
+        row: nextmoves.moves[pick].row,
+        col: nextmoves.moves[pick].col,
+        shapeId: nextmoves.moves[pick].shapeId
+      };
+
+      console.log("random pick");
+      console.log(moveToConfirm);
+      //TODO here find suitable or random one
+      // TODO auto draw
+      try {
+        if (moveToConfirm == null) {
+          return;
+        }
+
+        shapeIdChosen = moveToConfirm.shapeId
+
+        // draw preview
+        /*
+        let boardAction = gameLogic.getBoardActionFromShapeID(moveToConfirm.row, moveToConfirm.col, moveToConfirm.shapeId);
+        if (!angular.equals(preview, boardAction)) {
+          clearDrag('board', false);
+          console.log("set board");
+          setboardActionGroundColor(boardAction, getTurnColorForMove());
+          preview = boardAction;
+        }
+        */
+        updateboardAction(moveToConfirm.row, moveToConfirm.col);
+        printBoardAnchor();
+        dragDoneForBoard(moveToConfirm.row, moveToConfirm.col, 'board');
+      }
+      catch (e) {
+        console.log("EXCEPTION!:", moveToConfirm);
+      }
+    }
   }
 
   export function newlyPlaced(row: number, col: number) {
@@ -525,6 +619,9 @@ module game {
     // TODO change shapeId
     getShapeIdAfter(left, right, flip);
     updateboardAction(row, col);
+    //
+    printBoardAnchor();
+    //~
     dragDoneForBoard(row, col, 'board');
   }
 
@@ -587,7 +684,6 @@ module game {
       //confirm move
       // make move 
       clearBoardAnchor();
-
       boardAreaCellClicked(moveToConfirm.row, moveToConfirm.col);
       clearClickToDrag();
     }
@@ -782,15 +878,15 @@ module game {
     //   return '#F0F0F0';
     // }
     if (state.board[row][col] === '0') {
-      return '#ff0066';
+      return PLAYER_1_COLOR;
     } else if (state.board[row][col] === '1') {
-      return '#0099ff';
+      return PLAYER_2_COLOR;
     } else if (state.board[row][col] === '2') {
       return '#00e600';
     } else if (state.board[row][col] === '3') {
       return '#ffc34d';
     } else {
-      return '#F0F0F0';
+      return BACKGROUND_COLOR;
     }
   }
 
@@ -801,12 +897,12 @@ module game {
 
   function getTurnColor() {
     // var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
-    var color = ['#ff0066', '#0099ff', '#00e600', '#ffc34d'];
+    var color = [PLAYER_1_COLOR, PLAYER_2_COLOR, '#00e600', '#ffc34d'];
     return color[currentUpdateUI.turnIndex];
   }
 
   function getTurnColorForMove() {
-    var color = ['#ff4d94', '#66c2ff', '#00e600', '#ffc34d'];
+    var color = [PLAYER_1_MOVE_COLOR, PLAYER_2_MOVE_COLOR, '#00e600', '#ffc34d'];
     return color[currentUpdateUI.turnIndex];
   }
 
