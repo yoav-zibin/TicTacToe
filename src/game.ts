@@ -461,7 +461,7 @@ module game {
   }
 
   export function showConfirmButton() {
-    return checkLegal();
+    return isMyTurn() && checkLegal();
   }
 
   export function showCancelButton() {
@@ -479,15 +479,15 @@ module game {
   }
 
   export function showRotateLeft() {
-    return moveToConfirm !== null; // TODO check flip state
+    return isMyTurn() &&  (moveToConfirm !== null); // TODO check flip state
   }
 
   export function showRotateRight() {
-    return moveToConfirm !== null; // TODO check flip state
+    return isMyTurn() && (moveToConfirm !== null); // TODO check flip state
   }
 
   export function showFlip() {
-    return moveToConfirm !== null; // TODO check flip state
+    return isMyTurn() &&  (moveToConfirm !== null); // TODO check flip state
   }
 
   export function checkLegal() {

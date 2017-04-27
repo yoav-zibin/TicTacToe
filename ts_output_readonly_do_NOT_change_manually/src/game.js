@@ -397,7 +397,7 @@ var game;
     }
     game.cancelClicked = cancelClicked;
     function showConfirmButton() {
-        return checkLegal();
+        return isMyTurn() && checkLegal();
     }
     game.showConfirmButton = showConfirmButton;
     function showCancelButton() {
@@ -415,15 +415,15 @@ var game;
     }
     game.showHintBtn = showHintBtn;
     function showRotateLeft() {
-        return game.moveToConfirm !== null; // TODO check flip state
+        return isMyTurn() && (game.moveToConfirm !== null); // TODO check flip state
     }
     game.showRotateLeft = showRotateLeft;
     function showRotateRight() {
-        return game.moveToConfirm !== null; // TODO check flip state
+        return isMyTurn() && (game.moveToConfirm !== null); // TODO check flip state
     }
     game.showRotateRight = showRotateRight;
     function showFlip() {
-        return game.moveToConfirm !== null; // TODO check flip state
+        return isMyTurn() && (game.moveToConfirm !== null); // TODO check flip state
     }
     game.showFlip = showFlip;
     function checkLegal() {
