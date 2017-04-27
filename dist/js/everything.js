@@ -33621,10 +33621,10 @@ var game;
         //   return '#F0F0F0';
         // }
         if (game.state.board[row][col] === '0') {
-            return '#f39c12';
+            return '#ff0066';
         }
         else if (game.state.board[row][col] === '1') {
-            return '#2980b9';
+            return '#0099ff';
         }
         else if (game.state.board[row][col] === '2') {
             return '#00e600';
@@ -33643,11 +33643,11 @@ var game;
     game.setBoardAreaSquareStyle = setBoardAreaSquareStyle;
     function getTurnColor() {
         // var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
-        var color = ['#f39c12', '#2980b9', '#00e600', '#ffc34d'];
+        var color = ['#ff0066', '#0099ff', '#00e600', '#ffc34d'];
         return color[game.currentUpdateUI.turnIndex];
     }
     function getTurnColorForMove() {
-        var color = ['#f1c40f', '#3498db', '#00e600', '#ffc34d'];
+        var color = ['#ff4d94', '#66c2ff', '#00e600', '#ffc34d'];
         return color[game.currentUpdateUI.turnIndex];
     }
     function setShapeAreaSquareStyle(row, col) {
