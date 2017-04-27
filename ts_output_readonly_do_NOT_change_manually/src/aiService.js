@@ -34,11 +34,18 @@ var aiService;
         try {
             var nextmoves = gameLogic.getNextPossibleMoveList(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
             if (nextmoves.valid) {
-                state.anchorStatus = nextmoves.anchorStatus;
+                var anchors = state.anchorStatus;
                 for (var _i = 0, _a = nextmoves.moves; _i < _a.length; _i++) {
                     var move = _a[_i];
                     possibleMoves.push(gameLogic.createMove(state, move.row, move.col, move.shapeId, turnIndexBeforeMove));
                 }
+                var newAnchors = angular.copy(anchors);
+                for (var _b = 0, _c = nextmoves.invalidAnchors; _b < _c.length; _b++) {
+                    var pos = _c[_b];
+                    var pox = gameLogic.parseIJ(pos);
+                    newAnchors[pox[0]][pox[1]] = false;
+                }
+                state.anchorStatus = newAnchors;
             }
         }
         catch (e) {

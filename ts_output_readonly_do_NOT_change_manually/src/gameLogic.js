@@ -52,10 +52,8 @@ var gameLogic;
         var ret = [];
         for (var p = 0; p < gameLogic.GROUPNUMBER; p++) {
             ret[p] = [];
-            for (var i = 0; i < gameLogic.ROWS; i++) {
-                for (var j = 0; j < gameLogic.COLS; j++) {
-                    ret[p][i * gameLogic.COLS + j] = true;
-                }
+            for (var i = 0; i < gameLogic.ROWS * gameLogic.COLS; i++) {
+                ret[p][i] = true;
             }
         }
         return ret;
@@ -808,6 +806,7 @@ var gameLogic;
         var anchors = getRecomandAnchor(board, turnIndexBeforeMove);
         var freeShapeIds = [];
         var allshape = getInitShapes();
+        var invalidAnchors = [];
         for (var i = 0; i < gameLogic.SHAPENUMBER; i++) {
             if (shapeStatus[turnIndexBeforeMove][i] === true) {
                 freeShapeIds.push(i);
@@ -842,8 +841,9 @@ var gameLogic;
             }
             // add it to invalid anchor, and purning these anchors for latter search
             prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
+            invalidAnchors.push(row * gameLogic.COLS + col);
         }
-        return { anchorStatus: prevAnchor, valid: hasMove, moves: retList };
+        return { invalidAnchors: invalidAnchors, valid: hasMove, moves: retList };
     }
     gameLogic.getNextPossibleMoveList = getNextPossibleMoveList;
     /**
@@ -858,6 +858,7 @@ var gameLogic;
         var anchors = getRecomandAnchor(board, turnIndexBeforeMove);
         var freeShapeIds = [];
         var allshape = getInitShapes();
+        var invalidAnchors = [];
         for (var i = 0; i < gameLogic.SHAPENUMBER; i++) {
             if (shapeStatus[turnIndexBeforeMove][i] === true) {
                 freeShapeIds.push(i);
@@ -886,15 +887,16 @@ var gameLogic;
                         var frameY = corners[c][1];
                         var action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
                         if (action.valid) {
-                            return { anchorStatus: prevAnchor, board: angular.copy(action.board), valid: action.valid, shapeId: realShapeId, row: action.row, col: action.col };
+                            return { invalidAnchors: invalidAnchors, board: angular.copy(action.board), valid: action.valid, shapeId: realShapeId, row: action.row, col: action.col };
                         }
                     }
                 }
             }
             // add it to invalid anchor, and purning these anchors for latter search
             prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
+            invalidAnchors.push(row * gameLogic.COLS + col);
         }
-        return { anchorStatus: prevAnchor, board: retBoard, valid: false, shapeId: -1, row: -1, col: -1 };
+        return { invalidAnchors: invalidAnchors, board: retBoard, valid: false, shapeId: -1, row: -1, col: -1 };
     }
     gameLogic.getNextPossibleShape = getNextPossibleShape;
     /**
@@ -941,9 +943,15 @@ var gameLogic;
         console.log("boardAfterMove:");
         console.log(aux_printFrame(boardAfterMove, gameLogic.COLS));
         console.log(aux_printArray(shapeStatusAfterMove));
+        var anchorStatus = stateBeforeMove.anchorStatus;
         //TODO implement the last check
-        var nextstep = getNextPossibleShape(stateBeforeMove.anchorStatus, boardAfterMove, shapeStatusAfterMove, turnIndexBeforeMove);
-        var anchorStatusAfterMove = angular.copy(nextstep.anchorStatus);
+        var nextstep = getNextPossibleShape(anchorStatus, boardAfterMove, shapeStatusAfterMove, turnIndexBeforeMove);
+        var anchorStatusAfterMove = angular.copy(anchorStatus);
+        for (var _i = 0, _a = nextstep.invalidAnchors; _i < _a.length; _i++) {
+            var anchorPos = _a[_i];
+            var pox = parseIJ(anchorPos);
+            anchorStatus[pox[0]][pox[1]] = false;
+        }
         console.log(boardAfterMove);
         console.log("possibleMove");
         console.log(nextstep.valid);
@@ -952,6 +960,8 @@ var gameLogic;
         console.log("anchor status");
         console.log(anchorStatusAfterMove);
         console.log(aux_printFrame(nextstep.board, gameLogic.ROWS));
+        console.log("anchor status");
+        console.log(anchorStatus);
         var playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
         var winner = getWinner(boardAfterMove, playerStatusAfterMove);
         var endMatchScores;

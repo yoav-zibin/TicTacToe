@@ -89,10 +89,8 @@ module gameLogic {
     let ret: boolean[][] = [];
     for (let p = 0; p < GROUPNUMBER; p++) {
       ret[p] = [];
-      for (let i = 0; i < ROWS; i++) {
-        for (let j = 0; j < COLS; j++) {
-          ret[p][i * COLS + j] = true;
-        }
+      for (let i = 0; i < ROWS * COLS; i++) {
+        ret[p][i] = true;
       }
     }
     return ret;
@@ -808,7 +806,7 @@ module gameLogic {
     return ret;
   }
 
-  export function updatePlayerStatus(playerStatus: boolean[], turnIndexBeforeMove: number, nextstep: { anchorStatus: boolean[][], board: Board, valid: boolean }): boolean[] {
+  export function updatePlayerStatus(playerStatus: boolean[], turnIndexBeforeMove: number, nextstep: { invalidAnchors: number[], board: Board, valid: boolean }): boolean[] {
     let ret = angular.copy(playerStatus);
 
     if (nextstep.valid === false) {
@@ -903,12 +901,13 @@ module gameLogic {
   }
 
   export function getNextPossibleMoveList(prevAnchor: boolean[][], board: Board, shapeStatus: boolean[][], turnIndexBeforeMove: number):
-    { anchorStatus: boolean[][], valid: boolean, moves: {row:number, col:number, shapeId:number}[] } {
+    { invalidAnchors: number[], valid: boolean, moves: { row: number, col: number, shapeId: number }[] } {
 
-    let retList: {row:number, col:number, shapeId:number}[] = [];
+    let retList: { row: number, col: number, shapeId: number }[] = [];
     let anchors: number[] = getRecomandAnchor(board, turnIndexBeforeMove);
     let freeShapeIds: number[] = [];
     let allshape: AllShape = getInitShapes();
+    let invalidAnchors:number[] = [];
 
     for (let i = 0; i < SHAPENUMBER; i++) {
       if (shapeStatus[turnIndexBeforeMove][i] === true) {
@@ -940,16 +939,17 @@ module gameLogic {
             let action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
             if (action.valid) {
               hasMove = true;
-              retList.push({row:action.row, col:action.col, shapeId:realShapeId});
+              retList.push({ row: action.row, col: action.col, shapeId: realShapeId });
             }
           }
         }
       }
       // add it to invalid anchor, and purning these anchors for latter search
       prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
+      invalidAnchors.push(row*COLS + col);
     }
 
-    return { anchorStatus: prevAnchor, valid: hasMove, moves: retList };
+    return { invalidAnchors: invalidAnchors, valid: hasMove, moves: retList };
   }
 
   /**
@@ -960,12 +960,13 @@ module gameLogic {
    * @return board:Board,valid:boolean, the board in return is an boardAction only contains the shape
    */
   export function getNextPossibleShape(prevAnchor: boolean[][], board: Board, shapeStatus: boolean[][], turnIndexBeforeMove: number):
-    { anchorStatus: boolean[][], board: Board, valid: boolean, shapeId: number, row: number, col: number } {
+    { invalidAnchors: number[], board: Board, valid: boolean, shapeId: number, row: number, col: number } {
 
     let retBoard: Board = [];
     let anchors: number[] = getRecomandAnchor(board, turnIndexBeforeMove);
     let freeShapeIds: number[] = [];
     let allshape: AllShape = getInitShapes();
+    let invalidAnchors: number[] = [];
 
     for (let i = 0; i < SHAPENUMBER; i++) {
       if (shapeStatus[turnIndexBeforeMove][i] === true) {
@@ -998,16 +999,17 @@ module gameLogic {
             let frameY: number = corners[c][1];
             let action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
             if (action.valid) {
-              return { anchorStatus: prevAnchor, board: angular.copy(action.board), valid: action.valid, shapeId: realShapeId, row: action.row, col: action.col };
+              return { invalidAnchors: invalidAnchors, board: angular.copy(action.board), valid: action.valid, shapeId: realShapeId, row: action.row, col: action.col };
             }
           }
         }
       }
       // add it to invalid anchor, and purning these anchors for latter search
       prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
+      invalidAnchors.push(row*COLS+col);
     }
 
-    return { anchorStatus: prevAnchor, board: retBoard, valid: false, shapeId: -1, row: -1, col: -1 };
+    return { invalidAnchors: invalidAnchors, board: retBoard, valid: false, shapeId: -1, row: -1, col: -1 };
   }
 
   /**
@@ -1069,9 +1071,14 @@ module gameLogic {
     console.log(aux_printFrame(boardAfterMove, COLS))
     console.log(aux_printArray(shapeStatusAfterMove));
 
+    let anchorStatus:boolean[][] = stateBeforeMove.anchorStatus;
     //TODO implement the last check
-    let nextstep = getNextPossibleShape(stateBeforeMove.anchorStatus, boardAfterMove, shapeStatusAfterMove, turnIndexBeforeMove);
-    let anchorStatusAfterMove = angular.copy(nextstep.anchorStatus);
+    let nextstep = getNextPossibleShape(anchorStatus, boardAfterMove, shapeStatusAfterMove, turnIndexBeforeMove);
+    let anchorStatusAfterMove = angular.copy(anchorStatus);
+    for (let anchorPos of nextstep.invalidAnchors) {
+      let pox:number[] = parseIJ(anchorPos);
+      anchorStatus[pox[0]][pox[1]] = false;
+    }
 
     console.log(boardAfterMove);
     console.log("possibleMove");
@@ -1081,6 +1088,8 @@ module gameLogic {
     console.log("anchor status");
     console.log(anchorStatusAfterMove);
     console.log(aux_printFrame(nextstep.board, ROWS));
+    console.log("anchor status");
+    console.log(anchorStatus);
 
     let playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
 
