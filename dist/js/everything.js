@@ -31711,6 +31711,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0],
+                pt: 4,
             },
             {
                 id: 1, row: -1, column: -1,
@@ -31720,6 +31721,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0],
+                pt: 1,
             },
             {
                 id: 2, row: -1, column: -1,
@@ -31729,6 +31731,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 4,
             },
             {
                 id: 3, row: -1, column: -1,
@@ -31738,6 +31741,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 2,
             },
             {
                 id: 4, row: -1, column: -1,
@@ -31747,6 +31751,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 3,
             },
             {
                 id: 5, row: -1, column: -1,
@@ -31756,6 +31761,7 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 3,
             },
             {
                 id: 6, row: -1, column: -1,
@@ -31765,6 +31771,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 4,
             },
             {
                 id: 7, row: -1, column: -1,
@@ -31774,6 +31781,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 3,
             },
             {
                 id: 8, row: -1, column: -1,
@@ -31783,6 +31791,7 @@ var gameLogic;
                     ['0', '1', '1', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 4,
             },
             {
                 id: 9, row: -1, column: -1,
@@ -31792,6 +31801,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 10, row: -1, column: -1,
@@ -31801,6 +31811,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 5,
             },
             {
                 id: 11, row: -1, column: -1,
@@ -31810,6 +31821,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 5,
             },
             {
                 id: 12, row: -1, column: -1,
@@ -31819,6 +31831,7 @@ var gameLogic;
                     ['0', '1', '1', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 13, row: -1, column: -1,
@@ -31828,6 +31841,7 @@ var gameLogic;
                     ['0', '1', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 14, row: -1, column: -1,
@@ -31837,6 +31851,7 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '1', '0', '0']],
                 ops: [0, 1, 2, 3],
+                pt: 5,
             },
             {
                 id: 15, row: -1, column: -1,
@@ -31846,6 +31861,7 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 16, row: -1, column: -1,
@@ -31855,6 +31871,7 @@ var gameLogic;
                     ['0', '1', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 17, row: -1, column: -1,
@@ -31864,6 +31881,7 @@ var gameLogic;
                     ['0', '0', '1', '1', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 18, row: -1, column: -1,
@@ -31873,6 +31891,7 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             },
             {
                 id: 19, row: -1, column: -1,
@@ -31882,6 +31901,7 @@ var gameLogic;
                     ['0', '0', '1', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0],
+                pt: 5,
             },
             {
                 id: 20, row: -1, column: -1,
@@ -31891,6 +31911,7 @@ var gameLogic;
                     ['0', '0', '0', '0', '0'],
                     ['0', '0', '0', '0', '0']],
                 ops: [0, 1, 2, 3, 4, 5, 6, 7],
+                pt: 5,
             }
         ];
         return shapes;
@@ -32466,6 +32487,7 @@ var gameLogic;
                         var action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
                         if (action.valid) {
                             hasMove = true;
+                            console.log();
                             retList.push({ row: action.row, col: action.col, shapeId: realShapeId });
                         }
                     }
@@ -32504,6 +32526,7 @@ var gameLogic;
             }
             var row = parseIJ(anchor)[0];
             var col = parseIJ(anchor)[1];
+            // TODO shuffle and make random
             for (var id = 0; id < freeShapeIds.length; id++) {
                 var shapeId = freeShapeIds[id];
                 var stdShape = allshape[shapeId];
@@ -32519,6 +32542,8 @@ var gameLogic;
                         var frameY = corners[c][1];
                         var action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
                         if (action.valid) {
+                            //console.log("action");//~
+                            //console.log(action);//~
                             return { invalidAnchors: invalidAnchors, board: angular.copy(action.board), valid: action.valid, shapeId: realShapeId, row: action.row, col: action.col };
                         }
                     }
@@ -32581,8 +32606,7 @@ var gameLogic;
         var anchorStatusAfterMove = angular.copy(anchorStatus);
         for (var _i = 0, _a = nextstep.invalidAnchors; _i < _a.length; _i++) {
             var anchorPos = _a[_i];
-            var pox = parseIJ(anchorPos);
-            anchorStatus[pox[0]][pox[1]] = false;
+            anchorStatus[turnIndexBeforeMove][anchorPos] = false;
         }
         console.log(boardAfterMove);
         console.log("possibleMove");
@@ -32946,6 +32970,17 @@ var game;
     game.dim = 14; //20
     game.SHAPEROW = 12;
     game.SHAPECOL = 23;
+    game.SHOW_HINT_COLOR = false;
+    var showHintColor = game.SHOW_HINT_COLOR;
+    game.BACKGROUND_COLOR = "rgb(240, 240, 240)"; //"#F0F0F0"
+    game.PLAYER_1_COLOR = "#ff0066";
+    game.PLAYER_2_COLOR = "#0099ff";
+    game.HINT_1_COLOR = "#93FF33";
+    game.HINT_2_COLOR = "#93FF33";
+    game.PLAYER_1_MOVE_COLOR = "#ff4d94";
+    game.PLAYER_2_MOVE_COLOR = "#66c2ff";
+    game.DEFAULT_BG_USED_SHAPE = '#C0C0C0';
+    game.DEFAULT_BG_NO_SHAPE = '#F0F0F0';
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -32976,6 +33011,7 @@ var game;
             getStateForOgImage: null,
         });
         game.shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
+        showHintColor = game.SHOW_HINT_COLOR;
     }
     game.init = init;
     function getTranslations() {
@@ -32999,7 +33035,7 @@ var game;
         */
         return { width: area.clientWidth, height: area.clientHeight };
     }
-    function getXYandDragTyep(clientX, clientY) {
+    function getXYandDragType(clientX, clientY) {
         //TODO check if shapex and shapey is correct
         console.log("[getXYandDragTyep], clientX:", clientX, " clientY:", clientY);
         var boardX = clientX - game.gameArea.offsetLeft - game.boardArea.offsetLeft;
@@ -33034,12 +33070,15 @@ var game;
         return { x: x, y: y, dragType: dragType };
     }
     function getHintColor() {
-        return "#93FF33";
+        var color = [game.HINT_1_COLOR, game.HINT_2_COLOR, '#00e600', '#ffc34d'];
+        return color[game.currentUpdateUI.turnIndex];
+        //return "#93FF33";
     }
     function printBoardAnchor() {
         game.anchorBoard = gameLogic.getBoardAnchor(game.state.board, game.state.anchorStatus, game.currentUpdateUI.turnIndex);
         //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
-        setboardActionGroundColor(game.anchorBoard, getHintColor());
+        setboardHintColor(game.anchorBoard, getHintColor());
+        //setboardActionGroundColor(anchorBoard, getHintColor());
     }
     function clearBoardAnchor() {
         clearCoverBoard(game.anchorBoard, true, game.preview, true);
@@ -33051,7 +33090,7 @@ var game;
         if (!game.isYourTurn) {
             return;
         }
-        var XYDrag = getXYandDragTyep(clientX, clientY);
+        var XYDrag = getXYandDragType(clientX, clientY);
         var x = XYDrag.x;
         var y = XYDrag.y;
         var dragType = XYDrag.dragType;
@@ -33079,6 +33118,7 @@ var game;
         verticalDraggingLine.setAttribute("x2", "" + centerXY.x);
         horizontalDraggingLine.setAttribute("y1", "" + centerXY.y);
         horizontalDraggingLine.setAttribute("y2", "" + centerXY.y);
+        printBoardAnchor();
         console.log("[handleDragEventGameArea], dragtype:", dragType);
         if (dragType === 'board') {
             console.log("[handleDragEventGameArea], in board get shapeIdChosen:", game.shapeIdChosen);
@@ -33109,11 +33149,26 @@ var game;
     function setSquareBackGroundColor(row, col, color) {
         document.getElementById('e2e_test_board_div_' + row + 'x' + col).style.background = color;
     }
+    function getSquareBackGroundColor(row, col) {
+        return document.getElementById('e2e_test_board_div_' + row + 'x' + col).style.background;
+    }
     function setboardActionGroundColor(boardAction, color) {
         for (var i = 0; i < boardAction.length; i++) {
             for (var j = 0; j < boardAction[i].length; j++) {
                 if (boardAction[i][j] === '1') {
                     setSquareBackGroundColor(i, j, color);
+                }
+            }
+        }
+    }
+    function setboardHintColor(boardAction, color) {
+        for (var i = 0; i < boardAction.length; i++) {
+            for (var j = 0; j < boardAction[i].length; j++) {
+                //console.log(getSquareBackGroundColor(i, j));
+                if (boardAction[i][j] === '1') {
+                    if (showHintColor === true || getSquareBackGroundColor(i, j) === game.BACKGROUND_COLOR) {
+                        setSquareBackGroundColor(i, j, color);
+                    }
                 }
             }
         }
@@ -33233,16 +33288,16 @@ var game;
     function updateboardAction(row, col) {
         var boardAction = gameLogic.getBoardActionFromShapeID(row, col, game.shapeIdChosen);
         console.log(gameLogic.aux_printFrame(boardAction, game.dim));
-        if (!angular.equals(game.preview, boardAction)) {
-            clearDrag('board', true);
-            console.log("set board");
-            console.log(gameLogic.aux_printFrame(game.preview, game.dim));
-            console.log(gameLogic.aux_printFrame(boardAction, game.dim));
-            //clearPreview
-            //setboardActionGroundColor(boardAction, getTurnColor());
-            setboardActionGroundColor(boardAction, getTurnColorForMove());
-            game.preview = boardAction;
-        }
+        //if (!angular.equals(preview, boardAction)) {
+        clearDrag('board', true);
+        console.log("set board");
+        console.log(gameLogic.aux_printFrame(game.preview, game.dim));
+        console.log(gameLogic.aux_printFrame(boardAction, game.dim));
+        //clearPreview
+        //setboardActionGroundColor(boardAction, getTurnColor());
+        setboardActionGroundColor(boardAction, getTurnColorForMove());
+        game.preview = boardAction;
+        //}
         game.canConfirm = true;
     }
     function boardAreaChooseMove(row, col) {
@@ -33297,7 +33352,7 @@ var game;
     game.showConfirmButton = showConfirmButton;
     function showCancelButton() {
         // TODO only show cancel when some block is chosen
-        return true;
+        return isMyTurn();
     }
     game.showCancelButton = showCancelButton;
     /*
@@ -33305,6 +33360,10 @@ var game;
       return moveToConfirm !== null; // TODO check flip state
     }
     */
+    function showHintBtn() {
+        return isMyTurn();
+    }
+    game.showHintBtn = showHintBtn;
     function showRotateLeft() {
         return game.moveToConfirm !== null; // TODO check flip state
     }
@@ -33321,6 +33380,64 @@ var game;
         return game.moveToConfirm !== null && gameLogic.checkLegalMoveForGame(game.state.board, game.moveToConfirm.row, game.moveToConfirm.col, game.currentUpdateUI.turnIndex, game.moveToConfirm.shapeId, true);
     }
     game.checkLegal = checkLegal;
+    function getHint() {
+        console.log("state");
+        console.log(game.state);
+        clearDrag('board', true);
+        //let nextmove = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, currentUpdateUI.turnIndex);
+        var anchorStatus = angular.copy(game.state.anchorStatus);
+        var nextmoves = gameLogic.getNextPossibleMoveList(anchorStatus, game.state.board, game.state.shapeStatus, game.currentUpdateUI.turnIndex);
+        console.log("HINT nextmove");
+        console.log(nextmoves);
+        if (nextmoves.valid) {
+            var pick = 0;
+            if (game.shapeIdChosen != undefined && game.shapeIdChosen > 0) {
+                var readyList = [];
+                for (var i = 0; i < nextmoves.moves.length; i++) {
+                    if (gameLogic.getShapeType(nextmoves.moves[i].shapeId) == gameLogic.getShapeType(game.shapeIdChosen)) {
+                        readyList.push(i);
+                    }
+                }
+                var randPos = Math.floor(Math.random() * readyList.length);
+                pick = readyList[randPos];
+            }
+            else {
+                pick = Math.floor(Math.random() * nextmoves.moves.length);
+            }
+            game.moveToConfirm = {
+                row: nextmoves.moves[pick].row,
+                col: nextmoves.moves[pick].col,
+                shapeId: nextmoves.moves[pick].shapeId
+            };
+            console.log("random pick");
+            console.log(game.moveToConfirm);
+            //TODO here find suitable or random one
+            // TODO auto draw
+            try {
+                if (game.moveToConfirm == null) {
+                    return;
+                }
+                game.shapeIdChosen = game.moveToConfirm.shapeId;
+                // draw preview
+                /*
+                let boardAction = gameLogic.getBoardActionFromShapeID(moveToConfirm.row, moveToConfirm.col, moveToConfirm.shapeId);
+                if (!angular.equals(preview, boardAction)) {
+                  clearDrag('board', false);
+                  console.log("set board");
+                  setboardActionGroundColor(boardAction, getTurnColorForMove());
+                  preview = boardAction;
+                }
+                */
+                updateboardAction(game.moveToConfirm.row, game.moveToConfirm.col);
+                printBoardAnchor();
+                dragDoneForBoard(game.moveToConfirm.row, game.moveToConfirm.col, 'board');
+            }
+            catch (e) {
+                console.log("EXCEPTION!:", game.moveToConfirm);
+            }
+        }
+    }
+    game.getHint = getHint;
     function newlyPlaced(row, col) {
         /*for the initial state, there is no newly added square*/
         if (game.preview === undefined || game.preview.length <= 0) {
@@ -33378,6 +33495,9 @@ var game;
         // TODO change shapeId
         getShapeIdAfter(left, right, flip);
         updateboardAction(row, col);
+        //
+        printBoardAnchor();
+        //~
         dragDoneForBoard(row, col, 'board');
     }
     game.RotateAndFlip = RotateAndFlip;
@@ -33621,10 +33741,10 @@ var game;
         //   return '#F0F0F0';
         // }
         if (game.state.board[row][col] === '0') {
-            return '#ff0066';
+            return game.PLAYER_1_COLOR;
         }
         else if (game.state.board[row][col] === '1') {
-            return '#0099ff';
+            return game.PLAYER_2_COLOR;
         }
         else if (game.state.board[row][col] === '2') {
             return '#00e600';
@@ -33633,7 +33753,7 @@ var game;
             return '#ffc34d';
         }
         else {
-            return '#F0F0F0';
+            return game.BACKGROUND_COLOR;
         }
     }
     function setBoardAreaSquareStyle(row, col) {
@@ -33643,18 +33763,18 @@ var game;
     game.setBoardAreaSquareStyle = setBoardAreaSquareStyle;
     function getTurnColor() {
         // var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
-        var color = ['#ff0066', '#0099ff', '#00e600', '#ffc34d'];
+        var color = [game.PLAYER_1_COLOR, game.PLAYER_2_COLOR, '#00e600', '#ffc34d'];
         return color[game.currentUpdateUI.turnIndex];
     }
     function getTurnColorForMove() {
-        var color = ['#ff4d94', '#66c2ff', '#00e600', '#ffc34d'];
+        var color = [game.PLAYER_1_MOVE_COLOR, game.PLAYER_2_MOVE_COLOR, '#00e600', '#ffc34d'];
         return color[game.currentUpdateUI.turnIndex];
     }
     function setShapeAreaSquareStyle(row, col) {
         var shapeId = game.shapeBoard.cellToShape[row][col];
         //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
         if (shapeId != -1) {
-            var color = '#C0C0C0';
+            var color = game.DEFAULT_BG_USED_SHAPE;
             if (game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
                 color = getTurnColor();
             }
@@ -33663,7 +33783,7 @@ var game;
                 background: color
             };
         }
-        return { background: '#F0F0F0' };
+        return { background: game.DEFAULT_BG_NO_SHAPE };
     }
     game.setShapeAreaSquareStyle = setShapeAreaSquareStyle;
     /*
