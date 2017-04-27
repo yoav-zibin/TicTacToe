@@ -782,9 +782,9 @@ module game {
     //   return '#F0F0F0';
     // }
     if (state.board[row][col] === '0') {
-      return '#ff0066';
+      return '#f39c12';
     } else if (state.board[row][col] === '1') {
-      return '#0066ff';
+      return '#2980b9';
     } else if (state.board[row][col] === '2') {
       return '#00e600';
     } else if (state.board[row][col] === '3') {
@@ -801,12 +801,12 @@ module game {
 
   function getTurnColor() {
     // var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
-    var color = ['#ff0066', '#0066ff', '#00e600', '#ffc34d'];
+    var color = ['#f39c12', '#2980b9', '#00e600', '#ffc34d'];
     return color[currentUpdateUI.turnIndex];
   }
 
   function getTurnColorForMove() {
-    var color = ['#f481b3', '#81b1f9', '#00e600', '#ffc34d'];
+    var color = ['#f1c40f', '#3498db', '#00e600', '#ffc34d'];
     return color[currentUpdateUI.turnIndex];
   }
 
