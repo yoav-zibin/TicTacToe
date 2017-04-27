@@ -33347,7 +33347,7 @@ var game;
     }
     game.cancelClicked = cancelClicked;
     function showConfirmButton() {
-        return checkLegal();
+        return isMyTurn() && checkLegal();
     }
     game.showConfirmButton = showConfirmButton;
     function showCancelButton() {
@@ -33365,15 +33365,15 @@ var game;
     }
     game.showHintBtn = showHintBtn;
     function showRotateLeft() {
-        return game.moveToConfirm !== null; // TODO check flip state
+        return isMyTurn() && (game.moveToConfirm !== null); // TODO check flip state
     }
     game.showRotateLeft = showRotateLeft;
     function showRotateRight() {
-        return game.moveToConfirm !== null; // TODO check flip state
+        return isMyTurn() && (game.moveToConfirm !== null); // TODO check flip state
     }
     game.showRotateRight = showRotateRight;
     function showFlip() {
-        return game.moveToConfirm !== null; // TODO check flip state
+        return isMyTurn() && (game.moveToConfirm !== null); // TODO check flip state
     }
     game.showFlip = showFlip;
     function checkLegal() {
@@ -33390,7 +33390,7 @@ var game;
         console.log("HINT nextmove");
         console.log(nextmoves);
         if (nextmoves.valid) {
-            var pick = 0;
+            var pick = -1;
             if (game.shapeIdChosen != undefined && game.shapeIdChosen > 0) {
                 var readyList = [];
                 for (var i = 0; i < nextmoves.moves.length; i++) {
@@ -33398,10 +33398,12 @@ var game;
                         readyList.push(i);
                     }
                 }
-                var randPos = Math.floor(Math.random() * readyList.length);
-                pick = readyList[randPos];
+                if (readyList.length > 0) {
+                    var randPos = Math.floor(Math.random() * readyList.length);
+                    pick = readyList[randPos];
+                }
             }
-            else {
+            if (pick == -1) {
                 pick = Math.floor(Math.random() * nextmoves.moves.length);
             }
             game.moveToConfirm = {

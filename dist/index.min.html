@@ -53,11 +53,11 @@
 			<button type="button" ng-show="game.showRotateLeft()" ng-click="game.rotateLeft()"><img ng-src="../icon/rotate-left-small.png"/></button>
 			<button type="button" ng-show="game.showFlip()" ng-click="game.flip()"><img ng-src="../icon/flip-small.png"/></button>
 			<button type="button" ng-show="game.showRotateRight()" ng-click="game.rotateRight()" ><img ng-src="../icon/rotate-right-small.png"/></button>
-			<button type="button" style="float: right" ng-show="game.showCancelButton()" ng-click="game.cancelClicked()" ng-disabled="!game.isCancelBtnEnabled()">
-				<img ng-src="../icon/cancel-small.png"/>
-			</button>
 			<button type="button" style="float: right" ng-show="game.showConfirmButton()" ng-click="game.confirmClicked()" ng-disabled="!game.checkLegal()">
 				<img ng-src="../icon/confirm-small.png"/>
+			</button>
+			<button type="button" style="float: right" ng-show="game.showCancelButton()" ng-click="game.cancelClicked()" ng-disabled="!game.isCancelBtnEnabled()">
+				<img ng-src="../icon/cancel-small.png"/>
 			</button>
 		</div>
 	</div>
