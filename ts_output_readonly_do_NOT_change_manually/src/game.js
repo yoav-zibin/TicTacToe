@@ -23,12 +23,14 @@ var game;
     game.SHOW_HINT_COLOR = false;
     var showHintColor = game.SHOW_HINT_COLOR;
     game.BACKGROUND_COLOR = "rgb(240, 240, 240)"; //"#F0F0F0"
-    game.PLAYER_1_COLOR = "#f39c12";
-    game.PLAYER_2_COLOR = "#2980b9";
-    game.HINT_1_COLOR = "#ffcce0";
-    game.HINT_2_COLOR = "#ccebff";
-    game.PLAYER_1_MOVE_COLOR = "#f1c40f";
-    game.PLAYER_2_MOVE_COLOR = "#3498db";
+    game.PLAYER_1_COLOR = "#ff0066";
+    game.PLAYER_2_COLOR = "#0099ff";
+    game.HINT_1_COLOR = "#93FF33";
+    game.HINT_2_COLOR = "#93FF33";
+    game.PLAYER_1_MOVE_COLOR = "#ff4d94";
+    game.PLAYER_2_MOVE_COLOR = "#66c2ff";
+    game.DEFAULT_BG_USED_SHAPE = '#C0C0C0';
+    game.DEFAULT_BG_NO_SHAPE = '#F0F0F0';
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -822,7 +824,7 @@ var game;
         var shapeId = game.shapeBoard.cellToShape[row][col];
         //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
         if (shapeId != -1) {
-            var color = '#C0C0C0';
+            var color = game.DEFAULT_BG_USED_SHAPE;
             if (game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
                 color = getTurnColor();
             }
@@ -831,7 +833,7 @@ var game;
                 background: color
             };
         }
-        return { background: '#F0F0F0' };
+        return { background: game.DEFAULT_BG_NO_SHAPE };
     }
     game.setShapeAreaSquareStyle = setShapeAreaSquareStyle;
     /*

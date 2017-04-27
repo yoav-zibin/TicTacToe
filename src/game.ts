@@ -30,12 +30,14 @@ module game {
   let showHintColor: boolean = SHOW_HINT_COLOR;
 
   export const BACKGROUND_COLOR = "rgb(240, 240, 240)";//"#F0F0F0"
-  export const PLAYER_1_COLOR = "#f39c12";
-  export const PLAYER_2_COLOR = "#2980b9";
-  export const HINT_1_COLOR = "#ffcce0";
-  export const HINT_2_COLOR = "#ccebff";
-  export const PLAYER_1_MOVE_COLOR = "#f1c40f";
-  export const PLAYER_2_MOVE_COLOR = "#3498db";
+  export const PLAYER_1_COLOR = "#ff0066";
+  export const PLAYER_2_COLOR = "#0099ff";
+  export const HINT_1_COLOR = "#93FF33";
+  export const HINT_2_COLOR = "#93FF33";
+  export const PLAYER_1_MOVE_COLOR = "#ff4d94";
+  export const PLAYER_2_MOVE_COLOR = "#66c2ff";
+  export const DEFAULT_BG_USED_SHAPE = '#C0C0C0';
+  export const DEFAULT_BG_NO_SHAPE = '#F0F0F0';
   // For community games.
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
@@ -397,16 +399,16 @@ module game {
     console.log(gameLogic.aux_printFrame(boardAction, dim));
 
     //if (!angular.equals(preview, boardAction)) {
-      clearDrag('board', true);
-      console.log("set board");
+    clearDrag('board', true);
+    console.log("set board");
 
-      console.log(gameLogic.aux_printFrame(preview, dim));
-      console.log(gameLogic.aux_printFrame(boardAction, dim));
-      //clearPreview
-      //setboardActionGroundColor(boardAction, getTurnColor());
-      setboardActionGroundColor(boardAction, getTurnColorForMove());
+    console.log(gameLogic.aux_printFrame(preview, dim));
+    console.log(gameLogic.aux_printFrame(boardAction, dim));
+    //clearPreview
+    //setboardActionGroundColor(boardAction, getTurnColor());
+    setboardActionGroundColor(boardAction, getTurnColorForMove());
 
-      preview = boardAction;
+    preview = boardAction;
     //}
     canConfirm = true;
   }
@@ -910,7 +912,7 @@ module game {
     let shapeId: number = shapeBoard.cellToShape[row][col]
     //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
     if (shapeId != -1) {
-      let color: string = '#C0C0C0'
+      let color: string = DEFAULT_BG_USED_SHAPE;
       if (state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {
         color = getTurnColor();
       }
@@ -919,7 +921,7 @@ module game {
         background: color
       };
     }
-    return { background: '#F0F0F0' };
+    return { background: DEFAULT_BG_NO_SHAPE };
   }
 
   /* 
