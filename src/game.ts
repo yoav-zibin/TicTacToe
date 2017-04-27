@@ -479,7 +479,7 @@ module game {
   }
 
   export function showRotateLeft() {
-    return isMyTurn() &&  (moveToConfirm !== null); // TODO check flip state
+    return isMyTurn() && (moveToConfirm !== null); // TODO check flip state
   }
 
   export function showRotateRight() {
@@ -487,7 +487,7 @@ module game {
   }
 
   export function showFlip() {
-    return isMyTurn() &&  (moveToConfirm !== null); // TODO check flip state
+    return isMyTurn() && (moveToConfirm !== null); // TODO check flip state
   }
 
   export function checkLegal() {
@@ -505,7 +505,7 @@ module game {
     console.log("HINT nextmove");
     console.log(nextmoves);
     if (nextmoves.valid) {
-      let pick: number = 0;
+      let pick: number = -1;
       if (shapeIdChosen != undefined && shapeIdChosen > 0) {
         let readyList: number[] = [];
         for (let i = 0; i < nextmoves.moves.length; i++) {
@@ -513,9 +513,13 @@ module game {
             readyList.push(i);
           }
         }
-        let randPos: number = Math.floor(Math.random() * readyList.length);
-        pick = readyList[randPos];
-      } else {
+
+        if (readyList.length > 0) {
+          let randPos: number = Math.floor(Math.random() * readyList.length);
+          pick = readyList[randPos];
+        } 
+      } 
+      if (pick == -1) {
         pick = Math.floor(Math.random() * nextmoves.moves.length)
       }
       moveToConfirm = {
