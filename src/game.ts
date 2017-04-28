@@ -517,8 +517,8 @@ module game {
         if (readyList.length > 0) {
           let randPos: number = Math.floor(Math.random() * readyList.length);
           pick = readyList[randPos];
-        } 
-      } 
+        }
+      }
       if (pick == -1) {
         pick = Math.floor(Math.random() * nextmoves.moves.length)
       }
@@ -918,7 +918,11 @@ module game {
     if (shapeId != -1) {
       let color: string = DEFAULT_BG_USED_SHAPE;
       if (state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {
-        color = getTurnColor();
+        if (shapeId === gameLogic.getShapeType(shapeIdChosen)) {
+          color = getTurnColorForMove();
+        } else {
+          color = getTurnColor();
+        }
       }
       return {
         border: '1pt solid white',
