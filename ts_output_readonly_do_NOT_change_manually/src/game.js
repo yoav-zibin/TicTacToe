@@ -997,7 +997,7 @@ var game;
     }
     game.setShapeAreaSquareStyle = setShapeAreaSquareStyle;
 })(game || (game = {}));
-var app = angular.module('myApp', ['gameServices' /*,'ngScrollable'*/])
+var app = angular.module('myApp', ['gameServices',])
     .run(['$rootScope', '$timeout',
     function ($rootScope, $timeout) {
         $rootScope['game'] = game;

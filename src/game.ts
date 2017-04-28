@@ -701,7 +701,7 @@ module game {
       return 'MODAL_WAIT_OPPONET';
     }
     if (endMatchScore[turnIdx] == 0) {
-      return 'MODAL_TEXT_FOR_SELECT_'+ turnIdx;
+      return 'MODAL_TEXT_FOR_SELECT_' + turnIdx;
     }
     if (moveToConfirm === null) {
       return 'MODAL_TEXT_SELECT_PIECE';
@@ -1097,7 +1097,7 @@ module game {
   }
 }
 
-var app = angular.module('myApp', ['gameServices'/*,'ngScrollable'*/])
+var app = angular.module('myApp', ['gameServices', /*,'ngScrollable'*/])
   .run(['$rootScope', '$timeout',
     function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
       $rootScope['game'] = game;
