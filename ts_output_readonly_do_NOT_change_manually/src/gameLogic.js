@@ -928,7 +928,7 @@ var gameLogic;
         var hasMove = false;
         for (var t = 0; t < anchors.length; t++) {
             var anchor = anchors[t];
-            if (prevAnchor[turnIndexBeforeMove][anchor] === false) {
+            if (prevAnchor !== undefined && prevAnchor[turnIndexBeforeMove][anchor] === false) {
                 continue;
             }
             var row = parseIJ(anchor)[0];
@@ -947,14 +947,15 @@ var gameLogic;
                         var action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
                         if (action.valid) {
                             hasMove = true;
-                            console.log();
-                            retList.push({ row: action.row, col: action.col, shapeId: realShapeId });
+                            retList.push({ row: action.row, col: action.col, shapeId: realShapeId, pt: shape.pt });
                         }
                     }
                 }
             }
             // add it to invalid anchor, and purning these anchors for latter search
-            prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
+            if (prevAnchor !== undefined) {
+                prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
+            }
             invalidAnchors.push(row * gameLogic.COLS + col);
         }
         var unique = {};
@@ -970,6 +971,10 @@ var gameLogic;
         return { invalidAnchors: invalidAnchors, valid: hasMove, moves: distinct };
     }
     gameLogic.getNextPossibleMoveList = getNextPossibleMoveList;
+    function sortMoves(moves) {
+        return moves.sort(function (a, b) { return b.pt - a.pt; });
+    }
+    gameLogic.sortMoves = sortMoves;
     /**
      * find a possible next move for this turn user
      * @param board
@@ -991,7 +996,7 @@ var gameLogic;
         var hasMove = false;
         for (var t = 0; t < anchors.length; t++) {
             var anchor = anchors[t];
-            if (prevAnchor[turnIndexBeforeMove][anchor] === false) {
+            if (prevAnchor !== undefined && prevAnchor[turnIndexBeforeMove][anchor] === false) {
                 continue;
             }
             var row = parseIJ(anchor)[0];
@@ -1020,7 +1025,9 @@ var gameLogic;
                 }
             }
             // add it to invalid anchor, and purning these anchors for latter search
-            prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
+            if (prevAnchor !== undefined) {
+                prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
+            }
             invalidAnchors.push(row * gameLogic.COLS + col);
         }
         return { invalidAnchors: invalidAnchors, board: retBoard, valid: false, shapeId: -1, row: -1, col: -1 };

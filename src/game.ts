@@ -639,6 +639,8 @@ module game {
     console.log(nextmoves);
     if (nextmoves.valid) {
       let pick: number = -1;
+      let theNextMove = null;
+
       if (shapeIdChosen != undefined && shapeIdChosen > 0) {
         let readyList: number[] = [];
         for (let i = 0; i < nextmoves.moves.length; i++) {
@@ -650,15 +652,20 @@ module game {
         if (readyList.length > 0) {
           let randPos: number = Math.floor(Math.random() * readyList.length);
           pick = readyList[randPos];
+          theNextMove = nextmoves.moves[pick];
         }
       }
       if (pick == -1) {
-        pick = Math.floor(Math.random() * nextmoves.moves.length)
+        let optMoves = gameLogic.sortMoves(nextmoves.moves);
+        theNextMove = optMoves[0];
+        
+        //pick = Math.floor(Math.random() * nextmoves.moves.length);
+        //theNextMove = nextmoves.moves[pick];
       }
       moveToConfirm = {
-        row: nextmoves.moves[pick].row,
-        col: nextmoves.moves[pick].col,
-        shapeId: nextmoves.moves[pick].shapeId
+        row: theNextMove.row,
+        col: theNextMove.col,
+        shapeId: theNextMove.shapeId
       };
 
       console.log("random pick");
@@ -983,6 +990,10 @@ module game {
     if (didMakeMove) { // Only one move per updateUI
       return;
     }
+    if (move === undefined) {
+      return;
+    }
+    
     didMakeMove = true;
 
     // change currentUpdateUI.turnIndex here

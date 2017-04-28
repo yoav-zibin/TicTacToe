@@ -568,6 +568,7 @@ var game;
         console.log(nextmoves);
         if (nextmoves.valid) {
             var pick = -1;
+            var theNextMove = null;
             if (game.shapeIdChosen != undefined && game.shapeIdChosen > 0) {
                 var readyList = [];
                 for (var i = 0; i < nextmoves.moves.length; i++) {
@@ -578,15 +579,19 @@ var game;
                 if (readyList.length > 0) {
                     var randPos = Math.floor(Math.random() * readyList.length);
                     pick = readyList[randPos];
+                    theNextMove = nextmoves.moves[pick];
                 }
             }
             if (pick == -1) {
-                pick = Math.floor(Math.random() * nextmoves.moves.length);
+                var optMoves = gameLogic.sortMoves(nextmoves.moves);
+                theNextMove = optMoves[0];
+                //pick = Math.floor(Math.random() * nextmoves.moves.length);
+                //theNextMove = nextmoves.moves[pick];
             }
             game.moveToConfirm = {
-                row: nextmoves.moves[pick].row,
-                col: nextmoves.moves[pick].col,
-                shapeId: nextmoves.moves[pick].shapeId
+                row: theNextMove.row,
+                col: theNextMove.col,
+                shapeId: theNextMove.shapeId
             };
             console.log("random pick");
             console.log(game.moveToConfirm);
@@ -887,6 +892,9 @@ var game;
     }
     function makeMove(move) {
         if (game.didMakeMove) {
+            return;
+        }
+        if (move === undefined) {
             return;
         }
         game.didMakeMove = true;

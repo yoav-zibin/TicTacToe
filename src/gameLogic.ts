@@ -1022,9 +1022,9 @@ module gameLogic {
   }
 
   export function getNextPossibleMoveList(prevAnchor: boolean[][], board: Board, shapeStatus: boolean[][], turnIndexBeforeMove: number):
-    { invalidAnchors: number[], valid: boolean, moves: { row: number, col: number, shapeId: number }[] } {
+    { invalidAnchors: number[], valid: boolean, moves: { row: number, col: number, shapeId: number, pt: number }[] } {
 
-    let retList: { row: number, col: number, shapeId: number }[] = [];
+    let retList: { row: number, col: number, shapeId: number, pt: number }[] = [];
     let anchors: number[] = getRecomandAnchor(board, turnIndexBeforeMove);
     let freeShapeIds: number[] = [];
     let allshape: AllShape = getInitShapes();
@@ -1039,7 +1039,7 @@ module gameLogic {
     let hasMove = false;
     for (let t = 0; t < anchors.length; t++) {
       let anchor = anchors[t];
-      if (prevAnchor[turnIndexBeforeMove][anchor] === false) {
+      if (prevAnchor !== undefined && prevAnchor[turnIndexBeforeMove][anchor] === false) {
         continue;
       }
 
@@ -1060,14 +1060,15 @@ module gameLogic {
             let action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
             if (action.valid) {
               hasMove = true;
-              console.log()
-              retList.push({ row: action.row, col: action.col, shapeId: realShapeId });
+              retList.push({ row: action.row, col: action.col, shapeId: realShapeId, pt: shape.pt });
             }
           }
         }
       }
       // add it to invalid anchor, and purning these anchors for latter search
-      prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
+      if (prevAnchor !== undefined) {
+        prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
+      }
       invalidAnchors.push(row * COLS + col);
     }
 
@@ -1082,6 +1083,10 @@ module gameLogic {
     }
 
     return { invalidAnchors: invalidAnchors, valid: hasMove, moves: distinct };
+  }
+
+  export function sortMoves(moves: { row: number, col: number, shapeId: number, pt: number }[]) {
+    return moves.sort((a, b) => b.pt - a.pt);
   }
 
   /**
@@ -1109,7 +1114,7 @@ module gameLogic {
     let hasMove = false;
     for (let t = 0; t < anchors.length; t++) {
       let anchor = anchors[t];
-      if (prevAnchor[turnIndexBeforeMove][anchor] === false) {
+      if (prevAnchor !== undefined && prevAnchor[turnIndexBeforeMove][anchor] === false) {
         continue;
       }
 
@@ -1140,7 +1145,9 @@ module gameLogic {
         }
       }
       // add it to invalid anchor, and purning these anchors for latter search
-      prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
+      if (prevAnchor !== undefined) {
+        prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
+      }
       invalidAnchors.push(row * COLS + col);
     }
 
