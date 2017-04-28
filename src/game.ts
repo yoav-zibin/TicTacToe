@@ -50,12 +50,14 @@ module game {
   //export let currentUpdateUI.turnIndex: number = 0;
   export let shapeIdChosen: number = -1;
   export let preview: Board = [];
+  export let shapePreview: Board = [];
   export let canConfirm: boolean = false;
   export let isYourTurn: boolean = true;
   export let anchorBoard: Board = []
   export let moveInBoard: boolean = true;
   export let endMatchScore: number[] = [];
   export let playerStatus: boolean[] = [];
+  export let GlobalErrorMsg: string = "";
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
@@ -82,6 +84,7 @@ module game {
 
     shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
     showHintColor = SHOW_HINT_COLOR;
+    GlobalErrorMsg = "";
     moveInBoard = true;
     for (let p = 0; p < gameLogic.GROUPNUMBER; p++) {
       endMatchScore[p] = 0;
@@ -219,6 +222,7 @@ module game {
 
     printBoardAnchor();
     console.log("[handleDragEventGameArea], dragtype:", dragType);
+    let checkValid = null;
     if (dragType === 'board') {
       moveInBoard = true;
       console.log("[handleDragEventGameArea], in board get shapeIdChosen:", shapeIdChosen);
@@ -226,10 +230,22 @@ module game {
         return;
       }
 
-      if (!gameLogic.checkLegalMoveForGame(state.board, row, col, currentUpdateUI.turnIndex, shapeIdChosen, false)) {
+      checkValid = gameLogic.checkLegalMoveForGame(state.board, row, col, currentUpdateUI.turnIndex, shapeIdChosen, false);
+      console.log("-------------checkvalid-----------", checkValid);
+      //if (!checkValid.valid) {
+      if (!checkValid) {
+        // adjust row and col
+        //if (((checkValid.error >> 1) && 0x1) == 1) {
+        let newPos: number[] = gameLogic.adjustPositionByShapeId(row, col, shapeIdChosen);
+        row = newPos[0];
+        col = newPos[1];
+        //}
+
+        /*
         clearDrag('board', false);
         canConfirm = false;
         return;
+        */
       }
 
       let boardAction = gameLogic.getBoardActionFromShapeID(row, col, shapeIdChosen);
@@ -252,10 +268,25 @@ module game {
         }
         moveInBoard = false;
       }
+
+      // add drag
+      if (shapeIdChosen != undefined || shapeIdChosen >= 0) {
+        let shapeAction = gameLogic.getShapeActionFromShapeID(row, col, shapeIdChosen, SHAPEROW, SHAPECOL);
+        if (!angular.equals(shapePreview, shapeAction)) {
+          clearDrag('shape', false);
+          setShapeActionGroundColor(shapeAction, getTurnColorForMove());
+          shapePreview = shapeAction;
+        }
+      }
+
+      //  add over board adjust 
     }
 
     if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
+      if (checkValid !== null) {
+        //GlobalErrorMsg = gameLogic.getErrorMsg(checkValid.error);
+      }
       dragDoneForBoard(row, col, dragType);
       clearDrag(dragType, false);
     }
@@ -274,6 +305,16 @@ module game {
       for (let j = 0; j < boardAction[i].length; j++) {
         if (boardAction[i][j] === '1') {
           setSquareBackGroundColor(i, j, color);
+        }
+      }
+    }
+  }
+
+  function setShapeActionGroundColor(shapeAction: Board, color: string) {
+    for (let i = 0; i < shapeAction.length; i++) {
+      for (let j = 0; j < shapeAction[i].length; j++) {
+        if (shapeAction[i][j] === '1') {
+          setShapeSquareBackGroundColor(i, j, color);
         }
       }
     }
@@ -315,7 +356,11 @@ module game {
     }
   }
 
-  function setShapeSquareBackGroundColor(row: number, col: number) {
+  function setShapeSquareBackGroundColor(row: number, col: number, color: string) {
+    document.getElementById('e2e_test_shape_div_' + row + 'x' + col).style.background = color;
+  }
+
+  function setShapeSquareBackDefaultGroundColor(row: number, col: number) {
     let shapeId: number = shapeBoard.cellToShape[row][col]
     let color: string = DEFAULT_BG_NO_SHAPE;
     //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
@@ -333,10 +378,11 @@ module game {
   function clearShapeCoverBoard() {
     for (let i = 0; i < SHAPEROW; i++) {
       for (let j = 0; j < SHAPECOL; j++) {
-        setShapeSquareBackGroundColor(i, j);
+        setShapeSquareBackDefaultGroundColor(i, j);
       }
     }
   }
+
   function clearCoverBoard(coverBoard: Board, forced: boolean, otherBoard: Board, careOther: boolean) {
     if (coverBoard === undefined) {
       return;
@@ -622,6 +668,24 @@ module game {
     }
   }
 
+  export function getCurrentMsg() {
+    let turnIdx: number = currentUpdateUI.turnIndex;
+    if (playerStatus[turnIdx] === false) {
+      return "You have NO more moves";
+    }
+    if (!isMyTurn()) {
+      return "Waiting for opponent's turn";
+    }
+    if (endMatchScore[turnIdx] == 0) {
+      return "Cover the corner (green block) with your piece."; 
+    }
+    if (moveToConfirm === null) {
+      return "Select a piece by clicking or draging";
+    } if (moveToConfirm !== null) {
+      return "Place piece to touch your corner and never touch your side.";
+    }
+  }
+
   export function newlyPlaced(row: number, col: number) {
     /*for the initial state, there is no newly added square*/
     if (preview === undefined || preview.length <= 0) {
@@ -746,7 +810,9 @@ module game {
   }
 
   export function confirmClicked() {
-    if (!showConfirmButton()) return;
+    if (!showConfirmButton()) {
+      return;
+    }
     log.info("confirmClicked");
     if (false) /* game is over */ {
 
@@ -756,6 +822,7 @@ module game {
       clearBoardAnchor();
       boardAreaCellClicked(moveToConfirm.row, moveToConfirm.col);
       clearClickToDrag();
+      //GlobalErrorMsg = "";
     }
   }
 
@@ -849,7 +916,7 @@ module game {
     }
     */
 
-    
+
     isYourTurn = isMyTurn()
     //currentUpdateUI.turnIndex = gameLogic.getcurrentUpdateUI.turnIndex();
 

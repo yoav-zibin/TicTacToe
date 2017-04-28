@@ -23,7 +23,7 @@ interface Shape {
   frame: string[][];
   // how many identipodem operations
   ops: number[];
-  pt:number;
+  pt: number;
 }
 
 class Point {
@@ -117,7 +117,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0],
-      pt:4,
+      pt: 4,
     },
     {
       id: 1, row: -1, column: -1,
@@ -127,7 +127,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0],
-      pt:1,
+      pt: 1,
     },
     {
       id: 2, row: -1, column: -1,
@@ -137,7 +137,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3, 4, 5, 6, 7],
-      pt:4,
+      pt: 4,
     },
     {
       id: 3, row: -1, column: -1,
@@ -147,7 +147,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3],
-      pt:2,
+      pt: 2,
     },
     {
       id: 4, row: -1, column: -1,
@@ -157,7 +157,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3],
-      pt:3,
+      pt: 3,
     },
     {
       id: 5, row: -1, column: -1,
@@ -167,7 +167,7 @@ module gameLogic {
       ['0', '0', '1', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3],
-      pt:3,
+      pt: 3,
     },
     {
       id: 6, row: -1, column: -1,
@@ -177,7 +177,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3, 4, 5, 6, 7],
-      pt:4,
+      pt: 4,
     },
     {
       id: 7, row: -1, column: -1,
@@ -187,7 +187,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3],
-      pt:3,
+      pt: 3,
     },
     {
       id: 8, row: -1, column: -1,
@@ -197,7 +197,7 @@ module gameLogic {
       ['0', '1', '1', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3, 4, 5, 6, 7],
-      pt:4,
+      pt: 4,
     },
     {
       id: 9, row: -1, column: -1,
@@ -207,7 +207,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3, 4, 5, 6, 7],
-      pt:5,
+      pt: 5,
     },
     {
       id: 10, row: -1, column: -1,
@@ -217,7 +217,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3],
-      pt:5,
+      pt: 5,
     },
     {
       id: 11, row: -1, column: -1,
@@ -227,7 +227,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3],
-      pt:5,
+      pt: 5,
     },
     {
       id: 12, row: -1, column: -1,
@@ -237,7 +237,7 @@ module gameLogic {
       ['0', '1', '1', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3, 4, 5, 6, 7],
-      pt:5,
+      pt: 5,
     },
     {
       id: 13, row: -1, column: -1,
@@ -247,7 +247,7 @@ module gameLogic {
       ['0', '1', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3, 4, 5, 6, 7],
-      pt:5,
+      pt: 5,
     },
     {
       id: 14, row: -1, column: -1,
@@ -257,7 +257,7 @@ module gameLogic {
       ['0', '0', '1', '0', '0'],
       ['0', '0', '1', '0', '0']],
       ops: [0, 1, 2, 3],
-      pt:5,
+      pt: 5,
     },
     {
       id: 15, row: -1, column: -1,
@@ -267,7 +267,7 @@ module gameLogic {
       ['0', '0', '1', '1', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3, 4, 5, 6, 7],
-      pt:5,
+      pt: 5,
     },
     {
       id: 16, row: -1, column: -1,
@@ -277,7 +277,7 @@ module gameLogic {
       ['0', '1', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3, 4, 5, 6, 7],
-      pt:5,
+      pt: 5,
     },
     {
       id: 17, row: -1, column: -1,
@@ -287,7 +287,7 @@ module gameLogic {
       ['0', '0', '1', '1', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3, 4, 5, 6, 7],
-      pt:5,
+      pt: 5,
     },
     {
       id: 18, row: -1, column: -1,
@@ -297,7 +297,7 @@ module gameLogic {
       ['0', '0', '1', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3, 4, 5, 6, 7],
-      pt:5,
+      pt: 5,
     },
     {
       id: 19, row: -1, column: -1,
@@ -307,7 +307,7 @@ module gameLogic {
       ['0', '0', '1', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0],
-      pt:5,
+      pt: 5,
     },
     {
       id: 20, row: -1, column: -1,
@@ -317,7 +317,7 @@ module gameLogic {
       ['0', '0', '0', '0', '0'],
       ['0', '0', '0', '0', '0']],
       ops: [0, 1, 2, 3, 4, 5, 6, 7],
-      pt:5,
+      pt: 5,
     }
     ];
 
@@ -505,6 +505,40 @@ module gameLogic {
 
     return ret;
   }
+
+  export function adjustPositionByShapeId(row: number, col: number, shapeId: number): number[] {
+    if (shapeId === undefined || shapeId === -1) {
+      return [row, col];
+    }
+    let shape: Shape = getShapeFromShapeID(shapeId);
+    return adjustPosition(row, col, shape);
+  }
+
+  function adjustPosition(row: number, col: number, shape: Shape): number[] {
+    let ret: number[] = [row, col];
+    let margins: number[] = getAllMargin(shape);
+
+    // TODO check valid with board, center and margin
+    let up: number = row;
+    let left: number = col;
+    let bottom: number = ROWS - 1 - row;
+    let right: number = COLS - 1 - col;
+
+    if (up < margins[0]) {
+      ret[0] += (margins[0] - up);
+    }
+    if (left < margins[1]) {
+      ret[1] += (margins[1] - left);
+    }
+    if (bottom < margins[2]) {
+      ret[0] -= (margins[2] - bottom);
+    }
+    if (right < margins[3]) {
+      ret[1] -= (margins[3] - right);
+    }
+    return ret;
+  }
+
   export function checkValidShapePlacement(row: number, col: number, shape: Shape): boolean {
     let ret: boolean = true;
     let margins: number[] = getAllMargin(shape);
@@ -520,15 +554,20 @@ module gameLogic {
 
   export function getBoardActionFromShapeID(row: number, col: number, shapeId: number): Board {
     let shape: Shape = getShapeFromShapeID(shapeId);
-    return getBoardAction(row, col, shape);
+    return getBoardAction(row, col, shape, ROWS, COLS);
   }
 
-  export function getBoardAction(row: number, col: number, shape: Shape): Board {
+  export function getShapeActionFromShapeID(row: number, col: number, shapeId: number, SHAPEROW: number, SHAPECOL: number): Board {
+    let shape: Shape = getShapeFromShapeID(shapeId);
+    return getBoardAction(row, col, shape, SHAPEROW, SHAPECOL);
+  }
+
+  export function getBoardAction(row: number, col: number, shape: Shape, BOARDROWS: number, BOARDCOLS: number): Board {
     let board: Board = [];
     // fill the shape matrix into the board;
-    for (let i = 0; i < ROWS; i++) {
+    for (let i = 0; i < BOARDROWS; i++) {
       board[i] = [];
-      for (let j = 0; j < COLS; j++) {
+      for (let j = 0; j < BOARDCOLS; j++) {
         board[i][j] = '';
       }
     }
@@ -838,6 +877,17 @@ module gameLogic {
     return ret;
   }
 
+  export function getErrorMsg(error: number): string {
+    let errMsg: string = "";
+    let errMsgs: string[] = ["Invalid Shapes. ", "Piece out of board. ", "Place piece to touch your corner and never touch your side. ", "Pieces overlap. "];
+    for (let i = 0; i < 4; i++) {
+      let e = error >> i;
+      if ((e & 0x1) == 1) {
+        errMsg += errMsgs[i];
+      }
+    }
+    return errMsg;
+  }
   export function checkLegalMoveForGame(board: Board, row: number, col: number, turnIndexBeforeMove: number, shapeId: number, checkStrong: boolean): boolean {
     //console.log("[checkLegalMoveForGame]col:", col, " row", row, " SI:", shapeId);
     if (shapeId === undefined || shapeId < 0 || shapeId >= SHAPEMAX) {
@@ -850,17 +900,66 @@ module gameLogic {
       return false;
     }
 
-    let boardAction: Board = getBoardAction(row, col, shape);
-    if (checkStrong && !checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
-      return false;
+    let boardAction: Board = getBoardAction(row, col, shape, ROWS, COLS);
+    if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+      if (checkStrong) {
+        return false;
+      }
     }
 
     // add checkStrong here to make overlap possible, add check in the confirm phase
-    if (checkStrong && !checkSquareOverlap(board, boardAction)) {
-      return false;
+    if (!checkSquareOverlap(board, boardAction)) {
+      if (checkStrong) {
+        return false;
+      }
     }
 
     return true;
+  }
+
+  /**
+   * 
+   * @param board 
+   * @param row 
+   * @param col 
+   * @param turnIndexBeforeMove 
+   * @param shapeId 
+   * @param checkStrong 
+   * 
+   * @return error: 8 (overlap) 4 (illegal) 2 (out of board) 1 (invalid shape)
+   */
+  export function checkLegalMoveForGameWitError(board: Board, row: number, col: number, turnIndexBeforeMove: number, shapeId: number, checkStrong: boolean): { valid: boolean, error: number } {
+    //console.log("[checkLegalMoveForGame]col:", col, " row", row, " SI:", shapeId);
+    let error: number = 0;
+    if (shapeId === undefined || shapeId < 0 || shapeId >= SHAPEMAX) {
+      error += 1;
+      return { valid: false, error: error };
+    }
+
+    let shape: Shape = getShapeFromShapeID(shapeId);
+
+    if (!checkValidShapePlacement(row, col, shape)) {
+      error += 2;
+      return { valid: false, error: error };
+    }
+
+    let boardAction: Board = getBoardAction(row, col, shape, ROWS, COLS);
+    if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
+      error += 4;
+      if (checkStrong) {
+        return { valid: false, error: error };
+      }
+    }
+
+    // add checkStrong here to make overlap possible, add check in the confirm phase
+    if (!checkSquareOverlap(board, boardAction)) {
+      error += 8;
+      if (checkStrong) {
+        return { valid: false, error: error };
+      }
+    }
+
+    return { valid: true, error: error };
   }
 
   /** return true if all the players die */
@@ -884,7 +983,7 @@ module gameLogic {
       return { board: [], valid: false, row: -1, col: -1 };
     }
 
-    let boardAction: Board = getBoardAction(row, col, shape);
+    let boardAction: Board = getBoardAction(row, col, shape, ROWS, COLS);
 
     //TODO export a function checkLealMove(board, row, col, turnIndexBeforeMove) // add boardAction
     if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
@@ -929,7 +1028,7 @@ module gameLogic {
     let anchors: number[] = getRecomandAnchor(board, turnIndexBeforeMove);
     let freeShapeIds: number[] = [];
     let allshape: AllShape = getInitShapes();
-    let invalidAnchors:number[] = [];
+    let invalidAnchors: number[] = [];
 
     for (let i = 0; i < SHAPENUMBER; i++) {
       if (shapeStatus[turnIndexBeforeMove][i] === true) {
@@ -969,7 +1068,7 @@ module gameLogic {
       }
       // add it to invalid anchor, and purning these anchors for latter search
       prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
-      invalidAnchors.push(row*COLS + col);
+      invalidAnchors.push(row * COLS + col);
     }
 
     return { invalidAnchors: invalidAnchors, valid: hasMove, moves: retList };
@@ -1032,7 +1131,7 @@ module gameLogic {
       }
       // add it to invalid anchor, and purning these anchors for latter search
       prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
-      invalidAnchors.push(row*COLS+col);
+      invalidAnchors.push(row * COLS + col);
     }
 
     return { invalidAnchors: invalidAnchors, board: retBoard, valid: false, shapeId: -1, row: -1, col: -1 };
@@ -1070,7 +1169,7 @@ module gameLogic {
       throw new Error("Shape not on the board");
     }
 
-    let boardAction: Board = getBoardAction(row, col, shape);
+    let boardAction: Board = getBoardAction(row, col, shape, ROWS, COLS);
 
     //console.log("boardAction:")
     //console.log(aux_printFrame(boardAction, COLS))
@@ -1097,7 +1196,7 @@ module gameLogic {
     console.log(aux_printFrame(boardAfterMove, COLS))
     console.log(aux_printArray(shapeStatusAfterMove));
 
-    let anchorStatus:boolean[][] = stateBeforeMove.anchorStatus;
+    let anchorStatus: boolean[][] = stateBeforeMove.anchorStatus;
     //TODO implement the last check
     let nextstep = getNextPossibleShape(anchorStatus, boardAfterMove, shapeStatusAfterMove, turnIndexBeforeMove);
     let anchorStatusAfterMove = angular.copy(anchorStatus);
@@ -1395,7 +1494,7 @@ module gameLogic {
     log.log(checkValidShapePlacement(1, 0, shape));
     log.log(checkValidShapePlacement(0, 1, shape));
 
-    let boardAction: Board = getBoardAction(2, 2, shape);
+    let boardAction: Board = getBoardAction(2, 2, shape, ROWS, COLS);
     console.log(aux_printFrame(boardAction, COLS))
   }
 
@@ -1403,7 +1502,7 @@ module gameLogic {
     let board: Board = getInitialBoard();
     let turnIndexBeforeMove: number = 0;
 
-    shapePlacement(board, getBoardAction(2, 1, getShapeFromShapeID(40)), 1);
+    shapePlacement(board, getBoardAction(2, 1, getShapeFromShapeID(40), ROWS, COLS), 1);
 
     let actionRow: number[] = [0, 4, 2, 1, 4];
     let actionCol: number[] = [1, 3, 3, 2, 5];
@@ -1419,7 +1518,7 @@ module gameLogic {
         console.log("Shape not on the board");
       }
 
-      let boardAction: Board = getBoardAction(row, col, shape);
+      let boardAction: Board = getBoardAction(row, col, shape, ROWS, COLS);
       console.log("turnindex:", turnIndexBeforeMove);
       console.log("boardAction turn:", turnIndexBeforeMove, "row:", row, ", col:", col, "shape:", shapeId);
       console.log(aux_printFrame(boardAction, COLS));

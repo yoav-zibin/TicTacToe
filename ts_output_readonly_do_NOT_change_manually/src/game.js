@@ -38,12 +38,14 @@ var game;
     //export let currentUpdateUI.turnIndex: number = 0;
     game.shapeIdChosen = -1;
     game.preview = [];
+    game.shapePreview = [];
     game.canConfirm = false;
     game.isYourTurn = true;
     game.anchorBoard = [];
     game.moveInBoard = true;
     game.endMatchScore = [];
     game.playerStatus = [];
+    game.GlobalErrorMsg = "";
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
@@ -66,6 +68,7 @@ var game;
         });
         game.shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
         showHintColor = game.SHOW_HINT_COLOR;
+        game.GlobalErrorMsg = "";
         game.moveInBoard = true;
         for (var p = 0; p < gameLogic.GROUPNUMBER; p++) {
             game.endMatchScore[p] = 0;
@@ -187,16 +190,28 @@ var game;
         horizontalDraggingLine.setAttribute("y2", "" + centerXY.y);
         printBoardAnchor();
         console.log("[handleDragEventGameArea], dragtype:", dragType);
+        var checkValid = null;
         if (dragType === 'board') {
             game.moveInBoard = true;
             console.log("[handleDragEventGameArea], in board get shapeIdChosen:", game.shapeIdChosen);
             if (game.shapeIdChosen === undefined || game.shapeIdChosen == -1) {
                 return;
             }
-            if (!gameLogic.checkLegalMoveForGame(game.state.board, row, col, game.currentUpdateUI.turnIndex, game.shapeIdChosen, false)) {
+            checkValid = gameLogic.checkLegalMoveForGame(game.state.board, row, col, game.currentUpdateUI.turnIndex, game.shapeIdChosen, false);
+            console.log("-------------checkvalid-----------", checkValid);
+            //if (!checkValid.valid) {
+            if (!checkValid) {
+                // adjust row and col
+                //if (((checkValid.error >> 1) && 0x1) == 1) {
+                var newPos = gameLogic.adjustPositionByShapeId(row, col, game.shapeIdChosen);
+                row = newPos[0];
+                col = newPos[1];
+                //}
+                /*
                 clearDrag('board', false);
-                game.canConfirm = false;
+                canConfirm = false;
                 return;
+                */
             }
             var boardAction = gameLogic.getBoardActionFromShapeID(row, col, game.shapeIdChosen);
             if (!angular.equals(game.preview, boardAction)) {
@@ -218,9 +233,22 @@ var game;
                 }
                 game.moveInBoard = false;
             }
+            // add drag
+            if (game.shapeIdChosen != undefined || game.shapeIdChosen >= 0) {
+                var shapeAction = gameLogic.getShapeActionFromShapeID(row, col, game.shapeIdChosen, game.SHAPEROW, game.SHAPECOL);
+                if (!angular.equals(game.shapePreview, shapeAction)) {
+                    clearDrag('shape', false);
+                    setShapeActionGroundColor(shapeAction, getTurnColorForMove());
+                    game.shapePreview = shapeAction;
+                }
+            }
+            //  add over board adjust 
         }
         if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
             // drag ended
+            if (checkValid !== null) {
+                //GlobalErrorMsg = gameLogic.getErrorMsg(checkValid.error);
+            }
             dragDoneForBoard(row, col, dragType);
             clearDrag(dragType, false);
         }
@@ -236,6 +264,15 @@ var game;
             for (var j = 0; j < boardAction[i].length; j++) {
                 if (boardAction[i][j] === '1') {
                     setSquareBackGroundColor(i, j, color);
+                }
+            }
+        }
+    }
+    function setShapeActionGroundColor(shapeAction, color) {
+        for (var i = 0; i < shapeAction.length; i++) {
+            for (var j = 0; j < shapeAction[i].length; j++) {
+                if (shapeAction[i][j] === '1') {
+                    setShapeSquareBackGroundColor(i, j, color);
                 }
             }
         }
@@ -272,7 +309,10 @@ var game;
             return { rowsNum: game.SHAPEROW, colsNum: game.SHAPECOL };
         }
     }
-    function setShapeSquareBackGroundColor(row, col) {
+    function setShapeSquareBackGroundColor(row, col, color) {
+        document.getElementById('e2e_test_shape_div_' + row + 'x' + col).style.background = color;
+    }
+    function setShapeSquareBackDefaultGroundColor(row, col) {
         var shapeId = game.shapeBoard.cellToShape[row][col];
         var color = game.DEFAULT_BG_NO_SHAPE;
         //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
@@ -290,7 +330,7 @@ var game;
     function clearShapeCoverBoard() {
         for (var i = 0; i < game.SHAPEROW; i++) {
             for (var j = 0; j < game.SHAPECOL; j++) {
-                setShapeSquareBackGroundColor(i, j);
+                setShapeSquareBackDefaultGroundColor(i, j);
             }
         }
     }
@@ -553,6 +593,25 @@ var game;
         }
     }
     game.getHint = getHint;
+    function getCurrentMsg() {
+        var turnIdx = game.currentUpdateUI.turnIndex;
+        if (game.playerStatus[turnIdx] === false) {
+            return "You have NO more moves";
+        }
+        if (!isMyTurn()) {
+            return "Waiting for opponent's turn";
+        }
+        if (game.endMatchScore[turnIdx] == 0) {
+            return "Cover the corner (green block) with your piece.";
+        }
+        if (game.moveToConfirm === null) {
+            return "Select a piece by clicking or draging";
+        }
+        if (game.moveToConfirm !== null) {
+            return "Place piece to touch your corner and never touch your side.";
+        }
+    }
+    game.getCurrentMsg = getCurrentMsg;
     function newlyPlaced(row, col) {
         /*for the initial state, there is no newly added square*/
         if (game.preview === undefined || game.preview.length <= 0) {
@@ -666,8 +725,9 @@ var game;
         }
     }
     function confirmClicked() {
-        if (!showConfirmButton())
+        if (!showConfirmButton()) {
             return;
+        }
         log.info("confirmClicked");
         if (false) {
         }
@@ -677,6 +737,7 @@ var game;
             clearBoardAnchor();
             boardAreaCellClicked(game.moveToConfirm.row, game.moveToConfirm.col);
             clearClickToDrag();
+            //GlobalErrorMsg = "";
         }
     }
     game.confirmClicked = confirmClicked;
