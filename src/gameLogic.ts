@@ -570,7 +570,7 @@ module gameLogic {
     }
   }
 
-  function getScore(board: Board): number[] {
+  export function getScore(board: Board): number[] {
     let score: number[] = [];
     for (let i = 0; i < GROUPNUMBER; i++) {
       score[i] = 0;

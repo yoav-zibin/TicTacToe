@@ -42,13 +42,15 @@ var game;
     game.isYourTurn = true;
     game.anchorBoard = [];
     game.moveInBoard = true;
+    game.endMatchScore = [];
+    game.playerStatus = [];
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
         registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
-        resizeGameAreaService.setWidthToHeight(0.6);
+        resizeGameAreaService.setWidthToHeight(0.5);
         // dragAndDropService('gameArea', handleDragEvent);
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
@@ -65,6 +67,10 @@ var game;
         game.shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
         showHintColor = game.SHOW_HINT_COLOR;
         game.moveInBoard = true;
+        for (var p = 0; p < gameLogic.GROUPNUMBER; p++) {
+            game.endMatchScore[p] = 0;
+            game.playerStatus[p] = true;
+        }
     }
     game.init = init;
     function getTranslations() {
@@ -746,6 +752,21 @@ var game;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
         }
+        // change score and update user status
+        game.endMatchScore = angular.copy(gameLogic.getScore(game.state.board));
+        game.playerStatus = angular.copy(game.state.playerStatus);
+        for (var p = 0; p < game.endMatchScore.length; p++) {
+            //document.getElementById("p" + p + "_score").innerHTML = "Score:" + endMatchScore[p] + "";
+        }
+        /*
+        for (let p = 0; p < playerStatus.length; p++) {
+          if (playerStatus[p] === false) {
+            document.getElementById("p" + p + "_status").innerText = "No more moves for player " + (p+1);
+          } else {
+            document.getElementById("p" + p + "_status").innerText = "Go on player " + (p+1);
+          }
+        }
+        */
         game.isYourTurn = isMyTurn();
         //currentUpdateUI.turnIndex = gameLogic.getcurrentUpdateUI.turnIndex();
         // We calculate the AI move only after the animation finishes,
@@ -874,7 +895,7 @@ var game;
         if (shapeId != -1) {
             var color = game.DEFAULT_BG_USED_SHAPE;
             if (game.shapeIdChosen !== undefined && game.shapeIdChosen >= 0 && shapeId === gameLogic.getShapeType(game.shapeIdChosen)) {
-                color = getHintColor(); //getTurnColorForMove();
+                color = getTurnColorForMove(); //getTurnColorForMove();
             }
             else if (game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
                 color = getTurnColor();

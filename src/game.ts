@@ -53,7 +53,9 @@ module game {
   export let canConfirm: boolean = false;
   export let isYourTurn: boolean = true;
   export let anchorBoard: Board = []
-  export let moveInBoard:boolean = true;
+  export let moveInBoard: boolean = true;
+  export let endMatchScore: number[] = [];
+  export let playerStatus: boolean[] = [];
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
@@ -61,7 +63,7 @@ module game {
     registerServiceWorker();
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
-    resizeGameAreaService.setWidthToHeight(0.6);
+    resizeGameAreaService.setWidthToHeight(0.5);
     // dragAndDropService('gameArea', handleDragEvent);
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
@@ -81,6 +83,10 @@ module game {
     shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
     showHintColor = SHOW_HINT_COLOR;
     moveInBoard = true;
+    for (let p = 0; p < gameLogic.GROUPNUMBER; p++) {
+      endMatchScore[p] = 0;
+      playerStatus[p] = true;
+    }
   }
 
   function getTranslations(): Translations {
@@ -827,6 +833,23 @@ module game {
       state = gameLogic.getInitialState();
     }
 
+    // change score and update user status
+    endMatchScore = angular.copy(gameLogic.getScore(state.board));
+    playerStatus = angular.copy(state.playerStatus);
+    for (let p = 0; p < endMatchScore.length; p++) {
+      //document.getElementById("p" + p + "_score").innerHTML = "Score:" + endMatchScore[p] + "";
+    }
+    /*
+    for (let p = 0; p < playerStatus.length; p++) {
+      if (playerStatus[p] === false) {
+        document.getElementById("p" + p + "_status").innerText = "No more moves for player " + (p+1);
+      } else {
+        document.getElementById("p" + p + "_status").innerText = "Go on player " + (p+1);
+      }
+    }
+    */
+
+    
     isYourTurn = isMyTurn()
     //currentUpdateUI.turnIndex = gameLogic.getcurrentUpdateUI.turnIndex();
 
@@ -965,7 +988,7 @@ module game {
       let color: string = DEFAULT_BG_USED_SHAPE;
 
       if (shapeIdChosen !== undefined && shapeIdChosen >= 0 && shapeId === gameLogic.getShapeType(shapeIdChosen)) {
-        color = getHintColor(); //getTurnColorForMove();
+        color = getTurnColorForMove(); //getTurnColorForMove();
       } else if (state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {
         color = getTurnColor();
       }

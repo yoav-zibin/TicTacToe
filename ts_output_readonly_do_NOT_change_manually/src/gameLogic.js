@@ -524,6 +524,7 @@ var gameLogic;
         }
         return score;
     }
+    gameLogic.getScore = getScore;
     /**
      * Return the winner (either 'X' or 'O') or '' if there is no winner.
      * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
