@@ -576,7 +576,7 @@ module gameLogic {
     for (let i = -margins[0]; i <= margins[2]; i++) {
       for (let j = -margins[1]; j <= margins[3]; j++) {
         let val: string = shape.frame[Math.floor(SHAPEHEIGHT / 2) + i][Math.floor(SHAPEWIDTH / 2) + j];
-        if (val == '1') {
+        if (val == '1' && row + i >= 0 && row + i < BOARDROWS && col + j >= 0 && col + j < BOARDCOLS) {
           board[row + i][col + j] = val;
         }
       }
@@ -1071,10 +1071,10 @@ module gameLogic {
       invalidAnchors.push(row * COLS + col);
     }
 
-    let unique:{[id:number]:number;} = {};
+    let unique: { [id: number]: number; } = {};
     let distinct = [];
     for (let move of retList) {
-      let moveId:number = move.shapeId * ROWS * COLS + move.row * ROWS + move.col;
+      let moveId: number = move.shapeId * ROWS * COLS + move.row * ROWS + move.col;
       if (unique[moveId] === undefined || unique[moveId] === 0) {
         distinct.push(move);
       }

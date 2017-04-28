@@ -513,7 +513,7 @@ var gameLogic;
         for (var i = -margins[0]; i <= margins[2]; i++) {
             for (var j = -margins[1]; j <= margins[3]; j++) {
                 var val = shape.frame[Math.floor(gameLogic.SHAPEHEIGHT / 2) + i][Math.floor(gameLogic.SHAPEWIDTH / 2) + j];
-                if (val == '1') {
+                if (val == '1' && row + i >= 0 && row + i < BOARDROWS && col + j >= 0 && col + j < BOARDCOLS) {
                     board[row + i][col + j] = val;
                 }
             }
