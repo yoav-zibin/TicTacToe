@@ -32,12 +32,12 @@
 <body ng-cloak>
 	<div id="gameArea">
 		<div id="displayPanel" style="position:absolute; top:0; left:0; width:100%; height:10%">
-			<label id="firstUserName"> [User1] </label>
-			<label id="p0_score"> {{game.endMatchScore[0]}}</label>
+			<label id="firstUserName"> [User1]</label>
+			<label id="p0_score">{{game.endMatchScore[0]}}</label>
 			<label id="p1_score" style="float: right"> {{game.endMatchScore[1]}}</label>
 			<label id="secondUserName" style="float: right">[User2]</label>
 			<div>
-				<label id="p0_status" style="font-size:5">{{game.getCurrentMsg()}} </label>
+				<div class="text" id="p0_status" style="font-size:5">{{game.getCurrentMsg() | translate}} </div>
 			</div>
 		</div>
 		<div id="boardArea" style="position:absolute; top:10%; left:0; width:100%; height:50%">
@@ -71,19 +71,25 @@
 		</div>
 
 		<div class="buttonArea" ng-hide="game.hidePassButton" style="position:absolute; top:93%; left:0; width:100%; height:7%">
-			<button type="button" ng-show="game.showHintBtn()" ng-click="game.getHint()"><img ng-src="../icon/hint-small.png"/></button>
-			<button type="button" ng-show="game.showRotateLeft()" ng-click="game.rotateLeft()"><img ng-src="../icon/rotate-left-small.png"/></button>
-			<button type="button" ng-show="game.showFlip()" ng-click="game.flip()"><img ng-src="../icon/flip-small.png"/></button>
-			<button type="button" ng-show="game.showRotateRight()" ng-click="game.rotateRight()"><img ng-src="../icon/rotate-right-small.png"/></button>
-			<!--button type="button" style="float: right" ng-show="game.showConfirmButton()" ng-click="game.confirmClicked()" ng-disabled="!game.checkLegal()">
+			<md-content>
+				<md-button class="md-fab" aria-label="Photos">
+					<md-tooltip>Photos</md-tooltip>
+					<md-icon md-svg-src="img/icons/ic_photo_24px.svg"></md-icon>
+				</md-button>
+				<button type="button" ng-show="game.showHintBtn()" ng-click="game.getHint()"><img ng-src="../icon/hint-small.png"/></button>
+				<button type="button" ng-show="game.showRotateLeft()" ng-click="game.rotateLeft()"><img ng-src="../icon/rotate-left-small.png"/></button>
+				<button type="button" ng-show="game.showFlip()" ng-click="game.flip()"><img ng-src="../icon/flip-small.png"/></button>
+				<button type="button" ng-show="game.showRotateRight()" ng-click="game.rotateRight()"><img ng-src="../icon/rotate-right-small.png"/></button>
+				<!--button type="button" style="float: right" ng-show="game.showConfirmButton()" ng-click="game.confirmClicked()" ng-disabled="!game.checkLegal()">
 				<img ng-src="../icon/confirm-small.png"/>
 			</button-->
-			<button type="button" style="float: right" ng-show="game.showCancelButton()" ng-click="game.confirmClicked()" ng-disabled="!game.showConfirmButton()">
+				<button type="button" style="float: right" ng-show="game.showCancelButton()" ng-click="game.confirmClicked()" ng-disabled="!game.showConfirmButton()">
 				<img ng-src="{{game.showConfirmButton() ? '../icon/confirm-small.png':'../icon/confirm-gray-small.png'}}"/>
 			</button>
-			<button type="button" style="float: right" ng-show="game.showCancelButton()" ng-click="game.cancelClicked()" ng-disabled="!game.isCancelBtnEnabled()">
+				<button type="button" style="float: right" ng-show="game.showCancelButton()" ng-click="game.cancelClicked()" ng-disabled="!game.isCancelBtnEnabled()">
 				<img ng-src="../icon/cancel-small.png"/>
 			</button>
+			</md-content>
 		</div>
 	</div>
 </body>
