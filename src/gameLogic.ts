@@ -1071,7 +1071,17 @@ module gameLogic {
       invalidAnchors.push(row * COLS + col);
     }
 
-    return { invalidAnchors: invalidAnchors, valid: hasMove, moves: retList };
+    let unique:{[id:number]:number;} = {};
+    let distinct = [];
+    for (let move of retList) {
+      let moveId:number = move.shapeId * ROWS * COLS + move.row * ROWS + move.col;
+      if (unique[moveId] === undefined || unique[moveId] === 0) {
+        distinct.push(move);
+      }
+      unique[moveId] = 1;
+    }
+
+    return { invalidAnchors: invalidAnchors, valid: hasMove, moves: distinct };
   }
 
   /**

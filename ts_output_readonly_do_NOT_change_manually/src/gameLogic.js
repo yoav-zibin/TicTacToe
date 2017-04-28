@@ -957,7 +957,17 @@ var gameLogic;
             prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
             invalidAnchors.push(row * gameLogic.COLS + col);
         }
-        return { invalidAnchors: invalidAnchors, valid: hasMove, moves: retList };
+        var unique = {};
+        var distinct = [];
+        for (var _b = 0, retList_1 = retList; _b < retList_1.length; _b++) {
+            var move = retList_1[_b];
+            var moveId = move.shapeId * gameLogic.ROWS * gameLogic.COLS + move.row * gameLogic.ROWS + move.col;
+            if (unique[moveId] === undefined || unique[moveId] === 0) {
+                distinct.push(move);
+            }
+            unique[moveId] = 1;
+        }
+        return { invalidAnchors: invalidAnchors, valid: hasMove, moves: distinct };
     }
     gameLogic.getNextPossibleMoveList = getNextPossibleMoveList;
     /**
