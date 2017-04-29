@@ -4,7 +4,7 @@ var aiService;
     function findComputerMove(move) {
         return createComputerMove(move, 
         // at most 1 second for the AI to choose a move (but might be much quicker)
-        { millisecondsLimit: 3000 });
+        { millisecondsLimit: 1000, maxDepth: 500 });
     }
     aiService.findComputerMove = findComputerMove;
     /**
@@ -13,7 +13,7 @@ var aiService;
      */
     function getPossibleMoves(state, turnIndexBeforeMove) {
         var possibleMoves = [];
-        var MAX_COUNT = 5;
+        var MAX_COUNT = 10;
         try {
             var anchors = state.anchorStatus;
             var nextmoves = gameLogic.getNextPossibleMoveList(anchors, state.board, state.shapeStatus, turnIndexBeforeMove);

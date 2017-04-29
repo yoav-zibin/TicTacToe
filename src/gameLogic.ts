@@ -1051,9 +1051,11 @@ module gameLogic {
     let hasMove = false;
     for (let t = 0; t < anchors.length; t++) {
       let anchor = anchors[t];
+      /*
       if (prevAnchor !== undefined && prevAnchor[turnIndexBeforeMove][anchor] === false) {
         continue;
       }
+      */
 
       let row: number = parseIJ(anchor)[0];
       let col: number = parseIJ(anchor)[1];
@@ -1078,10 +1080,12 @@ module gameLogic {
         }
       }
       // add it to invalid anchor, and purning these anchors for latter search
+      /*
       if (prevAnchor !== undefined) {
         prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
       }
       invalidAnchors.push(row * COLS + col);
+      */
     }
 
     let unique: { [id: number]: number; } = {};

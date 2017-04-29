@@ -940,9 +940,11 @@ var gameLogic;
         var hasMove = false;
         for (var t = 0; t < anchors.length; t++) {
             var anchor = anchors[t];
+            /*
             if (prevAnchor !== undefined && prevAnchor[turnIndexBeforeMove][anchor] === false) {
-                continue;
+              continue;
             }
+            */
             var row = parseIJ(anchor)[0];
             var col = parseIJ(anchor)[1];
             for (var id = 0; id < freeShapeIds.length; id++) {
@@ -965,10 +967,12 @@ var gameLogic;
                 }
             }
             // add it to invalid anchor, and purning these anchors for latter search
+            /*
             if (prevAnchor !== undefined) {
-                prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
+              prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
             }
-            invalidAnchors.push(row * gameLogic.COLS + col);
+            invalidAnchors.push(row * COLS + col);
+            */
         }
         var unique = {};
         var distinct = [];

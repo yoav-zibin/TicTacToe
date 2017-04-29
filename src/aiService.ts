@@ -3,7 +3,7 @@ module aiService {
   export function findComputerMove(move: IMove): IMove {
     return createComputerMove(move,
       // at most 1 second for the AI to choose a move (but might be much quicker)
-      { millisecondsLimit: 3000 });
+      { millisecondsLimit: 1000, maxDepth:500 });
   }
 
   /**
@@ -12,7 +12,7 @@ module aiService {
    */
   export function getPossibleMoves(state: IState, turnIndexBeforeMove: number): IMove[] {
     let possibleMoves: IMove[] = [];
-    let MAX_COUNT = 5;
+    let MAX_COUNT = 10;
     try {
       let anchors = state.anchorStatus;
       let nextmoves = gameLogic.getNextPossibleMoveList(anchors, state.board, state.shapeStatus, turnIndexBeforeMove);
