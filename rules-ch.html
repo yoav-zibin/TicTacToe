@@ -1,0 +1,36 @@
+<h2>游戏规则</h2>
+<p>
+	<strong>胜利条件: </strong> <br />
+	每个玩家拥有21个方块，利用手中的方块扩张领地，阻止对方的入侵。游戏终止时占据更多方格的玩家获胜。
+</p>
+<p>
+	<strong>游戏规则:</strong> <br />
+	1. 玩家1的第一个方块必须占据左上角的方格，玩家2的第一个方块则需占据右下角。<br />
+	例如，下图是一个可行的第一步：<br />
+	<img src="https://gloriaice.github.io/Blokus/img_rules/corner1.png" alt="valid" style="width:200px;height:200px;">
+	<br />
+	下图中的步骤不合法，因为没有占据左上角的方块。
+	<br />
+	<img src="https://gloriaice.github.io/Blokus/img_rules/corner2.png" alt="valid" style="width:200px;height:200px;">
+	<br />
+	2. 接下来每一个放置的方块<strong>必须</strong>与原有的己方方块角对角。
+	<br />
+	例如，下图是一个可行步骤。新方块有一个角与原有方块的一个角（用黄圈标记）相对。
+	<br />
+	<img src="https://gloriaice.github.io/Blokus/img_rules/touch1.png" alt="valid" style="width:100px;height:100px;">
+	<br />
+	3. 每一个新放置的图形<strong>不能</strong>与原有方块的边接触。
+	<br />
+	例如，下图中的步骤是不合法的。尽管新方块的一个角与原有方块的一个角（黄圈）相对，但是与己方原有的一个方格（绿圈）边相接了。
+	<br />
+	<img src="https://gloriaice.github.io/Blokus/img_rules/touch2.png" alt="valid" style="width:100px;height:100px;">
+</p>
+<p>
+	<strong>操作说明：</strong> <br />
+	点击或拖动图形区域的方块，放置在棋盘上。<br />
+	换方向： 用 <img src="https://gloriaice.github.io/Blokus/icon/rotate-right-small.png"> 键来转换图形方向。 <br />
+	翻转：用 <img src="https://gloriaice.github.io/Blokus/icon/flip-small.png"> 进行翻转。<br />
+	提示： <img src="https://gloriaice.github.io/Blokus/icon/hint-small.png"> 来获得提示。支持先选中方块，获得该方块合法的放置位置。<br />
+	确认：点击 <img src="https://gloriaice.github.io/Blokus/icon/confirm-small.png"> 进行确认。当步骤不合法时确认按钮为灰色。<br />
+	取消： 点击 <img src="https://gloriaice.github.io/Blokus/icon/cancel-small.png"> 取消选择。取消之后应重新选择棋子并完成本轮游戏。
+</p>
