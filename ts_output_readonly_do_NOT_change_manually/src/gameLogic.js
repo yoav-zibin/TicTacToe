@@ -1087,9 +1087,11 @@ var gameLogic;
         shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove);
         var shapeStatusAfterMove = angular.copy(shapeStatus);
         shapeStatusAfterMove[turnIndexBeforeMove][getShapeType(shapeId)] = false;
-        console.log("boardAfterMove:");
-        console.log(aux_printFrame(boardAfterMove, gameLogic.COLS));
+        /*
+        console.log("boardAfterMove:")
+        console.log(aux_printFrame(boardAfterMove, COLS))
         console.log(aux_printArray(shapeStatusAfterMove));
+        */
         var anchorStatus = stateBeforeMove.anchorStatus;
         //TODO implement the last check
         var nextstep = getNextPossibleShape(anchorStatus, boardAfterMove, shapeStatusAfterMove, turnIndexBeforeMove);
@@ -1109,9 +1111,10 @@ var gameLogic;
         console.log(aux_printFrame(nextstep.board, ROWS));
         console.log("anchor status");
         console.log(anchorStatus);
-        */
+     
         console.log("anchorStatus");
-        console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], gameLogic.COLS));
+        console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], COLS));
+        */
         var playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
         var winner = getWinner(boardAfterMove, playerStatusAfterMove);
         var endMatchScores;
@@ -1363,7 +1366,7 @@ var gameLogic;
         var shape = getShapeFromShapeID(shapeId);
         log.log("frame:", shape);
         log.log("final shape:");
-        console.log(aux_printFrame(shape.frame, gameLogic.SHAPEHEIGHT));
+        //console.log(aux_printFrame(shape.frame, SHAPEHEIGHT));
         var margins = getAllMargin(shape);
         log.log("margin=", margins);
         log.log(checkValidShapePlacement(0, 0, shape));
@@ -1371,7 +1374,7 @@ var gameLogic;
         log.log(checkValidShapePlacement(1, 0, shape));
         log.log(checkValidShapePlacement(0, 1, shape));
         var boardAction = getBoardAction(2, 2, shape, gameLogic.ROWS, gameLogic.COLS);
-        console.log(aux_printFrame(boardAction, gameLogic.COLS));
+        //console.log(aux_printFrame(boardAction, COLS))
     }
     gameLogic.forSimpleTestHtml = forSimpleTestHtml;
     function forSimplePlayTestHtml() {

@@ -12,14 +12,20 @@ module aiService {
    */
   export function getPossibleMoves(state: IState, turnIndexBeforeMove: number): IMove[] {
     let possibleMoves: IMove[] = [];
+    let MAX_COUNT = 5;
     try {
       let anchors = state.anchorStatus;
       let nextmoves = gameLogic.getNextPossibleMoveList(anchors, state.board, state.shapeStatus, turnIndexBeforeMove);
       if (nextmoves.valid) {
         let moveSteps = gameLogic.sortMoves(nextmoves.moves);
         //let moveSteps = nextmoves.moves;
+        let count = 0;
         for (let move of moveSteps) {
+          if (count > MAX_COUNT) {
+            break;
+          }
           possibleMoves.push(gameLogic.createMove(state, move.row, move.col, move.shapeId, turnIndexBeforeMove));
+          count++;
         }
         //let newAnchors = angular.copy(anchors);
         //for (let pos of nextmoves.invalidAnchors) {

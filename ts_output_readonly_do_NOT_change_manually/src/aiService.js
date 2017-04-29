@@ -4,7 +4,7 @@ var aiService;
     function findComputerMove(move) {
         return createComputerMove(move, 
         // at most 1 second for the AI to choose a move (but might be much quicker)
-        { millisecondsLimit: 2000 });
+        { millisecondsLimit: 3000 });
     }
     aiService.findComputerMove = findComputerMove;
     /**
@@ -13,15 +13,21 @@ var aiService;
      */
     function getPossibleMoves(state, turnIndexBeforeMove) {
         var possibleMoves = [];
+        var MAX_COUNT = 5;
         try {
             var anchors = state.anchorStatus;
             var nextmoves = gameLogic.getNextPossibleMoveList(anchors, state.board, state.shapeStatus, turnIndexBeforeMove);
             if (nextmoves.valid) {
                 var moveSteps = gameLogic.sortMoves(nextmoves.moves);
                 //let moveSteps = nextmoves.moves;
+                var count = 0;
                 for (var _i = 0, moveSteps_1 = moveSteps; _i < moveSteps_1.length; _i++) {
                     var move = moveSteps_1[_i];
+                    if (count > MAX_COUNT) {
+                        break;
+                    }
                     possibleMoves.push(gameLogic.createMove(state, move.row, move.col, move.shapeId, turnIndexBeforeMove));
+                    count++;
                 }
                 //let newAnchors = angular.copy(anchors);
                 //for (let pos of nextmoves.invalidAnchors) {
