@@ -1223,9 +1223,11 @@ module gameLogic {
     let shapeStatusAfterMove =  angular.copy(shapeStatus); 
     shapeStatusAfterMove[turnIndexBeforeMove][getShapeType(shapeId)] = false;
 
+    /*
     console.log("boardAfterMove:")
     console.log(aux_printFrame(boardAfterMove, COLS))
     console.log(aux_printArray(shapeStatusAfterMove));
+    */
 
     let anchorStatus: boolean[][] = stateBeforeMove.anchorStatus;
     //TODO implement the last check
@@ -1246,9 +1248,11 @@ module gameLogic {
     console.log(aux_printFrame(nextstep.board, ROWS));
     console.log("anchor status");
     console.log(anchorStatus);
-    */
+ 
     console.log("anchorStatus");
     console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], COLS));
+    */
+
     let playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
 
     let winner = getWinner(boardAfterMove, playerStatusAfterMove);
@@ -1518,7 +1522,7 @@ module gameLogic {
 
     log.log("frame:", shape);
     log.log("final shape:");
-    console.log(aux_printFrame(shape.frame, SHAPEHEIGHT));
+    //console.log(aux_printFrame(shape.frame, SHAPEHEIGHT));
 
     let margins: number[] = getAllMargin(shape);
     log.log("margin=", margins)
@@ -1529,7 +1533,7 @@ module gameLogic {
     log.log(checkValidShapePlacement(0, 1, shape));
 
     let boardAction: Board = getBoardAction(2, 2, shape, ROWS, COLS);
-    console.log(aux_printFrame(boardAction, COLS))
+    //console.log(aux_printFrame(boardAction, COLS))
   }
 
   export function forSimplePlayTestHtml() {

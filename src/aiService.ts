@@ -3,7 +3,7 @@ module aiService {
   export function findComputerMove(move: IMove): IMove {
     return createComputerMove(move,
       // at most 1 second for the AI to choose a move (but might be much quicker)
-      { millisecondsLimit: 2000 });
+      { millisecondsLimit: 3000 });
   }
 
   /**
