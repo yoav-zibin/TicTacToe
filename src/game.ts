@@ -50,9 +50,14 @@ module game {
   //export let currentUpdateUI.turnIndex: number = 0;
   export let shapeIdChosen: number = -1;
   export let preview: Board = [];
+  export let shapePreview: Board = [];
   export let canConfirm: boolean = false;
   export let isYourTurn: boolean = true;
   export let anchorBoard: Board = []
+  export let moveInBoard: boolean = true;
+  export let endMatchScore: number[] = [];
+  export let playerStatus: boolean[] = [];
+  export let GlobalErrorMsg: string = "";
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
@@ -60,15 +65,16 @@ module game {
     registerServiceWorker();
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
-    resizeGameAreaService.setWidthToHeight(0.6);
+    resizeGameAreaService.setWidthToHeight(0.5);
     // dragAndDropService('gameArea', handleDragEvent);
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     shapeArea = document.getElementById("shapeArea");
 
     //TODO split the two event
-    dragAndDropService.addDragListener("boardArea", handleDragEventGameArea);
-    dragAndDropService.addDragListener("shapeArea", handleDragEventGameArea);
+    dragAndDropService.addDragListener("gameArea", handleDragEventGameArea);
+    //dragAndDropService.addDragListener("boardArea", handleDragEventGameArea);
+    //dragAndDropService.addDragListener("shapeArea", handleDragEventGameArea);
 
     //dragAndDropService.addDragListener("boardArea", handleDragEvent);
     gameService.setGame({
@@ -78,6 +84,12 @@ module game {
 
     shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
     showHintColor = SHOW_HINT_COLOR;
+    GlobalErrorMsg = "";
+    moveInBoard = true;
+    for (let p = 0; p < gameLogic.GROUPNUMBER; p++) {
+      endMatchScore[p] = 0;
+      playerStatus[p] = true;
+    }
   }
 
   function getTranslations(): Translations {
@@ -89,6 +101,30 @@ module game {
       "CANCEL": {
         "en": "Cancel",
         "zh": "取消"
+      },
+      "MODAL_NO_MOVES": {
+        "en": "NO more moves",
+        "zh": "无可选棋子"
+      },
+      "MODAL_WAIT_OPPONET": {
+        "en": "Waiting for opponent's turn",
+        "zh": "等待对手操作"
+      },
+      "MODAL_TEXT_FOR_SELECT_0": {
+        "en": "Start your first move, select your piece and cover the top-left corner. Press the piece for hint positions",
+        "zh": "开始你的第一步，选择一个棋子覆盖最左上角。点击棋子获得提示位置"
+      },
+      "MODAL_TEXT_FOR_SELECT_1": {
+        "en": "Start your first move, select your piece and cover the bottom-right corner. Press the piece for hint positions",
+        "zh": "开始你的第一步，选择一个棋子覆盖最右下角。点击棋子获得提示位置"
+      },
+      "MODAL_TEXT_SELECT_PIECE": {
+        "en": "Select a piece by clicking or draging",
+        "zh": "点击或拖动选择棋子"
+      },
+      "MODAL_TEXT_PUT_PIECE": {
+        "en": "Place piece to touch your corner and never touch your side. Press the piece for hint positions",
+        "zh": "角对角放置你的棋子，不能与自己的边相邻，点击棋子获得提示位置"
       }
     };
   }
@@ -104,8 +140,7 @@ module game {
   }
 
   function getXYandDragType(clientX: any, clientY: any) {
-    //TODO check if shapex and shapey is correct
-    console.log("[getXYandDragTyep], clientX:", clientX, " clientY:", clientY);
+    //console.log("[getXYandDragType], clientX:", clientX, " clientY:", clientY);
     let boardX: number = clientX - gameArea.offsetLeft - boardArea.offsetLeft
     let shapeX: number = clientX - gameArea.offsetLeft - shapeArea.offsetLeft;
     let boardY: number = clientY - gameArea.offsetTop - boardArea.offsetTop;
@@ -119,17 +154,26 @@ module game {
       x = boardX;
       y = boardY;
       dragType = 'board';
-      console.log("[getXYandDragTyep]board, x:", x, " y", y);
+      //console.log("[getXYandDragType]board, x:", x, " y", y);
     } else if (/*(shapeIdChosen === -1 || shapeIdChosen >= 0) &&*/
       shapeX < shapeSize.width && shapeY > 0 && shapeY < shapeSize.height) {
       x = shapeX;
       y = shapeY;
       dragType = 'shape';
       clearDrag('board', true);
-      shapeIdChosen = -1;
-      console.log("[getXYandDragTyep]shape, x:", x, " y", y);
+
+      //shapeIdChosen = -1; // changed for dragging
+      /*
+      let newShapeId = shapeAreaCellClicked(x, y);
+      if (newShapeId >= 0) {
+
+        shapeIdChosen = newShapeId;
+        console.log("[getXYandDragType ]Change ShapeId to", shapeIdChosen);
+      }
+      */
+      //console.log("[getXYandDragTyep]shape, x:", x, " y", y);
     } else {
-      console.log("[getXYandDragTyep]NOTYPE, x:", x, " y", y);
+      //console.log("[getXYandDragTyep]NOTYPE, x:", x, " y", y);
     }
 
     if (dragType === '') {
@@ -201,32 +245,72 @@ module game {
 
     printBoardAnchor();
     console.log("[handleDragEventGameArea], dragtype:", dragType);
+    let checkValid = null;
     if (dragType === 'board') {
-      console.log("[handleDragEventGameArea], in board get shapeIdChosen:", shapeIdChosen);
+      moveInBoard = true;
+      //console.log("[handleDragEventGameArea], in board get shapeIdChosen:", shapeIdChosen);
       if (shapeIdChosen === undefined || shapeIdChosen == -1) {
         return;
       }
 
-      if (!gameLogic.checkLegalMoveForGame(state.board, row, col, currentUpdateUI.turnIndex, shapeIdChosen, false)) {
+      checkValid = gameLogic.checkLegalMoveForGame(state.board, row, col, currentUpdateUI.turnIndex, shapeIdChosen, false);
+      //console.log("-------------checkvalid-----------", checkValid);
+      //if (!checkValid.valid) {
+      if (!checkValid) {
+        // adjust row and col
+        //if (((checkValid.error >> 1) && 0x1) == 1) {
+        let newPos: number[] = gameLogic.adjustPositionByShapeId(row, col, shapeIdChosen);
+        row = newPos[0];
+        col = newPos[1];
+        //}
+
+        /*
         clearDrag('board', false);
         canConfirm = false;
         return;
+        */
       }
 
       let boardAction = gameLogic.getBoardActionFromShapeID(row, col, shapeIdChosen);
       if (!angular.equals(preview, boardAction)) {
         clearDrag('board', false);
-        console.log("set board");
+        //console.log("set board");
 
         setboardActionGroundColor(boardAction, getTurnColorForMove());
         //setboardActionGroundColor(boardAction, getTurnColor());
         preview = boardAction;
       }
       canConfirm = true;
+    } else if (dragType === 'shape') {
+      //console.log("[handleDragEventGameArea] SHAPE");
+      if (moveInBoard) {
+        let newShapeId = shapeAreaCellClicked(row, col);
+        if (newShapeId >= 0) {
+          shapeIdChosen = newShapeId;
+          //console.log("[getXYandDragType]dragType === 'shape',Change ShapeId to", shapeIdChosen);
+        }
+        moveInBoard = false;
+      }
+
+      // add drag
+      if (shapeIdChosen !== undefined && shapeIdChosen >= 0) {
+        let shapeAction = gameLogic.getShapeActionFromShapeID(row, col, shapeIdChosen, SHAPEROW, SHAPECOL);
+        if (!angular.equals(shapePreview, shapeAction)) {
+          //console.log(gameLogic.aux_printFrame(shapeAction, SHAPEROW));
+          clearDrag('shape', false);
+          setShapeActionGroundColor(shapeAction, getTurnColorForMove());
+          shapePreview = shapeAction;
+        }
+      }
+
+      //  add over board adjust 
     }
 
     if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
+      if (checkValid !== null) {
+        //GlobalErrorMsg = gameLogic.getErrorMsg(checkValid.error);
+      }
       dragDoneForBoard(row, col, dragType);
       clearDrag(dragType, false);
     }
@@ -245,6 +329,16 @@ module game {
       for (let j = 0; j < boardAction[i].length; j++) {
         if (boardAction[i][j] === '1') {
           setSquareBackGroundColor(i, j, color);
+        }
+      }
+    }
+  }
+
+  function setShapeActionGroundColor(shapeAction: Board, color: string) {
+    for (let i = 0; i < shapeAction.length; i++) {
+      for (let j = 0; j < shapeAction[i].length; j++) {
+        if (shapeAction[i][j] === '1') {
+          setShapeSquareBackGroundColor(i, j, color);
         }
       }
     }
@@ -286,6 +380,33 @@ module game {
     }
   }
 
+  function setShapeSquareBackGroundColor(row: number, col: number, color: string) {
+    document.getElementById('e2e_test_shape_div_' + row + 'x' + col).style.background = color;
+  }
+
+  function setShapeSquareBackDefaultGroundColor(row: number, col: number) {
+    let shapeId: number = shapeBoard.cellToShape[row][col]
+    let color: string = DEFAULT_BG_NO_SHAPE;
+    //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
+    if (shapeIdChosen !== undefined && shapeIdChosen >= 0 && shapeId === gameLogic.getShapeType(shapeIdChosen)) {
+      color = getTurnColorForMove(); //getTurnColorForMove();
+    } else if (shapeId != -1) {
+      color = DEFAULT_BG_USED_SHAPE;
+      if (currentUpdateUI.turnIndex >= 0 && state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {
+        color = getTurnColor();
+      }
+    }
+    document.getElementById('e2e_test_shape_div_' + row + 'x' + col).style.background = color;
+  }
+
+  function clearShapeCoverBoard() {
+    for (let i = 0; i < SHAPEROW; i++) {
+      for (let j = 0; j < SHAPECOL; j++) {
+        setShapeSquareBackDefaultGroundColor(i, j);
+      }
+    }
+  }
+
   function clearCoverBoard(coverBoard: Board, forced: boolean, otherBoard: Board, careOther: boolean) {
     if (coverBoard === undefined) {
       return;
@@ -317,7 +438,10 @@ module game {
     if (type === 'board') {
       //clearBoardAnchor();
       //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
+      clearShapeCoverBoard();
       clearCoverBoard(preview, forced, undefined, false);
+    } else if (type === 'shape') {
+      clearShapeCoverBoard();
     }
 
     var draggingLines = document.getElementById(type + "DraggingLines");
@@ -382,14 +506,17 @@ module game {
 
   function shapeAreaCellClicked(row: number, col: number): number {
     let shapeNum: number = getShapeNum(row, col);
-    console.log("[shapeAreaCellClicked]shapeNum:", shapeNum);
+    console.log("[shapeAreaCellClicked] (", row, ",", col, ") => shapeNum:", shapeNum, " ShapeIdChose:", shapeIdChosen);
+    if (shapeNum < 0) {
+      return;
+    }
 
-    if (!state.shapeStatus[currentUpdateUI.turnIndex][shapeNum]) {
+    if (currentUpdateUI.turnIndex < 0 || !state.shapeStatus[currentUpdateUI.turnIndex][shapeNum]) {
       return;
     }
 
     let shapeId: number = shapeNumToShapeId(shapeNum);
-    console.log("[shapeAreaCellClicked]shapeNum:", shapeNum, " shapeIdchosen:", shapeId);
+    console.log("[shapeAreaCellClicked] (", row, ",", col, ") => shapeNum:", shapeNum, " shapeIdchosen:", shapeId);
     return shapeId;
   }
 
@@ -431,7 +558,12 @@ module game {
         moveToConfirm = boardAreaChooseMove(row, col);
         console.log("[dragDoneForBoard]moveToConfirm:", moveToConfirm);
       } else if (dragType == 'shape') {
-        shapeIdChosen = shapeAreaCellClicked(row, col);
+        let newShapeId = shapeAreaCellClicked(row, col);
+        if (newShapeId >= 0) {
+          shapeIdChosen = newShapeId;
+          console.log("[dragDoneForBoard ]Change ShapeId to", shapeIdChosen);
+        }
+
         console.log("--------------------------");
         printBoardAnchor();
         console.log("--------------------------");
@@ -449,6 +581,7 @@ module game {
     clearDrag('board', true);
     clearDrag('shapeArea', false);
     shapeIdChosen = -1
+    console.log("[clearClickToDrag]Change ShapeId to", shapeIdChosen);
   }
 
   export function isCancelBtnEnabled() {
@@ -506,6 +639,8 @@ module game {
     console.log(nextmoves);
     if (nextmoves.valid) {
       let pick: number = -1;
+      let theNextMove = null;
+
       if (shapeIdChosen != undefined && shapeIdChosen > 0) {
         let readyList: number[] = [];
         for (let i = 0; i < nextmoves.moves.length; i++) {
@@ -517,15 +652,20 @@ module game {
         if (readyList.length > 0) {
           let randPos: number = Math.floor(Math.random() * readyList.length);
           pick = readyList[randPos];
+          theNextMove = nextmoves.moves[pick];
         }
       }
       if (pick == -1) {
-        pick = Math.floor(Math.random() * nextmoves.moves.length)
+        let optMoves = gameLogic.sortMoves(nextmoves.moves);
+        theNextMove = optMoves[0];
+        
+        //pick = Math.floor(Math.random() * nextmoves.moves.length);
+        //theNextMove = nextmoves.moves[pick];
       }
       moveToConfirm = {
-        row: nextmoves.moves[pick].row,
-        col: nextmoves.moves[pick].col,
-        shapeId: nextmoves.moves[pick].shapeId
+        row: theNextMove.row,
+        col: theNextMove.col,
+        shapeId: theNextMove.shapeId
       };
 
       console.log("random pick");
@@ -556,6 +696,24 @@ module game {
       catch (e) {
         console.log("EXCEPTION!:", moveToConfirm);
       }
+    }
+  }
+
+  export function getCurrentMsg() {
+    let turnIdx: number = currentUpdateUI.turnIndex;
+    if (playerStatus[turnIdx] === false) {
+      return 'MODAL_NO_MOVES';
+    }
+    if (!isMyTurn()) {
+      return 'MODAL_WAIT_OPPONET';
+    }
+    if (endMatchScore[turnIdx] == 0) {
+      return 'MODAL_TEXT_FOR_SELECT_' + turnIdx;
+    }
+    if (moveToConfirm === null) {
+      return 'MODAL_TEXT_SELECT_PIECE';
+    } if (moveToConfirm !== null) {
+      return 'MODAL_TEXT_PUT_PIECE';
     }
   }
 
@@ -624,6 +782,11 @@ module game {
     let shapeId: number = moveToConfirm.shapeId;
     // TODO change shapeId
     getShapeIdAfter(left, right, flip);
+
+    let newPos: number[] = gameLogic.adjustPositionByShapeId(row, col, shapeIdChosen);
+    row = newPos[0];
+    col = newPos[1];
+
     updateboardAction(row, col);
     //
     printBoardAnchor();
@@ -674,6 +837,7 @@ module game {
       //TODO make sure this is corrcet
       makeMove(move);
       shapeIdChosen = -1; // to reset the shape being selected
+      console.log("[boardAreaCellClicked] Change ShapeId to", shapeIdChosen);
     } catch (e) {
       log.info(e);
       log.info(["This is an illegal move:", row, col]);
@@ -682,7 +846,9 @@ module game {
   }
 
   export function confirmClicked() {
-    if (!showConfirmButton()) return;
+    if (!showConfirmButton()) {
+      return;
+    }
     log.info("confirmClicked");
     if (false) /* game is over */ {
 
@@ -692,6 +858,7 @@ module game {
       clearBoardAnchor();
       boardAreaCellClicked(moveToConfirm.row, moveToConfirm.col);
       clearClickToDrag();
+      //GlobalErrorMsg = "";
     }
   }
 
@@ -765,9 +932,26 @@ module game {
     currentUpdateUI = params;
     clearAnimationTimeout();
     state = params.state;
-    if (isFirstMove()) {
+    if (state == null || isFirstMove()) {
       state = gameLogic.getInitialState();
     }
+
+    // change score and update user status
+    endMatchScore = angular.copy(gameLogic.getScore(state.board));
+    playerStatus = angular.copy(state.playerStatus);
+    for (let p = 0; p < endMatchScore.length; p++) {
+      //document.getElementById("p" + p + "_score").innerHTML = "Score:" + endMatchScore[p] + "";
+    }
+    /*
+    for (let p = 0; p < playerStatus.length; p++) {
+      if (playerStatus[p] === false) {
+        document.getElementById("p" + p + "_status").innerText = "No more moves for player " + (p+1);
+      } else {
+        document.getElementById("p" + p + "_status").innerText = "Go on player " + (p+1);
+      }
+    }
+    */
+
 
     isYourTurn = isMyTurn()
     //currentUpdateUI.turnIndex = gameLogic.getcurrentUpdateUI.turnIndex();
@@ -806,6 +990,10 @@ module game {
     if (didMakeMove) { // Only one move per updateUI
       return;
     }
+    if (move === undefined) {
+      return;
+    }
+    
     didMakeMove = true;
 
     // change currentUpdateUI.turnIndex here
@@ -872,17 +1060,6 @@ module game {
   }
 
   function getBoardSquareColor(row: number, col: number) {
-    // if (state.board[row][col] === '0') {
-    //   return '#33CCFF';
-    // } else if (state.board[row][col] === '1') {
-    //   return '#FF9900';
-    // } else if (state.board[row][col] === '2') {
-    //   return '#FF3399';
-    // } else if (state.board[row][col] === '3') {
-    //   return '#99FF33';
-    // } else {
-    //   return '#F0F0F0';
-    // }
     if (state.board[row][col] === '0') {
       return PLAYER_1_COLOR;
     } else if (state.board[row][col] === '1') {
@@ -902,7 +1079,6 @@ module game {
   }
 
   function getTurnColor() {
-    // var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
     var color = [PLAYER_1_COLOR, PLAYER_2_COLOR, '#00e600', '#ffc34d'];
     return color[currentUpdateUI.turnIndex];
   }
@@ -917,12 +1093,10 @@ module game {
     //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
     if (shapeId != -1) {
       let color: string = DEFAULT_BG_USED_SHAPE;
-      if (state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {
-        if (shapeId === gameLogic.getShapeType(shapeIdChosen)) {
-          color = getTurnColorForMove();
-        } else {
-          color = getTurnColor();
-        }
+      if (shapeIdChosen !== undefined && shapeIdChosen >= 0 && shapeId === gameLogic.getShapeType(shapeIdChosen)) {
+        color = getTurnColorForMove(); //getTurnColorForMove();
+      } else if (currentUpdateUI.turnIndex >= 0 && state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {
+        color = getTurnColor();
       }
       return {
         border: '1pt solid white',
@@ -931,33 +1105,9 @@ module game {
     }
     return { background: DEFAULT_BG_NO_SHAPE };
   }
-
-  /* 
-  export function shouldShowImage(row: number, col: number): boolean {
-    return state.board[row][col] !== "" || isProposal(row, col);
-  }
- 
- 
-  function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
-    return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
-  }
-  
-  export function isPieceX(row: number, col: number): boolean {
-    return isPiece(row, col, 0, 'X');
-  }
- 
-  export function isPieceO(row: number, col: number): boolean {
-    return isPiece(row, col, 1, 'O');
-  }
- 
-  export function shouldSlowlyAppear(row: number, col: number): boolean {
-    return state.delta &&
-        state.delta.row === row && state.delta.col === col;
-  }
-  */
 }
 
-var app = angular.module('myApp', ['gameServices'/*,'ngScrollable'*/])
+var app = angular.module('myApp', ['gameServices', /*,'ngScrollable'*/])
   .run(['$rootScope', '$timeout',
     function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
       $rootScope['game'] = game;

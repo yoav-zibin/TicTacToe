@@ -4,7 +4,7 @@ var aiService;
     function findComputerMove(move) {
         return createComputerMove(move, 
         // at most 1 second for the AI to choose a move (but might be much quicker)
-        { millisecondsLimit: 1000 });
+        { millisecondsLimit: 2000 });
     }
     aiService.findComputerMove = findComputerMove;
     /**
@@ -13,43 +13,26 @@ var aiService;
      */
     function getPossibleMoves(state, turnIndexBeforeMove) {
         var possibleMoves = [];
-        /*
-        for (let i = 0; i < gameLogic.ROWS; i++) {
-          for (let j = 0; j < gameLogic.COLS; j++) {
-            for (let shapeId = 0; shapeId < gameLogic.OPERATIONS; shapeId++) {
-              if (!state.shapeStatus[turnIndexBeforeMove][shapeId]) {
-                continue;
-              }
-              try {
-                //let nextstep = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
-                possibleMoves.push(gameLogic.createMove(state, i, j, shapeId, turnIndexBeforeMove));
-              } catch (e) {
-                // The cell in that position was full.
-              }
-            }
-    
-          }
-        }
-        */
         try {
-            var nextmoves = gameLogic.getNextPossibleMoveList(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
+            var anchors = state.anchorStatus;
+            var nextmoves = gameLogic.getNextPossibleMoveList(anchors, state.board, state.shapeStatus, turnIndexBeforeMove);
             if (nextmoves.valid) {
-                var anchors = state.anchorStatus;
-                for (var _i = 0, _a = nextmoves.moves; _i < _a.length; _i++) {
-                    var move = _a[_i];
+                var moveSteps = gameLogic.sortMoves(nextmoves.moves);
+                //let moveSteps = nextmoves.moves;
+                for (var _i = 0, moveSteps_1 = moveSteps; _i < moveSteps_1.length; _i++) {
+                    var move = moveSteps_1[_i];
                     possibleMoves.push(gameLogic.createMove(state, move.row, move.col, move.shapeId, turnIndexBeforeMove));
                 }
-                var newAnchors = angular.copy(anchors);
-                for (var _b = 0, _c = nextmoves.invalidAnchors; _b < _c.length; _b++) {
-                    var pos = _c[_b];
-                    var pox = gameLogic.parseIJ(pos);
-                    newAnchors[pox[0]][pox[1]] = false;
-                }
-                state.anchorStatus = newAnchors;
+                //let newAnchors = angular.copy(anchors);
+                //for (let pos of nextmoves.invalidAnchors) {
+                //  newAnchors[turnIndexBeforeMove][pos] = false;
+                //}
+                //state.anchorStatus = newAnchors;
             }
         }
         catch (e) {
         }
+        console.log("------------------------------\n--------------------\n");
         return possibleMoves;
     }
     aiService.getPossibleMoves = getPossibleMoves;

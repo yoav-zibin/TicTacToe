@@ -38,23 +38,29 @@ var game;
     //export let currentUpdateUI.turnIndex: number = 0;
     game.shapeIdChosen = -1;
     game.preview = [];
+    game.shapePreview = [];
     game.canConfirm = false;
     game.isYourTurn = true;
     game.anchorBoard = [];
+    game.moveInBoard = true;
+    game.endMatchScore = [];
+    game.playerStatus = [];
+    game.GlobalErrorMsg = "";
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
         registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
-        resizeGameAreaService.setWidthToHeight(0.6);
+        resizeGameAreaService.setWidthToHeight(0.5);
         // dragAndDropService('gameArea', handleDragEvent);
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
         game.shapeArea = document.getElementById("shapeArea");
         //TODO split the two event
-        dragAndDropService.addDragListener("boardArea", handleDragEventGameArea);
-        dragAndDropService.addDragListener("shapeArea", handleDragEventGameArea);
+        dragAndDropService.addDragListener("gameArea", handleDragEventGameArea);
+        //dragAndDropService.addDragListener("boardArea", handleDragEventGameArea);
+        //dragAndDropService.addDragListener("shapeArea", handleDragEventGameArea);
         //dragAndDropService.addDragListener("boardArea", handleDragEvent);
         gameService.setGame({
             updateUI: updateUI,
@@ -62,6 +68,12 @@ var game;
         });
         game.shapeBoard = gameLogic.getAllShapeMatrix_hardcode();
         showHintColor = game.SHOW_HINT_COLOR;
+        game.GlobalErrorMsg = "";
+        game.moveInBoard = true;
+        for (var p = 0; p < gameLogic.GROUPNUMBER; p++) {
+            game.endMatchScore[p] = 0;
+            game.playerStatus[p] = true;
+        }
     }
     game.init = init;
     function getTranslations() {
@@ -73,6 +85,30 @@ var game;
             "CANCEL": {
                 "en": "Cancel",
                 "zh": "取消"
+            },
+            "MODAL_NO_MOVES": {
+                "en": "NO more moves",
+                "zh": "无可选棋子"
+            },
+            "MODAL_WAIT_OPPONET": {
+                "en": "Waiting for opponent's turn",
+                "zh": "等待对手操作"
+            },
+            "MODAL_TEXT_FOR_SELECT_0": {
+                "en": "Start your first move, select your piece and cover the top-left corner. Press the piece for hint positions",
+                "zh": "开始你的第一步，选择一个棋子覆盖最左上角。点击棋子获得提示位置"
+            },
+            "MODAL_TEXT_FOR_SELECT_1": {
+                "en": "Start your first move, select your piece and cover the bottom-right corner. Press the piece for hint positions",
+                "zh": "开始你的第一步，选择一个棋子覆盖最右下角。点击棋子获得提示位置"
+            },
+            "MODAL_TEXT_SELECT_PIECE": {
+                "en": "Select a piece by clicking or draging",
+                "zh": "点击或拖动选择棋子"
+            },
+            "MODAL_TEXT_PUT_PIECE": {
+                "en": "Place piece to touch your corner and never touch your side. Press the piece for hint positions",
+                "zh": "角对角放置你的棋子，不能与自己的边相邻，点击棋子获得提示位置"
             }
         };
     }
@@ -86,8 +122,7 @@ var game;
         return { width: area.clientWidth, height: area.clientHeight };
     }
     function getXYandDragType(clientX, clientY) {
-        //TODO check if shapex and shapey is correct
-        console.log("[getXYandDragTyep], clientX:", clientX, " clientY:", clientY);
+        //console.log("[getXYandDragType], clientX:", clientX, " clientY:", clientY);
         var boardX = clientX - game.gameArea.offsetLeft - game.boardArea.offsetLeft;
         var shapeX = clientX - game.gameArea.offsetLeft - game.shapeArea.offsetLeft;
         var boardY = clientY - game.gameArea.offsetTop - game.boardArea.offsetTop;
@@ -100,18 +135,26 @@ var game;
             x = boardX;
             y = boardY;
             dragType = 'board';
-            console.log("[getXYandDragTyep]board, x:", x, " y", y);
+            //console.log("[getXYandDragType]board, x:", x, " y", y);
         }
         else if (shapeX < shapeSize.width && shapeY > 0 && shapeY < shapeSize.height) {
             x = shapeX;
             y = shapeY;
             dragType = 'shape';
             clearDrag('board', true);
-            game.shapeIdChosen = -1;
-            console.log("[getXYandDragTyep]shape, x:", x, " y", y);
+            //shapeIdChosen = -1; // changed for dragging
+            /*
+            let newShapeId = shapeAreaCellClicked(x, y);
+            if (newShapeId >= 0) {
+      
+              shapeIdChosen = newShapeId;
+              console.log("[getXYandDragType ]Change ShapeId to", shapeIdChosen);
+            }
+            */
+            //console.log("[getXYandDragTyep]shape, x:", x, " y", y);
         }
         else {
-            console.log("[getXYandDragTyep]NOTYPE, x:", x, " y", y);
+            //console.log("[getXYandDragTyep]NOTYPE, x:", x, " y", y);
         }
         if (dragType === '') {
             clearDrag('board', false);
@@ -170,28 +213,66 @@ var game;
         horizontalDraggingLine.setAttribute("y2", "" + centerXY.y);
         printBoardAnchor();
         console.log("[handleDragEventGameArea], dragtype:", dragType);
+        var checkValid = null;
         if (dragType === 'board') {
-            console.log("[handleDragEventGameArea], in board get shapeIdChosen:", game.shapeIdChosen);
+            game.moveInBoard = true;
+            //console.log("[handleDragEventGameArea], in board get shapeIdChosen:", shapeIdChosen);
             if (game.shapeIdChosen === undefined || game.shapeIdChosen == -1) {
                 return;
             }
-            if (!gameLogic.checkLegalMoveForGame(game.state.board, row, col, game.currentUpdateUI.turnIndex, game.shapeIdChosen, false)) {
+            checkValid = gameLogic.checkLegalMoveForGame(game.state.board, row, col, game.currentUpdateUI.turnIndex, game.shapeIdChosen, false);
+            //console.log("-------------checkvalid-----------", checkValid);
+            //if (!checkValid.valid) {
+            if (!checkValid) {
+                // adjust row and col
+                //if (((checkValid.error >> 1) && 0x1) == 1) {
+                var newPos = gameLogic.adjustPositionByShapeId(row, col, game.shapeIdChosen);
+                row = newPos[0];
+                col = newPos[1];
+                //}
+                /*
                 clearDrag('board', false);
-                game.canConfirm = false;
+                canConfirm = false;
                 return;
+                */
             }
             var boardAction = gameLogic.getBoardActionFromShapeID(row, col, game.shapeIdChosen);
             if (!angular.equals(game.preview, boardAction)) {
                 clearDrag('board', false);
-                console.log("set board");
+                //console.log("set board");
                 setboardActionGroundColor(boardAction, getTurnColorForMove());
                 //setboardActionGroundColor(boardAction, getTurnColor());
                 game.preview = boardAction;
             }
             game.canConfirm = true;
         }
+        else if (dragType === 'shape') {
+            //console.log("[handleDragEventGameArea] SHAPE");
+            if (game.moveInBoard) {
+                var newShapeId = shapeAreaCellClicked(row, col);
+                if (newShapeId >= 0) {
+                    game.shapeIdChosen = newShapeId;
+                    //console.log("[getXYandDragType]dragType === 'shape',Change ShapeId to", shapeIdChosen);
+                }
+                game.moveInBoard = false;
+            }
+            // add drag
+            if (game.shapeIdChosen !== undefined && game.shapeIdChosen >= 0) {
+                var shapeAction = gameLogic.getShapeActionFromShapeID(row, col, game.shapeIdChosen, game.SHAPEROW, game.SHAPECOL);
+                if (!angular.equals(game.shapePreview, shapeAction)) {
+                    //console.log(gameLogic.aux_printFrame(shapeAction, SHAPEROW));
+                    clearDrag('shape', false);
+                    setShapeActionGroundColor(shapeAction, getTurnColorForMove());
+                    game.shapePreview = shapeAction;
+                }
+            }
+            //  add over board adjust 
+        }
         if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
             // drag ended
+            if (checkValid !== null) {
+                //GlobalErrorMsg = gameLogic.getErrorMsg(checkValid.error);
+            }
             dragDoneForBoard(row, col, dragType);
             clearDrag(dragType, false);
         }
@@ -207,6 +288,15 @@ var game;
             for (var j = 0; j < boardAction[i].length; j++) {
                 if (boardAction[i][j] === '1') {
                     setSquareBackGroundColor(i, j, color);
+                }
+            }
+        }
+    }
+    function setShapeActionGroundColor(shapeAction, color) {
+        for (var i = 0; i < shapeAction.length; i++) {
+            for (var j = 0; j < shapeAction[i].length; j++) {
+                if (shapeAction[i][j] === '1') {
+                    setShapeSquareBackGroundColor(i, j, color);
                 }
             }
         }
@@ -243,6 +333,31 @@ var game;
             return { rowsNum: game.SHAPEROW, colsNum: game.SHAPECOL };
         }
     }
+    function setShapeSquareBackGroundColor(row, col, color) {
+        document.getElementById('e2e_test_shape_div_' + row + 'x' + col).style.background = color;
+    }
+    function setShapeSquareBackDefaultGroundColor(row, col) {
+        var shapeId = game.shapeBoard.cellToShape[row][col];
+        var color = game.DEFAULT_BG_NO_SHAPE;
+        //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
+        if (game.shapeIdChosen !== undefined && game.shapeIdChosen >= 0 && shapeId === gameLogic.getShapeType(game.shapeIdChosen)) {
+            color = getTurnColorForMove(); //getTurnColorForMove();
+        }
+        else if (shapeId != -1) {
+            color = game.DEFAULT_BG_USED_SHAPE;
+            if (game.currentUpdateUI.turnIndex >= 0 && game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
+                color = getTurnColor();
+            }
+        }
+        document.getElementById('e2e_test_shape_div_' + row + 'x' + col).style.background = color;
+    }
+    function clearShapeCoverBoard() {
+        for (var i = 0; i < game.SHAPEROW; i++) {
+            for (var j = 0; j < game.SHAPECOL; j++) {
+                setShapeSquareBackDefaultGroundColor(i, j);
+            }
+        }
+    }
     function clearCoverBoard(coverBoard, forced, otherBoard, careOther) {
         if (coverBoard === undefined) {
             return;
@@ -271,7 +386,11 @@ var game;
         if (type === 'board') {
             //clearBoardAnchor();
             //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
+            clearShapeCoverBoard();
             clearCoverBoard(game.preview, forced, undefined, false);
+        }
+        else if (type === 'shape') {
+            clearShapeCoverBoard();
         }
         var draggingLines = document.getElementById(type + "DraggingLines");
         if (draggingLines !== null && draggingLines.style !== null) {
@@ -327,12 +446,15 @@ var game;
     }
     function shapeAreaCellClicked(row, col) {
         var shapeNum = getShapeNum(row, col);
-        console.log("[shapeAreaCellClicked]shapeNum:", shapeNum);
-        if (!game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeNum]) {
+        console.log("[shapeAreaCellClicked] (", row, ",", col, ") => shapeNum:", shapeNum, " ShapeIdChose:", game.shapeIdChosen);
+        if (shapeNum < 0) {
+            return;
+        }
+        if (game.currentUpdateUI.turnIndex < 0 || !game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeNum]) {
             return;
         }
         var shapeId = shapeNumToShapeId(shapeNum);
-        console.log("[shapeAreaCellClicked]shapeNum:", shapeNum, " shapeIdchosen:", shapeId);
+        console.log("[shapeAreaCellClicked] (", row, ",", col, ") => shapeNum:", shapeNum, " shapeIdchosen:", shapeId);
         return shapeId;
     }
     function updateboardAction(row, col) {
@@ -368,7 +490,11 @@ var game;
                 console.log("[dragDoneForBoard]moveToConfirm:", game.moveToConfirm);
             }
             else if (dragType == 'shape') {
-                game.shapeIdChosen = shapeAreaCellClicked(row, col);
+                var newShapeId = shapeAreaCellClicked(row, col);
+                if (newShapeId >= 0) {
+                    game.shapeIdChosen = newShapeId;
+                    console.log("[dragDoneForBoard ]Change ShapeId to", game.shapeIdChosen);
+                }
                 console.log("--------------------------");
                 printBoardAnchor();
                 console.log("--------------------------");
@@ -385,6 +511,7 @@ var game;
         clearDrag('board', true);
         clearDrag('shapeArea', false);
         game.shapeIdChosen = -1;
+        console.log("[clearClickToDrag]Change ShapeId to", game.shapeIdChosen);
     }
     game.clearClickToDrag = clearClickToDrag;
     function isCancelBtnEnabled() {
@@ -441,6 +568,7 @@ var game;
         console.log(nextmoves);
         if (nextmoves.valid) {
             var pick = -1;
+            var theNextMove = null;
             if (game.shapeIdChosen != undefined && game.shapeIdChosen > 0) {
                 var readyList = [];
                 for (var i = 0; i < nextmoves.moves.length; i++) {
@@ -451,15 +579,19 @@ var game;
                 if (readyList.length > 0) {
                     var randPos = Math.floor(Math.random() * readyList.length);
                     pick = readyList[randPos];
+                    theNextMove = nextmoves.moves[pick];
                 }
             }
             if (pick == -1) {
-                pick = Math.floor(Math.random() * nextmoves.moves.length);
+                var optMoves = gameLogic.sortMoves(nextmoves.moves);
+                theNextMove = optMoves[0];
+                //pick = Math.floor(Math.random() * nextmoves.moves.length);
+                //theNextMove = nextmoves.moves[pick];
             }
             game.moveToConfirm = {
-                row: nextmoves.moves[pick].row,
-                col: nextmoves.moves[pick].col,
-                shapeId: nextmoves.moves[pick].shapeId
+                row: theNextMove.row,
+                col: theNextMove.col,
+                shapeId: theNextMove.shapeId
             };
             console.log("random pick");
             console.log(game.moveToConfirm);
@@ -490,6 +622,25 @@ var game;
         }
     }
     game.getHint = getHint;
+    function getCurrentMsg() {
+        var turnIdx = game.currentUpdateUI.turnIndex;
+        if (game.playerStatus[turnIdx] === false) {
+            return 'MODAL_NO_MOVES';
+        }
+        if (!isMyTurn()) {
+            return 'MODAL_WAIT_OPPONET';
+        }
+        if (game.endMatchScore[turnIdx] == 0) {
+            return 'MODAL_TEXT_FOR_SELECT_' + turnIdx;
+        }
+        if (game.moveToConfirm === null) {
+            return 'MODAL_TEXT_SELECT_PIECE';
+        }
+        if (game.moveToConfirm !== null) {
+            return 'MODAL_TEXT_PUT_PIECE';
+        }
+    }
+    game.getCurrentMsg = getCurrentMsg;
     function newlyPlaced(row, col) {
         /*for the initial state, there is no newly added square*/
         if (game.preview === undefined || game.preview.length <= 0) {
@@ -546,6 +697,9 @@ var game;
         var shapeId = game.moveToConfirm.shapeId;
         // TODO change shapeId
         getShapeIdAfter(left, right, flip);
+        var newPos = gameLogic.adjustPositionByShapeId(row, col, game.shapeIdChosen);
+        row = newPos[0];
+        col = newPos[1];
         updateboardAction(row, col);
         //
         printBoardAnchor();
@@ -594,6 +748,7 @@ var game;
             //TODO make sure this is corrcet
             makeMove(move);
             game.shapeIdChosen = -1; // to reset the shape being selected
+            console.log("[boardAreaCellClicked] Change ShapeId to", game.shapeIdChosen);
         }
         catch (e) {
             log.info(e);
@@ -602,8 +757,9 @@ var game;
         }
     }
     function confirmClicked() {
-        if (!showConfirmButton())
+        if (!showConfirmButton()) {
             return;
+        }
         log.info("confirmClicked");
         if (false) {
         }
@@ -613,6 +769,7 @@ var game;
             clearBoardAnchor();
             boardAreaCellClicked(game.moveToConfirm.row, game.moveToConfirm.col);
             clearClickToDrag();
+            //GlobalErrorMsg = "";
         }
     }
     game.confirmClicked = confirmClicked;
@@ -685,9 +842,24 @@ var game;
         game.currentUpdateUI = params;
         clearAnimationTimeout();
         game.state = params.state;
-        if (isFirstMove()) {
+        if (game.state == null || isFirstMove()) {
             game.state = gameLogic.getInitialState();
         }
+        // change score and update user status
+        game.endMatchScore = angular.copy(gameLogic.getScore(game.state.board));
+        game.playerStatus = angular.copy(game.state.playerStatus);
+        for (var p = 0; p < game.endMatchScore.length; p++) {
+            //document.getElementById("p" + p + "_score").innerHTML = "Score:" + endMatchScore[p] + "";
+        }
+        /*
+        for (let p = 0; p < playerStatus.length; p++) {
+          if (playerStatus[p] === false) {
+            document.getElementById("p" + p + "_status").innerText = "No more moves for player " + (p+1);
+          } else {
+            document.getElementById("p" + p + "_status").innerText = "Go on player " + (p+1);
+          }
+        }
+        */
         game.isYourTurn = isMyTurn();
         //currentUpdateUI.turnIndex = gameLogic.getcurrentUpdateUI.turnIndex();
         // We calculate the AI move only after the animation finishes,
@@ -720,6 +892,9 @@ var game;
     }
     function makeMove(move) {
         if (game.didMakeMove) {
+            return;
+        }
+        if (move === undefined) {
             return;
         }
         game.didMakeMove = true;
@@ -781,17 +956,6 @@ var game;
     }
     game.cellClicked = cellClicked;
     function getBoardSquareColor(row, col) {
-        // if (state.board[row][col] === '0') {
-        //   return '#33CCFF';
-        // } else if (state.board[row][col] === '1') {
-        //   return '#FF9900';
-        // } else if (state.board[row][col] === '2') {
-        //   return '#FF3399';
-        // } else if (state.board[row][col] === '3') {
-        //   return '#99FF33';
-        // } else {
-        //   return '#F0F0F0';
-        // }
         if (game.state.board[row][col] === '0') {
             return game.PLAYER_1_COLOR;
         }
@@ -814,7 +978,6 @@ var game;
     }
     game.setBoardAreaSquareStyle = setBoardAreaSquareStyle;
     function getTurnColor() {
-        // var color = ['#33CCFF', '#FF9900', '#FF3399', '#99FF33'];
         var color = [game.PLAYER_1_COLOR, game.PLAYER_2_COLOR, '#00e600', '#ffc34d'];
         return color[game.currentUpdateUI.turnIndex];
     }
@@ -827,13 +990,12 @@ var game;
         //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
         if (shapeId != -1) {
             var color = game.DEFAULT_BG_USED_SHAPE;
-            if (game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
-                if (shapeId === gameLogic.getShapeType(game.shapeIdChosen)) {
-                    color = getTurnColorForMove();
-                }
-                else {
-                    color = getTurnColor();
-                }
+            if (game.shapeIdChosen !== undefined && game.shapeIdChosen >= 0 && shapeId === gameLogic.getShapeType(game.shapeIdChosen)) {
+                color = getTurnColorForMove(); //getTurnColorForMove();
+            }
+            else if (game.currentUpdateUI.turnIndex >= 0 && game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
+                color = getTurnColor();
+
             }
             return {
                 border: '1pt solid white',
@@ -843,31 +1005,8 @@ var game;
         return { background: game.DEFAULT_BG_NO_SHAPE };
     }
     game.setShapeAreaSquareStyle = setShapeAreaSquareStyle;
-    /*
-    export function shouldShowImage(row: number, col: number): boolean {
-      return state.board[row][col] !== "" || isProposal(row, col);
-    }
-   
-   
-    function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
-      return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
-    }
-    
-    export function isPieceX(row: number, col: number): boolean {
-      return isPiece(row, col, 0, 'X');
-    }
-   
-    export function isPieceO(row: number, col: number): boolean {
-      return isPiece(row, col, 1, 'O');
-    }
-   
-    export function shouldSlowlyAppear(row: number, col: number): boolean {
-      return state.delta &&
-          state.delta.row === row && state.delta.col === col;
-    }
-    */
 })(game || (game = {}));
-var app = angular.module('myApp', ['gameServices' /*,'ngScrollable'*/])
+var app = angular.module('myApp', ['gameServices',])
     .run(['$rootScope', '$timeout',
     function ($rootScope, $timeout) {
         $rootScope['game'] = game;

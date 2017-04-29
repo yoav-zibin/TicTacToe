@@ -3,7 +3,7 @@ module aiService {
   export function findComputerMove(move: IMove): IMove {
     return createComputerMove(move,
       // at most 1 second for the AI to choose a move (but might be much quicker)
-      { millisecondsLimit: 1000 });
+      { millisecondsLimit: 2000 });
   }
 
   /**
@@ -12,45 +12,25 @@ module aiService {
    */
   export function getPossibleMoves(state: IState, turnIndexBeforeMove: number): IMove[] {
     let possibleMoves: IMove[] = [];
-    
-    /*
-    for (let i = 0; i < gameLogic.ROWS; i++) {
-      for (let j = 0; j < gameLogic.COLS; j++) {
-        for (let shapeId = 0; shapeId < gameLogic.OPERATIONS; shapeId++) {
-          if (!state.shapeStatus[turnIndexBeforeMove][shapeId]) {
-            continue;
-          }
-          try {
-            //let nextstep = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
-            possibleMoves.push(gameLogic.createMove(state, i, j, shapeId, turnIndexBeforeMove));
-          } catch (e) {
-            // The cell in that position was full.
-          }
-        }
-
-      }
-    }
-    */
-    
     try {
-
-      let nextmoves = gameLogic.getNextPossibleMoveList(state.anchorStatus, state.board, state.shapeStatus, turnIndexBeforeMove);
+      let anchors = state.anchorStatus;
+      let nextmoves = gameLogic.getNextPossibleMoveList(anchors, state.board, state.shapeStatus, turnIndexBeforeMove);
       if (nextmoves.valid) {
-        let anchors = state.anchorStatus;
-        
-        for (let move of nextmoves.moves) {
+        let moveSteps = gameLogic.sortMoves(nextmoves.moves);
+        //let moveSteps = nextmoves.moves;
+        for (let move of moveSteps) {
           possibleMoves.push(gameLogic.createMove(state, move.row, move.col, move.shapeId, turnIndexBeforeMove));
         }
-        let newAnchors = angular.copy(anchors);
-        for (let pos of nextmoves.invalidAnchors) {
-          let pox:number[] = gameLogic.parseIJ(pos);
-          newAnchors[pox[0]][pox[1]] = false;
-        }
-        state.anchorStatus = newAnchors;
+        //let newAnchors = angular.copy(anchors);
+        //for (let pos of nextmoves.invalidAnchors) {
+        //  newAnchors[turnIndexBeforeMove][pos] = false;
+        //}
+        //state.anchorStatus = newAnchors;
       }
     } catch (e) {
 
     }
+    console.log("------------------------------\n--------------------\n")
     return possibleMoves;
   }
 
