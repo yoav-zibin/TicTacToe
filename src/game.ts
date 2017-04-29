@@ -111,20 +111,20 @@ module game {
         "zh": "等待对手操作"
       },
       "MODAL_TEXT_FOR_SELECT_0": {
-        "en": "Start your first move, select your piece and cover the top-left corner. Press the piece for hint positions",
-        "zh": "开始你的第一步，选择一个棋子覆盖最左上角。点击棋子获得提示位置"
+        "en": "Start your first move, select your piece and cover the top-left corner.",
+        "zh": "开始你的第一步，选择一个棋子覆盖最左上角。点击棋子获得提示位置。"
       },
       "MODAL_TEXT_FOR_SELECT_1": {
-        "en": "Start your first move, select your piece and cover the bottom-right corner. Press the piece for hint positions",
-        "zh": "开始你的第一步，选择一个棋子覆盖最右下角。点击棋子获得提示位置"
+        "en": "Start your first move, select your piece and cover the bottom-right corner.",
+        "zh": "开始你的第一步，选择一个棋子覆盖最右下角。点击棋子获得提示位置。"
       },
       "MODAL_TEXT_SELECT_PIECE": {
-        "en": "Select a piece by clicking or draging",
-        "zh": "点击或拖动选择棋子"
+        "en": "Select a piece by clicking or draging.",
+        "zh": "点击或拖动选择棋子。"
       },
       "MODAL_TEXT_PUT_PIECE": {
-        "en": "Place piece to touch your corner and never touch your side. Press the piece for hint positions",
-        "zh": "角对角放置你的棋子，不能与自己的边相邻，点击棋子获得提示位置"
+        "en": "Place piece to touch your corner and never touch your side.",
+        "zh": "角对角放置你的棋子，不能与自己的边相邻，点击棋子获得提示位置。"
       }
     };
   }

@@ -154,7 +154,7 @@ td {
 .text:disabled {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 20px;
   color: #95a5a6;
   text-align: center;
   text-transform: none;
@@ -169,6 +169,7 @@ td {
   color: #ff66a3;
   font-weight: bold;
   display: block;
+  font-size: 20px;
   /*width: 50px;*/
   float: left;
 }
@@ -177,14 +178,23 @@ td {
   color: #ff66a3;
   font-weight: italic;
   display: block;
+  font-size: 20px;
   /*width: 50px;*/
   float: left;
+}
+
+#p0_status {
+  font-size:16px; 
+  border-top: 20px;
+  text-align: left;
+  color: #cc6600;
 }
 
 #secondUserName {
   color: #80ccff;
   font-weight: bold;
   display: block;
+  font-size: 20px;
   /*width: 50px;*/
   float: left;
 }
@@ -193,6 +203,7 @@ td {
   color: #80ccff;
   font-weight: italic;
   display: block;
+  font-size: 20px;
   /*width: 50px;*/
   float: left;
 }
