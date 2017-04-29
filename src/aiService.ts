@@ -3,7 +3,7 @@ module aiService {
   export function findComputerMove(move: IMove): IMove {
     return createComputerMove(move,
       // at most 1 second for the AI to choose a move (but might be much quicker)
-      { millisecondsLimit: 1000 });
+      { millisecondsLimit: 2000 });
   }
 
   /**
@@ -17,6 +17,7 @@ module aiService {
       let nextmoves = gameLogic.getNextPossibleMoveList(anchors, state.board, state.shapeStatus, turnIndexBeforeMove);
       if (nextmoves.valid) {
         let moveSteps = gameLogic.sortMoves(nextmoves.moves);
+        //let moveSteps = nextmoves.moves;
         for (let move of moveSteps) {
           possibleMoves.push(gameLogic.createMove(state, move.row, move.col, move.shapeId, turnIndexBeforeMove));
         }
@@ -29,6 +30,7 @@ module aiService {
     } catch (e) {
 
     }
+    console.log("------------------------------\n--------------------\n")
     return possibleMoves;
   }
 

@@ -392,7 +392,7 @@ module game {
       color = getTurnColorForMove(); //getTurnColorForMove();
     } else if (shapeId != -1) {
       color = DEFAULT_BG_USED_SHAPE;
-      if (state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {
+      if (currentUpdateUI.turnIndex >= 0 && state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {
         color = getTurnColor();
       }
     }
@@ -511,7 +511,7 @@ module game {
       return;
     }
 
-    if (!state.shapeStatus[currentUpdateUI.turnIndex][shapeNum]) {
+    if (currentUpdateUI.turnIndex < 0 || !state.shapeStatus[currentUpdateUI.turnIndex][shapeNum]) {
       return;
     }
 
@@ -932,7 +932,7 @@ module game {
     currentUpdateUI = params;
     clearAnimationTimeout();
     state = params.state;
-    if (isFirstMove()) {
+    if (state == null || isFirstMove()) {
       state = gameLogic.getInitialState();
     }
 
@@ -1096,7 +1096,7 @@ module game {
 
       if (shapeIdChosen !== undefined && shapeIdChosen >= 0 && shapeId === gameLogic.getShapeType(shapeIdChosen)) {
         color = getTurnColorForMove(); //getTurnColorForMove();
-      } else if (state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {
+      } else if (currentUpdateUI.turnIndex >= 0 && state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {
         color = getTurnColor();
       }
       return {

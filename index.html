@@ -31,16 +31,16 @@
 
 <body ng-cloak>
 	<div id="gameArea">
-		<div id="displayPanel" style="position:absolute; top:0; left:0; width:100%; height:10%">
-			<label id="firstUserName"> [User1]</label>
+		<div id="displayPanel" style="position:absolute; top:0; left:0; width:100%; height:12%">
+			<label id="firstUserName"> {{currentUpdateUI.yourPlayerIndex == 0? yourPlayerInfo.displayName: Opponent}}</label>
 			<label id="p0_score">{{game.endMatchScore[0]}}</label>
 			<label id="p1_score" style="float: right"> {{game.endMatchScore[1]}}</label>
-			<label id="secondUserName" style="float: right">[User2]</label>
+			<label id="secondUserName" style="float: right">{{currentUpdateUI.yourPlayerIndex == 1? yourPlayerInfo.displayName: Opponent}}</label>
 			<div>
 				<div class="text" id="p0_status" style="font-size:5">{{game.getCurrentMsg() | translate}} </div>
 			</div>
 		</div>
-		<div id="boardArea" style="position:absolute; top:10%; left:0; width:100%; height:50%">
+		<div id="boardArea" style="position:absolute; top:13%; left:0; width:100%; height:50%">
 			<div ng-repeat="row in game.getIntegersTill(14)" style="position:absolute; top:{{row * 7.14}}%; left:0; width:100%; height:7.14%;">
 				<div ng-repeat="col in game.getIntegersTill(14)" style="position:absolute; top:0; left:{{col * 7.14}}%; width:7.14%; height:100%;"
 				 ng-class="{l: true, t: true, r: col === 13, b: row === 13, blink:newlyPlaced(row, col)}" ng-style="game.setBoardAreaSquareStyle(row, col)"
@@ -56,7 +56,7 @@
 
 		<!--div ng-scrollable="{scrollX:'bottom',scrollY:'none'}" style="position:absolute; top:71%; left:0; width:100%; height:21%">
 			<img src="http://echa.github.io/ng-scrollable/assets/dumbo.jpg"/-->
-		<div id="shapeArea" style="position:absolute; top:61%; left:0; width:100%; height:30%;">
+		<div id="shapeArea" style="position:absolute; top:64%; left:0; width:100%; height:27%;">
 			<div ng-repeat="row in game.getIntegersTill(12)" style="position:absolute; top:{{row * 8.33}}%; left:0; width:100%; height:8.33%;">
 				<div ng-repeat="col in game.getIntegersTill(23)" style="position:absolute; top:0; left:{{col * 4.34}}%; width:4.34%; height:100%;"
 				 ng-class="{l: true, t: true, r: col === 22, b: row === 11, blink:game.shapeNewlyPlaced(row, col)}" ng-style="game.setShapeAreaSquareStyle(row, col)"

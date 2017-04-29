@@ -332,10 +332,22 @@ module gameLogic {
     return ret;
   }
 
-  export function aux_printFrame(frame: string[][], height: number): string {
+  export function aux_print1dArray(frame: any[], col:number): string {
+    let ret: string = "   0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9\n\r  ----------------------------------------";
+    for (let i = 0; i < frame.length; i++) {
+      if (i % col === 0) {
+        ret += "\n\r" + (Math.floor(i / col) % 10) + "|";
+      }
+      ret += frame[i].toString() + ",";
+    }
+    ret += "  ----------------------------------------\n\r";
+    return ret;
+  }
+
+  export function aux_printFrame(frame: any[][], height: number): string {
     let ret: string = "   0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9\n\r  ----------------------------------------\n\r";
     for (let i = 0; i < height; i++) {
-      let tmp: string[] = angular.copy(frame[i]);
+      let tmp: any[] = angular.copy(frame[i]);
       if (tmp === null || tmp === undefined) {
         continue;
       }
@@ -1208,7 +1220,9 @@ module gameLogic {
 
     let boardAfterMove = angular.copy(board);
     shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove);
-    let shapeStatusAfterMove = updateShapeStatus(shapeStatus, shapeId, turnIndexBeforeMove);
+    let shapeStatusAfterMove =  angular.copy(shapeStatus); 
+    shapeStatusAfterMove[turnIndexBeforeMove][getShapeType(shapeId)] = false;
+
     console.log("boardAfterMove:")
     console.log(aux_printFrame(boardAfterMove, COLS))
     console.log(aux_printArray(shapeStatusAfterMove));
@@ -1218,9 +1232,10 @@ module gameLogic {
     let nextstep = getNextPossibleShape(anchorStatus, boardAfterMove, shapeStatusAfterMove, turnIndexBeforeMove);
     let anchorStatusAfterMove = angular.copy(anchorStatus);
     for (let anchorPos of nextstep.invalidAnchors) {
-      anchorStatus[turnIndexBeforeMove][anchorPos] = false;
+      anchorStatusAfterMove[turnIndexBeforeMove][anchorPos] = false;
     }
 
+    /*
     console.log(boardAfterMove);
     console.log("possibleMove");
     console.log(nextstep.valid);
@@ -1231,7 +1246,9 @@ module gameLogic {
     console.log(aux_printFrame(nextstep.board, ROWS));
     console.log("anchor status");
     console.log(anchorStatus);
-
+    */
+    console.log("anchorStatus");
+    console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], COLS));
     let playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
 
     let winner = getWinner(boardAfterMove, playerStatusAfterMove);

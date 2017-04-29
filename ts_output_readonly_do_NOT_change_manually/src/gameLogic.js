@@ -293,6 +293,18 @@ var gameLogic;
         return ret;
     }
     gameLogic.aux_printArray = aux_printArray;
+    function aux_print1dArray(frame, col) {
+        var ret = "   0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9\n\r  ----------------------------------------";
+        for (var i = 0; i < frame.length; i++) {
+            if (i % col === 0) {
+                ret += "\n\r" + (Math.floor(i / col) % 10) + "|";
+            }
+            ret += frame[i].toString() + ",";
+        }
+        ret += "  ----------------------------------------\n\r";
+        return ret;
+    }
+    gameLogic.aux_print1dArray = aux_print1dArray;
     function aux_printFrame(frame, height) {
         var ret = "   0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9\n\r  ----------------------------------------\n\r";
         for (var i = 0; i < height; i++) {
@@ -1073,7 +1085,8 @@ var gameLogic;
         //~
         var boardAfterMove = angular.copy(board);
         shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove);
-        var shapeStatusAfterMove = updateShapeStatus(shapeStatus, shapeId, turnIndexBeforeMove);
+        var shapeStatusAfterMove = angular.copy(shapeStatus);
+        shapeStatusAfterMove[turnIndexBeforeMove][getShapeType(shapeId)] = false;
         console.log("boardAfterMove:");
         console.log(aux_printFrame(boardAfterMove, gameLogic.COLS));
         console.log(aux_printArray(shapeStatusAfterMove));
@@ -1083,18 +1096,22 @@ var gameLogic;
         var anchorStatusAfterMove = angular.copy(anchorStatus);
         for (var _i = 0, _a = nextstep.invalidAnchors; _i < _a.length; _i++) {
             var anchorPos = _a[_i];
-            anchorStatus[turnIndexBeforeMove][anchorPos] = false;
+            anchorStatusAfterMove[turnIndexBeforeMove][anchorPos] = false;
         }
+        /*
         console.log(boardAfterMove);
         console.log("possibleMove");
         console.log(nextstep.valid);
-        console.log("board");
+        console.log("board")
         console.log(nextstep.board);
         console.log("anchor status");
         console.log(anchorStatusAfterMove);
-        console.log(aux_printFrame(nextstep.board, gameLogic.ROWS));
+        console.log(aux_printFrame(nextstep.board, ROWS));
         console.log("anchor status");
         console.log(anchorStatus);
+        */
+        console.log("anchorStatus");
+        console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], gameLogic.COLS));
         var playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
         var winner = getWinner(boardAfterMove, playerStatusAfterMove);
         var endMatchScores;

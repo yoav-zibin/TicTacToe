@@ -345,7 +345,7 @@ var game;
         }
         else if (shapeId != -1) {
             color = game.DEFAULT_BG_USED_SHAPE;
-            if (game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
+            if (game.currentUpdateUI.turnIndex >= 0 && game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
                 color = getTurnColor();
             }
         }
@@ -450,7 +450,7 @@ var game;
         if (shapeNum < 0) {
             return;
         }
-        if (!game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeNum]) {
+        if (game.currentUpdateUI.turnIndex < 0 || !game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeNum]) {
             return;
         }
         var shapeId = shapeNumToShapeId(shapeNum);
@@ -842,7 +842,7 @@ var game;
         game.currentUpdateUI = params;
         clearAnimationTimeout();
         game.state = params.state;
-        if (isFirstMove()) {
+        if (game.state == null || isFirstMove()) {
             game.state = gameLogic.getInitialState();
         }
         // change score and update user status
@@ -993,7 +993,7 @@ var game;
             if (game.shapeIdChosen !== undefined && game.shapeIdChosen >= 0 && shapeId === gameLogic.getShapeType(game.shapeIdChosen)) {
                 color = getTurnColorForMove(); //getTurnColorForMove();
             }
-            else if (game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
+            else if (game.currentUpdateUI.turnIndex >= 0 && game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
                 color = getTurnColor();
             }
             return {
