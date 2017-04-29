@@ -33778,7 +33778,12 @@ var game;
         if (shapeId != -1) {
             var color = game.DEFAULT_BG_USED_SHAPE;
             if (game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
-                color = getTurnColor();
+                if (shapeId === gameLogic.getShapeType(game.shapeIdChosen)) {
+                    color = getTurnColorForMove();
+                }
+                else {
+                    color = getTurnColor();
+                }
             }
             return {
                 border: '1pt solid white',
