@@ -32572,9 +32572,11 @@ var gameLogic;
         var hasMove = false;
         for (var t = 0; t < anchors.length; t++) {
             var anchor = anchors[t];
+            /*
             if (prevAnchor !== undefined && prevAnchor[turnIndexBeforeMove][anchor] === false) {
-                continue;
+              continue;
             }
+            */
             var row = parseIJ(anchor)[0];
             var col = parseIJ(anchor)[1];
             for (var id = 0; id < freeShapeIds.length; id++) {
@@ -32597,10 +32599,12 @@ var gameLogic;
                 }
             }
             // add it to invalid anchor, and purning these anchors for latter search
+            /*
             if (prevAnchor !== undefined) {
-                prevAnchor[turnIndexBeforeMove][row * gameLogic.COLS + col] = false;
+              prevAnchor[turnIndexBeforeMove][row * COLS + col] = false;
             }
-            invalidAnchors.push(row * gameLogic.COLS + col);
+            invalidAnchors.push(row * COLS + col);
+            */
         }
         var unique = {};
         var distinct = [];
@@ -32719,9 +32723,11 @@ var gameLogic;
         shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove);
         var shapeStatusAfterMove = angular.copy(shapeStatus);
         shapeStatusAfterMove[turnIndexBeforeMove][getShapeType(shapeId)] = false;
-        console.log("boardAfterMove:");
-        console.log(aux_printFrame(boardAfterMove, gameLogic.COLS));
+        /*
+        console.log("boardAfterMove:")
+        console.log(aux_printFrame(boardAfterMove, COLS))
         console.log(aux_printArray(shapeStatusAfterMove));
+        */
         var anchorStatus = stateBeforeMove.anchorStatus;
         //TODO implement the last check
         var nextstep = getNextPossibleShape(anchorStatus, boardAfterMove, shapeStatusAfterMove, turnIndexBeforeMove);
@@ -32741,9 +32747,10 @@ var gameLogic;
         console.log(aux_printFrame(nextstep.board, ROWS));
         console.log("anchor status");
         console.log(anchorStatus);
-        */
+     
         console.log("anchorStatus");
-        console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], gameLogic.COLS));
+        console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], COLS));
+        */
         var playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
         var winner = getWinner(boardAfterMove, playerStatusAfterMove);
         var endMatchScores;
@@ -32995,7 +33002,7 @@ var gameLogic;
         var shape = getShapeFromShapeID(shapeId);
         log.log("frame:", shape);
         log.log("final shape:");
-        console.log(aux_printFrame(shape.frame, gameLogic.SHAPEHEIGHT));
+        //console.log(aux_printFrame(shape.frame, SHAPEHEIGHT));
         var margins = getAllMargin(shape);
         log.log("margin=", margins);
         log.log(checkValidShapePlacement(0, 0, shape));
@@ -33003,7 +33010,7 @@ var gameLogic;
         log.log(checkValidShapePlacement(1, 0, shape));
         log.log(checkValidShapePlacement(0, 1, shape));
         var boardAction = getBoardAction(2, 2, shape, gameLogic.ROWS, gameLogic.COLS);
-        console.log(aux_printFrame(boardAction, gameLogic.COLS));
+        //console.log(aux_printFrame(boardAction, COLS))
     }
     gameLogic.forSimpleTestHtml = forSimpleTestHtml;
     function forSimplePlayTestHtml() {
@@ -34095,7 +34102,7 @@ var aiService;
     function findComputerMove(move) {
         return createComputerMove(move, 
         // at most 1 second for the AI to choose a move (but might be much quicker)
-        { millisecondsLimit: 2000 });
+        { millisecondsLimit: 1000, maxDepth: 500 });
     }
     aiService.findComputerMove = findComputerMove;
     /**
@@ -34104,15 +34111,21 @@ var aiService;
      */
     function getPossibleMoves(state, turnIndexBeforeMove) {
         var possibleMoves = [];
+        var MAX_COUNT = 10;
         try {
             var anchors = state.anchorStatus;
             var nextmoves = gameLogic.getNextPossibleMoveList(anchors, state.board, state.shapeStatus, turnIndexBeforeMove);
             if (nextmoves.valid) {
                 var moveSteps = gameLogic.sortMoves(nextmoves.moves);
                 //let moveSteps = nextmoves.moves;
+                var count = 0;
                 for (var _i = 0, moveSteps_1 = moveSteps; _i < moveSteps_1.length; _i++) {
                     var move = moveSteps_1[_i];
+                    if (count > MAX_COUNT) {
+                        break;
+                    }
                     possibleMoves.push(gameLogic.createMove(state, move.row, move.col, move.shapeId, turnIndexBeforeMove));
+                    count++;
                 }
                 //let newAnchors = angular.copy(anchors);
                 //for (let pos of nextmoves.invalidAnchors) {
