@@ -1241,10 +1241,15 @@ module gameLogic {
       anchorStatusAfterMove[turnIndexBeforeMove][anchorPos] = false;
     }
 
-    /*
+    
     console.log(boardAfterMove);
     console.log("possibleMove");
-    console.log(nextstep.valid);
+    if (nextstep.valid) {
+      console.log("Has Moves move for ",turnIndexBeforeMove);
+    } else {
+          console.log("No More Move moves for ",turnIndexBeforeMove);
+    }
+
     console.log("board")
     console.log(nextstep.board);
     console.log("anchor status");
@@ -1255,7 +1260,7 @@ module gameLogic {
  
     console.log("anchorStatus");
     console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], COLS));
-    */
+    
 
     let playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
 
@@ -1274,7 +1279,7 @@ module gameLogic {
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
       // TODO change to four player
-      turnIndex = getNextTurn(turnIndexBeforeMove, playerStatus);
+      turnIndex = getNextTurn(turnIndexBeforeMove, playerStatusAfterMove);
       //turnIndex = (turnIndexBeforeMove + 1) % GROUPNUMBER;
       if (turnIndex == -1) {
         endMatchScores = getScore(boardAfterMove);

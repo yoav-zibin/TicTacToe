@@ -1104,21 +1104,23 @@ var gameLogic;
             var anchorPos = _a[_i];
             anchorStatusAfterMove[turnIndexBeforeMove][anchorPos] = false;
         }
-        /*
         console.log(boardAfterMove);
         console.log("possibleMove");
-        console.log(nextstep.valid);
-        console.log("board")
+        if (nextstep.valid) {
+            console.log("Has Moves move for ", turnIndexBeforeMove);
+        }
+        else {
+            console.log("No More Move moves for ", turnIndexBeforeMove);
+        }
+        console.log("board");
         console.log(nextstep.board);
         console.log("anchor status");
         console.log(anchorStatusAfterMove);
-        console.log(aux_printFrame(nextstep.board, ROWS));
+        console.log(aux_printFrame(nextstep.board, gameLogic.ROWS));
         console.log("anchor status");
         console.log(anchorStatus);
-     
         console.log("anchorStatus");
-        console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], COLS));
-        */
+        console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], gameLogic.COLS));
         var playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
         var winner = getWinner(boardAfterMove, playerStatusAfterMove);
         var endMatchScores;
@@ -1134,7 +1136,7 @@ var gameLogic;
         else {
             // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
             // TODO change to four player
-            turnIndex = getNextTurn(turnIndexBeforeMove, playerStatus);
+            turnIndex = getNextTurn(turnIndexBeforeMove, playerStatusAfterMove);
             //turnIndex = (turnIndexBeforeMove + 1) % GROUPNUMBER;
             if (turnIndex == -1) {
                 endMatchScores = getScore(boardAfterMove);
