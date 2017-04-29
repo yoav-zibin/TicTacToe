@@ -33,11 +33,12 @@
 	<div id="gameArea">
 		<div id="displayPanel" style="position:absolute; top:0; left:0; width:100%; height:10%">
 			<label id="firstUserName"> [User1]</label>
-			<label id="p0_score">{{game.endMatchScore[0]}}</label>
+			<label id="p0_score"> {{game.endMatchScore[0]}}</label>
 			<label id="p1_score" style="float: right"> {{game.endMatchScore[1]}}</label>
 			<label id="secondUserName" style="float: right">[User2]</label>
+			<br />
 			<div>
-				<div class="text" id="p0_status" style="font-size:5">{{game.getCurrentMsg() | translate}} </div>
+				<div class="text" id="p0_status" style="font-size:2; color: #cc6600">{{game.getCurrentMsg() | translate}} </div>
 			</div>
 		</div>
 		<div id="boardArea" style="position:absolute; top:10%; left:0; width:100%; height:50%">
