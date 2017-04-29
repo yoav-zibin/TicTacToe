@@ -164,3 +164,35 @@ td {
   user-select: none;
   background-image: none;
 }
+
+#firstUserName {
+  color: #ff66a3;
+  font-weight: bold;
+  display: block;
+  /*width: 50px;*/
+  float: left;
+}
+
+#p0_score {
+  color: #ff66a3;
+  font-weight: italic;
+  display: block;
+  /*width: 50px;*/
+  float: left;
+}
+
+#secondUserName {
+  color: #80ccff;
+  font-weight: bold;
+  display: block;
+  /*width: 50px;*/
+  float: left;
+}
+
+#p1_score {
+  color: #80ccff;
+  font-weight: italic;
+  display: block;
+  /*width: 50px;*/
+  float: left;
+}
