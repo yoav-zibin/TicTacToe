@@ -21,7 +21,6 @@ var gameLogic;
     gameLogic.SHAPEWIDTH = 5;
     gameLogic.SHAPENUMBER = 21;
     gameLogic.GROUPNUMBER = 2; /// 4
-    // TODO change this
     gameLogic.STARTANCHOR4 = [0, gameLogic.COLS - 1, gameLogic.ROWS * (gameLogic.COLS - 1), gameLogic.ROWS * gameLogic.COLS - 1];
     gameLogic.STARTANCHOR = [0, gameLogic.ROWS * gameLogic.COLS - 1]; // [0, 14 * 14];
     gameLogic.SHAPEMAX = 168;
@@ -59,11 +58,6 @@ var gameLogic;
         return ret;
     }
     gameLogic.getInitPrevAnchor = getInitPrevAnchor;
-    /*
-    export function getTurnIdx() {
-      return ....
-    }
-    */
     function getInitPlayerStatus() {
         return [true, true, true, true];
     }
@@ -362,7 +356,6 @@ var gameLogic;
         }
         //log.log("After flipping Allshape:")
         //console.log(aux_printFrame(retShape.frame, SHAPEHEIGHT));
-        // TODO check this
         // rotation
         var rotateAny = function (retShape, rotation) {
             var rotate90 = function (input) {
@@ -472,7 +465,7 @@ var gameLogic;
     function adjustPosition(row, col, shape) {
         var ret = [row, col];
         var margins = getAllMargin(shape);
-        // TODO check valid with board, center and margin
+        // check valid with board, center and margin
         var up = row;
         var left = col;
         var bottom = gameLogic.ROWS - 1 - row;
@@ -533,13 +526,6 @@ var gameLogic;
         return board;
     }
     gameLogic.getBoardAction = getBoardAction;
-    /**
-     * Returns true if the game ended in a tie because there are no empty cells.
-     * E.g., isTie returns true for the following board:
-     *     [['X', 'O', 'X'],
-     *      ['X', 'O', 'O'],
-     *      ['O', 'X', 'X']]
-     */
     function isTie(board, playerStatus) {
         var over = true;
         var winner = '';
@@ -572,14 +558,6 @@ var gameLogic;
         return score;
     }
     gameLogic.getScore = getScore;
-    /**
-     * Return the winner (either 'X' or 'O') or '' if there is no winner.
-     * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-     * E.g., getWinner returns 'X' for the following board:
-     *     [['X', 'O', ''],
-     *      ['X', 'O', ''],
-     *      ['X', '', '']]
-     */
     function getWinner(board, playerStatus) {
         var over = true;
         var winner = '';
@@ -679,7 +657,7 @@ var gameLogic;
                 if (boardAction[i][j] == '') {
                     continue;
                 }
-                // conflict
+                // check conflict
                 if (boardAction[i][j] == '1' && board[i][j] != '') {
                     return false;
                 }
@@ -722,12 +700,10 @@ var gameLogic;
             }
         }
         var possibleAnchors = gameLogic.getPossibleAnchor(board, turnIndexBeforeMove);
-        //console.log("[getBoardAnchor]", possibleAnchors);
         //aux_printCoordinator(possibleAnchors);
         for (var i = 0; i < possibleAnchors.length; i++) {
             if (anchorStatus[turnIndexBeforeMove][possibleAnchors[i]]) {
                 var coord = gameLogic.parseIJ(possibleAnchors[i]);
-                //console.log(coord);
                 boardAnchor[coord[0]][coord[1]] = '1';
             }
         }
@@ -768,7 +744,6 @@ var gameLogic;
         if (!foundAnchor) {
             return false;
         }
-        //console.log("Found anchor");
         // not conflict with existing teritory and not adjacent to teritory
         if (!checkSquareOverlap(board, boardAction) ||
             !checkSquareAdj(board, boardAction, turnIndexBeforeMove)) {
@@ -895,7 +870,6 @@ var gameLogic;
             return { board: [], valid: false, row: -1, col: -1 };
         }
         var boardAction = getBoardAction(row, col, shape, gameLogic.ROWS, gameLogic.COLS);
-        //TODO export a function checkLealMove(board, row, col, turnIndexBeforeMove) // add boardAction
         if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
             return { board: [], valid: false, row: -1, col: -1 };
         }
@@ -1017,14 +991,11 @@ var gameLogic;
             }
             var row = parseIJ(anchor)[0];
             var col = parseIJ(anchor)[1];
-            // TODO shuffle and make random
             for (var id = 0; id < freeShapeIds.length; id++) {
                 var shapeId = freeShapeIds[id];
                 var stdShape = allshape[shapeId];
                 for (var _i = 0, _a = stdShape.ops; _i < _a.length; _i++) {
                     var op = _a[_i];
-                    //for (let op = 0; op < OPERATIONS; op++) {
-                    //et shapeId: number = freeShapeIds[id];
                     var shape = getShapeByTypeAndOperation(freeShapeIds[id], op);
                     var realShapeId = shapeId * gameLogic.OPERATIONS + op;
                     var corners = getAllCorners(shape);
@@ -1033,8 +1004,6 @@ var gameLogic;
                         var frameY = corners[c][1];
                         var action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
                         if (action.valid) {
-                            //console.log("action");//~
-                            //console.log(action);//~
                             return { invalidAnchors: invalidAnchors, board: angular.copy(action.board), valid: action.valid, shapeId: realShapeId, row: action.row, col: action.col };
                         }
                     }
@@ -1078,15 +1047,12 @@ var gameLogic;
         //console.log(aux_printFrame(boardAction, COLS))
         var board = stateBeforeMove.board;
         var playerStatus = stateBeforeMove.playerStatus;
-        //TODO export a function checkLealMove(board, row, col, turnIndexBeforeMove) // add boardAction
         if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
             throw new Error("One can only make a move in an empty position!");
         }
-        // TODO change to IsGameOver function IsGameOver(board, boardAction, turnIndexBeforeMove)
         if (getWinner(board, playerStatus) !== '' || isTie(board, playerStatus)) {
             throw new Error("Can only make a move if the game is not over!");
         }
-        //~
         var boardAfterMove = angular.copy(board);
         shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove);
         var shapeStatusAfterMove = angular.copy(shapeStatus);
@@ -1114,28 +1080,24 @@ var gameLogic;
         }
         console.log("board");
         console.log(nextstep.board);
-        console.log("anchor status");
-        console.log(anchorStatusAfterMove);
+        //console.log("anchor status");
+        //console.log(anchorStatusAfterMove);
         console.log(aux_printFrame(nextstep.board, gameLogic.ROWS));
-        console.log("anchor status");
-        console.log(anchorStatus);
-        console.log("anchorStatus");
-        console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], gameLogic.COLS));
+        //console.log("anchorStatus");
+        //console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], COLS));
         var playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
         var winner = getWinner(boardAfterMove, playerStatusAfterMove);
         var endMatchScores;
         var turnIndex;
-        // CHANGE here
         if (winner !== '' || isTie(boardAfterMove, playerStatusAfterMove)) {
             // Game over.
             turnIndex = -1;
-            // TODO add endScore Function, the score is measured by the blocks unused.
+            // The score is measured by the blocks unused.
             endMatchScores = getScore(boardAfterMove);
-            //~
         }
         else {
             // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
-            // TODO change to four player
+            // Ready for changing to four player
             turnIndex = getNextTurn(turnIndexBeforeMove, playerStatusAfterMove);
             //turnIndex = (turnIndexBeforeMove + 1) % GROUPNUMBER;
             if (turnIndex == -1) {
@@ -1145,10 +1107,8 @@ var gameLogic;
                 endMatchScores = null;
             }
         }
-        //~
         // Here delta should be all the blocks covered by the new move
         var delta = { row: row, col: col, shapeId: shapeId };
-        //~
         var state = {
             delta: delta,
             board: boardAfterMove,
