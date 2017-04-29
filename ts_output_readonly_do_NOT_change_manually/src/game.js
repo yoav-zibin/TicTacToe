@@ -114,11 +114,6 @@ var game;
     }
     function getAreaSize(type) {
         var area = document.getElementById(type + "Area");
-        /*
-          if (type === 'shape') {
-          return { width: area.offsetWidth, height: area.offsetHeight };
-        }
-        */
         return { width: area.clientWidth, height: area.clientHeight };
     }
     function getXYandDragType(clientX, clientY) {
@@ -165,13 +160,11 @@ var game;
     function getHintColor() {
         var color = [game.HINT_1_COLOR, game.HINT_2_COLOR, '#00e600', '#ffc34d'];
         return color[game.currentUpdateUI.turnIndex];
-        //return "#93FF33";
     }
     function printBoardAnchor() {
         game.anchorBoard = gameLogic.getBoardAnchor(game.state.board, game.state.anchorStatus, game.currentUpdateUI.turnIndex);
         //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
         setboardHintColor(game.anchorBoard, getHintColor());
-        //setboardActionGroundColor(anchorBoard, getHintColor());
     }
     function clearBoardAnchor() {
         clearCoverBoard(game.anchorBoard, true, game.preview, true);
@@ -194,12 +187,6 @@ var game;
         var clickArea = getArea(dragType);
         var col = Math.floor(colAndRow.colsNum * x / clickArea.clientWidth);
         var row = Math.floor(colAndRow.rowsNum * y / clickArea.clientHeight);
-        /*
-        if (dragType === 'shape') {
-          col = Math.floor(colAndRow.colsNum * x / clickArea.offsetWidth);
-          row = Math.floor(colAndRow.rowsNum * y / clickArea.offsetHeight);
-        }
-        */
         console.log("dragType:", dragType, " col:", col, " row:", row);
         // displaying the dragging lines
         var draggingLines = document.getElementById(dragType + "DraggingLines");
@@ -304,7 +291,6 @@ var game;
     function setboardHintColor(boardAction, color) {
         for (var i = 0; i < boardAction.length; i++) {
             for (var j = 0; j < boardAction[i].length; j++) {
-                //console.log(getSquareBackGroundColor(i, j));
                 if (boardAction[i][j] === '1') {
                     if (showHintColor === true || getSquareBackGroundColor(i, j) === game.BACKGROUND_COLOR) {
                         setSquareBackGroundColor(i, j, color);
@@ -329,7 +315,6 @@ var game;
             return { rowsNum: game.dim, colsNum: game.dim };
         }
         if (type === 'shape') {
-            //TODO to const
             return { rowsNum: game.SHAPEROW, colsNum: game.SHAPECOL };
         }
     }
@@ -495,10 +480,10 @@ var game;
                     game.shapeIdChosen = newShapeId;
                     console.log("[dragDoneForBoard ]Change ShapeId to", game.shapeIdChosen);
                 }
-                console.log("--------------------------");
+                //console.log("--------------------------");
                 printBoardAnchor();
-                console.log("--------------------------");
-                console.log("[dragDoneForBoard]shapeIdChosen:", game.shapeIdChosen);
+                //console.log("--------------------------");
+                //console.log("[dragDoneForBoard]shapeIdChosen:", shapeIdChosen);
             }
             else {
                 // toggleDead(row, col);
@@ -518,7 +503,6 @@ var game;
         return true;
     }
     game.isCancelBtnEnabled = isCancelBtnEnabled;
-    //TODO
     function cancelClicked() {
         clearClickToDrag();
     }
@@ -528,15 +512,10 @@ var game;
     }
     game.showConfirmButton = showConfirmButton;
     function showCancelButton() {
-        // TODO only show cancel when some block is chosen
-        return isMyTurn();
+        // only show cancel when some block is chosen
+        return isMyTurn() && game.shapeIdChosen !== undefined && game.shapeIdChosen >= 0;
     }
     game.showCancelButton = showCancelButton;
-    /*
-    export function showRotateAndFlip() {
-      return moveToConfirm !== null; // TODO check flip state
-    }
-    */
     function showHintBtn() {
         return isMyTurn();
     }
@@ -558,7 +537,6 @@ var game;
     }
     game.checkLegal = checkLegal;
     function getHint() {
-        //console.log("state!!!!!!!!!!!!!!");
         console.log(game.state);
         clearDrag('board', true);
         //let nextmove = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, currentUpdateUI.turnIndex);
@@ -577,9 +555,18 @@ var game;
                     }
                 }
                 if (readyList.length > 0) {
-                    var randPos = Math.floor(Math.random() * readyList.length);
-                    pick = readyList[randPos];
-                    theNextMove = nextmoves.moves[pick];
+                    for (var i = 0; i < readyList.length; i++) {
+                        var pos = readyList[i];
+                        if (nextmoves.moves[pos].shapeId == game.shapeIdChosen) {
+                            pick = pos;
+                            theNextMove = nextmoves.moves[pick];
+                        }
+                    }
+                    if (pick == -1) {
+                        var randPos = Math.floor(Math.random() * readyList.length);
+                        pick = readyList[randPos];
+                        theNextMove = nextmoves.moves[pick];
+                    }
                 }
             }
             if (pick == -1) {
@@ -595,23 +582,11 @@ var game;
             };
             console.log("random pick");
             console.log(game.moveToConfirm);
-            //TODO here find suitable or random one
-            // TODO auto draw
             try {
                 if (game.moveToConfirm == null) {
                     return;
                 }
                 game.shapeIdChosen = game.moveToConfirm.shapeId;
-                // draw preview
-                /*
-                let boardAction = gameLogic.getBoardActionFromShapeID(moveToConfirm.row, moveToConfirm.col, moveToConfirm.shapeId);
-                if (!angular.equals(preview, boardAction)) {
-                  clearDrag('board', false);
-                  console.log("set board");
-                  setboardActionGroundColor(boardAction, getTurnColorForMove());
-                  preview = boardAction;
-                }
-                */
                 updateboardAction(game.moveToConfirm.row, game.moveToConfirm.col);
                 printBoardAnchor();
                 dragDoneForBoard(game.moveToConfirm.row, game.moveToConfirm.col, 'board');
@@ -681,9 +656,11 @@ var game;
         if (right) {
             addon--;
         }
-        if (currentFlip) {
-            addon = -addon;
-        }
+        /*
+            if (currentFlip) {
+              addon = -addon;
+            }
+        */
         rotation = (rotation + addon + 4) % 4;
         game.shapeIdChosen = gameLogic.getShapeId(originShapeId, rotation, currentFlip);
         return game.shapeIdChosen;

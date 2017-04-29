@@ -131,11 +131,6 @@ module game {
 
   function getAreaSize(type: string): { width: number; height: number; } {
     let area: HTMLElement = document.getElementById(type + "Area");
-    /*
-      if (type === 'shape') {
-      return { width: area.offsetWidth, height: area.offsetHeight };
-    }
-    */
     return { width: area.clientWidth, height: area.clientHeight };
   }
 
@@ -187,14 +182,12 @@ module game {
   function getHintColor() {
     var color = [HINT_1_COLOR, HINT_2_COLOR, '#00e600', '#ffc34d'];
     return color[currentUpdateUI.turnIndex];
-    //return "#93FF33";
   }
 
   function printBoardAnchor() {
     anchorBoard = gameLogic.getBoardAnchor(state.board, state.anchorStatus, currentUpdateUI.turnIndex);
     //console.log(gameLogic.aux_printFrame(anchorBoard, 20));
     setboardHintColor(anchorBoard, getHintColor());
-    //setboardActionGroundColor(anchorBoard, getHintColor());
   }
 
   function clearBoardAnchor() {
@@ -224,12 +217,6 @@ module game {
     let clickArea: HTMLElement = getArea(dragType);
     let col = Math.floor(colAndRow.colsNum * x / clickArea.clientWidth);
     let row = Math.floor(colAndRow.rowsNum * y / clickArea.clientHeight);
-    /*
-    if (dragType === 'shape') {
-      col = Math.floor(colAndRow.colsNum * x / clickArea.offsetWidth);
-      row = Math.floor(colAndRow.rowsNum * y / clickArea.offsetHeight);
-    }
-    */
     console.log("dragType:", dragType, " col:", col, " row:", row);
 
     // displaying the dragging lines
@@ -347,7 +334,6 @@ module game {
   function setboardHintColor(boardAction: Board, color: string) {
     for (let i = 0; i < boardAction.length; i++) {
       for (let j = 0; j < boardAction[i].length; j++) {
-        //console.log(getSquareBackGroundColor(i, j));
         if (boardAction[i][j] === '1') {
           if (showHintColor === true || getSquareBackGroundColor(i, j) === BACKGROUND_COLOR) {
             setSquareBackGroundColor(i, j, color);
@@ -375,7 +361,6 @@ module game {
       return { rowsNum: dim, colsNum: dim };
     }
     if (type === 'shape') {
-      //TODO to const
       return { rowsNum: SHAPEROW, colsNum: SHAPECOL };
     }
   }
@@ -564,10 +549,10 @@ module game {
           console.log("[dragDoneForBoard ]Change ShapeId to", shapeIdChosen);
         }
 
-        console.log("--------------------------");
+        //console.log("--------------------------");
         printBoardAnchor();
-        console.log("--------------------------");
-        console.log("[dragDoneForBoard]shapeIdChosen:", shapeIdChosen);
+        //console.log("--------------------------");
+        //console.log("[dragDoneForBoard]shapeIdChosen:", shapeIdChosen);
       }
       else {
         // toggleDead(row, col);
@@ -588,7 +573,6 @@ module game {
     return true;
   }
 
-  //TODO
   export function cancelClicked() {
     clearClickToDrag();
   }
@@ -598,15 +582,10 @@ module game {
   }
 
   export function showCancelButton() {
-    // TODO only show cancel when some block is chosen
-    return isMyTurn();
+    // only show cancel when some block is chosen
+    return isMyTurn() && shapeIdChosen !== undefined && shapeIdChosen >= 0;
   }
 
-  /*
-  export function showRotateAndFlip() {
-    return moveToConfirm !== null; // TODO check flip state
-  }
-  */
   export function showHintBtn() {
     return isMyTurn();
   }
@@ -629,7 +608,6 @@ module game {
   }
 
   export function getHint() {
-    //console.log("state!!!!!!!!!!!!!!");
     console.log(state);
     clearDrag('board', true);
     //let nextmove = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, currentUpdateUI.turnIndex);
@@ -650,15 +628,23 @@ module game {
         }
 
         if (readyList.length > 0) {
-          let randPos: number = Math.floor(Math.random() * readyList.length);
-          pick = readyList[randPos];
-          theNextMove = nextmoves.moves[pick];
+          for (let i = 0; i < readyList.length; i++) {
+            let pos = readyList[i];
+            if (nextmoves.moves[pos].shapeId == shapeIdChosen) {
+              pick = pos;
+              theNextMove = nextmoves.moves[pick];
+            }
+          }
+          if (pick == -1) {
+            let randPos: number = Math.floor(Math.random() * readyList.length);
+            pick = readyList[randPos];
+            theNextMove = nextmoves.moves[pick];
+          }
         }
       }
       if (pick == -1) {
         let optMoves = gameLogic.sortMoves(nextmoves.moves);
         theNextMove = optMoves[0];
-        
         //pick = Math.floor(Math.random() * nextmoves.moves.length);
         //theNextMove = nextmoves.moves[pick];
       }
@@ -670,25 +656,11 @@ module game {
 
       console.log("random pick");
       console.log(moveToConfirm);
-      //TODO here find suitable or random one
-      // TODO auto draw
       try {
         if (moveToConfirm == null) {
           return;
         }
-
         shapeIdChosen = moveToConfirm.shapeId
-
-        // draw preview
-        /*
-        let boardAction = gameLogic.getBoardActionFromShapeID(moveToConfirm.row, moveToConfirm.col, moveToConfirm.shapeId);
-        if (!angular.equals(preview, boardAction)) {
-          clearDrag('board', false);
-          console.log("set board");
-          setboardActionGroundColor(boardAction, getTurnColorForMove());
-          preview = boardAction;
-        }
-        */
         updateboardAction(moveToConfirm.row, moveToConfirm.col);
         printBoardAnchor();
         dragDoneForBoard(moveToConfirm.row, moveToConfirm.col, 'board');
@@ -763,10 +735,11 @@ module game {
       addon--;
     }
 
-    if (currentFlip) {
-      addon = -addon;
-    }
-
+    /*
+        if (currentFlip) {
+          addon = -addon;
+        }
+    */
     rotation = (rotation + addon + 4) % 4;
     shapeIdChosen = gameLogic.getShapeId(originShapeId, rotation, currentFlip);
 
@@ -993,7 +966,7 @@ module game {
     if (move === undefined) {
       return;
     }
-    
+
     didMakeMove = true;
 
     // change currentUpdateUI.turnIndex here

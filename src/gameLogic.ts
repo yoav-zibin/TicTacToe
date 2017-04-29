@@ -58,7 +58,6 @@ module gameLogic {
   export const SHAPEWIDTH = 5;
   export const SHAPENUMBER = 21;
   export const GROUPNUMBER = 2; /// 4
-  // TODO change this
   export const STARTANCHOR4: number[] = [0, COLS - 1, ROWS * (COLS - 1), ROWS * COLS - 1];
   export const STARTANCHOR: number[] = [0, ROWS * COLS - 1]; // [0, 14 * 14];
   export const SHAPEMAX = 168;
@@ -96,12 +95,7 @@ module gameLogic {
     }
     return ret;
   }
-  /*
-  export function getTurnIdx() {
-    return ....
-  }
-  */
-
+  
   export function getInitPlayerStatus(): boolean[] {
     return [true, true, true, true];
   }
@@ -332,7 +326,7 @@ module gameLogic {
     return ret;
   }
 
-  export function aux_print1dArray(frame: any[], col:number): string {
+  export function aux_print1dArray(frame: any[], col: number): string {
     let ret: string = "   0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9\n\r  ----------------------------------------";
     for (let i = 0; i < frame.length; i++) {
       if (i % col === 0) {
@@ -407,7 +401,6 @@ module gameLogic {
     //log.log("After flipping Allshape:")
     //console.log(aux_printFrame(retShape.frame, SHAPEHEIGHT));
 
-    // TODO check this
     // rotation
     let rotateAny = function (retShape: Shape, rotation: number): string[][] {
       let rotate90 = function (input: string[][]): string[][] {
@@ -530,7 +523,7 @@ module gameLogic {
     let ret: number[] = [row, col];
     let margins: number[] = getAllMargin(shape);
 
-    // TODO check valid with board, center and margin
+    // check valid with board, center and margin
     let up: number = row;
     let left: number = col;
     let bottom: number = ROWS - 1 - row;
@@ -597,13 +590,6 @@ module gameLogic {
     return board;
   }
 
-  /**
-   * Returns true if the game ended in a tie because there are no empty cells.
-   * E.g., isTie returns true for the following board:
-   *     [['X', 'O', 'X'],
-   *      ['X', 'O', 'O'],
-   *      ['O', 'X', 'X']]
-   */
   function isTie(board: Board, playerStatus: boolean[]): boolean {
     let over = true;
     let winner: string = '';
@@ -637,14 +623,7 @@ module gameLogic {
     }
     return score;
   }
-  /**
-   * Return the winner (either 'X' or 'O') or '' if there is no winner.
-   * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-   * E.g., getWinner returns 'X' for the following board:
-   *     [['X', 'O', ''],
-   *      ['X', 'O', ''],
-   *      ['X', '', '']]
-   */
+ 
   function getWinner(board: Board, playerStatus: boolean[]): string {
     let over = true;
     let winner: string = '';
@@ -754,7 +733,7 @@ module gameLogic {
         if (boardAction[i][j] == '') {
           continue;
         }
-        // conflict
+        // check conflict
         if (boardAction[i][j] == '1' && board[i][j] != '') {
           return false;
         }
@@ -799,13 +778,11 @@ module gameLogic {
     }
 
     let possibleAnchors: number[] = gameLogic.getPossibleAnchor(board, turnIndexBeforeMove);
-    //console.log("[getBoardAnchor]", possibleAnchors);
 
     //aux_printCoordinator(possibleAnchors);
     for (let i = 0; i < possibleAnchors.length; i++) {
       if (anchorStatus[turnIndexBeforeMove][possibleAnchors[i]]) {
         let coord: number[] = gameLogic.parseIJ(possibleAnchors[i])
-        //console.log(coord);
         boardAnchor[coord[0]][coord[1]] = '1';
       }
     }
@@ -853,7 +830,6 @@ module gameLogic {
       return false;
     }
 
-    //console.log("Found anchor");
     // not conflict with existing teritory and not adjacent to teritory
     if (!checkSquareOverlap(board, boardAction) ||
       !checkSquareAdj(board, boardAction, turnIndexBeforeMove)) {
@@ -997,7 +973,6 @@ module gameLogic {
 
     let boardAction: Board = getBoardAction(row, col, shape, ROWS, COLS);
 
-    //TODO export a function checkLealMove(board, row, col, turnIndexBeforeMove) // add boardAction
     if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
       return { board: [], valid: false, row: -1, col: -1 };
     }
@@ -1137,14 +1112,11 @@ module gameLogic {
       let row: number = parseIJ(anchor)[0];
       let col: number = parseIJ(anchor)[1];
 
-      // TODO shuffle and make random
       for (let id = 0; id < freeShapeIds.length; id++) {
         let shapeId: number = freeShapeIds[id];
         let stdShape: Shape = allshape[shapeId];
 
         for (let op of stdShape.ops) {
-          //for (let op = 0; op < OPERATIONS; op++) {
-          //et shapeId: number = freeShapeIds[id];
           let shape: Shape = getShapeByTypeAndOperation(freeShapeIds[id], op);
           let realShapeId: number = shapeId * OPERATIONS + op;
           let corners: number[][] = getAllCorners(shape);
@@ -1153,8 +1125,6 @@ module gameLogic {
             let frameY: number = corners[c][1];
             let action = mapShapeToPos(row, col, board, shape, frameX, frameY, turnIndexBeforeMove);
             if (action.valid) {
-              //console.log("action");//~
-              //console.log(action);//~
               return { invalidAnchors: invalidAnchors, board: angular.copy(action.board), valid: action.valid, shapeId: realShapeId, row: action.row, col: action.col };
             }
           }
@@ -1203,7 +1173,6 @@ module gameLogic {
     }
 
     let boardAction: Board = getBoardAction(row, col, shape, ROWS, COLS);
-
     //console.log("boardAction:")
     //console.log(aux_printFrame(boardAction, COLS))
 
@@ -1211,20 +1180,17 @@ module gameLogic {
 
     let playerStatus: boolean[] = stateBeforeMove.playerStatus;
 
-    //TODO export a function checkLealMove(board, row, col, turnIndexBeforeMove) // add boardAction
     if (!checkLegalMove(board, row, col, boardAction, turnIndexBeforeMove)) {
       throw new Error("One can only make a move in an empty position!");
     }
 
-    // TODO change to IsGameOver function IsGameOver(board, boardAction, turnIndexBeforeMove)
     if (getWinner(board, playerStatus) !== '' || isTie(board, playerStatus)) {
       throw new Error("Can only make a move if the game is not over!");
     }
-    //~
-
+    
     let boardAfterMove = angular.copy(board);
     shapePlacement(boardAfterMove, boardAction, turnIndexBeforeMove);
-    let shapeStatusAfterMove =  angular.copy(shapeStatus); 
+    let shapeStatusAfterMove = angular.copy(shapeStatus);
     shapeStatusAfterMove[turnIndexBeforeMove][getShapeType(shapeId)] = false;
 
     /*
@@ -1241,44 +1207,35 @@ module gameLogic {
       anchorStatusAfterMove[turnIndexBeforeMove][anchorPos] = false;
     }
 
-    
     console.log(boardAfterMove);
     console.log("possibleMove");
     if (nextstep.valid) {
-      console.log("Has Moves move for ",turnIndexBeforeMove);
+      console.log("Has Moves move for ", turnIndexBeforeMove);
     } else {
-          console.log("No More Move moves for ",turnIndexBeforeMove);
+      console.log("No More Move moves for ", turnIndexBeforeMove);
     }
 
     console.log("board")
     console.log(nextstep.board);
-    console.log("anchor status");
-    console.log(anchorStatusAfterMove);
+    //console.log("anchor status");
+    //console.log(anchorStatusAfterMove);
     console.log(aux_printFrame(nextstep.board, ROWS));
-    console.log("anchor status");
-    console.log(anchorStatus);
- 
-    console.log("anchorStatus");
-    console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], COLS));
-    
+    //console.log("anchorStatus");
+    //console.log(aux_print1dArray(anchorStatusAfterMove[turnIndexBeforeMove], COLS));
 
     let playerStatusAfterMove = updatePlayerStatus(playerStatus, turnIndexBeforeMove, nextstep);
-
     let winner = getWinner(boardAfterMove, playerStatusAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
-
-    // CHANGE here
+    
     if (winner !== '' || isTie(boardAfterMove, playerStatusAfterMove)) {
       // Game over.
       turnIndex = -1;
-
-      // TODO add endScore Function, the score is measured by the blocks unused.
+      // The score is measured by the blocks unused.
       endMatchScores = getScore(boardAfterMove);
-      //~
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
-      // TODO change to four player
+      // Ready for changing to four player
       turnIndex = getNextTurn(turnIndexBeforeMove, playerStatusAfterMove);
       //turnIndex = (turnIndexBeforeMove + 1) % GROUPNUMBER;
       if (turnIndex == -1) {
@@ -1287,11 +1244,9 @@ module gameLogic {
         endMatchScores = null;
       }
     }
-    //~
-
+    
     // Here delta should be all the blocks covered by the new move
     let delta: BoardDelta = { row: row, col: col, shapeId: shapeId };
-    //~
     let state: IState = {
       delta: delta,
       board: boardAfterMove,
