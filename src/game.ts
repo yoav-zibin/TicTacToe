@@ -72,9 +72,9 @@ module game {
     shapeArea = document.getElementById("shapeArea");
 
     //TODO split the two event
-    dragAndDropService.addDragListener("gameArea", handleDragEventGameArea);
-    //dragAndDropService.addDragListener("boardArea", handleDragEventGameArea);
-    //dragAndDropService.addDragListener("shapeArea", handleDragEventGameArea);
+    //dragAndDropService.addDragListener("gameArea", handleDragEventGameArea);
+    dragAndDropService.addDragListener("boardArea", handleDragEventGameArea);
+    dragAndDropService.addDragListener("shapeArea", handleDragEventGameArea);
 
     //dragAndDropService.addDragListener("boardArea", handleDragEvent);
     gameService.setGame({
@@ -629,7 +629,7 @@ module game {
   }
 
   export function getHint() {
-    console.log("state");
+    //console.log("state!!!!!!!!!!!!!!");
     console.log(state);
     clearDrag('board', true);
     //let nextmove = gameLogic.getNextPossibleShape(state.anchorStatus, state.board, state.shapeStatus, currentUpdateUI.turnIndex);
