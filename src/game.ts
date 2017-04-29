@@ -1093,7 +1093,6 @@ module game {
     //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
     if (shapeId != -1) {
       let color: string = DEFAULT_BG_USED_SHAPE;
-
       if (shapeIdChosen !== undefined && shapeIdChosen >= 0 && shapeId === gameLogic.getShapeType(shapeIdChosen)) {
         color = getTurnColorForMove(); //getTurnColorForMove();
       } else if (currentUpdateUI.turnIndex >= 0 && state.shapeStatus[currentUpdateUI.turnIndex][shapeId]) {

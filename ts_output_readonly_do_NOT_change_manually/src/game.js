@@ -995,6 +995,7 @@ var game;
             }
             else if (game.currentUpdateUI.turnIndex >= 0 && game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
                 color = getTurnColor();
+
             }
             return {
                 border: '1pt solid white',
