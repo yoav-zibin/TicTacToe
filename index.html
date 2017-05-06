@@ -30,6 +30,11 @@
 </head>
 
 <body ng-cloak>
+	<p>You can populate the 
+		<md-tooltip md-direction="bottom">
+            Insert Drive
+        </md-tooltip>
+	</p>
 	<div id="gameArea">
 		<div id="displayPanel" style="position:absolute; top:0; left:0; width:100%; height:12%">
 			<!--label id="firstUserName"> {{currentUpdateUI.yourPlayerIndex == 0? yourPlayerInfo.displayName: Opponent}}:&nbsp</label-->
@@ -72,19 +77,33 @@
 		</div>
 
 		<div id="buttonArea" ng-hide="game.hidePassButton" style="position:absolute; top:93%; left:0; width:100%; height:5%">
-			<button type="button" ng-show="game.showHintBtn()" ng-click="game.getHint()"><img ng-src="../icon/hint-small.png"/></button>
+			<!--<button type="button" ng-show="game.showHintBtn()" ng-click="game.getHint()"><img ng-src="../icon/hint-small.png"/></button>-->
 			<!--<button type="button" ng-show="game.showRotateLeft()" ng-click="game.rotateLeft()"><img ng-src="../icon/rotate-left-small.png"/></button>-->
-			<button type="button" ng-show="game.showFlip()" ng-click="game.flip()"><img ng-src="../icon/flip-small.png"/></button>
-			<button type="button" ng-show="game.showRotateRight()" ng-click="game.rotateRight()"><img ng-src="../icon/rotate-right-small.png"/></button>
+			
+			<md-button class="md-fab" type="button" ng-show="game.showHintBtn()" ng-click="game.getHint()">
+				<span tooltip="hint" tooltip-placement="bottom">
+              		<img ng-src="icon/hint-small.png"/>
+				</span>
+            </md-button>
+			
+			<md-button class="md-fab" type="button" ng-show="game.showFlip()" ng-click="game.flip()">
+				<md-tooltip md-direction="bottom"> Flip </md-tooltip>
+				<img ng-src="icon/flip-small.png"/>
+			</md-button>
+
+			<md-button class="md-fab" type="button" ng-show="game.showRotateRight()" ng-click="game.rotateRight()">
+				<img ng-src="icon/rotate-right-small.png"/>
+			</md-button>
+
 			<!--button type="button" style="float: right" ng-show="game.showConfirmButton()" ng-click="game.confirmClicked()" ng-disabled="!game.checkLegal()">
 				<img ng-src="../icon/confirm-small.png"/>
 				</button-->
-			<button type="button" style="float: right" ng-show="game.showCancelButton()" ng-click="game.confirmClicked()" ng-disabled="!game.showConfirmButton()">
-				<img ng-src="{{game.showConfirmButton() ? '../icon/confirm-small.png':'../icon/confirm-gray-small.png'}}"/>
-			</button>
-			<button type="button" style="float: right" ng-show="game.showCancelButton()" ng-click="game.cancelClicked()" ng-disabled="!game.isCancelBtnEnabled()">
-				<img ng-src="../icon/cancel-small.png"/>
-			</button>
+			<md-button class="md-fab" type="button" style="float: right" ng-show="game.showCancelButton()" ng-click="game.confirmClicked()" ng-disabled="!game.showConfirmButton()">
+				<img ng-src="{{game.showConfirmButton() ? 'icon/confirm-small.png':'icon/confirm-gray-small.png'}}"/>
+			</md-button>
+			<md-button class="md-fab" type="button" style="float: right" ng-show="game.showCancelButton()" ng-click="game.cancelClicked()" ng-disabled="!game.isCancelBtnEnabled()">
+				<img ng-src="icon/cancel-small.png"/>
+			</md-button>
 		</div>
 	</div>
 </body>

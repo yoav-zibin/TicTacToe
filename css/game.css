@@ -208,3 +208,12 @@ td {
   /*width: 50px;*/
   float: left;
 }
+
+.md-button.md-fab {
+  line-height: 5.6rem;
+  min-width: 0;
+  width: 5.6rem;
+  height: 5.6rem;
+  padding-left: 10px;
+  border-radius: 50%;
+}
