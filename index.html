@@ -30,11 +30,6 @@
 </head>
 
 <body ng-cloak>
-	<p>You can populate the 
-		<md-tooltip md-direction="bottom">
-            Insert Drive
-        </md-tooltip>
-	</p>
 	<div id="gameArea">
 		<div id="displayPanel" style="position:absolute; top:0; left:0; width:100%; height:12%">
 			<!--label id="firstUserName"> {{currentUpdateUI.yourPlayerIndex == 0? yourPlayerInfo.displayName: Opponent}}:&nbsp</label-->
@@ -87,7 +82,6 @@
             </md-button>
 			
 			<md-button class="md-fab" type="button" ng-show="game.showFlip()" ng-click="game.flip()">
-				<md-tooltip md-direction="bottom"> Flip </md-tooltip>
 				<img ng-src="icon/flip-small.png"/>
 			</md-button>
 
