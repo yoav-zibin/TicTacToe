@@ -32801,6 +32801,23 @@ var gameLogic;
         return { start: start, end: i };
     }
     gameLogic.getNextShapeFrom = getNextShapeFrom;
+    function getShapeMarkMatrix() {
+        return [
+            [0, 0, 0, 15, 0, 0, 0, 7, 13, 0, 0, 0, 7, 9, 0, 0, 0, 7, 5, 13, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [3, 9, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 3, 13],
+            [6, 12, 0, 0, 7, 4, 13, 0, 0, 7, 5, 5, 13, 0, 0, 7, 5, 12, 0, 0, 7, 12, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 11, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 11],
+            [11, 0, 0, 0, 0, 0, 10, 0, 0, 10, 0, 0, 0, 0, 3, 5, 13, 0, 3, 5, 12, 0, 10],
+            [6, 5, 5, 13, 0, 7, 4, 13, 0, 6, 5, 13, 0, 7, 12, 0, 0, 0, 14, 0, 0, 0, 10],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10],
+            [11, 0, 0, 0, 3, 13, 0, 3, 13, 0, 0, 0, 3, 13, 0, 0, 11, 0, 0, 0, 0, 0, 14],
+            [2, 9, 0, 3, 12, 0, 0, 10, 0, 0, 0, 7, 8, 0, 0, 7, 0, 13, 0, 0, 11, 0, 0],
+            [6, 12, 0, 14, 0, 0, 0, 6, 13, 0, 0, 0, 14, 0, 0, 0, 14, 0, 0, 7, 4, 5, 13]
+        ];
+    }
+    gameLogic.getShapeMarkMatrix = getShapeMarkMatrix;
     // get ShapeBoard information
     function getAllShapeMatrix_hardcode() {
         var shapeBoard = { board: [], cellToShape: [], shapeToCell: [] };
@@ -33091,6 +33108,7 @@ var game;
     game.endMatchScore = [];
     game.playerStatus = [];
     game.GlobalErrorMsg = "";
+    game.shapeMarkBoard = [];
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
@@ -33115,6 +33133,7 @@ var game;
         showHintColor = game.SHOW_HINT_COLOR;
         game.GlobalErrorMsg = "";
         game.moveInBoard = true;
+        game.shapeMarkBoard = gameLogic.getShapeMarkMatrix();
         for (var p = 0; p < gameLogic.GROUPNUMBER; p++) {
             game.endMatchScore[p] = 0;
             game.playerStatus[p] = true;
@@ -34007,13 +34026,28 @@ var game;
         var color = [game.PLAYER_1_MOVE_COLOR, game.PLAYER_2_MOVE_COLOR, '#00e600', '#ffc34d'];
         return color[game.currentUpdateUI.turnIndex];
     }
+    function getBoarderStyle(row, col, opId) {
+        var val = game.shapeMarkBoard[row][col];
+        if (((game.shapeMarkBoard[row][col] >> opId) & 1) == 1) {
+            return '1pt solid yellow';
+        }
+        return '1pt solid white';
+    }
     function setShapeAreaSquareStyle(row, col) {
         var shapeId = game.shapeBoard.cellToShape[row][col];
         //console.log("currentUpdateUI.turnIndex:" + currentUpdateUI.turnIndex + ":(" + row + "," + col + "):" + shapeId);
         if (shapeId != -1) {
             var color = game.DEFAULT_BG_USED_SHAPE;
             if (game.shapeIdChosen !== undefined && game.shapeIdChosen >= 0 && shapeId === gameLogic.getShapeType(game.shapeIdChosen)) {
+                // TODO change to a brighter color
                 color = getTurnColorForMove(); //getTurnColorForMove();
+                return {
+                    'border-top-style': getBoarderStyle(row, col, 0),
+                    'border-left-style': getBoarderStyle(row, col, 1),
+                    'border-bottom-style': getBoarderStyle(row, col, 2),
+                    'border-right-style': getBoarderStyle(row, col, 3),
+                    'background': color,
+                };
             }
             else if (game.currentUpdateUI.turnIndex >= 0 && game.state.shapeStatus[game.currentUpdateUI.turnIndex][shapeId]) {
                 color = getTurnColor();
@@ -34041,7 +34075,7 @@ var aiService;
     function findComputerMove(move) {
         return createComputerMove(move, 
         // at most 1 second for the AI to choose a move (but might be much quicker)
-        { millisecondsLimit: 1000, maxDepth: 500 });
+        { millisecondsLimit: 1000, maxDepth: 3000 });
     }
     aiService.findComputerMove = findComputerMove;
     /**

@@ -977,6 +977,7 @@ var game;
         if (shapeId != -1) {
             var color = game.DEFAULT_BG_USED_SHAPE;
             if (game.shapeIdChosen !== undefined && game.shapeIdChosen >= 0 && shapeId === gameLogic.getShapeType(game.shapeIdChosen)) {
+                // TODO change to a brighter color
                 color = getTurnColorForMove(); //getTurnColorForMove();
                 return {
                     'border-top-style': getBoarderStyle(row, col, 0),
