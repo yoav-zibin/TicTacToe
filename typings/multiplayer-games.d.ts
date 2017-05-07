@@ -82,6 +82,12 @@ interface IGame {
   // If it's your player's turn (updateUI.yourPlayerIndex == updateUI.turnIndex),
   // and your player didn't submit a proposal already (updateUI.playerIdToProposal[updateUI.yourPlayerInfo.playerId] == undefined),
   // then the UI should allow the player to make a move (and the game should call gameService.makeMove).
+  //
+  // In a speed match, whenever a player calls makeMove the opponent will get an updateUI.
+  // In contrast, in a ping-pong match, if a player calls makeMove but still set the turn to themselves,
+  // then the opponent will not get an updateUI (they'll only get it when the turn changes).
+  // So if a player in your game sets the turn to themselves, you should be careful to do the animations
+  // correctly, especially in ping-pong matches.
   updateUI(updateUI: IUpdateUI): void;
 
   // The platform supports players sharing a match on facebook, and therefore the platform
@@ -176,9 +182,17 @@ interface IUpdateUI extends IMove {
   // two communities (e.g., if it's a match between US and UK, avatarImageUrl will be a country flag).
   playersInfo: IPlayerInfo[];
 
+  // Deprecated: you should use matchType.
   // playMode is either 'passAndPlay', 'playAgainstTheComputer', or 
   // (if it's a multiplayer/community match) yourPlayerIndex (e.g., 0 or 1).
   playMode: PlayMode; 
+
+  // matchType is either:
+  // 'passAndPlay', 'playAgainstTheComputer',
+  // 'pingPongMultiplayer', 'speedMultiplayer',
+  // 'community'
+  // (for testing in the emulator, we also have 'onlyAIs')
+  matchType: string;
 
   // Below are fields set only in community matches.
   // Mapping playerId to their proposal.
