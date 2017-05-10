@@ -209,11 +209,6 @@ td {
   float: left;
 }
 
-.md-button.md-fab {
-  line-height: 5.6rem;
-  min-width: 0;
-  width: 5.6rem;
-  height: 5.6rem;
-  padding-left: 10px;
-  border-radius: 50%;
+.md-button.md-default-theme.md-fab:not([disabled]):hover, .md-button.md-fab:not([disabled]):hover {
+     background-color: #99ffeb; 
 }

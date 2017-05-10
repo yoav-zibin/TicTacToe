@@ -1098,7 +1098,7 @@ module game {
   }
 }
 
-var app = angular.module('myApp', ['gameServices', /*,'ngScrollable'*/])
+var app = angular.module('myApp', ['gameServices', 'ngMaterial' /* ,'ngScrollable'*/])
   .run(['$rootScope', '$timeout',
     function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
       $rootScope['game'] = game;

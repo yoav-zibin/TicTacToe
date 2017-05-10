@@ -1,10 +1,10 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   // Auto resize (and pad with white color) an image
   // into multiple sizes for Google&Apple app submission.
   // I use 'sips' command line to resize and pad images,
   // which only work on MAC OSx.
   var src_img = "src.png";
-  var src_img_width_to_height_ratio = 1024/1024;
+  var src_img_width_to_height_ratio = 1024 / 1024;
   var directory = "auto_resize_images";
   var output_directory = directory + "/output";
   var padColor = "FFFFFF"; // white in HEX
@@ -86,8 +86,8 @@ module.exports = function(grunt) {
     var scale_to_width = is_height_limiting ? height * src_img_width_to_height_ratio : width;
     var scale_to_height = is_height_limiting ? height : width / src_img_width_to_height_ratio;
     commands.push('sips ' + directory + '/' + src_img + ' --resampleHeightWidth ' +
-        scale_to_height + ' ' + scale_to_width +
-        ' -s format bmp --out ' + output_directory + '/temp/' + dimensions + '.bmp');
+      scale_to_height + ' ' + scale_to_width +
+      ' -s format bmp --out ' + output_directory + '/temp/' + dimensions + '.bmp');
     commands.push('sips ' + output_directory +
       '/temp/' + dimensions + '.bmp -s format png --padToHeightWidth ' +
       height + ' ' + width +
@@ -140,12 +140,25 @@ module.exports = function(grunt) {
       js: {
         src: [
           'lib/angular.js',
+          'lib/angular-animate.js',
+          'lib/angular-aria.js',
+          'lib/angular-messages.js',
+          'lib/angular-material.js',
           'lib/turnBasedServices.4.js',
           'ts_output_readonly_do_NOT_change_manually/src/gameLogic.js',
           'ts_output_readonly_do_NOT_change_manually/src/game.js',
-          'ts_output_readonly_do_NOT_change_manually/src/aiService.js'],
+          'ts_output_readonly_do_NOT_change_manually/src/aiService.js'
+        ],
         dest: 'dist/js/everything.js',
       },
+      css: {
+        src: [  
+          'css/game.css',
+          'css/angular-material.css',
+          'css/material-icons.css'
+        ],
+        dest: 'dist/css/everything.css',
+      }
     },
     postcss: {
       options: {
@@ -155,11 +168,13 @@ module.exports = function(grunt) {
         },
         processors: [
           require('autoprefixer')(), // add vendor prefixes
-          require('cssnano')({safe: true}) // minify the result, skipping unsafe optimizations
+          require('cssnano')({ safe: true }) // minify the result, skipping unsafe optimizations
         ]
       },
       dist: {
-        src: 'css/game.css',
+        src: [
+          'dist/css/everything.css'
+        ],
         dest: 'dist/css/everything.min.css',
       }
     },
@@ -199,19 +214,19 @@ module.exports = function(grunt) {
       }
     },
     'http-server': {
-        'dev': {
-            // the server root directory
-            root: '.',
-            port: 9000,
-            host: "0.0.0.0",
-            cache: 1,
-            showDir : true,
-            autoIndex: true,
-            // server default file extension
-            ext: "html",
-            // run in parallel with other tasks
-            runInBackground: true
-        }
+      'dev': {
+        // the server root directory
+        root: '.',
+        port: 9000,
+        host: "0.0.0.0",
+        cache: 1,
+        showDir: true,
+        autoIndex: true,
+        // server default file extension
+        ext: "html",
+        // run in parallel with other tasks
+        runInBackground: true
+      }
     },
     protractor: {
       options: {
@@ -230,12 +245,12 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('default', [
-      'ts',
-      'karma',
-      'copy',
-      'concat', 'postcss', 'uglify',
-      'processhtml', 'manifest',
-      'http-server', 'protractor']);
-  grunt.registerTask('e2e', [
-      'http-server', 'protractor']);
+    'ts',
+    'karma',
+    'copy',
+    'concat', 'postcss', 'uglify',
+    'processhtml', 'manifest',
+    'http-server']);
+  // grunt.registerTask('e2e', [
+  //   'http-server', 'protractor']);
 };
