@@ -1,8 +1,10 @@
 interface SupportedLanguages {
-  en: string, iw: string,
-  pt: string, zh: string,
-  el: string, fr: string,
-  hi: string, es: string,
+  en: string,
+  iw: string,
+  pt: string,
+  zh: string,
+  fr: string,
+  es: string,
 };
 
 module game {
